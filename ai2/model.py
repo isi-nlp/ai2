@@ -15,8 +15,8 @@ class Classifier(pl.LightningModule):
 
         super(Classifier, self).__init__()
         self.config = config
-        self.model = model_class.from_pretrained(model_path)
-        self.tokenizer = tokenizer_class.from_pretrained(tokenizer_path)
+        self.model = model_class.from_pretrained(model_path, cache_dir='./.cache')
+        self.tokenizer = tokenizer_class.from_pretrained(tokenizer_path, cache_dir='./.cache')
         assert 'classes' in self.config, "Wrong config for Classifier, classes not found"
         self.linear = nn.Linear(d_model, self.config['classes'])
 
