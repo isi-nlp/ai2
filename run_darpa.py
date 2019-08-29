@@ -39,7 +39,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     exp = Experiment('./output')
-    model = Classifier(TASKS[args.task], MODELS[args.model_type], args.model_Weight,
+    model = Classifier(TASKS[args.task], MODELS[args.model_type], args.model_weight,
                        TOKENIZERS[args.tokenizer_type], args.tokenizer_weight, args.d_model)
     trainer = Trainer(exp,
                       early_stop_callback=EarlyStopping(monitor='val_f1', patience=10, mode='max'),
