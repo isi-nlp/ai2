@@ -36,11 +36,13 @@ if __name__ == "__main__":
     parser.add_argument('--model_weight', help='Model weight from huggingface')
     parser.add_argument('--tokenizer_weight', help='Pretrained tokenizer from huggingface')
     parser.add_argument('--d_model', type=int, help='Hidden dimension of the model')
+    args = parser.parse_args()
 
     exp = Experiment('./output')
-    model = Classifier(TASKS['anli'], BertModel, 'bert-base-uncased', BertTokenizer, 'bert-base-uncased', 768)
+    model = Classifier(TASKS[args.task], MODELS[args.model_type], args.model_Weight,
+                       TOKENIZERS[args.tokenizer_type], args.tokenizer_weight, args.d_model)
     trainer = Trainer(exp,
-                      early_stop_callback=EarlyStopping(monitor='avg_val_loss', patience=10),
+                      early_stop_callback=EarlyStopping(monitor='val_f1', patience=10, mode='max'),
                       checkpoint_callback=ModelCheckpoint(filepath='./models', save_best_only=True),
                       gradient_clip=0,
                       cluster=None,
