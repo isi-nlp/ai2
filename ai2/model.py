@@ -11,7 +11,7 @@ from sklearn.metrics import f1_score
 
 class Classifier(pl.LightningModule):
 
-    def __init__(self, config, model_class, model_path, tokenizer_class, tokenizer_path, d_model):
+    def __init__(self, config, model_class, model_path, tokenizer_class, tokenizer_path, d_model, batch_size=64):
 
         super(Classifier, self).__init__()
         self.config = config
@@ -22,6 +22,8 @@ class Classifier(pl.LightningModule):
 
         self.preprocessor = AI2Preprocessor(self.config)
         self.train_x, self.train_y, self.dev_x, self.dev_y = self.preprocessor.download()
+        self.d_model = d_model
+        self.batch_size = batch_size
 
     def forward(self, x):
         output = self.model(x)[1]  # pooled context vectors
@@ -78,14 +80,14 @@ class Classifier(pl.LightningModule):
         # REQUIRED
         return DataLoader(AI2Dataset(self.preprocessor.preprocess(self.train_x, self.train_y), self.tokenizer),
                           collate_fn=self.collate_fn,
-                          batch_size=8)
+                          batch_size=self.batch_size)
 
     @pl.data_loader
     def val_dataloader(self):
         # OPTIONAL
         return DataLoader(AI2Dataset(self.preprocessor.preprocess(self.dev_x, self.dev_y), self.tokenizer),
                           collate_fn=self.collate_fn,
-                          batch_size=8)
+                          batch_size=self.batch_size)
 
 
 if __name__ == "__main__":
