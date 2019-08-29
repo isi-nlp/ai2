@@ -56,7 +56,7 @@ class Classifier(pl.LightningModule):
         return {'avg_val_loss': avg_loss,
                 'avg_val_acc': avg_acc,
                 'avg_val_f1': avg_f1,
-                'true_f1': f1_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist())
+                'val_f1': f1_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist())
                 }
 
     def configure_optimizers(self):
