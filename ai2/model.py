@@ -16,7 +16,7 @@ class Classifier(pl.LightningModule):
         super(Classifier, self).__init__()
         self.config = config
         self.model = model_class.from_pretrained(model_path, cache_dir='./.cache')
-        self.tokenizer = tokenizer_class.from_pretrained(tokenizer_path, cache_dir='./.cache')
+        self.tokenizer = tokenizer_class.from_pretrained(tokenizer_path, cache_dir='./.cache', do_lower_case=False)
         assert 'classes' in self.config, "Wrong config for Classifier, classes not found"
         self.linear = nn.Linear(d_model, self.config['classes'])
 
@@ -44,7 +44,7 @@ class Classifier(pl.LightningModule):
             'val_acc': ((y_hat.reshape(-1) == y.reshape(-1)).sum()/y_hat.reshape(-1).size(0)).float(),
             'val_f1': torch.tensor(f1_score(y.reshape(-1).cpu().detach().numpy().tolist(),
                                             (y_hat.reshape(-1) >= 0.5).long().cpu().detach().numpy().tolist()
-                                            ), requires_grad=False),
+                                            ), requires_grad=False).to(x.device).reshape(-1),
             'truth': y.reshape(-1),
             'pred': y_hat.reshape(-1).long()}
 

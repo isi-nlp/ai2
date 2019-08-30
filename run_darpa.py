@@ -7,6 +7,9 @@ from pytorch_transformers import *
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from ai2.model import Classifier
 
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 MODELS = {
     'bert': BertModel,
     'gpt': OpenAIGPTModel,
