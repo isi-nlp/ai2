@@ -54,8 +54,8 @@ class Classifier(pl.LightningModule):
         avg_acc = torch.stack([x['val_acc'] for x in outputs], dim=-1).mean()
         avg_f1 = torch.stack([x['val_f1'] for x in outputs], dim=-1).mean()
 
-        truth = torch.stack([x['truth'] for x in outputs], dim=-1).reshape(-1)
-        pred = torch.stack([x['pred'] for x in outputs], dim=-1).reshape(-1)
+        truth = torch.cat([x['truth'] for x in outputs], dim=-1).reshape(-1)
+        pred = torch.cat([x['pred'] for x in outputs], dim=-1).reshape(-1)
 
         return {'avg_val_loss': avg_loss,
                 'avg_val_acc': avg_acc,
