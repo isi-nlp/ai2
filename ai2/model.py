@@ -54,7 +54,7 @@ class Classifier(pl.LightningModule):
         truth = torch.cat([x['truth'] for x in outputs], dim=-1).reshape(-1)
         pred = torch.cat([x['pred'] for x in outputs], dim=-1).reshape(-1)
 
-        return {'val_loss': F.mse_loss(pred, truth, reduction='sum').item(),
+        return {'val_loss': F.mse_loss(pred.float(), truth.float(), reduction='sum').item(),
                 'val_acc': accuracy_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist()),
                 'val_f1': f1_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist())
                 }
