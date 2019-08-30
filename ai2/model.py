@@ -33,7 +33,7 @@ class Classifier(pl.LightningModule):
     def training_step(self, batch, batch_nb):
         x, y = batch['x'], batch['y']
         y_hat = self.forward(x)
-        return {'loss': F.binary_cross_entropy(y_hat.reshape(-1), y.reshape(-1))}
+        return {'loss': F.binary_cross_entropy(y_hat.reshape(-1), y.reshape(-1), reduction='sum')}
 
     def validation_step(self, batch, batch_nb):
         # Must return tensors
@@ -41,7 +41,7 @@ class Classifier(pl.LightningModule):
         y_hat = self.forward(x)
 
         return {
-            'val_loss': (F.mse_loss(y_hat.reshape(-1), y.reshape(-1))).reshape((1, 1)),
+            'val_loss': (F.mse_loss(y_hat.reshape(-1), y.reshape(-1), reduction='sum')).reshape((1, 1)),
             'val_acc': (((y_hat.reshape(-1) == y.reshape(-1)).sum()/y_hat.reshape(-1).size(0)).float()).reshape((1, 1)),
             'val_f1': torch.tensor(f1_score(y.reshape(-1).cpu().detach().numpy().tolist(),
                                             (y_hat.reshape(-1) >= 0.5).long().cpu().detach().numpy().tolist()
