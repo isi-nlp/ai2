@@ -6,7 +6,7 @@ from torch.utils.data import Dataset, DataLoader
 from pytorch_transformers import *
 from ai2.utils import AI2Dataset, AI2Preprocessor
 from torch.nn import functional as F
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, accuracy_score
 
 
 class Classifier(pl.LightningModule):
@@ -41,25 +41,21 @@ class Classifier(pl.LightningModule):
         y_hat = self.forward(x)
 
         return {
-            'val_loss': (F.mse_loss(y_hat.reshape(-1), y.reshape(-1), reduction='sum')).reshape((1, 1)),
-            'val_acc': (((y_hat.reshape(-1) == y.reshape(-1)).sum()/y_hat.reshape(-1).size(0)).float()).reshape((1, 1)),
-            'val_f1': torch.tensor(f1_score(y.reshape(-1).cpu().detach().numpy().tolist(),
-                                            (y_hat.reshape(-1) >= 0.5).long().cpu().detach().numpy().tolist()
-                                            ), requires_grad=False).to(x.device).reshape((1, 1)),
+            'batch_loss': (F.mse_loss(y_hat.reshape(-1), y.reshape(-1), reduction='sum')).reshape((1, 1)),
+            'batch_acc': (((y_hat.reshape(-1) == y.reshape(-1)).sum()/y_hat.reshape(-1).size(0)).float()).reshape((1, 1)),
+            'batch_f1': torch.tensor(f1_score(y.reshape(-1).cpu().detach().numpy().tolist(),
+                                              (y_hat.reshape(-1) > 0.5).long().cpu().detach().numpy().tolist()
+                                              ), requires_grad=False).to(x.device).reshape((1, 1)),
             'truth': y.reshape((1, -1)),
             'pred': y_hat.reshape((1, -1)).long()}
 
     def validation_end(self, outputs):
-        avg_loss = torch.stack([x['val_loss'] for x in outputs], dim=-1).mean()
-        avg_acc = torch.stack([x['val_acc'] for x in outputs], dim=-1).mean()
-        avg_f1 = torch.stack([x['val_f1'] for x in outputs], dim=-1).mean()
 
         truth = torch.cat([x['truth'] for x in outputs], dim=-1).reshape(-1)
         pred = torch.cat([x['pred'] for x in outputs], dim=-1).reshape(-1)
 
-        return {'avg_val_loss': avg_loss,
-                'avg_val_acc': avg_acc,
-                'avg_val_f1': avg_f1,
+        return {'val_loss': F.mse_loss(pred, truth, reduction='sum').item(),
+                'val_acc': accuracy_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist()),
                 'val_f1': f1_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist())
                 }
 
