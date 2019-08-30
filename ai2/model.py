@@ -35,22 +35,23 @@ class Classifier(pl.LightningModule):
         return {'loss': F.binary_cross_entropy(y_hat.reshape(-1), y.reshape(-1))}
 
     def validation_step(self, batch, batch_nb):
+        # Must return tensors
         x, y = batch['x'], batch['y']
         y_hat = self.forward(x)
 
         return {
-            'val_loss': F.binary_cross_entropy(y_hat.reshape(-1), y.reshape(-1)).item(),
-            'val_acc': (y_hat.reshape(-1) == y.reshape(-1)).sum().item()/y_hat.reshape(-1).size(0),
-            'val_f1': f1_score(y.reshape(-1).cpu().detach().numpy().tolist(),
-                               (y_hat.reshape(-1) >= 0.5).long().cpu().detach().numpy().tolist()
-                               ),
+            'val_loss': F.binary_cross_entropy(y_hat.reshape(-1), y.reshape(-1)),
+            'val_acc': ((y_hat.reshape(-1) == y.reshape(-1)).sum()/y_hat.reshape(-1).size(0)).float(),
+            'val_f1': torch.tensor(f1_score(y.reshape(-1).cpu().detach().numpy().tolist(),
+                                            (y_hat.reshape(-1) >= 0.5).long().cpu().detach().numpy().tolist()
+                                            ), requires_grad=False),
             'truth': y.reshape(-1),
             'pred': y_hat.reshape(-1).long()}
 
     def validation_end(self, outputs):
-        avg_loss = np.mean([x['val_loss'] for x in outputs])
-        avg_acc = np.mean([x['val_acc'] for x in outputs])
-        avg_f1 = np.mean([x['val_f1'] for x in outputs])
+        avg_loss = torch.stack([x['val_loss'] for x in outputs], dim=-1).mean()
+        avg_acc = torch.stack([x['val_acc'] for x in outputs], dim=-1).mean()
+        avg_f1 = torch.stack([x['val_f1'] for x in outputs], dim=-1).mean()
 
         truth = torch.stack([x['truth'] for x in outputs], dim=-1).reshape(-1)
         pred = torch.stack([x['pred'] for x in outputs], dim=-1).reshape(-1)
