@@ -43,7 +43,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    exp = Experiment(save_dir='./output', name=f"{args.task}-{model_weight}")
+    exp = Experiment(save_dir='./output', name=f"{args.task}-{args.model_weight}")
     model = Classifier(TASKS[args.task], MODELS[args.model_type], args.model_weight,
                        TOKENIZERS[args.tokenizer_type], args.tokenizer_weight, args.d_model, batch_size=args.batch_size)
     trainer = Trainer(exp,
