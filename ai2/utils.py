@@ -9,6 +9,8 @@ from collections import namedtuple
 from pprint import pprint
 from pytorch_transformers.tokenization_utils import PreTrainedTokenizer
 from torch.utils.data import Dataset
+import os 
+
 
 TASKS = {
     'anli': {
@@ -80,8 +82,15 @@ class AI2Preprocessor:
 
     def download(self):
 
-        request = requests.get(self.config['url'])
-        zipped_file = ZipFile(BytesIO(request.content))
+        if not os.path.exists('./.cache/') :
+            os.mkdir("./.cache/")
+        
+        if not os.path.exists(f"./.cache/{self.config['url'].rsplit('/', 1)[-1]}"):
+            request = requests.get(self.config['url'])
+            with open(f"./.cache/{self.config['url'].rsplit('/', 1)[-1]}", "wb") as output:
+                output.write(request.content)
+        with open(f"./.cache/{self.config['url'].rsplit('/', 1)[-1]}", "rb") as input_file:
+            zipped_file = ZipFile(BytesIO(input_file.read()))
 
         exp = set(self.config['format'].values())
         found = set(f for f in zipped_file.namelist() if (f.endswith('jsonl') or f.endswith('lst')) and (not f.startswith('__')))
