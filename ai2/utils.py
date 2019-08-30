@@ -9,7 +9,7 @@ from collections import namedtuple
 from pprint import pprint
 from pytorch_transformers.tokenization_utils import PreTrainedTokenizer
 from torch.utils.data import Dataset
-import os 
+import os
 
 
 TASKS = {
@@ -82,9 +82,9 @@ class AI2Preprocessor:
 
     def download(self):
 
-        if not os.path.exists('./.cache/') :
+        if not os.path.exists('./.cache/'):
             os.mkdir("./.cache/")
-        
+
         if not os.path.exists(f"./.cache/{self.config['url'].rsplit('/', 1)[-1]}"):
             request = requests.get(self.config['url'])
             with open(f"./.cache/{self.config['url'].rsplit('/', 1)[-1]}", "wb") as output:
@@ -142,13 +142,5 @@ class AI2Dataset(Dataset):
             'x': self.tokenizer.convert_tokens_to_ids(self.tokenizer.tokenize(left) + ['[SEP]'] + self.tokenizer.tokenize(right) + ['[SEP]']),
             'y': label
         }
-        # print(sample)
+        # print(self.tokenizer.tokenize(left) + ['[SEP]'] + self.tokenizer.tokenize(right) + ['[SEP]'])
         return sample
-
-
-if __name__ == "__main__":
-    dataset = AI2Dataset(TASKS['socialiqa'])
-    train_x, train_y, dev_x, dev_y = dataset.download()
-
-    training_examples = dataset.preprocess(train_x, train_y)
-    pprint(training_examples[:5])
