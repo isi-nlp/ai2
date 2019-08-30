@@ -157,7 +157,7 @@ class AI2Dataset(Dataset):
 
         sample = {
             'x': x,  # [C, S]
-            'y': torch.tensor(label, requires_grad=False).long(),  # [C]
+            'y': torch.tensor(label).long(),  # [C]
         }
         return sample
 
