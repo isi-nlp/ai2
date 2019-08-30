@@ -78,14 +78,18 @@ class Classifier(pl.LightningModule):
     @pl.data_loader
     def tng_dataloader(self):
         # REQUIRED
-        return DataLoader(AI2Dataset(self.preprocessor.preprocess(self.train_x, self.train_y), self.tokenizer),
+        dataset = AI2Dataset(self.preprocessor.preprocess(self.train_x, self.train_y), self.tokenizer)
+        dist_sampler = torch.utils.data.distributed.DistributedSampler(dataset)
+        return DataLoader(dataset, sampler=dist_sampler,
                           collate_fn=self.collate_fn,
                           batch_size=self.batch_size)
 
     @pl.data_loader
     def val_dataloader(self):
         # OPTIONAL
-        return DataLoader(AI2Dataset(self.preprocessor.preprocess(self.dev_x, self.dev_y), self.tokenizer),
+        dataset = AI2Dataset(self.preprocessor.preprocess(self.dev_x, self.dev_y), self.tokenizer)
+        dist_sampler = torch.utils.data.distributed.DistributedSampler(dataset)
+        return DataLoader(dataset, sampler=dist_sampler,
                           collate_fn=self.collate_fn,
                           batch_size=self.batch_size)
 
