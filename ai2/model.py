@@ -40,13 +40,13 @@ class Classifier(pl.LightningModule):
         y_hat = self.forward(x)
 
         return {
-            'val_loss': F.binary_cross_entropy(y_hat.reshape(-1), y.reshape(-1)),
-            'val_acc': ((y_hat.reshape(-1) == y.reshape(-1)).sum()/y_hat.reshape(-1).size(0)).float(),
+            'val_loss': (F.binary_cross_entropy(y_hat.reshape(-1), y.reshape(-1))).reshape((-1, 1)),
+            'val_acc': (((y_hat.reshape(-1) == y.reshape(-1)).sum()/y_hat.reshape(-1).size(0)).float()).reshape((-1, 1)),
             'val_f1': torch.tensor(f1_score(y.reshape(-1).cpu().detach().numpy().tolist(),
                                             (y_hat.reshape(-1) >= 0.5).long().cpu().detach().numpy().tolist()
-                                            ), requires_grad=False).to(x.device).reshape(-1),
-            'truth': y.reshape(-1),
-            'pred': y_hat.reshape(-1).long()}
+                                            ), requires_grad=False).to(x.device).reshape((-1, 1)),
+            'truth': y.reshape((-1, 1)),
+            'pred': y_hat.reshape((-1, 1)).long()}
 
     def validation_end(self, outputs):
         avg_loss = torch.stack([x['val_loss'] for x in outputs], dim=-1).mean()
