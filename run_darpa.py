@@ -33,11 +33,11 @@ TOKENIZERS = {
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('Run ai2 darpa tasks with pytorch-transformers')
     parser.add_argument('--task', '-t', choices=['anli', 'hellaswag', 'physicaliqa', 'socialiqa'],
-                        help='DARPA task, see https://leaderboard.allenai.org/?darpa_offset=0')
-    parser.add_argument('--model_type', choices=MODELS, help='Model type')
-    parser.add_argument('--tokenizer_type', choices=TOKENIZERS, help='Tokenizer type')
-    parser.add_argument('--model_weight', help='Model weight from huggingface')
-    parser.add_argument('--tokenizer_weight', help='Pretrained tokenizer from huggingface')
+                        help='DARPA task, see https://leaderboard.allenai.org/?darpa_offset=0', required=True)
+    parser.add_argument('--model_type', choices=MODELS, help='Model type', required=True)
+    parser.add_argument('--tokenizer_type', choices=TOKENIZERS, help='Tokenizer type', required=True)
+    parser.add_argument('--model_weight', help='Model weight from huggingface', required=True)
+    parser.add_argument('--tokenizer_weight', help='Pretrained tokenizer from huggingface', required=True)
     parser.add_argument('--d_model', type=int, help='Hidden dimension of the model')
     parser.add_argument('--batch_size', type=int, help='Batch size')
 
@@ -48,7 +48,7 @@ if __name__ == "__main__":
                        TOKENIZERS[args.tokenizer_type], args.tokenizer_weight, args.d_model, batch_size=args.batch_size)
     trainer = Trainer(exp,
                       early_stop_callback=EarlyStopping(monitor='val_f1', patience=10, mode='max'),
-                      checkpoint_callback=ModelCheckpoint(filepath='./models', save_best_only=True),
+                      checkpoint_callback=ModelCheckpoint(filepath='./models', monitor='val_f1', save_best_only=True),
                       gradient_clip=0,
                       cluster=None,
                       process_position=0,

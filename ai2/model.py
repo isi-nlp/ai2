@@ -12,13 +12,13 @@ from sklearn.metrics import f1_score, accuracy_score
 class Classifier(pl.LightningModule):
 
     def __init__(self, config, model_class, model_path, tokenizer_class, tokenizer_path, d_model, batch_size=64):
-
         super(Classifier, self).__init__()
         self.config = config
         self.model = model_class.from_pretrained(model_path, cache_dir='./.cache')
         self.tokenizer = tokenizer_class.from_pretrained(tokenizer_path, cache_dir='./.cache', do_lower_case=False)
         assert 'classes' in self.config, "Wrong config for Classifier, classes not found"
-        self.linear = nn.Linear(d_model, self.config['classes'])
+        self.linear = nn.Linear(d_model, 1)
+        self.loss = nn.CrossEntropyLoss(reduction='sum')
 
         self.preprocessor = AI2Preprocessor(self.config)
         self.train_x, self.train_y, self.dev_x, self.dev_y = self.preprocessor.download()
@@ -26,57 +26,68 @@ class Classifier(pl.LightningModule):
         self.batch_size = batch_size
 
     def forward(self, x):
-
-        output = self.model(x)[1]  # pooled context vectors
-        return torch.sigmoid(self.linear(output))
+        """
+        x has shape [batch_size(B), num_choice(C), squence_length(S)]
+        """
+        B, C, S = x.shape
+        output = self.model(x.reshape((-1, x.size(-1))))[1]  # pooled context vectors: [B*C, H]
+        output = output.reshape((B, C, -1))  # [B, C, H]
+        return torch.squeeze(self.linear(output), dim=-1)  # [B, C]
 
     def training_step(self, batch, batch_nb):
         x, y = batch['x'], batch['y']
-        y_hat = self.forward(x)
-        return {'loss': F.binary_cross_entropy(y_hat.reshape(-1), y.reshape(-1), reduction='sum')}
+        y_hat = self.forward(x)  # [B, C]
+        assert y_hat.size(0) == y.size(0), "Batch size mismatch during training!"
+        return {'loss': self.loss(y_hat, y)}
 
     def validation_step(self, batch, batch_nb):
-        # Must return tensors
+
         x, y = batch['x'], batch['y']
         y_hat = self.forward(x)
 
+        pred = y_hat.argmax(dim=-1)
+
         return {
-            'batch_loss': (F.mse_loss(y_hat.reshape(-1), y.reshape(-1), reduction='sum')).reshape((1, 1)),
-            'batch_acc': (((y_hat.reshape(-1) == y.reshape(-1)).sum()/y_hat.reshape(-1).size(0)).float()).reshape((1, 1)),
+            'batch_loss': (self.loss(y_hat, y)).reshape((1, 1)),
+            'batch_acc': (((pred == y).sum()/y_hat.size(0)).float()).reshape((1, 1)),
             'batch_f1': torch.tensor(f1_score(y.reshape(-1).cpu().detach().numpy().tolist(),
-                                              (y_hat.reshape(-1) > 0.5).long().cpu().detach().numpy().tolist()
-                                              ), requires_grad=False).to(x.device).reshape((1, 1)),
-            'truth': y.reshape((1, -1)),
-            'pred': y_hat.reshape((1, -1)).long()}
+                                              pred.cpu().detach().numpy().tolist()),
+                                     requires_grad=False).to(x.device).reshape((1, 1)),
+            'truth': y,
+            'pred': pred}
 
     def validation_end(self, outputs):
 
-        truth = torch.cat([x['truth'] for x in outputs], dim=-1).reshape(-1)
-        pred = torch.cat([x['pred'] for x in outputs], dim=-1).reshape(-1)
+        truth = torch.cat([x['truth'] for x in outputs], dim=0).reshape(-1)
+        pred = torch.cat([x['pred'] for x in outputs], dim=0).reshape(-1)
 
-        return {'val_loss': F.mse_loss(pred.float(), truth.float(), reduction='sum').item(),
-                'val_acc': accuracy_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist()),
-                'val_f1': f1_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist())
-                }
+        return {
+            'val_acc': accuracy_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist()),
+            'val_f1': f1_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist())
+        }
 
     def configure_optimizers(self):
         return torch.optim.AdamW(self.parameters(), lr=0.02)
 
     def collate_fn(self, samples):
-        inputs = torch.zeros((len(samples), max(map(lambda x: len(x['x']), samples))))
-        targets = torch.zeros((len(samples), 1))
+        """
+        Pad x with the longest example in the batch
+        """
+        C = samples[0]['x'].size(0)
 
+        inputs = torch.zeros((len(samples), C, max(map(lambda x: x['x'].size(1), samples))), requires_grad=False)
+        inputs += self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0]
+        targets = torch.zeros((len(samples)))
         for i, sample in enumerate(samples):
-
-            inputs[i, :len(sample['x'])] = torch.from_numpy(np.asarray(sample['x']))
-            targets[i, :] = sample['y']
-
-        return {'x': inputs.long(), 'y': targets}
+            inputs[i, :, :sample['x'].size(1)] = sample['x']
+            targets[i] = sample['y']
+        return {'x': inputs.long(), 'y': targets.long()}
 
     @pl.data_loader
     def tng_dataloader(self):
         # REQUIRED
-        dataset = AI2Dataset(self.preprocessor.preprocess(self.train_x, self.train_y), self.tokenizer)
+        dataset = AI2Dataset(self.preprocessor.preprocess(self.train_x, self.train_y),
+                             self.tokenizer, self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0])
         # dist_sampler = torch.utils.data.distributed.DistributedSampler(dataset)
         return DataLoader(dataset,
                           #   sampler=dist_sampler,
@@ -86,7 +97,8 @@ class Classifier(pl.LightningModule):
     @pl.data_loader
     def val_dataloader(self):
         # OPTIONAL
-        dataset = AI2Dataset(self.preprocessor.preprocess(self.dev_x, self.dev_y), self.tokenizer)
+        dataset = AI2Dataset(self.preprocessor.preprocess(self.dev_x, self.dev_y),
+                             self.tokenizer, self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0])
         # dist_sampler = torch.utils.data.distributed.DistributedSampler(dataset)
         return DataLoader(dataset,
                           #   sampler=dist_sampler,
@@ -94,12 +106,12 @@ class Classifier(pl.LightningModule):
                           batch_size=self.batch_size)
 
 
-if __name__ == "__main__":
-    from utils import TASKS
-    from pytorch_lightning import Trainer
-    from test_tube import Experiment
+# if __name__ == "__main__":
+#     from utils import TASKS
+#     from pytorch_lightning import Trainer
+#     from test_tube import Experiment
 
-    exp = Experiment('./output')
-    model = Classifier(TASKS['anli'], BertModel, 'bert-base-uncased', BertTokenizer, 'bert-base-uncased', 768)
-    trainer = Trainer(exp)
-    trainer.fit(model)
+#     exp = Experiment('./output')
+#     model = Classifier(TASKS['anli'], BertModel, 'bert-base-uncased', BertTokenizer, 'bert-base-uncased', 768)
+#     trainer = Trainer(exp)
+#     trainer.fit(model)

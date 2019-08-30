@@ -4,6 +4,8 @@ from io import BytesIO
 from zipfile import ZipFile
 import requests
 import json
+import torch
+import numpy as np
 from loguru import logger
 from collections import namedtuple
 from pprint import pprint
@@ -11,12 +13,11 @@ from pytorch_transformers.tokenization_utils import PreTrainedTokenizer
 from torch.utils.data import Dataset
 import os
 
-
 TASKS = {
     'anli': {
         'url': 'https://storage.googleapis.com/ai2-mosaic/public/alphanli/alphanli-train-dev.zip',
         'type': 'classification',
-        'classes': 1,  # Boolean value for each of the two hypotheses
+        'classes': 2,  # Boolean value for each of the two hypotheses
         'contains': ['story_id', 'obs1', 'obs2', 'hyp1', 'hyp2'],
         'formula': 'obs1 + obs2 => hyp1|hyp2',
         'start': 1,
@@ -30,7 +31,7 @@ TASKS = {
     'hellaswag': {
         'url': 'https://storage.googleapis.com/ai2-mosaic/public/hellaswag/hellaswag-train-dev.zip',
         'type': 'classification',
-        'classes': 1,  # Boolean value for each of the four choices
+        'classes': 4,  # Boolean value for each of the four choices
         'contains': ['ind', 'id', 'activity_label', 'ctx', 'ctx_a', 'ctx_b', 'dataset', 'ending_options'],
         'formula': 'ctx => ending_options',
         'start': 0,
@@ -44,7 +45,7 @@ TASKS = {
     'physicaliqa': {
         'url': 'https://storage.googleapis.com/ai2-mosaic/public/physicaliqa/physicaliqa-train-dev.zip',
         'type': 'classification',
-        'classes': 1,  # Boolean value for each of the two solutions
+        'classes': 2,  # Boolean value for each of the two solutions
         'contains': ['goal', 'sol1', 'sol2'],
         'formula': 'goal => sol1|sol2',
         'start': 0,
@@ -54,12 +55,11 @@ TASKS = {
             'dev_x': 'physicaliqa-train-dev/dev.jsonl',
             'dev_y': 'physicaliqa-train-dev/dev-labels.lst'
         }
-
     },
     'socialiqa': {
         'url': 'https://storage.googleapis.com/ai2-mosaic/public/socialiqa/socialiqa-train-dev.zip',
         'type': 'classification',
-        'classes': 1,  # Boolean value for each of the three answers
+        'classes': 3,  # Boolean value for each of the three answers
         'contains': ['context', 'question', 'answerA', 'answerB', 'answerC'],
         'formula': 'context + question => answerA|answerB|answerC',
         'start': 1,
@@ -72,7 +72,8 @@ TASKS = {
     }
 }
 
-Example = namedtuple('Example', ['left', 'right', 'label'])
+Sample = namedtuple('Sample', ['premise', 'choice'])
+Example = namedtuple('Example', ['samples', 'label'])
 
 
 @dataclass
@@ -82,16 +83,21 @@ class AI2Preprocessor:
 
     def download(self):
 
+        # Caching datasets
         if not os.path.exists('./.cache/'):
             os.mkdir("./.cache/")
 
-        if not os.path.exists(f"./.cache/{self.config['url'].rsplit('/', 1)[-1]}"):
+        filename = self.config['url'].rsplit('/', 1)[-1]
+
+        if not os.path.exists(f"./.cache/{filename}"):
             request = requests.get(self.config['url'])
-            with open(f"./.cache/{self.config['url'].rsplit('/', 1)[-1]}", "wb") as output:
+            with open(f"./.cache/{filename}", "wb") as output:
                 output.write(request.content)
-        with open(f"./.cache/{self.config['url'].rsplit('/', 1)[-1]}", "rb") as input_file:
+
+        with open(f"./.cache/{filename}", "rb") as input_file:
             zipped_file = ZipFile(BytesIO(input_file.read()))
 
+        # Load examples and labels
         exp = set(self.config['format'].values())
         found = set(f for f in zipped_file.namelist() if (f.endswith('jsonl') or f.endswith('lst')) and (not f.startswith('__')))
         assert exp == found, f'Dismatched files in downloaded file, looking for {exp} in {found}'
@@ -106,25 +112,30 @@ class AI2Preprocessor:
 
     def preprocess(self, input_x, input_y):
 
-        left, right = self.parse_formula(self.config['formula'])
+        premise_keys, choice_keys = self.parse_formula(self.config['formula'])
+
         examples = []
 
-        for input_json, label in zip(input_x, input_y):
-            question = ' '.join(input_json[x] for x in left)
-            choices = input_json[right[0]] if len(right) == 1 else [input_json[x] for x in right]
+        for input_json, correct_choice in zip(input_x, input_y):
 
-            for i, choice in enumerate(choices):
-                if i == int(label) - self.config['start']:
-                    examples.append(Example(question, choice, 1))
-                else:
-                    examples.append(Example(question, choice, 0))
+            premise = ' '.join(input_json[x] for x in premise_keys)
+            choices = input_json[choice_keys[0]] if len(choice_keys) == 1 else [input_json[x] for x in choice_keys]
+
+            label = int(correct_choice) - self.config['start']
+            samples = []
+
+            for choice in choices:
+                sample = Sample(premise, choice)
+                samples.append(sample)
+
+            examples.append(Example(samples, label))
 
         return examples
 
     @staticmethod
     def parse_formula(formula):
-        left, right = list(map(lambda x: x.strip(), formula.split('=>', 1)))
-        return list(map(lambda x: x.strip(), left.split('+'))), list(map(lambda x: x.strip(), right.split('|')))
+        premise_keys, choice_keys = list(map(lambda x: x.strip(), formula.split('=>', 1)))
+        return list(map(lambda x: x.strip(), premise_keys.split('+'))), list(map(lambda x: x.strip(), choice_keys.split('|')))
 
 
 @dataclass
@@ -132,15 +143,38 @@ class AI2Dataset(Dataset):
 
     x: List
     tokenizer: PreTrainedTokenizer
+    padding_index: int
 
     def __len__(self):
         return len(self.x)
 
     def __getitem__(self, idx):
-        left, right, label = self.x[idx].left, self.x[idx].right, self.x[idx].label
+        samples, label = self.x[idx].samples, self.x[idx].label
+        samples = list(map(self.sample2tensor, samples))
+        x = torch.zeros((len(samples), max(map(len, samples)))) + self.padding_index
+        for i in range(len(samples)):
+            x[i, :len(samples[i])] = torch.from_numpy(np.asarray(samples[i]))
+
         sample = {
-            'x': self.tokenizer.convert_tokens_to_ids(self.tokenizer.tokenize(left) + ['[SEP]'] + self.tokenizer.tokenize(right) + ['[SEP]']),
-            'y': label
+            'x': x,  # [C, S]
+            'y': torch.tensor(label, requires_grad=False).long(),  # [C]
         }
-        # print(self.tokenizer.tokenize(left) + ['[SEP]'] + self.tokenizer.tokenize(right) + ['[SEP]'])
         return sample
+
+    def sample2tensor(self, sample):
+        return self.tokenizer.convert_tokens_to_ids(
+            [self.tokenizer.cls_token] +
+            self.tokenizer.tokenize(sample.premise) +
+            [self.tokenizer.sep_token] +
+            self.tokenizer.tokenize(sample.choice) +
+            [self.tokenizer.sep_token])
+
+
+# if __name__ == "__main__":
+#     from pytorch_transformers import *
+#     from pprint import pprint
+#     tokenizer = BertTokenizer.from_pretrained('bert-base-cased', cache_dir='./.cache', do_lower_case=False)
+#     preprocessor = AI2Preprocessor(TASKS['anli'])
+#     train_x, train_y, dev_x, dev_y = preprocessor.download()
+#     examples = preprocessor.preprocess(train_x, train_y)
+#     pprint(examples[0])
