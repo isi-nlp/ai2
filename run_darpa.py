@@ -65,7 +65,7 @@ if __name__ == "__main__":
                       val_check_interval=1.0,
                       log_save_interval=100,
                       add_log_row_interval=10,
-                      distributed_backend='ddp',
+                      distributed_backend='dp',
                       use_amp=False,
                       print_nan_grads=False,
                       print_weights_summary=False,
