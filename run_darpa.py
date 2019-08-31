@@ -19,6 +19,15 @@ MODELS = {
     'roberta': RobertaModel,
     'xlm': XLMModel
 }
+CONFIGS = {
+    'bert': BertConfig,
+    'gpt': OpenAIGPTConfig,
+    'transformerxl': TransfoXLConfig,
+    'gpt2': GPT2Config,
+    'xlnet': XLNetConfig,
+    'roberta': RobertaConfig,
+    'xlm': XLMConfig
+}
 
 TOKENIZERS = {
     'bert': BertTokenizer,
@@ -38,7 +47,8 @@ if __name__ == "__main__":
     parser.add_argument('--tokenizer_type', choices=TOKENIZERS, help='Tokenizer type', required=True)
     parser.add_argument('--model_weight', help='Model weight from huggingface', required=True)
     parser.add_argument('--tokenizer_weight', help='Pretrained tokenizer from huggingface', required=True)
-    parser.add_argument('--d_model', type=int, help='Hidden dimension of the model')
+    parser.add_argument('--config_type', choices=CONFIGS, help='Model configuration type', required=True)
+    parser.add_argument('--config_weight', help='Predefined configuration', required=True)
     parser.add_argument('--batch_size', type=int, help='Batch size')
 
     args = parser.parse_args()
@@ -51,7 +61,8 @@ if __name__ == "__main__":
                        model_path=args.model_weight,
                        tokenizer_class=TOKENIZERS[args.tokenizer_type],
                        tokenizer_path=args.tokenizer_weight,
-                       d_model=args.d_model,
+                       config_class=CONFIGS[args.config_type],
+                       config_path=args.config_weight,
                        batch_size=args.batch_size)
     trainer = Trainer(exp,
                       early_stop_callback=EarlyStopping(monitor='val_f1', patience=10, mode='max'),
