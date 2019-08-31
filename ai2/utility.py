@@ -86,7 +86,7 @@ class AI2DatasetHelper:
         for raw_example, raw_label in zip(input_x, input_y):
 
             choices = raw_example[choice_keys[0]] if len(choice_keys) == 1 else [raw_example[choice_key] for choice_key in choice_keys]
-            premise = ' '.join(raw_example.get(premise_key, "") for premise_key in premise_keys)
+            premise = ' '.join(raw_example[premise_key] for premise_key in premise_keys)
 
             examples.append(
                 Example(

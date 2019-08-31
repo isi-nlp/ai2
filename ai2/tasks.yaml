@@ -29,7 +29,7 @@ hellaswag:
     - ctx_b
     - dataset
     - ending_options
-  formula: cxt => ending_options
+  formula: ctx => ending_options
   format:
     train_x: hellaswag-train-dev/train.jsonl
     train_y: hellaswag-train-dev/train-labels.lst
