@@ -1,6 +1,6 @@
 import argparse
 import torch
-from ai2.utils import TASKS
+from ai2.utility import load_config
 from pytorch_lightning import Trainer
 from test_tube import Experiment
 from pytorch_transformers import *
@@ -43,13 +43,20 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    TASK = load_config("ai2/tasks.yaml", args.task)
+
     exp = Experiment(save_dir='./output', name=f"{args.task}-{args.model_weight}")
-    model = Classifier(TASKS[args.task], MODELS[args.model_type], args.model_weight,
-                       TOKENIZERS[args.tokenizer_type], args.tokenizer_weight, args.d_model, batch_size=args.batch_size)
+    model = Classifier(config=TASK,
+                       model_class=MODELS[args.model_type],
+                       model_path=args.model_weight,
+                       tokenizer_class=TOKENIZERS[args.tokenizer_type],
+                       tokenizer_path=args.tokenizer_weight,
+                       d_model=args.d_model,
+                       batch_size=args.batch_size)
     trainer = Trainer(exp,
                       early_stop_callback=EarlyStopping(monitor='val_f1', patience=10, mode='max'),
                       checkpoint_callback=ModelCheckpoint(filepath='./models', monitor='val_f1', save_best_only=True),
-                      gradient_clip=0,
+                      gradient_clip=1.0,
                       cluster=None,
                       process_position=0,
                       current_gpu_name=0,
@@ -66,8 +73,8 @@ if __name__ == "__main__":
                       train_percent_check=1.0,
                       val_percent_check=1.0,
                       test_percent_check=1.0,
-                      val_check_interval=0.05,
-                      log_save_interval=100,
+                      val_check_interval=0.01,
+                      log_save_interval=50,
                       add_log_row_interval=10,
                       distributed_backend='dp',
                       use_amp=False,

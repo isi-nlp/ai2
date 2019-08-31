@@ -1,0 +1,69 @@
+anli:
+  url: https://storage.googleapis.com/ai2-mosaic/public/alphanli/alphanli-train-dev.zip
+  type: mutilplechoice
+  classes: 2
+  start: 1
+  contains:
+    - story_id
+    - obs1
+    - obs2
+    - hyp1
+    - hyp2
+  formula: obs1 + obs2 => hyp1 | hyp2
+  format:
+    train_x: train.jsonl
+    train_y: train-labels.lst
+    dev_x: dev.jsonl
+    dev_y: dev-labels.lst
+hellaswag:
+  url: https://storage.googleapis.com/ai2-mosaic/public/hellaswag/hellaswag-train-dev.zip
+  type: mutilplechoice
+  classes: 4
+  start: 0
+  contains:
+    - ind
+    - id
+    - activity_label
+    - ctx
+    - ctx_a
+    - ctx_b
+    - dataset
+    - ending_options
+  formula: cxt => ending_options
+  format:
+    train_x: hellaswag-train-dev/train.jsonl
+    train_y: hellaswag-train-dev/train-labels.lst
+    dev_x: hellaswag-train-dev/valid.jsonl
+    dev_y: hellaswag-train-dev/valid-labels.lst
+physicaliqa:
+  url: https://storage.googleapis.com/ai2-mosaic/public/physicaliqa/physicaliqa-train-dev.zip
+  type: mutilplechoice
+  classes: 2
+  start: 0
+  contains:
+    - goal
+    - sol1
+    - sol2
+  formula: goal => sol1 | sol2
+  format:
+    train_x: physicaliqa-train-dev/train.jsonl
+    train_y: physicaliqa-train-dev/train-labels.lst
+    dev_x: physicaliqa-train-dev/dev.jsonl
+    dev_y: physicaliqa-train-dev/dev-labels.lst
+socialiqa:
+  url: https://storage.googleapis.com/ai2-mosaic/public/socialiqa/socialiqa-train-dev.zip
+  type: mutilplechoice
+  classes: 3
+  start: 1
+  contains:
+    - context
+    - question
+    - answerA
+    - answerB
+    - answerC
+  formula: context + question => answerA | answerB | answerC
+  format:
+    train_x: socialiqa-train-dev/train.jsonl
+    train_y: socialiqa-train-dev/train-labels.lst
+    dev_x: socialiqa-train-dev/dev.jsonl
+    dev_y: socialiqa-train-dev/dev-labels.lst
