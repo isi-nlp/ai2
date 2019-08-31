@@ -4,7 +4,7 @@ import numpy as np
 import pytorch_lightning as pl
 from torch.utils.data import Dataset, DataLoader
 from pytorch_transformers import *
-from .utility import AI2DatasetHelper, AI2Dataset, collate_fn
+from ai2.utility import AI2DatasetHelper, AI2Dataset, collate_fn
 from torch.nn import functional as F
 from sklearn.metrics import f1_score, accuracy_score
 from typing import *
@@ -13,24 +13,30 @@ from functools import partial
 
 class Classifier(pl.LightningModule):
 
-    def __init__(self, config: Dict, model_class: callable, model_path: str, tokenizer_class: callable, tokenizer_path: str, d_model: int, batch_size: int = 64):
+    def __init__(self, config: Dict,
+                 model_class: callable,
+                 model_path: str,
+                 tokenizer_class: callable,
+                 tokenizer_path: str,
+                 config_class: callable,
+                 config_path: str,
+                 batch_size: int = 64):
         super(Classifier, self).__init__()
 
         assert 'classes' in config, "Wrong config for Classifier, classes not found"
 
         self.config = config
-
         self.model = model_class.from_pretrained(model_path, cache_dir='./.cache')
+        self.model_config = config_class.from_pretrained(config_path, cache_dir='./.cache')
         self.model.train()
+        self.dropout = nn.Dropout(self.model_config.hidden_dropout_prob)
+        self.linear = nn.Linear(self.model_config.hidden_size, 1)
+        self.linear.weight.data.normal_(mean=0.0, std=self.model_config.initializer_range)
+        self.linear.bias.data.zero_()
         self.tokenizer = tokenizer_class.from_pretrained(tokenizer_path, cache_dir='./.cache', do_lower_case=False)
-
-        self.linear = nn.Linear(d_model, 1)
         self.loss = nn.CrossEntropyLoss(reduction='sum')
-
         self.helper = AI2DatasetHelper(self.config)
         self.train_x, self.train_y, self.dev_x, self.dev_y = self.helper.download()
-
-        self.d_model = d_model
         self.batch_size = batch_size
         self.padding_index = self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0]
 
@@ -42,9 +48,13 @@ class Classifier(pl.LightningModule):
             logits: [batch_size(B), num_choice(C)]
         """
         B, C, S = x.shape
-        output = self.model(x.reshape((-1, x.size(-1))))[1]     # [B*C, H]
-        output = output.reshape((B, C, -1))                     # [B, C, H]
-        return torch.squeeze(self.linear(output), dim=-1)       # [B, C]
+
+        pooled_output = self.model(x.reshape((B*C, S)))[1]     # [B*C, H]
+        pooled_output = self.dropout(pooled_output)
+        logits = self.linear(pooled_output)
+        reshaped_logits = logits.view(-1, C)
+
+        return reshaped_logits
 
     def training_step(self, batch, batch_nb):
         x, y = batch['x'], batch['y']
@@ -56,8 +66,6 @@ class Classifier(pl.LightningModule):
         x, y = batch['x'], batch['y']
         y_hat = self.forward(x)
         pred = y_hat.argmax(dim=-1)
-
-        # print(pred, y)
 
         return {
             'batch_loss': self.loss(y_hat, y).reshape((1, 1)),
@@ -96,17 +104,3 @@ class Classifier(pl.LightningModule):
         return DataLoader(dataset,
                           collate_fn=partial(collate_fn, padding_index=self.padding_index),
                           batch_size=self.batch_size)
-
-
-if __name__ == "__main__":
-
-    from .utility import load_config
-    from pytorch_lightning import Trainer
-    from test_tube import Experiment
-
-    exp = Experiment('./output')
-    model = Classifier(load_config(
-        "/Users/chenghaomou/Code/Code-ProjectsPyCharm/ai2/ai2/tasks.yaml",
-    ), BertModel, 'bert-base-uncased', BertTokenizer, 'bert-base-uncased', 768, 2)
-    trainer = Trainer(exp)
-    trainer.fit(model)
