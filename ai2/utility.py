@@ -119,6 +119,7 @@ class AI2Dataset(Dataset):
     tokenizer: PreTrainedTokenizer
     examples: List[Example]
     padding_index: int = None
+    max_sequence_length: int = 128
 
     def __post_init__(self):
         self.padding_index = self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0]
@@ -149,6 +150,9 @@ class AI2Dataset(Dataset):
             tokens += self.tokenizer.tokenize(pair.hypothesis) + [self.tokenizer.sep_token]
 
             token_type_ids += [1] * (len(tokens) - len(token_type_ids))
+
+            tokens = tokens[:self.max_sequence_length]
+            token_type_ids = token_type_ids[:self.max_sequence_length]
 
             input_mask.append([1] * len(tokens))
             input_token_type_ids.append(np.asarray(token_type_ids))
@@ -187,10 +191,13 @@ def pad_list(l: Union[List[np.ndarray], List[torch.Tensor]], padding_index: int)
     return placeholder
 
 
-def load_config(path: Path, name: str = 'anli') -> Dict:
+def load_config(path: Path, name: str = None) -> Dict:
 
     with open(path) as f:
-        return yaml.load(f, Loader=yaml.FullLoader)[name]
+        if name:
+            return yaml.load(f, Loader=yaml.FullLoader)[name]
+        else:
+            return yaml.load(f, Loader=yaml.FullLoader)
 
 
 def collate_fn(exmples, padding_index: int):

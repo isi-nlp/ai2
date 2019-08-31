@@ -43,12 +43,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser('Run ai2 darpa tasks with pytorch-transformers')
     parser.add_argument('--task', '-t', choices=['anli', 'hellaswag', 'physicaliqa', 'socialiqa'],
                         help='DARPA task, see https://leaderboard.allenai.org/?darpa_offset=0', required=True)
+    parser.add_argument('--train_config', help='Training config file', required=True)
     parser.add_argument('--model_type', choices=MODELS, help='Model type', required=True)
     parser.add_argument('--tokenizer_type', choices=TOKENIZERS, help='Tokenizer type', required=True)
+    parser.add_argument('--model_config_type', choices=CONFIGS, help='Model configuration type', required=True)
     parser.add_argument('--model_weight', help='Model weight from huggingface', required=True)
     parser.add_argument('--tokenizer_weight', help='Pretrained tokenizer from huggingface', required=True)
-    parser.add_argument('--config_type', choices=CONFIGS, help='Model configuration type', required=True)
-    parser.add_argument('--config_weight', help='Predefined configuration', required=True)
+    parser.add_argument('--model_config_weight', help='Predefined configuration', required=True)
     parser.add_argument('--batch_size', type=int, help='Batch size')
 
     args = parser.parse_args()
@@ -56,14 +57,14 @@ if __name__ == "__main__":
     TASK = load_config("ai2/tasks.yaml", args.task)
 
     exp = Experiment(save_dir='./output', name=f"{args.task}-{args.model_weight}")
-    model = Classifier(config=TASK,
+    model = Classifier(task_config=TASK,
+                       train_config=load_config(args.train_config),
                        model_class=MODELS[args.model_type],
                        model_path=args.model_weight,
                        tokenizer_class=TOKENIZERS[args.tokenizer_type],
                        tokenizer_path=args.tokenizer_weight,
-                       config_class=CONFIGS[args.config_type],
-                       config_path=args.config_weight,
-                       batch_size=args.batch_size)
+                       model_config_class=CONFIGS[args.model_config_type],
+                       model_config_path=args.model_config_weight)
     trainer = Trainer(exp,
                       early_stop_callback=EarlyStopping(monitor='val_f1', patience=10, mode='max'),
                       checkpoint_callback=ModelCheckpoint(filepath='./models', monitor='val_f1', save_best_only=True),
