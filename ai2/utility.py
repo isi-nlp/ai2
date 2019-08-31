@@ -134,6 +134,7 @@ class AI2Dataset(Dataset):
         input_ids = []
         input_token_type_ids = []
         input_mask = []
+        input_tokens = []
 
         for pair in example.pairs:
 
@@ -151,11 +152,19 @@ class AI2Dataset(Dataset):
 
             input_mask.append([1] * len(tokens))
             input_token_type_ids.append(np.asarray(token_type_ids))
+            input_tokens.append(tokens)
             input_ids.append(np.asarray(self.tokenizer.convert_tokens_to_ids(tokens)))
 
         input_tensor = pad_list(input_ids, self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0])
         input_token_type_ids = pad_list(input_token_type_ids, self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0])
         input_mask = pad_list(input_mask, self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0])
+
+        if index == 0:
+            # print(input_token_type_ids)
+            logger.debug(f"Example: {input_tokens[0]}")
+            logger.debug(f"X: {input_tensor[0].numpy().tolist()}")
+            logger.debug(f"token_type_ids: {input_token_type_ids[0].numpy().tolist()}")
+            logger.debug(f"attention_mask: {input_mask[0].numpy().tolist()}")
 
         return {
             'x': input_tensor.long(),
