@@ -13,31 +13,35 @@ from functools import partial
 
 class Classifier(pl.LightningModule):
 
-    def __init__(self, config: Dict,
+    def __init__(self,
+                 task_config: Dict,
+                 train_config: Dict,
                  model_class: callable,
                  model_path: str,
                  tokenizer_class: callable,
                  tokenizer_path: str,
-                 config_class: callable,
-                 config_path: str,
-                 batch_size: int = 64):
+                 model_config_class: callable,
+                 model_config_path: str):
         super(Classifier, self).__init__()
 
-        assert 'classes' in config, "Wrong config for Classifier, classes not found"
+        assert 'classes' in task_config, "Wrong config for Classifier, classes not found"
 
-        self.config = config
+        self.task_config = task_config
+        self.train_config = train_config
+
         self.model = model_class.from_pretrained(model_path, cache_dir='./.cache')
-        self.model_config = config_class.from_pretrained(config_path, cache_dir='./.cache')
+        self.model_config = model_config_class.from_pretrained(model_config_path, cache_dir='./.cache')
         self.model.train()
         self.dropout = nn.Dropout(self.model_config.hidden_dropout_prob)
         self.linear = nn.Linear(self.model_config.hidden_size, 1)
         self.linear.weight.data.normal_(mean=0.0, std=self.model_config.initializer_range)
         self.linear.bias.data.zero_()
+
         self.tokenizer = tokenizer_class.from_pretrained(tokenizer_path, cache_dir='./.cache', do_lower_case=False)
         self.loss = nn.CrossEntropyLoss(reduction='sum')
-        self.helper = AI2DatasetHelper(self.config)
+        self.helper = AI2DatasetHelper(self.task_config)
         self.train_x, self.train_y, self.dev_x, self.dev_y = self.helper.download()
-        self.batch_size = batch_size
+        self.batch_size = self.train_config['batch_size']
         self.padding_index = self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0]
 
     def forward(self, x, token_type_ids, attention_mask):
@@ -87,12 +91,13 @@ class Classifier(pl.LightningModule):
         }
 
     def configure_optimizers(self):
-        return torch.optim.AdamW(self.parameters(), lr=1e-3)
+        return torch.optim.AdamW(self.parameters(), lr=float(self.train_config['lr']))
 
     @pl.data_loader
     def tng_dataloader(self):
         # REQUIRED
-        dataset = AI2Dataset(self.tokenizer, self.helper.preprocess(self.train_x, self.train_y))
+        dataset = AI2Dataset(self.tokenizer, self.helper.preprocess(self.train_x, self.train_y),
+                             self.padding_index, self.train_config['max_sequence_length'])
         return DataLoader(dataset,
                           collate_fn=partial(collate_fn, padding_index=self.padding_index),
                           batch_size=self.batch_size)
@@ -100,7 +105,8 @@ class Classifier(pl.LightningModule):
     @pl.data_loader
     def val_dataloader(self):
         # OPTIONAL
-        dataset = AI2Dataset(self.tokenizer, self.helper.preprocess(self.dev_x, self.dev_y))
+        dataset = AI2Dataset(self.tokenizer, self.helper.preprocess(self.dev_x, self.dev_y),
+                             self.padding_index, self.train_config['max_sequence_length'])
         return DataLoader(dataset,
                           collate_fn=partial(collate_fn, padding_index=self.padding_index),
                           batch_size=self.batch_size)
