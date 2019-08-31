@@ -40,16 +40,16 @@ class Classifier(pl.LightningModule):
         self.batch_size = batch_size
         self.padding_index = self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0]
 
-    def forward(self, x):
+    def forward(self, x, token_type_ids, attention_mask):
         """
         Inputs:
             x: [batch_size(B), num_choice(C), squence_length(S)]
-        Output: 
+        Output:
             logits: [batch_size(B), num_choice(C)]
         """
         B, C, S = x.shape
 
-        pooled_output = self.model(x.reshape((B*C, S)))[1]     # [B*C, H]
+        pooled_output = self.model(x.reshape((B*C, S)), token_type_ids.reshape((B*C, S)), attention_mask.reshape((B*C, S)))[1]     # [B*C, H]
         pooled_output = self.dropout(pooled_output)
         logits = self.linear(pooled_output)
         reshaped_logits = logits.view(-1, C)
@@ -57,14 +57,14 @@ class Classifier(pl.LightningModule):
         return reshaped_logits
 
     def training_step(self, batch, batch_nb):
-        x, y = batch['x'], batch['y']
-        y_hat = self.forward(x)                 # [B, C]
+        x, y, token_type_ids, attention_mask = batch['x'], batch['y'], batch['token_type_ids'], batch['attention_mask']
+        y_hat = self.forward(x, token_type_ids, attention_mask)                 # [B, C]
         return {'loss': self.loss(y_hat, y)}
 
     def validation_step(self, batch, batch_nb):
 
-        x, y = batch['x'], batch['y']
-        y_hat = self.forward(x)
+        x, y, token_type_ids, attention_mask = batch['x'], batch['y'], batch['token_type_ids'], batch['attention_mask']
+        y_hat = self.forward(x, token_type_ids, attention_mask)
         pred = y_hat.argmax(dim=-1)
 
         return {

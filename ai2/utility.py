@@ -122,6 +122,7 @@ class AI2Dataset(Dataset):
 
     def __post_init__(self):
         self.padding_index = self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0]
+        logger.info(f'Padding index: {self.padding_index}')
 
     def __len__(self):
         return len(self.examples)
@@ -131,20 +132,35 @@ class AI2Dataset(Dataset):
         example = self.examples[index]
 
         input_ids = []
+        input_token_type_ids = []
+        input_mask = []
 
         for pair in example.pairs:
 
-            # [CLS] TOK TOK ... [SEP] TOK TOK ... [SEP]
+            # [CLS] TOK TOK ... [SEP] TOK TOK ... [SEP] [PAD] ...
+            # 0     0   0   ... 0     1   1   ... 1     PAD   ...
+            # 1     1   1   ... 1     1   1   ... 1     0     0
 
-            tokens = [self.tokenizer.cls_token] + self.tokenizer.tokenize(pair.premise) +  \
-                [self.tokenizer.sep_token] + self.tokenizer.tokenize(pair.hypothesis) + [self.tokenizer.sep_token]
+            tokens = [self.tokenizer.cls_token] + self.tokenizer.tokenize(pair.premise) + [self.tokenizer.sep_token]
 
+            token_type_ids = [0] * len(tokens)
+
+            tokens += self.tokenizer.tokenize(pair.hypothesis) + [self.tokenizer.sep_token]
+
+            token_type_ids += [1] * (len(tokens) - len(token_type_ids))
+
+            input_mask.append([1] * len(tokens))
+            input_token_type_ids.append(np.asarray(token_type_ids))
             input_ids.append(np.asarray(self.tokenizer.convert_tokens_to_ids(tokens)))
 
         input_tensor = pad_list(input_ids, self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0])
+        input_token_type_ids = pad_list(input_token_type_ids, self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0])
+        input_mask = pad_list(input_mask, self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0])
 
         return {
             'x': input_tensor.long(),
+            'token_type_ids': input_token_type_ids,
+            'attention_mask': input_mask,
             'y': torch.tensor(example.label).reshape((1,)).long()
         }
 
@@ -172,6 +188,8 @@ def collate_fn(exmples, padding_index: int):
 
     return {
         'x': pad_list([x['x'] for x in exmples], padding_index),
+        'token_type_ids': pad_list([x['token_type_ids'] for x in exmples], padding_index),
+        'attention_mask': pad_list([x['attention_mask'] for x in exmples], padding_index),
         'y': pad_list([x['y'] for x in exmples], padding_index).reshape(-1)
     }
 
