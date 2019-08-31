@@ -75,7 +75,7 @@ class Classifier(pl.LightningModule):
             'batch_loss': self.loss(y_hat, y).reshape((1, 1)),
             'batch_acc': ((pred == y).sum()/y_hat.size(0)).reshape((1, 1)),
             'batch_f1': torch.tensor(f1_score(y.reshape(-1).cpu().detach().numpy().tolist(),
-                                              pred.cpu().detach().numpy().tolist()),
+                                              pred.cpu().detach().numpy().tolist(), average='micro'),
                                      requires_grad=False).to(x.device).reshape((1, 1)),
             'truth': y,
             'pred': pred}
@@ -87,7 +87,7 @@ class Classifier(pl.LightningModule):
 
         return {
             'val_acc': accuracy_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist()),
-            'val_f1': f1_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist())
+            'val_f1': f1_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist(), average='micro')
         }
 
     def configure_optimizers(self):
