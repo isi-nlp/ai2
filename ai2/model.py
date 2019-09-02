@@ -75,7 +75,9 @@ class Classifier(pl.LightningModule):
         self.helper = AI2DatasetHelper(self.task_config)
         self.train_x, self.train_y, self.dev_x, self.dev_y = self.helper.download()
         self.batch_size = self.train_config['batch_size']
-        self.padding_index = self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0]
+        self.padding_index = self.tokenizer.convert_tokens_to_ids(
+            [self.tokenizer._pad_token if self.tokenizer._pad_token is not None else '<PAD>'])[0]
+        self.index = 1 if 'bert' in self.model_class.__class__.__name__ else 0
 
     def forward(self, x, token_type_ids, attention_mask):
         """
@@ -86,7 +88,8 @@ class Classifier(pl.LightningModule):
         """
         B, C, S = x.shape
 
-        pooled_output = self.model(x.reshape((B*C, S)), token_type_ids.reshape((B*C, S)), attention_mask.reshape((B*C, S)))[1]     # [B*C, H]
+        pooled_output = self.model(x.reshape((B*C, S)), token_type_ids.reshape((B*C, S)), attention_mask.reshape((B*C, S)))[self.index]    # [B*C, H]
+        pooled_output =
         pooled_output = self.dropout(pooled_output)
         logits = self.linear(pooled_output)
         reshaped_logits = logits.view(-1, C)
