@@ -26,7 +26,7 @@ One of the four tasks from ai2 leaderboards:
 
 1. `anli`: _Abductive Natural Language Inference (aNLI)_
 2. `hellaswag`: _HellaSwag: Can a Machine Really Finish Your Sentence?_
-3. `pyhsicaliqa`: _Physical IQa: Physical Interaction QA_
+3. `physicaliqa`: _Physical IQa: Physical Interaction QA_
 4. `socialiqa`: _Social IQA: Social Interaction QA_
 
 ### 1.2 Model/Tokenizer/Weight type
