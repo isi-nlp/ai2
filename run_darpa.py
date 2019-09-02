@@ -73,7 +73,7 @@ if __name__ == "__main__":
                           filepath=f'./{args.task}-{args.model_weight}-models', monitor='val_f1', save_best_only=True),
                       gradient_clip=1.0, cluster=None, process_position=0, current_gpu_name=0, nb_gpu_nodes=1,
                       gpus=[i for i in range(torch.cuda.device_count())],
-                      show_progress_bar=True, overfit_pct=0.0, track_grad_norm=-1, check_val_every_n_epoch=1, fast_dev_run=True,
+                      show_progress_bar=True, overfit_pct=0.0, track_grad_norm=-1, check_val_every_n_epoch=1, fast_dev_run=False,
                       accumulate_grad_batches=1, max_nb_epochs=load_config(args.train_config)['max_epochs'],
                       min_nb_epochs=1, train_percent_check=1.0, val_percent_check=1.0, test_percent_check=1.0, val_check_interval=0.1,
                       log_save_interval=10, add_log_row_interval=10, distributed_backend='dp', use_amp=False, print_nan_grads=False,
