@@ -32,9 +32,42 @@ class Classifier(pl.LightningModule):
         self.model = model_class.from_pretrained(model_path, cache_dir='./.cache')
         self.model_config = model_config_class.from_pretrained(model_config_path, cache_dir='./.cache')
         self.model.train()
-        self.dropout = nn.Dropout(self.model_config.hidden_dropout_prob)
-        self.linear = nn.Linear(self.model_config.hidden_size, 1)
-        self.linear.weight.data.normal_(mean=0.0, std=self.model_config.initializer_range)
+
+        dropout = self.model_config.__dict__.get(
+            'hidden_dropout_prob',
+            self.model_config..__dict__.get(
+                'resid_pdrop',
+                self.model_config..__dict__.get(
+                    'dropout',
+                    0.1
+                )
+            )
+        )
+
+        hidden_size = self.model_config.__dict__.get(
+            'hidden_size',
+            self.model_config..__dict__.get(
+                'n_embd',
+                self.model_config..__dict__.get(
+                    'd_model',
+                    None
+                )
+            )
+        )
+
+        initializer_range = self.model_config.__dict__.get(
+            'init_range',
+            self.model_config..__dict__.get(
+                'initializer_range',
+                0.02
+
+            )
+        )
+
+        self.dropout = nn.Dropout(dropout)
+        self.linear = nn.Linear(hidden_size, 1)
+        self.linear.weight.data.normal_(mean=0.0, std=initializer_range)
+
         self.linear.bias.data.zero_()
 
         self.tokenizer = tokenizer_class.from_pretrained(tokenizer_path, cache_dir='./.cache', do_lower_case=False)
