@@ -77,7 +77,7 @@ class Classifier(pl.LightningModule):
         self.batch_size = self.train_config['batch_size']
         self.padding_index = self.tokenizer.convert_tokens_to_ids(
             [self.tokenizer._pad_token if self.tokenizer._pad_token is not None else '<PAD>'])[0]
-        self.index = 1 if 'bert' in self.model_class.__class__.__name__ else 0
+        self.index = 1 if 'bert' in model_class.__class__.__name__ else 0
 
     def forward(self, x, token_type_ids, attention_mask):
         """
