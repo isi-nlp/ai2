@@ -35,9 +35,9 @@ class Classifier(pl.LightningModule):
 
         dropout = self.model_config.__dict__.get(
             'hidden_dropout_prob',
-            self.model_config..__dict__.get(
+            self.model_config.__dict__.get(
                 'resid_pdrop',
-                self.model_config..__dict__.get(
+                self.model_config.__dict__.get(
                     'dropout',
                     0.1
                 )
@@ -46,9 +46,9 @@ class Classifier(pl.LightningModule):
 
         hidden_size = self.model_config.__dict__.get(
             'hidden_size',
-            self.model_config..__dict__.get(
+            self.model_config.__dict__.get(
                 'n_embd',
-                self.model_config..__dict__.get(
+                self.model_config.__dict__.get(
                     'd_model',
                     None
                 )
@@ -57,7 +57,7 @@ class Classifier(pl.LightningModule):
 
         initializer_range = self.model_config.__dict__.get(
             'init_range',
-            self.model_config..__dict__.get(
+            self.model_config.__dict__.get(
                 'initializer_range',
                 0.02
 
