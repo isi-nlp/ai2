@@ -89,7 +89,6 @@ class Classifier(pl.LightningModule):
         B, C, S = x.shape
 
         pooled_output = self.model(x.reshape((B*C, S)), token_type_ids.reshape((B*C, S)), attention_mask.reshape((B*C, S)))[self.index]    # [B*C, H]
-        pooled_output =
         pooled_output = self.dropout(pooled_output)
         logits = self.linear(pooled_output)
         reshaped_logits = logits.view(-1, C)
