@@ -11,13 +11,13 @@ import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 MODELS = {
-    'bert': BertModel,
-    'gpt': OpenAIGPTModel,
-    'transformerxl': TransfoXLModel,
-    'gpt2': GPT2Model,
-    'xlnet': XLNetModel,
-    'roberta': RobertaModel,
-    'xlm': XLMModel
+    'bert': BertModel,  # 1
+    'gpt': OpenAIGPTModel,  # 0
+    'transformerxl': TransfoXLModel,  # 0
+    'gpt2': GPT2Model,  # 0
+    'xlnet': XLNetModel,  # 0
+    'roberta': RobertaModel,  # 1
+    'xlm': XLMModel  # 0
 }
 CONFIGS = {
     'bert': BertConfig,
@@ -68,6 +68,7 @@ if __name__ == "__main__":
                        tokenizer_path=args.tokenizer_weight,
                        model_config_class=CONFIGS[args.model_config_type],
                        model_config_path=args.model_config_weight)
+
     trainer = Trainer(exp, early_stop_callback=EarlyStopping(monitor='val_f1', patience=10, mode='max'),
                       checkpoint_callback=ModelCheckpoint(
                           filepath=f'./{args.task}-{args.model_weight}-models', monitor='val_f1', save_best_only=True),
@@ -78,4 +79,5 @@ if __name__ == "__main__":
                       min_nb_epochs=1, train_percent_check=1.0, val_percent_check=1.0, test_percent_check=1.0, val_check_interval=0.1,
                       log_save_interval=10, add_log_row_interval=10, distributed_backend='dp', use_amp=False, print_nan_grads=False,
                       print_weights_summary=False, amp_level='O2', nb_sanity_val_steps=5)
+
     trainer.fit(model)
