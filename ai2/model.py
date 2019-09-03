@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 import pytorch_lightning as pl
+import inspect
 from torch.utils.data import Dataset, DataLoader
 from pytorch_transformers import *
 from ai2.utility import AI2DatasetHelper, AI2Dataset, collate_fn
@@ -9,6 +10,20 @@ from torch.nn import functional as F
 from sklearn.metrics import f1_score, accuracy_score
 from typing import *
 from functools import partial
+from loguru import logger
+
+
+def forward(model, input_ids, token_type_ids, attention_mask):
+    """Ignore some of the inputs according to model's function signature."""
+    spec = inspect.getargspec(model.forward)
+
+    args = {'input_ids': input_ids}
+    if 'token_type_ids' in spec:
+        args['token_type_ids'] = token_type_ids
+    if 'attention_mask' in spec:
+        args['attention_mask'] = attention_mask
+
+    return model.forward(**args)
 
 
 class Classifier(pl.LightningModule):
@@ -50,7 +65,10 @@ class Classifier(pl.LightningModule):
                 'n_embd',
                 self.model_config.__dict__.get(
                     'd_model',
-                    None
+                    self.model_config.__dict__.get(
+                        'emb_dim',
+                        None
+                    )
                 )
             )
         )
@@ -64,6 +82,10 @@ class Classifier(pl.LightningModule):
             )
         )
 
+        logger.debug(f'Dropout: {dropout}')
+        logger.info(f'Hidden size: {hidden_size}')
+        logger.info(f'Initializer range: {initializer_range}')
+
         self.dropout = nn.Dropout(dropout)
         self.linear = nn.Linear(hidden_size, 1)
         self.linear.weight.data.normal_(mean=0.0, std=initializer_range)
@@ -71,21 +93,11 @@ class Classifier(pl.LightningModule):
 
         self.tokenizer = tokenizer_class.from_pretrained(tokenizer_path, cache_dir='./.cache', do_lower_case=False)
 
-        if self.tokenizer._cls_token is None:
-            self.tokenizer.add_special_tokens({'cls_token': '<cls>'})
-
-        if self.tokenizer._sep_token is None:
-            self.tokenizer.add_special_tokens({'sep_token': '<sep>'})
-
-        if self.tokenizer._pad_token is None:
-            self.tokenizer.add_special_tokens({'pad_token': '<pad>'})
-
         self.loss = nn.CrossEntropyLoss(reduction='sum')
         self.helper = AI2DatasetHelper(self.task_config)
         self.train_x, self.train_y, self.dev_x, self.dev_y = self.helper.download()
         self.batch_size = self.train_config['batch_size']
-        self.padding_index = self.tokenizer.convert_tokens_to_ids(
-            [self.tokenizer._pad_token if self.tokenizer._pad_token is not None else '<PAD>'])[0]
+
         self.index = 1 if 'bert' in model_class.__class__.__name__ else 0
 
     def forward(self, x, token_type_ids, attention_mask):
@@ -97,7 +109,12 @@ class Classifier(pl.LightningModule):
         """
         B, C, S = x.shape
 
-        pooled_output = self.model(x.reshape((B*C, S)), token_type_ids.reshape((B*C, S)), attention_mask.reshape((B*C, S)))[self.index]    # [B*C, H]
+        pooled_output = forward(self.model,
+                                input_ids=x.reshape((B*C, S)),
+                                token_type_ids=token_type_ids.reshape((B*C, S)),
+                                attention_mask=attention_mask.reshape((B*C, S)))[self.index]    # [B*C, H]
+        if len(pooled_output.shape) == 3:
+            pooled_output = pooled_output.mean(dim=1)  # [B*C, S, H] => [B*C, H]
         pooled_output = self.dropout(pooled_output)
         logits = self.linear(pooled_output)
         reshaped_logits = logits.view(-1, C)
@@ -140,17 +157,19 @@ class Classifier(pl.LightningModule):
     @pl.data_loader
     def tng_dataloader(self):
         # REQUIRED
-        dataset = AI2Dataset(self.tokenizer, self.helper.preprocess(self.train_x, self.train_y),
-                             self.padding_index, self.train_config['max_sequence_length'])
+        dataset = AI2Dataset(tokenizer=self.tokenizer,
+                             examples=self.helper.preprocess(self.train_x, self.train_y),
+                             max_sequence_length=self.train_config['max_sequence_length'])
         return DataLoader(dataset,
-                          collate_fn=partial(collate_fn, padding_index=self.padding_index),
+                          collate_fn=partial(collate_fn, padding_index=self.tokenizer.convert_tokens_to_ids([dataset.pad_token])[0]),
                           batch_size=self.batch_size)
 
     @pl.data_loader
     def val_dataloader(self):
         # OPTIONAL
-        dataset = AI2Dataset(self.tokenizer, self.helper.preprocess(self.dev_x, self.dev_y),
-                             self.padding_index, self.train_config['max_sequence_length'])
+        dataset = AI2Dataset(tokenizer=self.tokenizer,
+                             examples=self.helper.preprocess(self.dev_x, self.dev_y),
+                             max_sequence_length=self.train_config['max_sequence_length'])
         return DataLoader(dataset,
-                          collate_fn=partial(collate_fn, padding_index=self.padding_index),
+                          collate_fn=partial(collate_fn, padding_index=self.tokenizer.convert_tokens_to_ids([dataset.pad_token])[0]),
                           batch_size=self.batch_size)
