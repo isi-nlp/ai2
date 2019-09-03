@@ -1,7 +1,7 @@
 #!/bin/sh
 python=/auto/nlg-05/chengham/anaconda3/envs/py37/bin/python 
 declare -a TASKS=(anli hellaswag physicaliqa socialiqa)
-declare -a MODELS=(bert,bert-base-cased bert,bert-large-cased gpt,open-ai-gpt gpt2,gpt2 transformerxl,transfo-xl-wt103 xlnet,xlnet-base-cased xlnet,xlnet-large-cased xlm,xlm-mlm-enfr-1024 roberta,roberta-base roberta,roberta-large)
+declare -a MODELS=(bert,bert-base-cased bert,bert-large-cased gpt,openai-gpt gpt2,gpt2 transformerxl,transfo-xl-wt103 xlnet,xlnet-base-cased xlnet,xlnet-large-cased xlm,xlm-mlm-enfr-1024 roberta,roberta-base roberta,roberta-large)
 OLDIFS=$IFS;
 
 tmux set-option -g remain-on-exit on
