@@ -118,17 +118,29 @@ class AI2Dataset(Dataset):
 
     tokenizer: PreTrainedTokenizer
     examples: List[Example]
-    padding_index: int = None
+    pad_token: str = None
+    cls_token: str = None
+    sep_token: str = None
     max_sequence_length: int = 128
 
     def __post_init__(self):
-        self.padding_index = self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0]
-        logger.info(f'Padding index: {self.padding_index}')
+
+        self.pad_token = self.tokenizer.unk_token if self.tokenizer._pad_token is None else self.tokenizer.pad_token
+        logger.info(f'PAD token: {self.pad_token}')
+
+        self.cls_token = self.tokenizer.unk_token if self.tokenizer._cls_token is None else self.tokenizer.cls_token
+        logger.info(f'CLS token: {self.cls_token}')
+
+        self.sep_token = self.tokenizer.unk_token if self.tokenizer._sep_token is None else self.tokenizer.sep_token
+        logger.info(f'SEP token: {self.sep_token}')
 
     def __len__(self):
         return len(self.examples)
 
     def __getitem__(self, index):
+
+        if self.pad_token is None:
+            self.__post_init__()
 
         example = self.examples[index]
 
@@ -143,11 +155,11 @@ class AI2Dataset(Dataset):
             # 0     0   0   ... 0     1   1   ... 1     PAD   ...
             # 1     1   1   ... 1     1   1   ... 1     0     0
 
-            tokens = [self.tokenizer.cls_token] + self.tokenizer.tokenize(pair.premise) + [self.tokenizer.sep_token]
+            tokens = [self.cls_token] + self.tokenizer.tokenize(pair.premise) + [self.sep_token]
 
             token_type_ids = [0] * len(tokens)
 
-            tokens += self.tokenizer.tokenize(pair.hypothesis) + [self.tokenizer.sep_token]
+            tokens += self.tokenizer.tokenize(pair.hypothesis) + [self.sep_token]
 
             token_type_ids += [1] * (len(tokens) - len(token_type_ids))
 
@@ -155,25 +167,19 @@ class AI2Dataset(Dataset):
             token_type_ids = token_type_ids[:self.max_sequence_length]
 
             input_mask.append([1] * len(tokens))
+
             input_token_type_ids.append(np.asarray(token_type_ids))
             input_tokens.append(tokens)
             input_ids.append(np.asarray(self.tokenizer.convert_tokens_to_ids(tokens)))
 
-        input_tensor = pad_list(input_ids, self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0])
-        input_token_type_ids = pad_list(input_token_type_ids, self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0])
-        input_mask = pad_list(input_mask, self.tokenizer.convert_tokens_to_ids([self.tokenizer.pad_token])[0])
-
-        #if index == 0:
-        #    print(input_token_type_ids)
-        #    logger.debug(f"Example: {input_tokens[0]}")
-        #    logger.debug(f"X: {input_tensor[0].numpy().tolist()}")
-        #    logger.debug(f"token_type_ids: {input_token_type_ids[0].numpy().tolist()}")
-        #    logger.debug(f"attention_mask: {input_mask[0].numpy().tolist()}")
+        input_tensor = pad_list(input_ids, self.tokenizer.convert_tokens_to_ids([self.pad_token])[0])
+        input_token_type_ids = pad_list(input_token_type_ids, self.tokenizer.convert_tokens_to_ids([self.pad_token])[0])
+        input_mask = pad_list(input_mask, self.tokenizer.convert_tokens_to_ids([self.pad_token])[0])
 
         return {
             'x': input_tensor.long(),
-            'token_type_ids': input_token_type_ids,
-            'attention_mask': input_mask,
+            'token_type_ids': input_token_type_ids.long(),
+            'attention_mask': input_mask.float(),
             'y': torch.tensor(example.label).reshape((1,)).long()
         }
 
@@ -215,7 +221,7 @@ if __name__ == "__main__":
     print(pad_list([[1, 2], [2, 3, 4]], 0))
     print(pad_list([[[1], [2]], [[2, 1], [3, 4]]], 0))
 
-    config = load_config('/Users/chenghaomou/Code/Code-ProjectsPyCharm/ai2/ai2/tasks.yaml')
+    config = load_config('/Users/chenghaomou/Code/Code-ProjectsPyCharm/ai2/ai2/tasks.yaml', 'anli')
     helper = AI2DatasetHelper(config)
     train_x, train_y, dev_x, dev_y = helper.download()
     train_examples = helper.preprocess(train_x, train_y)
@@ -229,5 +235,5 @@ if __name__ == "__main__":
 
     # print(dataset[0])
 
-    batch_x, batch_y = collate_fn([dataset[0], dataset[1], dataset[4]], tokenizer.convert_tokens_to_ids([tokenizer.pad_token])[0])
-    print(batch_x.shape, batch_y.shape)
+    batch = collate_fn([dataset[0], dataset[1], dataset[4]], tokenizer.convert_tokens_to_ids([tokenizer.pad_token])[0])
+    print(batch)
