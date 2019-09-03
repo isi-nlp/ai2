@@ -78,7 +78,7 @@ if __name__ == "__main__":
                       show_progress_bar=True, overfit_pct=0.0, track_grad_norm=-1, check_val_every_n_epoch=1, fast_dev_run=args.debug,
                       accumulate_grad_batches=1, max_nb_epochs=load_config(args.train_config)['max_epochs'],
                       min_nb_epochs=0, train_percent_check=0.001 if args.debug else 1.0, val_percent_check=0.001 if args.debug else 1.0,
-                      test_percent_check=1.0, val_check_interval=0.1, log_save_interval=10, add_log_row_interval=10, distributed_backend='dp',
+                      test_percent_check=1.0, val_check_interval=0.1, log_save_interval=50, add_log_row_interval=50, distributed_backend='dp',
                       use_amp=False, print_nan_grads=False, print_weights_summary=False, amp_level='O2', nb_sanity_val_steps=2 if args.debug else 5)
 
     trainer.fit(model)
