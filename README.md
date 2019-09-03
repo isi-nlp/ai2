@@ -7,20 +7,20 @@ Framework for testing models with AI2 leaderboards, integrated with all kinds of
 ```bash
 python run_darpa.py --help
 
-python run_darpa.py                         \
-    --task anli                             \
-    --model_type bert                       \
-    --model_weight bert-base-cased          \
-    --tokenizer_type bert                   \
-    --tokenizer_weight bert-base-cased      \
-    --model_config_type bert                \
-    --model_config_weight bert-base-cased   \
+python run_darpa.py \
+    --task anli \
+    --model_type bert \
+    --model_weight bert-base-cased \
+    --tokenizer_type bert \
+    --tokenizer_weight bert-base-cased \
+    --model_config bert \
+    --model_config_weight bert-base-cased \
     --train_config ai2/base-task.yaml
 ```
 
-**If you are using HPC nodes, you should run this script first on your login node to cache the task dataset first.**
+**If you are using HPC nodes, you should run this script first (You can stop it as soon as it reaches training) on your login node to cache the task dataset first.**
 
-### 1.1 Task
+### 2 Task
 
 One of the four tasks from ai2 leaderboards:
 
@@ -29,7 +29,13 @@ One of the four tasks from ai2 leaderboards:
 3. `physicaliqa`: _Physical IQa: Physical Interaction QA_
 4. `socialiqa`: _Social IQA: Social Interaction QA_
 
-### 1.2 Model/Tokenizer/Weight type
+### 3 Task Construction
+
+Each premise and hypothesis is considered as a pair, each example is a group of pairs where only hypothesis varies. For example, an input of `{'premise': 'He is graduating this summer', 'choices'; ['He will find a job', 'He will go surfing']}` will become `[CLS] He is graduating this summer [SEP] He will find a job [SEP]` and `[CLS] He is graduating this summer [SEP] He will go surfing [SEP]`. Output probabilities of the two choices will be softmaxed along the last dimension, i.e. the sum of the probabilities of the two choices will be 1, both during training and validation.
+
+In some cases, tokenizers do not support special tokens such as `[CLS]` or `[SEP]`, it falls back to `[UNK]`.
+
+### 4 Model/Tokenizer/Weight type
 
 Seven models supported by huggingface:
 
@@ -43,6 +49,6 @@ Seven models supported by huggingface:
 
 **Model type** means one of the seven models while **model weight** means different pretrained model weight like `bert-base-cased`. The tokenizer/tokenizer_weight normally take the same type/weight. **Model config** is the huggingface's config class/weight which tells some superparameters about a model and the training settings, like batch size or learning rate. Please refer to huggingface's [repo](https://github.com/huggingface/pytorch-transformers) for more information.
 
-### 1.3 Train config
+### 5 Train config
 
 You can specify your own training config file with YAML for batch size, learning rate, max sequence length, or max epochs.
