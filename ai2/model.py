@@ -67,10 +67,19 @@ class Classifier(pl.LightningModule):
         self.dropout = nn.Dropout(dropout)
         self.linear = nn.Linear(hidden_size, 1)
         self.linear.weight.data.normal_(mean=0.0, std=initializer_range)
-
         self.linear.bias.data.zero_()
 
         self.tokenizer = tokenizer_class.from_pretrained(tokenizer_path, cache_dir='./.cache', do_lower_case=False)
+
+        if self.tokenizer._cls_token is None:
+            self.tokenizer.add_special_tokens({'cls_token': '<cls>'})
+
+        if self.tokenizer._sep_token is None:
+            self.tokenizer.add_special_tokens({'sep_token': '<sep>'})
+
+        if self.tokenizer._pad_token is None:
+            self.tokenizer.add_special_tokens({'pad_token': '<pad>'})
+
         self.loss = nn.CrossEntropyLoss(reduction='sum')
         self.helper = AI2DatasetHelper(self.task_config)
         self.train_x, self.train_y, self.dev_x, self.dev_y = self.helper.download()
