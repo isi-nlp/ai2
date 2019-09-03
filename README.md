@@ -31,7 +31,13 @@ One of the four tasks from ai2 leaderboards:
 
 ### 3 Task Construction
 
-Each premise and hypothesis is considered as a pair, each example is a group of pairs where only hypothesis varies. For example, an input of `{'premise': 'He is graduating this summer', 'choices'; ['He will find a job', 'He will go surfing']}` will become `[CLS] He is graduating this summer [SEP] He will find a job [SEP]` and `[CLS] He is graduating this summer [SEP] He will go surfing [SEP]`. Output probabilities of the two choices will be softmaxed along the last dimension, i.e. the sum of the probabilities of the two choices will be 1, both during training and validation.
+Each premise and hypothesis is considered as a pair, each example is a group of pairs where only hypotheses vary. For example, an input of `{'premise': 'He is graduating this summer', 'choices'; ['He will find a job', 'He will go surfing']}` will become `[CLS] He is graduating this summer [SEP] He will find a job [SEP]` and `[CLS] He is graduating this summer [SEP] He will go surfing [SEP]`. Output probabilities of the two choices will be softmaxed along the last dimension, i.e. the sum of the probabilities of the two choices will be 1, both during training and validation.
+
+A simple matrix transformation can represent this framework:
+
+$[B, C, S] \to [B, C, S, H] \to [B, C, H] \to [B, C]$
+
+Where B is the batch size, C is the number of choice, S is the sequence length, and H is the hidden size.
 
 In some cases, tokenizers do not support special tokens such as `[CLS]` or `[SEP]`, it falls back to `[UNK]`.
 
@@ -52,3 +58,4 @@ Seven models supported by huggingface:
 ### 5 Train config
 
 You can specify your own training config file with YAML for batch size, learning rate, max sequence length, or max epochs.
+Default parameters are batch size 32, learning rate 2e-5, max sequence length 128, and max epochs 3.
