@@ -1,10 +1,12 @@
 import argparse
 import warnings
 import torch
+from tqdm import tqdm
 from argparse import Namespace
 from ai2.utility import load_config
 from ai2.model import Classifier
 from run_darpa import MODELS, CONFIGS, TOKENIZERS
+from loguru import logger
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -18,8 +20,8 @@ def load_from_metrics(base, weights_path, on_gpu, map_location=None, **kargs):
     :param map_location: dic for mapping storage {'cuda:1':'cuda:0'}
     :return:
     """
-    hparams = Namespace(**kargs)
-    hparams.__setattr__('on_gpu', on_gpu)
+    # hparams = Namespace(**kargs)
+    # hparams.__setattr__('on_gpu', on_gpu)
 
     if on_gpu:
         if map_location is not None:
@@ -30,7 +32,9 @@ def load_from_metrics(base, weights_path, on_gpu, map_location=None, **kargs):
         checkpoint = torch.load(weights_path, map_location=lambda storage, loc: storage)
 
     # load the state_dict on the model automatically
-    model = base(hparams)
+    # print(hparams)
+    model = base(**kargs)
+    model.__setattr__('on_gpu', on_gpu)
     model.load_state_dict(checkpoint['state_dict'])
 
     # give model a chance to load something
@@ -81,21 +85,21 @@ if __name__ == "__main__":
     pretrained_model.eval()
     pretrained_model.freeze()
 
-    dataloader = pretrained_model.val_dataloader()
+    dataloader = pretrained_model.val_dataloader
 
     outputs = []
 
-    for i, batch in enumerate(dataloader):
+    for i, batch in tqdm(enumerate(dataloader), total=len(dataloader)):
         res = pretrained_model.validation_step(batch, i)
         outputs.append(res)
 
     truth = torch.cat([x['truth'] for x in outputs], dim=0).reshape(-1).cpu().detach().numpy().tolist()
     pred = torch.cat([x['pred'] for x in outputs], dim=0).reshape(-1).cpu().detach().numpy().tolist()
-
-    assert truth == list(map(int, pretrained_model.dev_y))
+    # logger.info(f"{truth} {pretrained_model.dev_y} {len(truth)} {len(pretrained_model.dev_y)}")
+    assert truth == list(map(lambda x: int(x.decode("utf-8").strip('\n')) - TASK['start'], pretrained_model.dev_y))
 
     with open(args.output, "w") as output:
         output.write(f"Premise\tHypothesis\tTruth\tPrediction\n")
-        for example, p in zip(pretrained_model.helper.preprocess(pretrained_model.dev_x, pretrained_model.dev_y), pred):
+        for example, p in tqdm(zip(pretrained_model.helper.preprocess(pretrained_model.dev_x, pretrained_model.dev_y), pred)):
             for i, pair in enumerate(example.pairs):
-                output.write(f"{pair.premise}\t{pair.hypothesis}\t{exmple.label == i}\t{p == i}\n")
+                output.write(f"{pair.premise}\t{pair.hypothesis}\t{example.label == i}\t{p == i}\n")
