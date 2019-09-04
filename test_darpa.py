@@ -1,6 +1,7 @@
 import argparse
 import warnings
 import torch
+from argparse import Namespace
 from ai2.utility import load_config
 from ai2.model import Classifier
 from run_darpa import MODELS, CONFIGS, TOKENIZERS
@@ -17,7 +18,7 @@ def load_from_metrics(base, weights_path, on_gpu, map_location=None, **kargs):
     :param map_location: dic for mapping storage {'cuda:1':'cuda:0'}
     :return:
     """
-    hparams = kargs
+    hparams = Namespace(**kargs)
     hparams.__setattr__('on_gpu', on_gpu)
 
     if on_gpu:
