@@ -2,7 +2,7 @@ import argparse
 import warnings
 import torch
 from ai2.model import Classifier
-from run_darpa import TASKS, MODELS, CONFIGS, TOKENIZERS
+from run_darpa import MODELS, CONFIGS, TOKENIZERS
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
