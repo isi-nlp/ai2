@@ -81,15 +81,20 @@ if __name__ == "__main__":
         model_config_path=args.model_config_weight
     )
 
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
     # predict
     pretrained_model.eval()
     pretrained_model.freeze()
+    pretrained_model.to(device)
 
     dataloader = pretrained_model.val_dataloader
 
     outputs = []
 
     for i, batch in tqdm(enumerate(dataloader), total=len(dataloader)):
+        for key, val in batch.items():
+            batch[key] = val.to(device)
         res = pretrained_model.validation_step(batch, i)
         outputs.append(res)
 
