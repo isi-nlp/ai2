@@ -1,6 +1,7 @@
 import argparse
 import warnings
 import torch
+from ai2.utility import load_config
 from ai2.model import Classifier
 from run_darpa import MODELS, CONFIGS, TOKENIZERS
 
