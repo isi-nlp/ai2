@@ -56,6 +56,10 @@ if __name__ == "__main__":
 
     TASK = load_config("ai2/tasks.yaml", args.task)
 
+    if args.model_config_weight is None or args.model_config_type is None:
+        args.model_config_weight = args.model_weight
+        args.model_config_type = args.model_type
+
     pretrained_model = load_from_metrics(
         base=Classifier,
         weights_path=args.weights_path,
