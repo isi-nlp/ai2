@@ -53,11 +53,10 @@ if __name__ == "__main__":
                     right_on=['Premise', 'Hypothesis', 'Truth'])
 
         scores = get_difficulty(final.groupby(level=0))
-        scores = pd.DataFrame({'Premise': final.groupby(level=0).apply(lambda x: x.name).values.tolist(),
+        scores = pd.DataFrame({'Premise': final.groupby(level=1).apply(lambda x: x.name).values.tolist(),
                                'Score': scores})
         scores = scores.sort_values(by=['Score'])
         print(scores.head())
         # print(score.head())
-
         # if final is not None:
         #     final.to_csv(f"{task}-eval.tsv", sep='\t')

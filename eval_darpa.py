@@ -105,7 +105,7 @@ if __name__ == "__main__":
     assert truth == list(map(lambda x: int(x.decode("utf-8").strip('\n')) - TASK['start'], pretrained_model.dev_y))
 
     with open(args.output, "w") as output:
-        output.write(f"Premise\tHypothesis\tTruth\tPrediction\nProbability")
+        output.write(f"Premise\tHypothesis\tTruth\tPrediction\tProbability\n")
         for example, prediction, probabilities in tqdm(
             zip(pretrained_model.helper.preprocess(pretrained_model.dev_x, pretrained_model.dev_y),
                 pred, prob)):
