@@ -131,6 +131,7 @@ class Classifier(pl.LightningModule):
         x, y, token_type_ids, attention_mask = batch['x'], batch['y'], batch['token_type_ids'], batch['attention_mask']
         y_hat = self.forward(x, token_type_ids, attention_mask)
         pred = y_hat.argmax(dim=-1)
+        prob = F.softmax(y_hat, dim=-1)
 
         return {
             'batch_loss': self.loss(y_hat, y).reshape((1, 1)),
@@ -139,7 +140,8 @@ class Classifier(pl.LightningModule):
                                               pred.cpu().detach().numpy().tolist(), average='micro'),
                                      requires_grad=False).to(x.device).reshape((1, 1)),
             'truth': y,
-            'pred': pred}
+            'pred': pred,
+            'prob': prob}
 
     def validation_end(self, outputs):
 

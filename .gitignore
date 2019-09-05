@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 .vscode
 output/
+data/
+*.tsv
 *-models/
 # C extensions
 *.so

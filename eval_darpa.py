@@ -100,11 +100,14 @@ if __name__ == "__main__":
 
     truth = torch.cat([x['truth'] for x in outputs], dim=0).reshape(-1).cpu().detach().numpy().tolist()
     pred = torch.cat([x['pred'] for x in outputs], dim=0).reshape(-1).cpu().detach().numpy().tolist()
-    # logger.info(f"{truth} {pretrained_model.dev_y} {len(truth)} {len(pretrained_model.dev_y)}")
+    prob = torch.cat([x['prob'] for x in outputs], dim=0).cpu().detach().numpy().tolist()
+
     assert truth == list(map(lambda x: int(x.decode("utf-8").strip('\n')) - TASK['start'], pretrained_model.dev_y))
 
     with open(args.output, "w") as output:
-        output.write(f"Premise\tHypothesis\tTruth\tPrediction\n")
-        for example, p in tqdm(zip(pretrained_model.helper.preprocess(pretrained_model.dev_x, pretrained_model.dev_y), pred)):
-            for i, pair in enumerate(example.pairs):
-                output.write(f"{pair.premise}\t{pair.hypothesis}\t{example.label == i}\t{p == i}\n")
+        output.write(f"Premise\tHypothesis\tTruth\tPrediction\nProbability")
+        for example, prediction, probabilities in tqdm(
+            zip(pretrained_model.helper.preprocess(pretrained_model.dev_x, pretrained_model.dev_y),
+                pred, prob)):
+            for i, (pair, probability) in enumerate(zip(example.pairs, probabilities)):
+                output.write(f"{pair.premise}\t{pair.hypothesis}\t{example.label == i}\t{prediction == i}\t{probability}\n")
