@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
                     ax = sns.heatmap(df[[x for x in df.columns if x not in ['Unnamed: 0', 'Premise', 'Choices', 'Score']]], cmap="YlGnBu")
                     ax.figure.tight_layout()
-                    ax.figure.savefig(f"{task}.png")
+                    ax.figure.savefig(f"{task}.svg")
 
                     plt.clf()
 
