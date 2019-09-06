@@ -70,9 +70,10 @@ if __name__ == "__main__":
                        model_config_class=CONFIGS[args.model_config_type],
                        model_config_path=args.model_config_weight)
 
-    trainer = Trainer(exp, early_stop_callback=EarlyStopping(monitor='val_f1', patience=10, mode='max'),
+    trainer = Trainer(exp,
+                      early_stop_callback=EarlyStopping(monitor='val_f1', patience=10, mode='max'),
                       checkpoint_callback=ModelCheckpoint(
-                          filepath=f'./{args.task}-{args.model_weight}-models', monitor='val_f1', save_best_only=True),
+                          filepath=f'./{args.task}-{args.model_weight}-models', monitor='val_f1', save_best_only=False, mode='max'),
                       gradient_clip=1.0, cluster=None, process_position=0, current_gpu_name=0, nb_gpu_nodes=1,
                       gpus=[i for i in range(torch.cuda.device_count())],
                       show_progress_bar=True, overfit_pct=0.0, track_grad_norm=-1, check_val_every_n_epoch=1, fast_dev_run=args.debug,
