@@ -52,10 +52,10 @@ class AI2DatasetHelper:
         """Download both train and dev datasets."""
 
         def string(x):
-
+            choice_name = [k for k in x if k.endswith('choices')][0]
             x['question'] = ' '.join(map(str, x['question']))
-            x['answer_choices'] = [
-                ' '.join(map(str, xx)) for xx in x['answer_choices']
+            x[choice_name] = [
+                ' '.join(map(str, xx)) for xx in x[choice_name]
             ]
 
             return x

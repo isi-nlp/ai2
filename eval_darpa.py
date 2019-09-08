@@ -45,7 +45,7 @@ def load_from_metrics(base, weights_path, on_gpu, map_location=None, **kargs):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('Eval ai2 darpa tasks with pytorch-transformers')
-    parser.add_argument('--task', '-t', choices=['anli', 'hellaswag', 'physicaliqa', 'socialiqa'],
+    parser.add_argument('--task', '-t', choices=['vcrqa', 'vcrqar', 'anli', 'hellaswag', 'physicaliqa', 'socialiqa'],
                         help='DARPA task, see https://leaderboard.allenai.org/?darpa_offset=0', required=True)
 
     parser.add_argument('--train_config', help='Training config file', required=True)
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     pred = torch.cat([x['pred'] for x in outputs], dim=0).reshape(-1).cpu().detach().numpy().tolist()
     prob = torch.cat([x['prob'] for x in outputs], dim=0).cpu().detach().numpy().tolist()
 
-    assert truth == list(map(lambda x: int(x.decode("utf-8").strip('\n')) - TASK['start'], pretrained_model.dev_y))
+    assert truth == list(map(lambda x: int(x.decode("utf-8").strip('\n') if not isinstance(x, int) else x) - TASK['start'], pretrained_model.dev_y))
 
     with open(args.output, "w") as output:
         output.write(f"Premise\tHypothesis\tTruth\tPrediction\tProbability\n")

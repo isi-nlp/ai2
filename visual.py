@@ -60,6 +60,7 @@ def rank(path):
             for f in files:
                 if f'{task}-eval' in f or not f.startswith(task) or not f.endswith('.tsv'):
                     continue
+                print(os.path.join(root, f))
                 df = read_csv(os.path.join(root, f), sep='\t')
                 assert len(df) % num_choice == 0, f"{len(df)} {num_choice}"
                 df.rename(columns={'Prediction': f"{f.replace('eval.tsv', '').replace(task, '').strip('-')}",
@@ -90,30 +91,41 @@ def rank(path):
         scores = pd.DataFrame(data)
 
         scores = scores.sort_values(by=['Score'])
-        scores.to_csv(os.path.join(root, f'{task}-eval-rank.tsv'), sep='\t')
+        scores.to_csv(os.path.join(path, f'{task}-eval-rank.tsv'), sep='\t')
 
 
 if __name__ == "__main__":
-    rank('.')
-    sns.set_style("dark")
-    sns.set(rc={'axes.facecolor':'darksalmon'})
+    # rank('.')
+    # sns.set_style("darkgrid")
+    sns.set_style("white")
+    # sns.set(rc={'axes.facecolor':'white'})
 
     for task, num_choice in tqdm([('anli', 2), ('hellaswag', 4), ('physicaliqa', 2), ('socialiqa', 3)]):
         final = None
         for root, dirs, files in os.walk('.'):
             for f in files:
                 if f'{task}-eval-rank' in f:
+                    # print(os.path.join(root, f))
                     df = pd.read_csv(os.path.join(root, f), sep='\t')
                     acc = df[[x for x in df.columns if x not in ['Unnamed: 0', 'Premise', 'Choices', 'Score']]].isna().sum()
                     acc /= len(df)
                     df.rename(columns={
-                        x: f"{x}-{a*100:.2f}" for x, a in zip([x for x in df.columns if x not in ['Unnamed: 0', 'Premise', 'Choices', 'Score']], acc.values)
+                        x: f"{x} ({a*100:.2f})" for x, a in zip([x for x in df.columns if x not in ['Unnamed: 0', 'Premise', 'Choices', 'Score']], acc.values)
                     }, inplace=True)
-                    print(df.columns)
-                    ax = sns.heatmap(df[[x for x in df.columns if x not in ['Unnamed: 0', 'Premise', 'Choices', 'Score']]], cmap="YlGnBu")
+                    # print(df.columns)
+                    data = df[[x for x in df.columns if x not in ['Unnamed: 0', 'Premise', 'Choices', 'Score']]].transpose()
+                    ax = sns.heatmap(data, cmap="autumn", xticklabels=False, cbar_kws={"orientation": "horizontal"})
+                    # ax.set(xticklabels=[])
+                    ax.invert_xaxis()
+                    ax.hlines([i for i in range(data.shape[1])], linewidth=0.5, *ax.get_xlim())
+                    ax.vlines([data.columns[-1], data.columns[0]], linewidth=0.5, *ax.get_ylim())
+                    #ax.axhline(y=1, color='k',linewidth=1)
+                    #ax.axhline(y=data.shape[1], color='k',linewidth=1)
+                    #ax.axvline(x=1, color='k',linewidth=1)
+                    #ax.axvline(x=data.shape[0], color='k',linewidth=1)
                     ax.figure.tight_layout()
                     ax.figure.savefig(f"{task}.svg")
-
+                    
                     plt.clf()
 
                     # del map
