@@ -19,22 +19,22 @@ for task in "${TASKS[@]}"; do
 		if [[ "$task-$1-$2-eval" =~ "large" ]]
 		
 		then
-			if test -f "$task-$2-models/_ckpt_epoch_2.ckpt"; then
-				tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore eval_darpa.py --task $task --train_config ai2/small-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2 --weights_path $task-$2-models/_ckpt_epoch_2.ckpt --output $task-$2-eval.tsv"
-			elif test -f "$task-$2-models/_ckpt_epoch_1.ckpt"; then
-				tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore eval_darpa.py --task $task --train_config ai2/small-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2 --weights_path $task-$2-models/_ckpt_epoch_1.ckpt --output $task-$2-eval.tsv"
+			if test -f "$task-$2-models/_ckpt_epoch_4.ckpt"; then
+				tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore eval_darpa.py --task $task --train_config ai2/$task-small-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2 --weights_path $task-$2-models/_ckpt_epoch_4.ckpt --output $task-$2-eval.tsv"
+			elif test -f "$task-$2-models/_ckpt_epoch_3.ckpt"; then
+				tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore eval_darpa.py --task $task --train_config ai2/$task-small-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2 --weights_path $task-$2-models/_ckpt_epoch_3.ckpt --output $task-$2-eval.tsv"
 			else
-				tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore eval_darpa.py --task $task --train_config ai2/small-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2 --weights_path $task-$2-models/_ckpt_epoch_0.ckpt --output $task-$2-eval.tsv"
+				tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore eval_darpa.py --task $task --train_config ai2/$task-small-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2 --weights_path $task-$2-models/_ckpt_epoch_2.ckpt --output $task-$2-eval.tsv"
 			fi
 
 		
 		else
-			if test -f "$task-$2-models/_ckpt_epoch_2.ckpt"; then
-				tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore eval_darpa.py --task $task --train_config ai2/base-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2 --weights_path $task-$2-models/_ckpt_epoch_2.ckpt --output $task-$2-eval.tsv"
-			elif test -f "$task-$2-models/_ckpt_epoch_1.ckpt"; then
-                                tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore eval_darpa.py --task $task --train_config ai2/base-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2 --weights_path $task-$2-models/_ckpt_epoch_1.ckpt --output $task-$2-eval.tsv"
+			if test -f "$task-$2-models/_ckpt_epoch_4.ckpt"; then
+				tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore eval_darpa.py --task $task --train_config ai2/$task-base-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2 --weights_path $task-$2-models/_ckpt_epoch_4.ckpt --output $task-$2-eval.tsv"
+			elif test -f "$task-$2-models/_ckpt_epoch_3.ckpt"; then
+                                tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore eval_darpa.py --task $task --train_config ai2/$task-base-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2 --weights_path $task-$2-models/_ckpt_epoch_3.ckpt --output $task-$2-eval.tsv"
                         else
-                                tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore eval_darpa.py --task $task --train_config ai2/base-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2 --weights_path $task-$2-models/_ckpt_epoch_0.ckpt --output $task-$2-eval.tsv"
+                                tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore eval_darpa.py --task $task --train_config ai2/$task-base-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2 --weights_path $task-$2-models/_ckpt_epoch_2.ckpt --output $task-$2-eval.tsv"
 			fi
 		fi
 	done;

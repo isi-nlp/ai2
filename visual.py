@@ -58,10 +58,10 @@ def rank(path):
         final = None
         for root, dirs, files in os.walk(path):
             for f in files:
-                if f'{task}-eval' in f or not f.startswith(task):
+                if f'{task}-eval' in f or not f.startswith(task) or not f.endswith('.tsv'):
                     continue
                 df = read_csv(os.path.join(root, f), sep='\t')
-                assert len(df) % num_choice == 0
+                assert len(df) % num_choice == 0, f"{len(df)} {num_choice}"
                 df.rename(columns={'Prediction': f"{f.replace('eval.tsv', '').replace(task, '').strip('-')}",
                                    'Probability': f"Probability-{f.replace('eval.tsv', '').replace(task, '').strip('-')}"}, inplace=True)
                 if final is None:
@@ -94,15 +94,22 @@ def rank(path):
 
 
 if __name__ == "__main__":
-
+    rank('.')
     sns.set_style("dark")
+    sns.set(rc={'axes.facecolor':'darksalmon'})
+
     for task, num_choice in tqdm([('anli', 2), ('hellaswag', 4), ('physicaliqa', 2), ('socialiqa', 3)]):
         final = None
-        for root, dirs, files in os.walk('./data'):
+        for root, dirs, files in os.walk('.'):
             for f in files:
                 if f'{task}-eval-rank' in f:
                     df = pd.read_csv(os.path.join(root, f), sep='\t')
-
+                    acc = df[[x for x in df.columns if x not in ['Unnamed: 0', 'Premise', 'Choices', 'Score']]].isna().sum()
+                    acc /= len(df)
+                    df.rename(columns={
+                        x: f"{x}-{a*100:.2f}" for x, a in zip([x for x in df.columns if x not in ['Unnamed: 0', 'Premise', 'Choices', 'Score']], acc.values)
+                    }, inplace=True)
+                    print(df.columns)
                     ax = sns.heatmap(df[[x for x in df.columns if x not in ['Unnamed: 0', 'Premise', 'Choices', 'Score']]], cmap="YlGnBu")
                     ax.figure.tight_layout()
                     ax.figure.savefig(f"{task}.svg")
