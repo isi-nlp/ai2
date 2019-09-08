@@ -67,3 +67,27 @@ socialiqa:
     train_y: socialiqa-train-dev/train-labels.lst
     dev_x: socialiqa-train-dev/dev.jsonl
     dev_y: socialiqa-train-dev/dev-labels.lst
+vcrqa:
+  url: vcr
+  type: mutilplechoice
+  classes: 4
+  start: 0
+  label: answer_label
+  formula: question => answer_choices
+  format:
+    train_x: train-qa.jsonl
+    train_y: train-labels.lst
+    dev_x: dev-qa.jsonl
+    dev_y: dev-labels.lst
+vcrqar:
+  url: vcr
+  type: mutilplechoice
+  classes: 4
+  start: 0
+  label: rationale_label
+  formula: question => rationale_choices
+  format:
+    train_x: train-qar.jsonl
+    train_y: train-labels.lst
+    dev_x: dev-qar.jsonl
+    dev_y: dev-labels.lst

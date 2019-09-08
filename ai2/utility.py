@@ -3,40 +3,37 @@
 # Author: Chenghao Mou
 # Last updated: Aug 30, 2019
 
-import numpy as np
-import torch
-import os
-import requests
-import yaml
 import json
+import os
 from dataclasses import dataclass
-from typing import *
-from torch.utils.data import Dataset
-from sklearn.metrics import accuracy_score, f1_score
-from pathlib import Path
 from io import BytesIO
+from pathlib import Path
+from typing import *
 from zipfile import ZipFile
+
+import numpy as np
+import requests
+import torch
+import yaml
 from loguru import logger
 from pytorch_transformers.tokenization_utils import PreTrainedTokenizer
+from torch.utils.data import Dataset
 
 
 @dataclass
 class Pair:
-
     premise: str
     hypothesis: str
 
 
 @dataclass
 class Example:
-
     pairs: List[Pair]
-    label: int   # Zero-indexed true label
+    label: int  # Zero-indexed true label
 
 
 @dataclass
 class AI2DatasetHelper:
-
     config: Dict
     filename: str = None
     cache_dir: str = './.cache'
@@ -53,6 +50,19 @@ class AI2DatasetHelper:
 
     def download(self) -> Tuple[List[Dict], List[str], List[Dict], List[str]]:
         """Download both train and dev datasets."""
+
+        def string(x):
+
+            x['question'] = ' '.join(map(str, x['question']))
+            x['answer_choices'] = [
+                ' '.join(map(str, xx)) for xx in x['answer_choices']
+            ]
+
+            return x
+
+        def integer(y):
+            return int(y[self.config.label]) - self.config.start
+
         if not os.path.exists(self.cache_dir):
             os.mkdir(self.cache_dir)
         if not os.path.exists(self.cache_dir / self.filename):
@@ -60,19 +70,38 @@ class AI2DatasetHelper:
             with open(self.cache_dir / self.filename, 'wb') as output:
                 output.write(request.content)
 
-        with open(self.cache_dir / self.filename, "rb") as input_file:
-            zipped_file = ZipFile(BytesIO(input_file.read()))
+        if self.filename.endswith('tar.gz'):
+            with open(self.cache_dir / self.filename, "rb") as input_file:
+                zipped_file = ZipFile(BytesIO(input_file.read()))
 
-        # Check expected fields with actual ones.
-        expected = set(self.config['format'].values())
-        found = set(f for f in zipped_file.namelist() if f.endswith(('jsonl', 'lst')) and not f.startswith(('__', '.')))
+            # Check expected fields with actual ones.
+            expected = set(self.config['format'].values())
+            found = set(
+                f for f in zipped_file.namelist() if f.endswith(('jsonl', 'lst')) and not f.startswith(('__', '.')))
 
-        assert expected == found, f'Dismatched files in downloaded file, looking for {exp} in {found}'
+            assert expected == found, f'Dismatched files in downloaded file, looking for {expected} in {found}'
 
-        train_x = list(map(json.loads, zipped_file.open(self.config['format'].get('train_x', None)).readlines()))
-        train_y = zipped_file.open(self.config['format'].get('train_y', None)).readlines()
-        dev_x = list(map(json.loads, zipped_file.open(self.config['format'].get('dev_x', None)).readlines()))
-        dev_y = zipped_file.open(self.config['format'].get('dev_y', None)).readlines()
+            train_x = list(map(json.loads, zipped_file.open(self.config['format'].get('train_x', None)).readlines()))
+            train_y = zipped_file.open(self.config['format'].get('train_y', None)).readlines()
+            dev_x = list(map(json.loads, zipped_file.open(self.config['format'].get('dev_x', None)).readlines()))
+            dev_y = zipped_file.open(self.config['format'].get('dev_y', None)).readlines()
+        else:
+            train_x = list(map(json.loads, open(
+                self.cache_dir / self.filename / self.config['format'].get('train_x', None)).readlines()))
+            train_y = list(map(json.loads, open(
+                self.cache_dir / self.filename / self.config['format'].get('train_y', None)).readlines()))
+            dev_x = list(map(json.loads, open(
+                self.cache_dir / self.filename / self.config['format'].get('dev_x', None)).readlines()))
+            dev_y = list(map(json.loads, open(
+                self.cache_dir / self.filename / self.config['format'].get('dev_y', None)).readlines()))
+
+            # TODO
+            # hardcoded vcr preprocessing
+
+            train_x = list(map(string, train_x))
+            train_y = list(map(integer, train_y))
+            dev_x = list(map(string, dev_x))
+            dev_y = list(map(integer, dev_y))
 
         logger.info(f"""Training examples: {len(train_x)}, Dev examples: {len(dev_x)}""")
 
@@ -84,8 +113,8 @@ class AI2DatasetHelper:
         premise_keys, choice_keys = self.parse_formula()
 
         for raw_example, raw_label in zip(input_x, input_y):
-
-            choices = raw_example[choice_keys[0]] if len(choice_keys) == 1 else [raw_example[choice_key] for choice_key in choice_keys]
+            choices = raw_example[choice_keys[0]] if len(choice_keys) == 1 else [raw_example[choice_key] for choice_key
+                                                                                 in choice_keys]
             premise = ' '.join(raw_example[premise_key] for premise_key in premise_keys)
 
             examples.append(
@@ -115,7 +144,6 @@ class AI2DatasetHelper:
 
 @dataclass
 class AI2Dataset(Dataset):
-
     tokenizer: PreTrainedTokenizer
     examples: List[Example]
     pad_token: str = None
@@ -150,7 +178,6 @@ class AI2Dataset(Dataset):
         input_tokens = []
 
         for pair in example.pairs:
-
             # [CLS] TOK TOK ... [SEP] TOK TOK ... [SEP] [PAD] ...
             # 0     0   0   ... 0     1   1   ... 1     PAD   ...
             # 1     1   1   ... 1     1   1   ... 1     0     0
@@ -185,11 +212,11 @@ class AI2Dataset(Dataset):
 
 
 def pad_list(l: Union[List[np.ndarray], List[torch.Tensor]], padding_index: int) -> torch.LongTensor:
-
     l = list([np.asarray(x) if isinstance(x, list) else x for x in l])
     assert all(x.shape[:-1] == l[0].shape[:-1] for x in l), 'Mismatch dimensions for list elements!'
     *dimensions, _ = l[0].shape
-    placeholder = torch.zeros((len(l), *dimensions, max(map(lambda x: x.shape[-1], l))), requires_grad=False).long() + padding_index
+    placeholder = torch.zeros((len(l), *dimensions, max(map(lambda x: x.shape[-1], l))),
+                              requires_grad=False).long() + padding_index
 
     for i, x in enumerate(l):
         placeholder[i, ..., :x.shape[-1]] = torch.tensor(x).long() if isinstance(x, np.ndarray) else x
@@ -198,7 +225,6 @@ def pad_list(l: Union[List[np.ndarray], List[torch.Tensor]], padding_index: int)
 
 
 def load_config(path: Path, name: str = None) -> Dict:
-
     with open(path) as f:
         if name:
             return yaml.load(f, Loader=yaml.FullLoader)[name]
@@ -207,7 +233,6 @@ def load_config(path: Path, name: str = None) -> Dict:
 
 
 def collate_fn(exmples, padding_index: int):
-
     return {
         'x': pad_list([x['x'] for x in exmples], padding_index),
         'token_type_ids': pad_list([x['token_type_ids'] for x in exmples], padding_index),
@@ -217,7 +242,6 @@ def collate_fn(exmples, padding_index: int):
 
 
 if __name__ == "__main__":
-
     print(pad_list([[1, 2], [2, 3, 4]], 0))
     print(pad_list([[[1], [2]], [[2, 1], [3, 4]]], 0))
 
