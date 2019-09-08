@@ -16,8 +16,8 @@ for task in "${TASKS[@]}"; do
 		
 		tmux kill-session -t "$task-$1-$2"
 		
-		if [[ "$task-$1-$2" =~ "hellaswag-gpt2" ]]; then
-			tmux new-session -d -s "$task-$1-$2" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore run_darpa.py --task $task --train_config ai2/$task-small-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2"
+		if [[ "$task-$1-$2" =~ "gpt2" ]]; then
+			tmux new-session -d -s "$task-$1-$2" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore run_darpa.py --task $task --train_config ai2/$task-mini-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2"
 		
 		elif [[ "$task-$1-$2" =~ "large" ]]; then
 			tmux new-session -d -s "$task-$1-$2" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 $python -W ignore run_darpa.py --task $task --train_config ai2/$task-small-task.yaml --model_type $1 --tokenizer_type $1 --model_weight $2 --tokenizer_weight $2"
