@@ -61,7 +61,7 @@ class AI2DatasetHelper:
             return x
 
         def integer(y):
-            return int(y[self.config.label]) - self.config.start
+            return int(y[self.config['label']]) - self.config['start']
 
         if not os.path.exists(self.cache_dir):
             os.mkdir(self.cache_dir)
