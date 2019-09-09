@@ -35,8 +35,8 @@ if __name__ == "__main__":
 
     import argparse
     parser = argparse.ArgumentParser('Wikihow VS. ActivityNet')
-    parser.add_argument('--eval_jsonl', type='str', required=True)
-    parser.add_argument('--eval_tsv', type='str', required=True)
+    parser.add_argument('--eval_jsonl', type=str, required=True)
+    parser.add_argument('--eval_tsv', type=str, required=True)
     args = parser.parse_args()
 
     from loguru import logger
