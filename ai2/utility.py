@@ -70,7 +70,7 @@ class AI2DatasetHelper:
             with open(self.cache_dir / self.filename, 'wb') as output:
                 output.write(request.content)
 
-        if self.filename.endswith('tar.gz'):
+        if self.filename.endswith('tar.gz') or self.filename.endswith('.zip'):
             with open(self.cache_dir / self.filename, "rb") as input_file:
                 zipped_file = ZipFile(BytesIO(input_file.read()))
 
