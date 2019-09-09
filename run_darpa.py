@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     TASK = load_config("ai2/tasks.yaml", args.task)
 
-    exp = Experiment(save_dir='./output', name=f"{args.task}-{args.model_weight}-{args.train_config}")
+    exp = Experiment(save_dir='./output', name=f"{args.task}-{args.model_weight}-{args.train_config.split('/')[-1]}")
     model = Classifier(task_config=TASK,
                        train_config=load_config(args.train_config),
                        model_class=MODELS[args.model_type],
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     trainer = Trainer(exp,
                       early_stop_callback=EarlyStopping(monitor='val_f1', patience=10, mode='max'),
                       checkpoint_callback=ModelCheckpoint(
-                          filepath=f'./{args.task}-{args.model_weight}-{args.train_config}-models', monitor='val_f1', save_best_only=False,
+                          filepath=f'./{args.task}-{args.model_weight}-{args.train_config.split('/')[-1]}-models', monitor='val_f1', save_best_only=False,
                           mode='max'),
                       gradient_clip=1.0, cluster=None, process_position=0, current_gpu_name=0, nb_gpu_nodes=1,
                       gpus=[i for i in range(torch.cuda.device_count())],
