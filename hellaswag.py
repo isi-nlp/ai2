@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 from collections import Counter
+from visual import read_csv
 
 
 def source(path):
@@ -10,7 +11,7 @@ def source(path):
 
 
 def accuracy(source, eval_path):
-    df = pd.read_csv(eval_path, sep='\t', header=True)
+    df = read_csv(source)
     counter = Counter()
 
     def correct(slice):
