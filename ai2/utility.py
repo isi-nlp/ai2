@@ -10,7 +10,7 @@ from io import BytesIO
 from pathlib import Path
 from typing import *
 from zipfile import ZipFile
-
+from random import shuffle
 import numpy as np
 import requests
 import torch
@@ -150,6 +150,8 @@ class AI2Dataset(Dataset):
     cls_token: str = None
     sep_token: str = None
     max_sequence_length: int = 128
+    no_context: Boolean = False
+    shuffle_hyp: Boolean = False
 
     def __post_init__(self):
 
@@ -182,11 +184,16 @@ class AI2Dataset(Dataset):
             # 0     0   0   ... 0     1   1   ... 1     PAD   ...
             # 1     1   1   ... 1     1   1   ... 1     0     0
 
-            tokens = [self.cls_token] + self.tokenizer.tokenize(pair.premise) + [self.sep_token]
+            premise_tokens = self.tokenizer.tokenize(pair.premise) if not self.no_context else []
+            tokens = [self.cls_token] + premise_tokens + [self.sep_token]
 
             token_type_ids = [0] * len(tokens)
 
-            tokens += self.tokenizer.tokenize(pair.hypothesis) + [self.sep_token]
+            hyp_tokens = self.tokenizer.tokenize(pair.hypothesis)
+            if self.shuffle_hyp:
+                shuffle(hyp_tokens)
+
+            tokens += hyp_tokens + [self.sep_token]
 
             token_type_ids += [1] * (len(tokens) - len(token_type_ids))
 

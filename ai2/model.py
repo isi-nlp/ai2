@@ -161,7 +161,9 @@ class Classifier(pl.LightningModule):
         # REQUIRED
         dataset = AI2Dataset(tokenizer=self.tokenizer,
                              examples=self.helper.preprocess(self.train_x, self.train_y),
-                             max_sequence_length=self.train_config['max_sequence_length'])
+                             max_sequence_length=self.train_config['max_sequence_length'],
+                             no_context=self.train_config.get('no_context', False),
+                             shuffle_hyp=self.train_config.get('shuffle_hyp', False))
         return DataLoader(dataset,
                           collate_fn=partial(collate_fn, padding_index=self.tokenizer.convert_tokens_to_ids([dataset.pad_token])[0]),
                           batch_size=self.batch_size)
@@ -171,7 +173,9 @@ class Classifier(pl.LightningModule):
         # OPTIONAL
         dataset = AI2Dataset(tokenizer=self.tokenizer,
                              examples=self.helper.preprocess(self.dev_x, self.dev_y),
-                             max_sequence_length=self.train_config['max_sequence_length'])
+                             max_sequence_length=self.train_config['max_sequence_length'],
+                             no_context=self.train_config.get('no_context', False),
+                             shuffle_hyp=self.train_config.get('shuffle_hyp', False))
         return DataLoader(dataset,
                           collate_fn=partial(collate_fn, padding_index=self.tokenizer.convert_tokens_to_ids([dataset.pad_token])[0]),
                           batch_size=self.batch_size)
