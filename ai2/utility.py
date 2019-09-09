@@ -150,8 +150,8 @@ class AI2Dataset(Dataset):
     cls_token: str = None
     sep_token: str = None
     max_sequence_length: int = 128
-    no_context: Boolean = False
-    shuffle_hyp: Boolean = False
+    no_context: bool = False
+    shuffle_hyp: bool = False
 
     def __post_init__(self):
 
