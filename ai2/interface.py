@@ -192,9 +192,6 @@ class HuggingFaceTokenizerLoader(TokenizerLoader):
     def tokenize(self, text: str) -> List[str]:
         return self.tokenizer.tokenize(text)
 
-
-class ClassifierModel(ABC, LightningModule):
-
     def __init__(self, hparams):
 
         super(ClassifierModel, self).__init__()
@@ -218,7 +215,7 @@ class ClassifierModel(ABC, LightningModule):
     # ---------------------
     # TRAINING
     # ---------------------
-
+    @abc.abstractmethod
     def forward(self, **kargs):
 
         output = self.encoder.forward(**kargs)
@@ -227,16 +224,20 @@ class ClassifierModel(ABC, LightningModule):
 
         return logits
 
+    @abc.abstractmethod
     def loss(self, labels, logits):
         l = F.cross_entropy(logits, labels)
         return l
 
+    @abc.abstractmethod
     def training_step(self, data_batch, batch_i):
         pass
 
+    @abc.abstractmethod
     def validation_step(self, data_batch, batch_i):
         pass
 
+    @abc.abstractmethod
     def validation_end(self, outputs):
         pass
 
@@ -244,6 +245,7 @@ class ClassifierModel(ABC, LightningModule):
     # TRAINING SETUP
     # ---------------------
 
+    @abc.abstractmethod
     def configure_optimizers(self):
         """
         return whatever optimizers we want here
