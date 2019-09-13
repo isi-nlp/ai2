@@ -1,0 +1,20 @@
+bert:
+  bert-large-cased:
+    lr: 1e-5
+    batch_size: 8
+gpt2:
+  gpt2:
+    lr: 2e-6
+    batch_size: 4
+    max_epochs: 4
+xlnet:
+  xlnet-large-cased:
+    lr: 1e-5
+    batch_size: 8
+roberta:
+  roberta-large:
+    lr: 1e-5
+    batch_size: 8
+default:
+  max_seq_len: 128
+  max_epochs: 3
