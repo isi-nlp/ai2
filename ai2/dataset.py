@@ -195,6 +195,6 @@ if __name__ == "__main__":
 
     if args.task == 'all':
         for task in ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa', 'vcrqa', 'vcrqr']:
-            cache_dirs = download(config[task]['urls'], './cache')
+            cache_dirs = download(config[task]['urls'], args.cache_dir)
     else:
-        cache_dirs = download(config[args.task]['urls'], './cache')
+        cache_dirs = download(config[args.task]['urls'], args.cache_dir)
