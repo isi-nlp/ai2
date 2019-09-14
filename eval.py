@@ -31,11 +31,9 @@ def load_from_metrics(hparams, model_cls, weights_path, tags_csv, on_gpu, map_lo
     else:
         checkpoint = torch.load(weights_path, map_location=lambda storage, loc: storage)
 
-    # load the state_dict on the model automatically
     model = model_cls(hparams)
     model.load_state_dict(checkpoint['state_dict'])
 
-    # give model a chance to load something
     model.on_load_checkpoint(checkpoint)
 
     return model
@@ -59,7 +57,6 @@ def main(hparams):
 
 if __name__ == '__main__':
 
-    # use default args given by lightning
     root_dir = os.path.split(os.path.dirname(sys.modules['__main__'].__file__))[0]
     parent_parser = HyperOptArgumentParser(strategy='random_search', add_help=True)
     add_default_args(parent_parser, root_dir)

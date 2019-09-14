@@ -298,9 +298,9 @@ class HuggingFaceClassifier(LightningModule):
 
         runing_group.add_argument('--running_config_file', type=str, required=True)
 
-        parser.add_argument('--test_input_dir', type=str, required=False, default="/data/")
-        parser.add_argument('--output_dir', type=str, required=False, default="/results/")
-        parser.add_argument('--weights_path', type=str, required=False)
-        parser.add_argument('--tags_csv', type=str, required=False)
+        parser.add_argument('--test_input_dir', type=str, required=False, default=None)
+        parser.add_argument('--output_dir', type=str, required=False, default=None)
+        parser.add_argument('--weights_path', type=str, required=False, default=None)
+        parser.add_argument('--tags_csv', type=str, required=False, default=None)
 
         return parser

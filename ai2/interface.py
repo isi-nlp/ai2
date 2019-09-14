@@ -139,7 +139,6 @@ class HuggingFaceTokenizerLoader(TokenizerLoader):
 
     @classmethod
     def load(cls, model_type: str, model_weights: str, *args, **kargs) -> HuggingFaceTokenizerLoader:
-        print(model_type)
         assert model_type in TOKENIZERS, f"Tokenizer model type {model_type} is not recognized."
         return HuggingFaceTokenizerLoader(TOKENIZERS[model_type].from_pretrained(model_weights, *args, **kargs))
 

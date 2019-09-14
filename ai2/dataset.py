@@ -102,10 +102,7 @@ class AI2Dataset(Dataset):
 
         type_formula_mapping = list(map(int, type_formula.split(' ')))
 
-        # print(cache_dir, file_mapping)
-
         if file_mapping[x] is None:
-
             x = [f for f in glob.glob(f"{cache_dir}/*.jsonl")]
             assert len(x) == 1, f"Multiple input files found in cache_dir {x}"
             x = x[0]
