@@ -169,13 +169,12 @@ class HuggingFaceClassifier(LightningModule):
 
     def configure_optimizers(self):
 
-        optimizer = optim.Adam(self.parameters(), lr=self.hparams.learning_rate)
-        scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10)
-        return [optimizer], [scheduler]
+        optimizer = optim.AdamW(self.parameters(), lr=self.hparams.learning_rate)
+        return optimizer
 
     @pl.data_loader
     def tng_dataloader(self):
-        dataset_name = "dev"
+        dataset_name = "train"
         cache_dirs = download(self.task_config[self.hparams.task_name]['urls'], self.hparams.task_cache_dir)
         dataset = AI2Dataset.load(cache_dir=cache_dirs[0] if isinstance(cache_dirs, list) else cache_dirs,
                                   file_mapping=self.task_config[self.hparams.task_name]['file_mapping'][dataset_name],
