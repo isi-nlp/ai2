@@ -48,7 +48,7 @@ def main(hparams):
 
     model_save_path = '{}/{}'.format(f"{hparams.model_type}-{hparams.model_weight}-{hparams.task_name}-checkpoints", exp.version)
     checkpoint = ModelCheckpoint(
-        filepath=model_save_path,
+        filepath=os.path.join(curr_dir, model_save_path),
         save_best_only=True,
         verbose=True,
         monitor=hparams.model_save_monitor_value,
@@ -96,14 +96,11 @@ def main(hparams):
 
 if __name__ == '__main__':
 
-    # use default args given by lightning
     root_dir = os.path.split(os.path.dirname(sys.modules['__main__'].__file__))[0]
     parent_parser = HyperOptArgumentParser(strategy='random_search', add_help=True)
     add_default_args(parent_parser, root_dir)
 
-    # allow model to overwrite or extend args
     parser = HuggingFaceClassifier.add_model_specific_args(parent_parser)
     hyperparams = parser.parse_args()
 
-    # train model
     main(hyperparams)
