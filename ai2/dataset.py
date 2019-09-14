@@ -5,6 +5,7 @@ import io
 import json
 import os
 import zipfile
+import glob
 
 from collections import defaultdict
 from dataclasses import dataclass
@@ -101,11 +102,22 @@ class AI2Dataset(Dataset):
 
         type_formula_mapping = list(map(int, type_formula.split(' ')))
 
-        with open(os.path.join(cache_dir, file_mapping[x])) as input_file:
+        # print(cache_dir, file_mapping)
+
+        if file_mapping[x] is None:
+
+            x = [f for f in glob.glob(f"{cache_dir}/*.jsonl")]
+            assert len(x) == 1, f"Multiple input files found in cache_dir {x}"
+            x = x[0]
+        else:
+            x = os.path.join(cache_dir, file_mapping[x])
+
+        with open(x) as input_file:
             tokens = []
             token_type_ids = []
 
             for line in tqdm(input_file.readlines()):
+
                 example_raw = json.loads(line.strip('\r\n ').replace('\n', ''))
 
                 if pretokenized:
@@ -126,6 +138,7 @@ class AI2Dataset(Dataset):
                         if segment.startswith('[') and segment.endswith(']'):
                             example = [e + [getattr(preprocessor, segment.strip('[]'))] for e in example]
                             example_token_type_ids = [e + [i] for e in example_token_type_ids]
+
                         elif isinstance(example_raw[segment], str):
                             example_tokens = preprocessor.tokenize(example_raw[segment])
                             example = [e + example_tokens for e in example]
@@ -142,8 +155,8 @@ class AI2Dataset(Dataset):
                         example_token_type_ids = [e + [i for _ in t]
                                                   for t in example_tokens for e in example_token_type_ids]
 
-            tokens.extend(example)
-            token_type_ids.extend(example_token_type_ids)
+                tokens.append(example)
+                token_type_ids.append(example_token_type_ids)
 
         labels = None
         if y:
@@ -155,14 +168,15 @@ class AI2Dataset(Dataset):
                     else:
                         labels.append(int(line) - label_offset)
 
-        input_ids = [preprocessor.tokens2ids(e) for e in tokens]
-        attention_mask = [[1 for _ in e] for e in tokens]
+        input_ids = [[preprocessor.tokens2ids(ee) for ee in e] for e in tokens]
+        attention_mask = [[[1 for _ in ee] for ee in e] for e in tokens]
 
         logger.info(f"""
-            {cache_dir}
-            Average input length: {sum(map(len, tokens))//len(tokens)}
-            Maximum input length: {max(map(len, tokens))}
-            99 % of input length: {sorted(map(len, tokens))[int(len(tokens)*.99)]}
+            {x}
+            Total number of examples: {len(tokens)}
+            Average input length: {sum(map(lambda e: sum(map(len, e)), tokens))//sum(map(len, tokens))}
+            Maximum input length: {max(map(lambda e: max(map(len, e)), tokens))}
+            99 % of input length: {sorted(map(lambda e: max(map(len, e)), tokens))[int(len(tokens)*.99)]}
         """)
 
         return AI2Dataset(tokens, input_ids, token_type_ids, attention_mask, labels)
