@@ -56,8 +56,8 @@ class ModelLoader(ABC):
         Returns:
             Tuple -- Tuple of returned values of forwading.
         """
-        signature = getfullargspec(self.base.forward)
-        return self.base.forward(**{k: v for k, v in kwargs.items() if k in signature.args})
+        signature = getfullargspec(self.model.forward)
+        return self.model.forward(**{k: v for k, v in kwargs.items() if k in signature.args})
 
     @property
     def dim(self) -> int:
@@ -139,7 +139,8 @@ class HuggingFaceTokenizerLoader(TokenizerLoader):
 
     @classmethod
     def load(cls, model_type: str, model_weights: str, *args, **kargs) -> HuggingFaceTokenizerLoader:
-        assert model_type in TOKENIZERS, "Tokenizer model type is not recognized."
+        print(model_type)
+        assert model_type in TOKENIZERS, f"Tokenizer model type {model_type} is not recognized."
         return HuggingFaceTokenizerLoader(TOKENIZERS[model_type].from_pretrained(model_weights, *args, **kargs))
 
     @property
@@ -191,93 +192,3 @@ class HuggingFaceTokenizerLoader(TokenizerLoader):
 
     def tokenize(self, text: str) -> List[str]:
         return self.tokenizer.tokenize(text)
-
-    def __init__(self, hparams):
-
-        super(ClassifierModel, self).__init__()
-        self.hparams = hparams
-        self.build_model()
-
-    @abc.abstractmethod
-    def build_model(self):
-
-        raise NotImplementedError('build_model is not implemented.')
-
-        # model_params = {k: v for k, v in self.hparams.items() if k.startswith('model')}
-        # self.encoder = ModelLoader.load(**model_params)
-
-        # tokenizer_params = {k: v for k, v in self.hparams.items() if k.startswith('tokenizer')}
-        # self.tokenizer = TokenizerLoader.load(**tokenizer_params)
-
-        # self.dropout = nn.Dropout(self.hparams.dropout)
-        # self.linear = nn.Linear(self.encoder.dim, 1)
-
-    # ---------------------
-    # TRAINING
-    # ---------------------
-    @abc.abstractmethod
-    def forward(self, **kargs):
-
-        output = self.encoder.forward(**kargs)
-        logits = self.dropout(output)
-        logits = self.linear(logits)
-
-        return logits
-
-    @abc.abstractmethod
-    def loss(self, labels, logits):
-        l = F.cross_entropy(logits, labels)
-        return l
-
-    @abc.abstractmethod
-    def training_step(self, data_batch, batch_i):
-        pass
-
-    @abc.abstractmethod
-    def validation_step(self, data_batch, batch_i):
-        pass
-
-    @abc.abstractmethod
-    def validation_end(self, outputs):
-        pass
-
-    # ---------------------
-    # TRAINING SETUP
-    # ---------------------
-
-    @abc.abstractmethod
-    def configure_optimizers(self):
-        """
-        return whatever optimizers we want here
-        :return: list of optimizers
-        """
-        optimizer = optim.Adam(self.parameters(), lr=self.hparams.learning_rate)
-        scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10)
-        return [optimizer], [scheduler]
-
-    @pl.data_loader
-    def tng_dataloader(self):
-        pass
-
-    @pl.data_loader
-    def val_dataloader(self):
-        pass
-
-    @pl.data_loader
-    def test_dataloader(self):
-        pass
-
-    @staticmethod
-    def add_model_specific_args(parent_parser, root_dir):  # pragma: no cover
-        """
-        Parameters you define here will be available to your model through self.hparams
-        :param parent_parser:
-        :param root_dir:
-        :return:
-        """
-        parser = HyperOptArgumentParser(strategy=parent_parser.strategy, parents=[parent_parser])
-
-        # param overwrites
-        # parser.set_defaults(gradient_clip=5.0)
-
-        return parser

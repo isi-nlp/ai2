@@ -2,3 +2,5 @@
 .idea
 **pyc
 .DS_Store
+*-pred
+*-checkpoints

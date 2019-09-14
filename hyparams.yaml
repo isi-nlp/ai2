@@ -16,5 +16,9 @@ roberta:
     lr: 1e-5
     batch_size: 8
 default:
+  lr: 2e-5
+  dropout: 0.1
+  batch_size: 32
   max_seq_len: 128
   max_epochs: 3
+  initializer_range: 0.02
