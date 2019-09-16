@@ -16,7 +16,7 @@ def read_csv(filename, header=True, sep='\t'):
                 headers.extend(line.strip('\r\n').split(sep))
             else:
                 tmp = line.strip('\r\n').split(sep)
-                assert len(tmp) == len(headers), f"Wrong fields in {line} -> {tmp} {headers}"
+                assert len(tmp) == len(headers), f"{filename} Wrong fields in {line} -> {tmp} {headers}"
                 content.append(tmp)
 
     return pd.DataFrame(content, columns=headers)
@@ -94,16 +94,7 @@ def rank(path):
         scores.to_csv(os.path.join(path, f'{task}-eval-rank.tsv'), sep='\t')
 
 
-<<<<<<< HEAD
-if __name__ == "__main__":
-    rank('.')
-    # sns.set_style("darkgrid")
-    sns.set_style("white")
-    # sns.set(rc={'axes.facecolor':'white'})
-
-=======
 def heatmap(path):
->>>>>>> 8f9aac4d34ee898461bfeeb2e9045b96b612e8ae
     for task, num_choice in tqdm([('anli', 2), ('hellaswag', 4), ('physicaliqa', 2), ('socialiqa', 3), ('vcrqa', 4), ('vcrqar', 4)]):
         final = None
         for root, dirs, files in os.walk(path):
@@ -140,18 +131,19 @@ def merge(path):
     for task, num_choice in tqdm([('anli', 2), ('hellaswag', 4), ('physicaliqa', 2), ('socialiqa', 3), ('vcrqa', 4), ('vcrqar', 4)]):
         final = None
         for root, dirs, files in os.walk(path):
-            for f in files:
-                if f'{task}-eval' in f or not f.startswith(task) or not f.endswith('.tsv'):
+            for file in files:
+                if f'{task}-eval' in file or not file.startswith(task+'-') or not file.endswith('.tsv'):
                     continue
-                df = read_csv(os.path.join(root, f), sep='\t')
+                # print(file, f"{task}-eval" in file)
+                df = read_csv(os.path.join(root, file), sep='\t')
                 assert len(df) % num_choice == 0, f"{len(df)} {num_choice}"
-                df.rename(columns={'Prediction': f"{f.replace('eval.tsv', '').replace(task, '').strip('-')}",
-                                   'Probability': f"Probability-{f.replace('eval.tsv', '').replace(task, '').strip('-')}"}, inplace=True)
+                df.rename(columns={'Prediction': f"{file.replace('eval.tsv', '').replace(task, '').strip('-')}",
+                                   'Probability': f"Probability-{file.replace('eval.tsv', '').replace(task, '').strip('-')}"}, inplace=True)
                 if final is None:
                     final = df
                 else:
-                    final[f"{f.replace('eval.tsv', '').replace(task, '').strip('-')}"] = df[f"{f.replace('eval.tsv', '').replace(task, '').strip('-')}"]
-                    final[f"Probability-{f.replace('eval.tsv', '').replace(task, '').strip('-')}"] = df[f"Probability-{f.replace('eval.tsv', '').replace(task, '').strip('-')}"]
+                    final[f"{file.replace('eval.tsv', '').replace(task, '').strip('-')}"] = df[f"{file.replace('eval.tsv', '').replace(task, '').strip('-')}"]
+                    final[f"Probability-{file.replace('eval.tsv', '').replace(task, '').strip('-')}"] = df[f"Probability-{file.replace('eval.tsv', '').replace(task, '').strip('-')}"]
 
         final.to_csv(os.path.join(path, f'{task}-eval-proba.tsv'), sep='\t')
 
