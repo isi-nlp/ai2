@@ -101,6 +101,30 @@ class HuggingFaceClassifier(LightningModule):
             'loss': self.loss(data_batch['y'].reshape(-1), logits.reshape(B, C))
         }
 
+    # def on_epoch_end(self):
+    #     device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    #     outputs = []
+
+    #     for i, batch in tqdm(enumerate(self.tng_dataloader), total=len(self.tng_dataloader)):
+    #         for key, val in batch.items():
+    #             batch[key] = val.to(device)
+    #             outputs.append(self.validation_step(batch, i))
+
+    #     logits = torch.cat([o['logits'] for o in outputs], dim=0)
+    #     truth = torch.cat([o['truth'] for o in outputs], dim=0)
+    #     # loss = self.loss(truth.reshape(-1), logits)
+    #     proba = F.softmax(logits, dim=-1)
+    #     pred = torch.argmax(proba, dim=-1).reshape(-1)
+
+    #     with open(os.path.join(self.hparams.output_dir, "train-labels.lst"), "w") as output_file:
+    #         output_file.write("\n".join(map(str,  truth.reshape(-1).cpu().numpy().tolist())))
+
+    #     with open(os.path.join(self.hparams.output_dir, "train-predictions.lst"), "w") as output_file:
+    #         output_file.write("\n".join(map(str, (pred + self.task_config[self.hparams.task_name]['label_offset']).cpu().numpy().tolist())))
+
+    #     with open(os.path.join(self.hparams.output_dir, "train-probabilities.lst"), "w") as output_file:
+    #         output_file.write("\n".join(map(lambda l: '\t'.join(l), proba.cpu().detach().numpy().tolist())))
+
     def validation_step(self, data_batch, batch_i):
         B, C, S = data_batch['input_ids'].shape
 
@@ -137,11 +161,14 @@ class HuggingFaceClassifier(LightningModule):
         proba = F.softmax(logits, dim=-1)
         pred = torch.argmax(proba, dim=-1).reshape(-1)
 
+        with open(os.path.join(self.hparams.output_dir, "dev-labels.lst"), "w") as output_file:
+            output_file.write("\n".join(map(str,  truth.reshape(-1).cpu().numpy().tolist())))
+
         with open(os.path.join(self.hparams.output_dir, "dev-predictions.lst"), "w") as output_file:
             output_file.write("\n".join(map(str, (pred + self.task_config[self.hparams.task_name]['label_offset']).cpu().numpy().tolist())))
 
         with open(os.path.join(self.hparams.output_dir, "dev-probabilities.lst"), "w") as output_file:
-            output_file.write("\n".join(map(str, proba.cpu().detach().numpy().tolist())))
+            output_file.write("\n".join(map(lambda l: '\t'.join(l), proba.cpu().detach().numpy().tolist())))
 
         return {
             'val_loss': loss.item(),
@@ -163,7 +190,7 @@ class HuggingFaceClassifier(LightningModule):
             output_file.write("\n".join(map(str, (pred + self.task_config[self.hparams.task_name]['label_offset']).cpu().detach().numpy().tolist())))
 
         with open(os.path.join(self.hparams.output_dir, "probabilities.lst"), "w") as output_file:
-            output_file.write("\n".join(map(str, proba.cpu().detach().numpy().tolist())))
+            output_file.write("\n".join(map(lambda l: '\t'.join(l), proba.cpu().detach().numpy().tolist())))
 
         return {}
 
