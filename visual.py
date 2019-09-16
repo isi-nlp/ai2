@@ -16,7 +16,7 @@ def read_csv(filename, header=True, sep='\t'):
                 headers.extend(line.strip('\r\n').split(sep))
             else:
                 tmp = line.strip('\r\n').split(sep)
-                assert len(tmp) == len(headers), f"Wrong fields in {line} -> {tmp}"
+                assert len(tmp) == len(headers), f"Wrong fields in {line} -> {tmp} {headers}"
                 content.append(tmp)
 
     return pd.DataFrame(content, columns=headers)
