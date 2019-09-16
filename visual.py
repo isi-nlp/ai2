@@ -4,6 +4,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+from loguru import logger
 
 
 def read_csv(filename, header=True, sep='\t'):
@@ -52,6 +53,31 @@ def get_difficulty(df, num_choice):
         yield difficulty(df.iloc[i*num_choice:(i+1)*num_choice, :])
 
 
+def get_average(df, num_choice):
+
+    def average(d):
+        # print(d)
+        # exit(0)
+        assert all(d['Premise'] == d['Premise'].values.tolist()[0]), d
+        assert len(d) == num_choice, 'Wrong number of choices'
+
+        probabilities = [[] for _ in range(num_choice)]
+
+        for col in d.columns:
+            if col.startswith('Probability'):
+                probability = d[col].values.tolist()
+                for i in range(num_choice):
+                    probabilities[i].append(float(probability[i]))
+        # print(probabilities)
+        avg_probabilities = [sum(probabilities[i])/len(probabilities[i]) for i in range(num_choice)]
+        choices = [False if avg_probabilities[i] != max(avg_probabilities) else True for i in range(num_choice)]
+        # assert choices.count(True) == 1, f"Wrong choice in {choices} {avg_probabilities} {d}"
+        return choices.index(True)
+
+    for i in range(len(df)//num_choice):
+        yield average(df.iloc[i*num_choice:(i+1)*num_choice, :])
+
+
 def rank(path):
 
     for task, num_choice in tqdm([('anli', 2), ('hellaswag', 4), ('physicaliqa', 2), ('socialiqa', 3), ('vcrqa', 4), ('vcrqar', 4)]):
@@ -60,7 +86,7 @@ def rank(path):
             for f in files:
                 if f'{task}-eval' in f or not f.startswith(f"{task}-") or not f.endswith('.tsv'):
                     continue
-                print(os.path.join(root, f))
+                # print(os.path.join(root, f))
                 df = read_csv(os.path.join(root, f), sep='\t')
                 assert len(df) % num_choice == 0, f"{len(df)} {num_choice}"
                 df.rename(columns={'Prediction': f"{f.replace('eval.tsv', '').replace(task, '').strip('-')}",
@@ -148,10 +174,43 @@ def merge(path):
         final.to_csv(os.path.join(path, f'{task}-eval-proba.tsv'), sep='\t')
 
 
+def avg_pred(path):
+    for task, num_choice in tqdm([('anli', 2), ('hellaswag', 4), ('physicaliqa', 2), ('socialiqa', 3), ('vcrqa', 4), ('vcrqar', 4)]):
+
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                if f'{task}-eval-proba.tsv' in f:
+                    final = read_csv(os.path.join(root, f), sep='\t')
+                    predictions = list(get_average(final, num_choice))
+                    models = [x.replace('Probability-', '') for x in final.columns if x.startswith('Probability')]
+
+                    choices = final['Hypothesis'].values.tolist()
+                    truth = final['Truth'].values.tolist()
+                    choice_index = [[j for j, (x, t) in enumerate(zip(choices[i*num_choice: (i+1)*num_choice],
+                                                                      truth[i*num_choice: (i+1)*num_choice]
+                                                                      )) if t == "True"][0] for i in range(len(choices)//num_choice)]
+                    choices = ['\n'.join(['[Correct] ' + x if t == 'True' else x for x, t in zip(choices[i*num_choice: (i+1)*num_choice],
+                                                                                                 truth[i*num_choice: (i+1)*num_choice]
+                                                                                                 )]) for i in range(len(choices)//num_choice)]
+
+                    premises = final['Premise'].values.tolist()
+                    premises = [premises[i*num_choice: (i+1)*num_choice][0] for i in range(len(premises)//num_choice)]
+                    # print(len(premises), len(choices), len(choice_index), len(predictions))
+                    data = {'Premise': premises, 'Choices': choices, 'Answer': choice_index, 'Prediction': predictions}
+                    scores = pd.DataFrame(data)
+                    scores.to_csv(os.path.join(path, f'{task}-eval-avg-pred.tsv'), sep='\t')
+
+                    logger.debug(f"""
+                    
+                        Accuracy: {scores[scores['Answer'] == scores['Prediction']].count().values.tolist()[0]/len(scores):.4f}
+
+                    """)
+
+
 if __name__ == "__main__":
     # rank('.')
     # sns.set_style("darkgrid")
     # sns.set_style("white")
     # sns.set(rc={'axes.facecolor':'white'})
 
-    merge('.')
+    avg_pred('.')
