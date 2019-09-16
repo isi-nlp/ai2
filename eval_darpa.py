@@ -57,6 +57,7 @@ if __name__ == "__main__":
     parser.add_argument('--model_config_weight', help='Predefined configuration', required=False)
     parser.add_argument('--weights_path', help='Saved model weights file')
     parser.add_argument('--output', '-o', help='Output file')
+    parser.add_argument('--train_eval', action='store_true', default=False, help='Eval on train or not')
 
     args = parser.parse_args()
 
@@ -88,7 +89,7 @@ if __name__ == "__main__":
     pretrained_model.freeze()
     pretrained_model.to(device)
 
-    dataloader = pretrained_model.val_dataloader
+    dataloader = pretrained_model.val_dataloader if args.train_eval else pretrained_model.tng_dataloader 
 
     outputs = []
 

@@ -11,7 +11,7 @@ def read_csv(filename, header=True, sep='\t'):
     headers = []
     content = []
     with open(filename, "r") as input_file:
-        for i, line in enumerate(input_file):
+        for i, line in enumerate(input_file.readlines()):
             if i == 0:
                 headers.extend(line.strip('\r\n').split(sep))
             else:
@@ -54,11 +54,11 @@ def get_difficulty(df, num_choice):
 
 def rank(path):
 
-    for task, num_choice in tqdm([('anli', 2), ('hellaswag', 4), ('physicaliqa', 2), ('socialiqa', 3)]):
+    for task, num_choice in tqdm([('anli', 2), ('hellaswag', 4), ('physicaliqa', 2), ('socialiqa', 3), ('vcrqa', 4), ('vcrqar', 4)]):
         final = None
         for root, dirs, files in os.walk(path):
             for f in files:
-                if f'{task}-eval' in f or not f.startswith(task) or not f.endswith('.tsv'):
+                if f'{task}-eval' in f or not f.startswith(f"{task}-") or not f.endswith('.tsv'):
                     continue
                 print(os.path.join(root, f))
                 df = read_csv(os.path.join(root, f), sep='\t')
@@ -95,12 +95,12 @@ def rank(path):
 
 
 if __name__ == "__main__":
-    # rank('.')
+    rank('.')
     # sns.set_style("darkgrid")
     sns.set_style("white")
     # sns.set(rc={'axes.facecolor':'white'})
 
-    for task, num_choice in tqdm([('anli', 2), ('hellaswag', 4), ('physicaliqa', 2), ('socialiqa', 3)]):
+    for task, num_choice in tqdm([('anli', 2), ('hellaswag', 4), ('physicaliqa', 2), ('socialiqa', 3), ('vcrqa', 4), ('vcrqar', 4)]):
         final = None
         for root, dirs, files in os.walk('.'):
             for f in files:
