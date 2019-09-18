@@ -4,4 +4,5 @@
 .DS_Store
 *-pred
 *-checkpoints
+*cache
 *-log

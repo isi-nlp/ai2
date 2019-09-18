@@ -132,7 +132,7 @@ class HuggingFaceModelLoader(ModelLoader):
     @classmethod
     def load(cls, model_type: str, model_weights: str) -> HuggingFaceModelLoader:
         assert model_type in MODELS, "Model type is not recognized."
-        return HuggingFaceModelLoader(MODELS[model_type].from_pretrained(model_weights))
+        return HuggingFaceModelLoader(MODELS[model_type].from_pretrained(model_weights, cache_dir="./model_cache"))
 
 
 class HuggingFaceTokenizerLoader(TokenizerLoader):
@@ -140,7 +140,7 @@ class HuggingFaceTokenizerLoader(TokenizerLoader):
     @classmethod
     def load(cls, model_type: str, model_weights: str, *args, **kargs) -> HuggingFaceTokenizerLoader:
         assert model_type in TOKENIZERS, f"Tokenizer model type {model_type} is not recognized."
-        return HuggingFaceTokenizerLoader(TOKENIZERS[model_type].from_pretrained(model_weights, *args, **kargs))
+        return HuggingFaceTokenizerLoader(TOKENIZERS[model_type].from_pretrained(model_weights, *args, cache_dir="./model_cache", **kargs))
 
     @property
     def SEP(self) -> str:
