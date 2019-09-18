@@ -1,5 +1,4 @@
 import unittest
-from model import Classifier
 
 
 class TestClassifier(unittest.TestCase):

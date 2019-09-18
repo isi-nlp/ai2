@@ -92,10 +92,13 @@ class HuggingFaceClassifier(LightningModule):
             'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
             'attention_mask': data_batch['attention_mask'].reshape(-1, S),
         })
+        loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, C))
+        if self.trainer.use_dp:
+            loss_val = loss_val.unsqueeze(0)
 
         return {
             'logits': logits.reshape(B, C),
-            'loss': self.loss(data_batch['y'].reshape(-1), logits.reshape(B, C))
+            'loss': loss_val
         }
 
     def validation_step(self, data_batch, batch_i):
@@ -107,10 +110,14 @@ class HuggingFaceClassifier(LightningModule):
             'attention_mask': data_batch['attention_mask'].reshape(-1, S),
         })
 
+        loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, C))
+        if self.trainer.use_dp:
+            loss_val = loss_val.unsqueeze(0)
+
         return {
             'logits': logits.reshape(B, C),
             'truth': data_batch['y'],
-            'val_batch_loss': self.loss(data_batch['y'].reshape(-1), logits.reshape(B, C))
+            'val_batch_loss': loss_val
         }
 
     def test_step(self, data_batch, batch_i):
