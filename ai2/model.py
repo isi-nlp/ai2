@@ -55,9 +55,9 @@ class HuggingFaceClassifier(LightningModule):
         if not os.path.exists(self.hparams.output_dir):
             os.mkdir(self.hparams.output_dir)
 
-        self.model = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
+        self.encoder = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
         self.dropout = nn.Dropout(self.hparams.dropout)
-        self.linear = nn.Linear(self.model.dim, 1)
+        self.linear = nn.Linear(self.encoder.dim, 1)
 
         self.linear.weight.data.normal_(mean=0.0, std=self.hparams.initializer_range)
         self.linear.bias.data.zero_()
@@ -65,14 +65,13 @@ class HuggingFaceClassifier(LightningModule):
         self.tokenizer = HuggingFaceTokenizerLoader.load(
             self.hparams.tokenizer_type, self.hparams.tokenizer_weight, do_lower_case=self.hparams.do_lower_case)
 
-        logger.debug(f"Device: {next(self.model.parameters()).device}")
-
     def forward(self, input_ids, token_type_ids=None, attention_mask=None):
 
         if input_ids is not None and token_type_ids is not None and attention_mask is not None:
+            logger.debug(f"Device: {next(self.encoder.model.parameters()).device}")
             logger.debug(f"Device: {input_ids.device} {token_type_ids.device} {attention_mask.device}")
 
-        outputs = self.model.forward(
+        outputs = self.encoder.forward(
             **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
         output = torch.mean(outputs[0], dim=1).squeeze()
         logits = self.dropout(output)
