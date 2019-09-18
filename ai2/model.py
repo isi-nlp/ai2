@@ -7,6 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import yaml
 from pytorch_lightning.root_module.root_module import LightningModule
+from sklearn.metrics import accuracy_score
 from test_tube import HyperOptArgumentParser
 from torch import optim
 from torch.nn.utils.rnn import pad_sequence
@@ -109,15 +110,14 @@ class HuggingFaceClassifier(LightningModule):
             'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
             'attention_mask': data_batch['attention_mask'].reshape(-1, S),
         })
-
         loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, C))
         if self.trainer.use_dp:
             loss_val = loss_val.unsqueeze(0)
 
         return {
-            'logits': logits.reshape(B, C),
-            'truth': data_batch['y'],
-            'val_batch_loss': loss_val
+            'batch_logits': logits.reshape(B, C),
+            'batch_loss': loss_val,
+            'batch_truth': data_batch['y'].reshape(-1)
         }
 
     def test_step(self, data_batch, batch_i):
@@ -130,19 +130,21 @@ class HuggingFaceClassifier(LightningModule):
         })
 
         return {
-            'logits': logits.reshape(B, C),
+            'batch_logits': logits.reshape(B, C),
         }
 
     def validation_end(self, outputs):
+        truth = torch.cat([o['batch_truth'] for o in outputs], dim=0).reshape(-1)
+        logits = torch.cat([o['batch_logits'] for o in outputs], dim=0).reshape(len(truth),
+                                                                                outputs[0]['batch_logits'].shape[1])
 
-        logits = torch.cat([o['logits'] for o in outputs], dim=0)
-        truth = torch.cat([o['truth'] for o in outputs], dim=0)
-        loss = self.loss(truth.reshape(-1), logits)
+        loss = self.loss(truth, logits)
         proba = F.softmax(logits, dim=-1)
         pred = torch.argmax(proba, dim=-1).reshape(-1)
 
         with open(os.path.join(self.hparams.output_dir, "dev-labels.lst"), "w") as output_file:
-            output_file.write("\n".join(map(str, truth.reshape(-1).cpu().numpy().tolist())))
+            output_file.write("\n".join(map(str, (truth + self.task_config[self.hparams.task_name][
+                'label_offset']).cpu().numpy().tolist())))
 
         with open(os.path.join(self.hparams.output_dir, "dev-predictions.lst"), "w") as output_file:
             output_file.write("\n".join(
@@ -152,8 +154,8 @@ class HuggingFaceClassifier(LightningModule):
             output_file.write("\n".join(map(lambda l: '\t'.join(map(str, l)), proba.cpu().detach().numpy().tolist())))
 
         return {
-            'val_loss': loss.item(),
-            'val_acc': (pred == truth).sum() / len(truth)
+            # 'val_loss': loss.item(),
+            'val_acc': accuracy_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist()),
         }
 
     def test_end(self, outputs):
@@ -163,7 +165,7 @@ class HuggingFaceClassifier(LightningModule):
         :param outputs:
         :return: dic_with_metrics for tqdm
         """
-        logits = torch.cat([o['logits'] for o in outputs], dim=0)
+        logits = torch.cat([o['batch_logits'] for o in outputs], dim=0).reshape(-1, outputs[0]['batch_logits'].shape[1])
         proba = F.softmax(logits, dim=-1)
         pred = torch.argmax(proba, dim=-1).reshape(-1)
 
@@ -183,7 +185,7 @@ class HuggingFaceClassifier(LightningModule):
 
     @pl.data_loader
     def tng_dataloader(self):
-        dataset_name = "train"
+        dataset_name = "dev"
         cache_dirs = download(self.task_config[self.hparams.task_name]['urls'], self.hparams.task_cache_dir)
         dataset = AI2Dataset.load(cache_dir=cache_dirs[0] if isinstance(cache_dirs, list) else cache_dirs,
                                   file_mapping=self.task_config[self.hparams.task_name]['file_mapping'][dataset_name],
