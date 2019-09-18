@@ -6,7 +6,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import yaml
-from loguru import logger
 from pytorch_lightning.root_module.root_module import LightningModule
 from test_tube import HyperOptArgumentParser
 from torch import optim
@@ -56,7 +55,7 @@ class HuggingFaceClassifier(LightningModule):
             os.mkdir(self.hparams.output_dir)
 
         self.encoder = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
-        self.encoder.model.train()
+        self.encoder.train()
         self.dropout = nn.Dropout(self.hparams.dropout)
         self.linear = nn.Linear(self.encoder.dim, 1)
 
@@ -68,9 +67,9 @@ class HuggingFaceClassifier(LightningModule):
 
     def forward(self, input_ids, token_type_ids=None, attention_mask=None):
 
-        if input_ids is not None and token_type_ids is not None and attention_mask is not None:
-            logger.debug(f"Device: {next(self.encoder.model.parameters()).device}")
-            logger.debug(f"Device: {input_ids.device} {token_type_ids.device} {attention_mask.device}")
+        # if input_ids is not None and token_type_ids is not None and attention_mask is not None:
+        #     logger.debug(f"Device: {next(self.encoder.model.parameters()).device}")
+        #     logger.debug(f"Device: {input_ids.device} {token_type_ids.device} {attention_mask.device}")
 
         outputs = self.encoder.forward(
             **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})

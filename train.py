@@ -64,7 +64,7 @@ def main(hparams):
         gradient_clip=hparams.gradient_clip,
         process_position=0,
         nb_gpu_nodes=1,
-        gpus=[i for i in range(torch.cuda.device_count())],
+        gpus=[i for i in range(torch.cuda.device_count())] if torch.cuda.is_available() else None,
         show_progress_bar=True,
         overfit_pct=0.0,
         track_grad_norm=hparams.track_grad_norm,

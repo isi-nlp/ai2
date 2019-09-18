@@ -28,9 +28,11 @@ MODELS = {
 }
 
 
-@dataclass
 class ModelLoader(ABC, Module):
-    model: Union[Module, PreTrainedModel]
+
+    def __init__(self, model: Union[Module, PreTrainedModel]):
+        super(ModelLoader, self).__init__()
+        self.model = model
 
     @classmethod
     @abc.abstractmethod
@@ -114,6 +116,9 @@ class TokenizerLoader(ABC):
 
 
 class HuggingFaceModelLoader(ModelLoader):
+
+    def __init__(self, model: Union[Module, PreTrainedModel]):
+        super(HuggingFaceModelLoader, self).__init__(model)
 
     @classmethod
     def load(cls, model_type: str, model_weights: str) -> HuggingFaceModelLoader:
