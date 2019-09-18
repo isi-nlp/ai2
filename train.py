@@ -1,24 +1,23 @@
-
-
 import os
+import pathlib
+import sys
+
+import torch
+import yaml
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.utilities.arg_parse import add_default_args
 from test_tube import HyperOptArgumentParser, Experiment
+
 from ai2.model import HuggingFaceClassifier
-import torch
-import yaml
-import sys
-import pathlib
 
 
 def main(hparams):
     curr_dir = "output"
 
-
     log_dir = os.path.join(curr_dir, hparams.task_name, f"{hparams.model_type}-{hparams.model_weight}-log")
     pathlib.Path(log_dir).mkdir(parents=True, exist_ok=True)
-    
+
     hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type
     hparams.tokenizer_weight = hparams.model_weight if hparams.tokenizer_weight is None else hparams.tokenizer_weight
 
@@ -46,7 +45,8 @@ def main(hparams):
         mode=hparams.early_stop_mode
     )
 
-    model_save_path = os.path.join(curr_dir, hparams.task_name, f"{hparams.model_type}-{hparams.model_weight}-checkpoints", str(exp.version))
+    model_save_path = os.path.join(curr_dir, hparams.task_name,
+                                   f"{hparams.model_type}-{hparams.model_weight}-checkpoints", str(exp.version))
 
     checkpoint = ModelCheckpoint(
         filepath=model_save_path,
@@ -62,7 +62,6 @@ def main(hparams):
         checkpoint_callback=checkpoint,
         early_stop_callback=early_stop,
         gradient_clip=hparams.gradient_clip,
-        cluster=None,
         process_position=0,
         current_gpu_name=0,
         nb_gpu_nodes=1,
@@ -96,7 +95,6 @@ def main(hparams):
 
 
 if __name__ == '__main__':
-
     root_dir = os.path.split(os.path.dirname(sys.modules['__main__'].__file__))[0]
     parent_parser = HyperOptArgumentParser(strategy='random_search', add_help=True)
     add_default_args(parent_parser, root_dir)

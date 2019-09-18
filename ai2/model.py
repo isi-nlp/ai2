@@ -137,7 +137,7 @@ class HuggingFaceClassifier(LightningModule):
                 map(str, (pred + self.task_config[self.hparams.task_name]['label_offset']).cpu().numpy().tolist())))
 
         with open(os.path.join(self.hparams.output_dir, "dev-probabilities.lst"), "w") as output_file:
-            output_file.write("\n".join(map(lambda l: '\t'.join(l), proba.cpu().detach().numpy().tolist())))
+            output_file.write("\n".join(map(lambda l: '\t'.join(map(str, l)), proba.cpu().detach().numpy().tolist())))
 
         return {
             'val_loss': loss.item(),
@@ -160,7 +160,7 @@ class HuggingFaceClassifier(LightningModule):
                 'label_offset']).cpu().detach().numpy().tolist())))
 
         with open(os.path.join(self.hparams.output_dir, "probabilities.lst"), "w") as output_file:
-            output_file.write("\n".join(map(lambda l: '\t'.join(l), proba.cpu().detach().numpy().tolist())))
+            output_file.write("\n".join(map(lambda l: '\t'.join(map(str, l)), proba.cpu().detach().numpy().tolist())))
 
         return {}
 
