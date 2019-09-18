@@ -2,7 +2,7 @@
 .idea
 **pyc
 .DS_Store
-*-pred
-*-checkpoints
+*pred/*
+*checkpoints
 *cache
-*-log
+*log
