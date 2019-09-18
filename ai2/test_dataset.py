@@ -1,8 +1,10 @@
-import yaml
 import unittest
-from dataset import download, AI2Dataset
-from interface import HuggingFaceTokenizerLoader
+
+import yaml
 from loguru import logger
+
+from ai2.dataset import download, AI2Dataset
+from ai2.interface import HuggingFaceTokenizerLoader
 
 
 class TestDataset(unittest.TestCase):

@@ -1,27 +1,22 @@
 from __future__ import annotations
 
-import argparse
+import glob
 import io
 import json
 import os
 import zipfile
-import glob
-
-from collections import defaultdict
 from dataclasses import dataclass
-from itertools import zip_longest
 from typing import *
-from tqdm import tqdm
-import numpy as np
+
 import requests
-import torch
-from torch.nn.utils.rnn import pad_sequence
-from torch.utils.data import Dataset
 from loguru import logger
+from torch.utils.data import Dataset
+from tqdm import tqdm
+
+from ai2.interface import TokenizerLoader
 
 
 def download(urls: Union[str, List[str]], cache_dir: str) -> Union[str, List[str]]:
-
     if isinstance(urls, str):
         filename = urls.split('/')[-1]
         filename = filename.split('.')[0]
@@ -54,7 +49,6 @@ def download(urls: Union[str, List[str]], cache_dir: str) -> Union[str, List[str
 
 @dataclass
 class AI2Dataset(Dataset):
-
     tokens: List[List[str]]
     input_ids: List[List[int]]
     token_type_ids: List[List[int]]
@@ -66,7 +60,8 @@ class AI2Dataset(Dataset):
 
     @classmethod
     def load(
-            cls, cache_dir: str, file_mapping: Dict, task_formula: str, type_formula: str, preprocessor: TokenizerLoader, pretokenized: bool = False,
+            cls, cache_dir: str, file_mapping: Dict, task_formula: str, type_formula: str,
+            preprocessor: TokenizerLoader, pretokenized: bool = False,
             label_formula: str = None, label_offset: int = 0) -> AI2Dataset:
         """Load the dataset from a directory.
 
@@ -160,7 +155,8 @@ class AI2Dataset(Dataset):
             with open(os.path.join(cache_dir, file_mapping[y])) as input_file:
                 for line in input_file:
                     if label_formula is not None:
-                        labels.append(int(json.loads(line.strip('\r\n ').replace('\n', ' '))[label_formula]) - label_offset)
+                        labels.append(
+                            int(json.loads(line.strip('\r\n ').replace('\n', ' '))[label_formula]) - label_offset)
                     else:
                         labels.append(int(line) - label_offset)
 
@@ -170,9 +166,9 @@ class AI2Dataset(Dataset):
         logger.info(f"""
             {x}
             Total number of examples: {len(tokens)}
-            Average input length: {sum(map(lambda e: sum(map(len, e)), tokens))//sum(map(len, tokens))}
+            Average input length: {sum(map(lambda e: sum(map(len, e)), tokens)) // sum(map(len, tokens))}
             Maximum input length: {max(map(lambda e: max(map(len, e)), tokens))}
-            99 % of input length: {sorted(map(lambda e: max(map(len, e)), tokens))[int(len(tokens)*.99)]}
+            99 % of input length: {sorted(map(lambda e: max(map(len, e)), tokens))[int(len(tokens) * .99)]}
         """)
 
         return AI2Dataset(tokens, input_ids, token_type_ids, attention_mask, labels)
