@@ -1,26 +1,14 @@
 from __future__ import annotations
-from inspect import getfullargspec
+
+import abc
 from abc import ABC
 from dataclasses import dataclass
-from torch.nn import Module
-from typing import Union
-from pytorch_transformers.modeling_utils import PreTrainedModel
-from pytorch_transformers.tokenization_utils import PreTrainedTokenizer
 from inspect import getfullargspec
-import abc
-import os
-from collections import OrderedDict
-import torch.nn as nn
-import torch
-import torch.nn.functional as F
-from test_tube import HyperOptArgumentParser
-from torch import optim
-from torch.utils.data import DataLoader
-from torch.utils.data.distributed import DistributedSampler
+from typing import *
 
-import pytorch_lightning as pl
-from pytorch_lightning.root_module.root_module import LightningModule
 from pytorch_transformers import *
+from torch.nn import Module
+
 TOKENIZERS = {
     'bert': BertTokenizer,
     'xlm': XLMTokenizer,
@@ -42,8 +30,7 @@ MODELS = {
 
 @dataclass
 class ModelLoader(ABC):
-
-    model: Union[Module, PretrainedModel]
+    model: Union[Module, PreTrainedModel]
 
     @classmethod
     @abc.abstractmethod
@@ -71,8 +58,7 @@ class ModelLoader(ABC):
 
 @dataclass
 class TokenizerLoader(ABC):
-
-    tokenizer: Union[object, PretrainedTokenizer]
+    tokenizer: Union[object, PreTrainedTokenizer]
 
     @classmethod
     @abc.abstractmethod
@@ -140,7 +126,8 @@ class HuggingFaceTokenizerLoader(TokenizerLoader):
     @classmethod
     def load(cls, model_type: str, model_weights: str, *args, **kargs) -> HuggingFaceTokenizerLoader:
         assert model_type in TOKENIZERS, f"Tokenizer model type {model_type} is not recognized."
-        return HuggingFaceTokenizerLoader(TOKENIZERS[model_type].from_pretrained(model_weights, *args, cache_dir="./model_cache", **kargs))
+        return HuggingFaceTokenizerLoader(
+            TOKENIZERS[model_type].from_pretrained(model_weights, *args, cache_dir="./model_cache", **kargs))
 
     @property
     def SEP(self) -> str:
@@ -165,7 +152,7 @@ class HuggingFaceTokenizerLoader(TokenizerLoader):
     @property
     def UNK(self) -> str:
         if self.tokenizer._unk_token is None:
-            raise Error('UNK token in tokenizer not found.')
+            raise Exception('UNK token in tokenizer not found.')
 
         return self.tokenizer._unk_token
 

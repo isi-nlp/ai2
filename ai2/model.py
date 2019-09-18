@@ -1,24 +1,19 @@
 import os
 
-import torch
-import yaml
-import torch.nn.functional as F
-import pytorch_lightning as pl
 import numpy as np
+import pytorch_lightning as pl
+import torch
 import torch.nn as nn
-import pandas as pd
-
-from collections import OrderedDict
-
+import torch.nn.functional as F
+import yaml
+from pytorch_lightning.root_module.root_module import LightningModule
 from test_tube import HyperOptArgumentParser
 from torch import optim
-from torch.utils.data import DataLoader
 from torch.nn.utils.rnn import pad_sequence
-from torch.utils.data.distributed import DistributedSampler
-from pytorch_lightning.root_module.root_module import LightningModule
+from torch.utils.data import DataLoader
 
-from ai2.interface import HuggingFaceModelLoader, HuggingFaceTokenizerLoader
 from ai2.dataset import AI2Dataset, download
+from ai2.interface import HuggingFaceModelLoader, HuggingFaceTokenizerLoader
 
 
 class HuggingFaceClassifier(LightningModule):
@@ -59,10 +54,6 @@ class HuggingFaceClassifier(LightningModule):
         if not os.path.exists(self.hparams.output_dir):
             os.mkdir(self.hparams.output_dir)
 
-        self.build_model()
-
-    def build_model(self):
-
         self.model = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
         self.dropout = nn.Dropout(self.hparams.dropout)
         self.linear = nn.Linear(self.model.dim, 1)
@@ -73,9 +64,10 @@ class HuggingFaceClassifier(LightningModule):
         self.tokenizer = HuggingFaceTokenizerLoader.load(
             self.hparams.tokenizer_type, self.hparams.tokenizer_weight, do_lower_case=self.hparams.do_lower_case)
 
-    def forward(self, **kargs):
+    def forward(self, input_ids, token_type_ids, attention_mask):
 
-        outputs = self.model.forward(**kargs)
+        outputs = self.model.forward(
+            **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
         output = torch.mean(outputs[0], dim=1).squeeze()
         logits = self.dropout(output)
         logits = self.linear(logits)
@@ -100,30 +92,6 @@ class HuggingFaceClassifier(LightningModule):
             'logits': logits.reshape(B, C),
             'loss': self.loss(data_batch['y'].reshape(-1), logits.reshape(B, C))
         }
-
-    # def on_epoch_end(self):
-    #     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    #     outputs = []
-
-    #     for i, batch in tqdm(enumerate(self.tng_dataloader), total=len(self.tng_dataloader)):
-    #         for key, val in batch.items():
-    #             batch[key] = val.to(device)
-    #             outputs.append(self.validation_step(batch, i))
-
-    #     logits = torch.cat([o['logits'] for o in outputs], dim=0)
-    #     truth = torch.cat([o['truth'] for o in outputs], dim=0)
-    #     # loss = self.loss(truth.reshape(-1), logits)
-    #     proba = F.softmax(logits, dim=-1)
-    #     pred = torch.argmax(proba, dim=-1).reshape(-1)
-
-    #     with open(os.path.join(self.hparams.output_dir, "train-labels.lst"), "w") as output_file:
-    #         output_file.write("\n".join(map(str,  truth.reshape(-1).cpu().numpy().tolist())))
-
-    #     with open(os.path.join(self.hparams.output_dir, "train-predictions.lst"), "w") as output_file:
-    #         output_file.write("\n".join(map(str, (pred + self.task_config[self.hparams.task_name]['label_offset']).cpu().numpy().tolist())))
-
-    #     with open(os.path.join(self.hparams.output_dir, "train-probabilities.lst"), "w") as output_file:
-    #         output_file.write("\n".join(map(lambda l: '\t'.join(l), proba.cpu().detach().numpy().tolist())))
 
     def validation_step(self, data_batch, batch_i):
         B, C, S = data_batch['input_ids'].shape
@@ -162,10 +130,11 @@ class HuggingFaceClassifier(LightningModule):
         pred = torch.argmax(proba, dim=-1).reshape(-1)
 
         with open(os.path.join(self.hparams.output_dir, "dev-labels.lst"), "w") as output_file:
-            output_file.write("\n".join(map(str,  truth.reshape(-1).cpu().numpy().tolist())))
+            output_file.write("\n".join(map(str, truth.reshape(-1).cpu().numpy().tolist())))
 
         with open(os.path.join(self.hparams.output_dir, "dev-predictions.lst"), "w") as output_file:
-            output_file.write("\n".join(map(str, (pred + self.task_config[self.hparams.task_name]['label_offset']).cpu().numpy().tolist())))
+            output_file.write("\n".join(
+                map(str, (pred + self.task_config[self.hparams.task_name]['label_offset']).cpu().numpy().tolist())))
 
         with open(os.path.join(self.hparams.output_dir, "dev-probabilities.lst"), "w") as output_file:
             output_file.write("\n".join(map(lambda l: '\t'.join(l), proba.cpu().detach().numpy().tolist())))
@@ -187,7 +156,8 @@ class HuggingFaceClassifier(LightningModule):
         pred = torch.argmax(proba, dim=-1).reshape(-1)
 
         with open(os.path.join(self.hparams.output_dir, "predictions.lst"), "w") as output_file:
-            output_file.write("\n".join(map(str, (pred + self.task_config[self.hparams.task_name]['label_offset']).cpu().detach().numpy().tolist())))
+            output_file.write("\n".join(map(str, (pred + self.task_config[self.hparams.task_name][
+                'label_offset']).cpu().detach().numpy().tolist())))
 
         with open(os.path.join(self.hparams.output_dir, "probabilities.lst"), "w") as output_file:
             output_file.write("\n".join(map(lambda l: '\t'.join(l), proba.cpu().detach().numpy().tolist())))
@@ -248,8 +218,10 @@ class HuggingFaceClassifier(LightningModule):
         return {
             'tokens': tokens,
             'input_ids': pad_sequence(input_ids, batch_first=True, padding_value=padding_value).transpose(1, 2),
-            'token_type_ids': pad_sequence(token_type_ids, batch_first=True, padding_value=padding_value).transpose(1, 2),
-            'attention_mask': pad_sequence(attention_mask, batch_first=True, padding_value=padding_value).transpose(1, 2),
+            'token_type_ids': pad_sequence(token_type_ids, batch_first=True, padding_value=padding_value).transpose(1,
+                                                                                                                    2),
+            'attention_mask': pad_sequence(attention_mask, batch_first=True, padding_value=padding_value).transpose(1,
+                                                                                                                    2),
             'y': y if y is None else torch.from_numpy(np.asarray(y)).long(),
         }
 
@@ -318,7 +290,9 @@ class HuggingFaceClassifier(LightningModule):
         tokenizer_group.add_argument('--tokenizer_type', type=str, default=None)
         tokenizer_group.add_argument('--tokenizer_weight', type=str, default=None)
 
-        task_group.add_argument('--task_name', choices=['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa', 'vcrqa', 'vcrqr'], required=True)
+        task_group.add_argument('--task_name',
+                                choices=['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa', 'vcrqa', 'vcrqr'],
+                                required=True)
         task_group.add_argument('--task_config_file', type=str, required=True)
         task_group.add_argument('--task_cache_dir', type=str, required=True)
 
