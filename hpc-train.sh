@@ -12,7 +12,6 @@ for task in "${TASKS[@]}"; do
 		set -- $i;
 		tmux kill-session -t "$task-$1-$2-train"
 		tmux new-session -d -s "$task-$1-$2-train" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:k80:4 train.sh $1 $2 $task"
-		# ./train.sh $1 $2 $task
 	done;
 done;
 
