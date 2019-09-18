@@ -9,16 +9,16 @@ from ai2.model import HuggingFaceClassifier
 import torch
 import yaml
 import sys
+import pathlib
 
 
 def main(hparams):
-    curr_dir = "."
+    curr_dir = "output"
 
-    if not os.path.exists(os.path.join(curr_dir, f"{hparams.model_type}-{hparams.model_weight}-{hparams.task_name}-log")):
-        os.mkdir(os.path.join(curr_dir, f"{hparams.model_type}-{hparams.model_weight}-{hparams.task_name}-log"))
 
-    log_dir = os.path.join(curr_dir, f"{hparams.model_type}-{hparams.model_weight}-{hparams.task_name}-log")
-
+    log_dir = os.path.join(curr_dir, hparams.task_name, f"{hparams.model_type}-{hparams.model_weight}-log")
+    pathlib.Path(log_dir).mkdir(parents=True, exist_ok=True)
+    
     hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type
     hparams.tokenizer_weight = hparams.model_weight if hparams.tokenizer_weight is None else hparams.tokenizer_weight
 
@@ -46,9 +46,10 @@ def main(hparams):
         mode=hparams.early_stop_mode
     )
 
-    model_save_path = '{}/{}'.format(f"{hparams.model_type}-{hparams.model_weight}-{hparams.task_name}-checkpoints", exp.version)
+    model_save_path = os.path.join(curr_dir, hparams.task_name, f"{hparams.model_type}-{hparams.model_weight}-checkpoints", str(exp.version))
+
     checkpoint = ModelCheckpoint(
-        filepath=os.path.join(curr_dir, model_save_path),
+        filepath=model_save_path,
         save_best_only=True,
         verbose=True,
         monitor=hparams.model_save_monitor_value,

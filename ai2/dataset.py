@@ -114,7 +114,6 @@ class AI2Dataset(Dataset):
             token_type_ids = []
 
             for line in tqdm(input_file.readlines()):
-
                 example_raw = json.loads(line.strip('\r\n ').replace('\n', ''))
 
                 if pretokenized:

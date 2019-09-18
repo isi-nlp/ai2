@@ -1,10 +1,20 @@
-PYTHON=/Users/chenghaomou/Anaconda/envs/Elisa/bin/python
-TRAIN=/Users/chenghaomou/Code/Code-ProjectsPyCharm/ai2/train.py
+#!/bin/sh
 
-$PYTHON $TRAIN --model_type bert --model_weight bert-base-cased \
-    --task_config_file tasks.yaml \
-    --running_config_file hyparams.yaml \
-    --task_name alphanli \
-    --task_cache_dir ./cache \
-    --output_dir bert-bert-base-cased-alphanli-pred \
-    --log_save_interval 1 --add_log_row_interval 1
+declare -a TASKS=(alphanli hellaswag physicaliqa socialiqa vcrqa vcrqr)
+declare -a MODELS=(bert,bert-base-cased bert,bert-large-cased gpt,openai-gpt gpt2,gpt2 xlnet,xlnet-base-cased xlnet,xlnet-large-cased xlm,xlm-mlm-en-2048 roberta,roberta-base roberta,roberta-large)
+
+OLDIFS=$IFS;
+tmux set-option -g remain-on-exit on
+
+IFS=','
+for task in "${TASKS[@]}"; do
+	for i in "${MODELS[@]}"; do
+		set -- $i;
+		tmux kill-session -t "$task-$1-$2-train"
+		tmux new-session -d -s "$task-$1-$2-train" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:k80:4 train.sh $1 $2 $task"
+		# ./train.sh $1 $2 $task
+	done;
+done;
+
+IFS=$OLDIFS;
+
