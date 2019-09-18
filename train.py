@@ -63,7 +63,6 @@ def main(hparams):
         early_stop_callback=early_stop,
         gradient_clip=hparams.gradient_clip,
         process_position=0,
-        current_gpu_name=0,
         nb_gpu_nodes=1,
         gpus=[i for i in range(torch.cuda.device_count())],
         show_progress_bar=True,

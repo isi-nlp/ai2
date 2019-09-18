@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import yaml
+from loguru import logger
 from pytorch_lightning.root_module.root_module import LightningModule
 from test_tube import HyperOptArgumentParser
 from torch import optim
@@ -31,23 +32,23 @@ class HuggingFaceClassifier(LightningModule):
 
         self.hparams.learning_rate = float(self.running_config.get(
             self.hparams.model_type, {}).get(
-            self.hparams.model_weight, self.running_config['default']).get('lr'))
+            self.hparams.model_weight, self.running_config['default'].get('lr')))
 
         self.hparams.initializer_range = float(self.running_config.get(
             self.hparams.model_type, {}).get(
-            self.hparams.model_weight, self.running_config['default']).get('initializer_range'))
+            self.hparams.model_weight, self.running_config['default'].get('initializer_range')))
 
         self.hparams.dropout = float(self.running_config.get(
             self.hparams.model_type, {}).get(
-            self.hparams.model_weight, self.running_config['default']).get('dropout'))
+            self.hparams.model_weight, self.running_config['default'].get('dropout')))
 
         self.hparams.batch_size = self.running_config.get(
             self.hparams.model_type, {}).get(
-            self.hparams.model_weight, self.running_config['default']).get('batch_size')
+            self.hparams.model_weight, self.running_config['default'].get('batch_size'))
 
         self.hparams.max_seq_len = self.running_config.get(
             self.hparams.model_type, {}).get(
-            self.hparams.model_weight, self.running_config['default']).get('max_seq_len')
+            self.hparams.model_weight, self.running_config['default'].get('max_seq_len'))
 
         self.hparams.do_lower_case = self.task_config[self.hparams.task_name].get('do_lower_case', False)
 
@@ -64,7 +65,12 @@ class HuggingFaceClassifier(LightningModule):
         self.tokenizer = HuggingFaceTokenizerLoader.load(
             self.hparams.tokenizer_type, self.hparams.tokenizer_weight, do_lower_case=self.hparams.do_lower_case)
 
-    def forward(self, input_ids, token_type_ids, attention_mask):
+        logger.debug(f"Device: {next(self.model.parameters()).device}")
+
+    def forward(self, input_ids, token_type_ids=None, attention_mask=None):
+
+        if input_ids is not None and token_type_ids is not None and attention_mask is not None:
+            logger.debug(f"Device: {input_ids.device} {token_type_ids.device} {attention_mask.device}")
 
         outputs = self.model.forward(
             **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
