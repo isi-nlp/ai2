@@ -1,7 +1,7 @@
 bert:
   bert-large-cased:
     lr: 1e-5
-    batch_size: 8
+    batch_size: 4
 gpt2:
   gpt2:
     lr: 2e-6
@@ -10,15 +10,15 @@ gpt2:
 xlnet:
   xlnet-large-cased:
     lr: 1e-5
-    batch_size: 8
+    batch_size: 4
 roberta:
   roberta-large:
     lr: 1e-5
-    batch_size: 8
+    batch_size: 4
 default:
   lr: 2e-5
   dropout: 0.1
-  batch_size: 32
+  batch_size: 8
   max_seq_len: 128
   max_epochs: 3
   initializer_range: 0.02
