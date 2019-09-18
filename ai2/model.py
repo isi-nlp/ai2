@@ -154,7 +154,7 @@ class HuggingFaceClassifier(LightningModule):
             output_file.write("\n".join(map(lambda l: '\t'.join(map(str, l)), proba.cpu().detach().numpy().tolist())))
 
         return {
-            # 'val_loss': loss.item(),
+            'val_loss': loss.item(),
             'val_acc': accuracy_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist()),
         }
 
