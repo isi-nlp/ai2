@@ -56,6 +56,7 @@ class HuggingFaceClassifier(LightningModule):
             os.mkdir(self.hparams.output_dir)
 
         self.encoder = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
+        self.encoder.model.train()
         self.dropout = nn.Dropout(self.hparams.dropout)
         self.linear = nn.Linear(self.encoder.dim, 1)
 

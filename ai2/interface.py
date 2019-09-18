@@ -29,7 +29,7 @@ MODELS = {
 
 
 @dataclass
-class ModelLoader(ABC):
+class ModelLoader(ABC, Module):
     model: Union[Module, PreTrainedModel]
 
     @classmethod
