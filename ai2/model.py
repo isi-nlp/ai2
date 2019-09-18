@@ -80,7 +80,7 @@ class HuggingFaceClassifier(LightningModule):
         return logits.squeeze()
 
     def loss(self, labels, logits):
-        l = F.cross_entropy(logits, labels)
+        l = F.cross_entropy(logits, labels, reduction='sum')
         return l
 
     def training_step(self, data_batch, batch_i):
