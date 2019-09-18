@@ -15,7 +15,7 @@ from ai2.model import HuggingFaceClassifier
 def main(hparams):
     curr_dir = "output"
 
-    log_dir = os.path.join(curr_dir, hparams.task_name, f"{hparams.model_type}-{hparams.model_weight}-log")
+    log_dir = os.path.join(curr_dir, f"{hparams.model_type}-{hparams.model_weight}-log")
     pathlib.Path(log_dir).mkdir(parents=True, exist_ok=True)
 
     hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type
@@ -45,8 +45,9 @@ def main(hparams):
         mode=hparams.early_stop_mode
     )
 
-    model_save_path = os.path.join(curr_dir, hparams.task_name,
-                                   f"{hparams.model_type}-{hparams.model_weight}-checkpoints", str(exp.version))
+    model_save_path = os.path.join(curr_dir,
+                                   f"{hparams.model_type}-{hparams.model_weight}-checkpoints", hparams.task_name,
+                                   str(exp.version))
 
     checkpoint = ModelCheckpoint(
         filepath=model_save_path,
