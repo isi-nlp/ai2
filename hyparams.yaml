@@ -4,7 +4,7 @@ bert:
     batch_size: 8
 gpt2:
   gpt2:
-    lr: 2e-6
+    lr: 5e-6
     batch_size: 4
     max_epochs: 4
 xlnet:
@@ -16,7 +16,7 @@ roberta:
     lr: 1e-5
     batch_size: 8
 default:
-  lr: 1
+  lr: 2e-5
   dropout: 0.1
   batch_size: 32
   max_seq_len: 128
