@@ -172,7 +172,9 @@ class HuggingFaceClassifier(LightningModule):
                                   preprocessor=self.tokenizer,
                                   pretokenized=self.task_config[self.hparams.task_name].get('pretokenized', False),
                                   label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
-                                  label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0))
+                                  label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
+                                  label_transform=self.task_config[self.hparams.task_name].get('label_transform', None),
+                                  )
 
         return DataLoader(dataset,
                           collate_fn=self.collate_fn,
@@ -228,7 +230,8 @@ class HuggingFaceClassifier(LightningModule):
                                   preprocessor=self.tokenizer,
                                   pretokenized=self.task_config[self.hparams.task_name].get('pretokenized', False),
                                   label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
-                                  label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0))
+                                  label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
+                                  label_transform=self.task_config[self.hparams.task_name].get('label_transform', None),)
 
         return DataLoader(dataset,
                           collate_fn=self.collate_fn,
@@ -248,7 +251,8 @@ class HuggingFaceClassifier(LightningModule):
                                   preprocessor=self.tokenizer,
                                   pretokenized=self.task_config[self.hparams.task_name].get('pretokenized', False),
                                   label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
-                                  label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0))
+                                  label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
+                                  label_transform=self.task_config[self.hparams.task_name].get('label_transform', None),)
 
         return DataLoader(dataset,
                           collate_fn=self.collate_fn,
@@ -284,7 +288,7 @@ class HuggingFaceClassifier(LightningModule):
         tokenizer_group.add_argument('--tokenizer_weight', type=str, default=None)
 
         task_group.add_argument('--task_name',
-                                choices=['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa', 'vcrqa', 'vcrqr'],
+                                choices=['alphanli', 'snli', 'hellaswag', 'physicaliqa', 'socialiqa', 'vcrqa', 'vcrqr'],
                                 required=True)
         task_group.add_argument('--task_config_file', type=str, required=True)
         task_group.add_argument('--task_cache_dir', type=str, required=True)

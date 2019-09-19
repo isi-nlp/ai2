@@ -11,6 +11,24 @@ alphanli:
     dev:
       dev_x: "dev.jsonl"
       dev_y: "dev-labels.lst"
+snli:
+  urls:
+    - "https://nlp.stanford.edu/projects/snli/snli_1.0.zip"
+  task_formula: "[CLS] sentence1 [SEP] sentence2 [SEP]"
+  type_formula: "0 0 0 1 1"
+  label_formula: "gold_label"
+  label_transform:
+    neutral: 0
+    entailment: 1
+    contradiction: 2
+    "-": 3
+  file_mapping:
+    train:
+      train_x: "snli_1.0/snli_1.0_train.jsonl"
+      train_y: "snli_1.0/snli_1.0_train.jsonl"
+    dev:
+      dev_x: "snli_1.0/snli_1.0_dev.jsonl"
+      dev_y: "snli_1.0/snli_1.0_dev.jsonl"
 hellaswag:
   urls:
     - "https://storage.googleapis.com/ai2-mosaic/public/hellaswag/hellaswag-train-dev.zip"

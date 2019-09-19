@@ -19,7 +19,7 @@ from ai2.interface import TokenizerLoader
 def download(urls: Union[str, List[str]], cache_dir: str) -> Union[str, List[str]]:
     if isinstance(urls, str):
         filename = urls.split('/')[-1]
-        filename = filename.split('.')[0]
+        filename = filename.replace('.zip', '').replace('.tar.gz', '')
         target_dir = os.path.join(cache_dir, filename)
 
         if not os.path.exists(target_dir) or not os.listdir(target_dir):
@@ -34,7 +34,7 @@ def download(urls: Union[str, List[str]], cache_dir: str) -> Union[str, List[str
         cache_dirs = []
         for url in urls:
             filename = url.split('/')[-1]
-            filename = filename.split('.')[0]
+            filename = filename.replace('.zip', '').replace('.tar.gz', '')
             target_dir = os.path.join(cache_dir, filename)
 
             if not os.path.exists(target_dir) or not os.listdir(target_dir):
@@ -62,7 +62,7 @@ class AI2Dataset(Dataset):
     def load(
             cls, cache_dir: str, file_mapping: Dict, task_formula: str, type_formula: str,
             preprocessor: TokenizerLoader, pretokenized: bool = False,
-            label_formula: str = None, label_offset: int = 0) -> AI2Dataset:
+            label_formula: str = None, label_offset: int = 0, label_transform: Dict = None) -> AI2Dataset:
         """Load the dataset from a directory.
 
         Arguments:
@@ -146,8 +146,12 @@ class AI2Dataset(Dataset):
                         example_token_type_ids = [e + [i for _ in t]
                                                   for t in example_tokens for e in example_token_type_ids]
 
-                tokens.append(example)
-                token_type_ids.append(example_token_type_ids)
+                if isinstance(example, list) and isinstance(example[0], list) and isinstance(example[0][0], str):
+                    tokens.extend(example)
+                    token_type_ids.extend(example_token_type_ids)
+                else:
+                    tokens.append(example)
+                    token_type_ids.append(example_token_type_ids)
 
         labels = None
         if y:
@@ -155,8 +159,12 @@ class AI2Dataset(Dataset):
             with open(os.path.join(cache_dir, file_mapping[y])) as input_file:
                 for line in input_file:
                     if label_formula is not None:
-                        labels.append(
-                            int(json.loads(line.strip('\r\n ').replace('\n', ' '))[label_formula]) - label_offset)
+                        if label_transform is None:
+                            labels.append(
+                                int(json.loads(line.strip('\r\n ').replace('\n', ' '))[label_formula]) - label_offset)
+                        else:
+                            labels.append(
+                                label_transform[json.loads(line.strip('\r\n ').replace('\n', ' '))[label_formula]] - label_offset)
                     else:
                         labels.append(int(line) - label_offset)
 
