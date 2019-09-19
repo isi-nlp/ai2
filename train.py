@@ -30,6 +30,8 @@ def main(hparams):
 
     running_config = yaml.safe_load(open(hparams.running_config_file, "r"))
 
+    # logger.info(f"{running_config}")
+
     # set the hparams for the experiment
     exp.argparse(hparams)
     exp.save()
@@ -74,7 +76,7 @@ def main(hparams):
         accumulate_grad_batches=hparams.accumulate_grad_batches,
         max_nb_epochs=running_config.get(
             hparams.model_type, {}).get(
-            hparams.model_weight, running_config['default']).get('max_epochs'),
+            hparams.model_weight, running_config['default'].get('max_epochs', 3)),
         min_nb_epochs=hparams.min_nb_epochs,
         train_percent_check=hparams.train_percent_check,
         val_percent_check=hparams.val_percent_check,
