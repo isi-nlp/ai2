@@ -288,7 +288,8 @@ class HuggingFaceClassifier(LightningModule):
                             early_stop_metric='val_loss',
                             early_stop_patience=10,
                             early_stop_mode='min',
-                            val_check_interval=0.05
+                            val_check_interval=0.02,
+                            max_nb_epochs=3
                             )
 
         runing_group = parser.add_argument_group(title='Training/Evaluation options')

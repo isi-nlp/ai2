@@ -4,6 +4,7 @@ import sys
 
 import torch
 import yaml
+from loguru import logger
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.utilities.arg_parse import add_default_args
@@ -30,7 +31,11 @@ def main(hparams):
 
     running_config = yaml.safe_load(open(hparams.running_config_file, "r"))
 
-    # logger.info(f"{running_config}")
+    hparams.max_nb_epochs = running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default'].get('max_epochs', 3))
+
+    logger.info(f"{hparams}")
 
     # set the hparams for the experiment
     exp.argparse(hparams)
@@ -74,9 +79,7 @@ def main(hparams):
         check_val_every_n_epoch=hparams.check_val_every_n_epoch,
         fast_dev_run=hparams.fast_dev_run,
         accumulate_grad_batches=hparams.accumulate_grad_batches,
-        max_nb_epochs=running_config.get(
-            hparams.model_type, {}).get(
-            hparams.model_weight, running_config['default'].get('max_epochs', 3)),
+        max_nb_epochs=hparams.max_nb_epochs,
         min_nb_epochs=hparams.min_nb_epochs,
         train_percent_check=hparams.train_percent_check,
         val_percent_check=hparams.val_percent_check,
