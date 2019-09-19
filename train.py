@@ -19,9 +19,6 @@ def main(hparams):
     log_dir = os.path.join(curr_dir, f"{hparams.model_type}-{hparams.model_weight}-log")
     pathlib.Path(log_dir).mkdir(parents=True, exist_ok=True)
 
-    hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type
-    hparams.tokenizer_weight = hparams.model_weight if hparams.tokenizer_weight is None else hparams.tokenizer_weight
-
     exp = Experiment(
         name=hparams.task_name,
         version=0,
@@ -30,10 +27,35 @@ def main(hparams):
     )
 
     running_config = yaml.safe_load(open(hparams.running_config_file, "r"))
+    task_config = yaml.safe_load(open(hparams.task_config_file, 'r'))
 
     hparams.max_nb_epochs = running_config.get(
         hparams.model_type, {}).get(
         hparams.model_weight, running_config['default'].get('max_epochs', 3))
+
+    hparams.learning_rate = float(running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default'].get('lr')))
+    hparams.initializer_range = float(running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default'].get('initializer_range')))
+
+    hparams.dropout = float(running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default'].get('dropout')))
+
+    hparams.batch_size = running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default'].get('batch_size'))
+
+    hparams.max_seq_len = running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default'].get('max_seq_len'))
+
+    hparams.do_lower_case = task_config[hparams.task_name].get('do_lower_case', False)
+
+    hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type
+    hparams.tokenizer_weight = hparams.model_weight if hparams.tokenizer_weight is None else hparams.tokenizer_weight
 
     logger.info(f"{hparams}")
 

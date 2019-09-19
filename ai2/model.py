@@ -30,28 +30,6 @@ class HuggingFaceClassifier(LightningModule):
         with open(self.hparams.running_config_file, 'r') as input_file:
             self.running_config = yaml.safe_load(input_file)
 
-        self.hparams.learning_rate = float(self.running_config.get(
-            self.hparams.model_type, {}).get(
-            self.hparams.model_weight, self.running_config['default'].get('lr')))
-
-        self.hparams.initializer_range = float(self.running_config.get(
-            self.hparams.model_type, {}).get(
-            self.hparams.model_weight, self.running_config['default'].get('initializer_range')))
-
-        self.hparams.dropout = float(self.running_config.get(
-            self.hparams.model_type, {}).get(
-            self.hparams.model_weight, self.running_config['default'].get('dropout')))
-
-        self.hparams.batch_size = self.running_config.get(
-            self.hparams.model_type, {}).get(
-            self.hparams.model_weight, self.running_config['default'].get('batch_size'))
-
-        self.hparams.max_seq_len = self.running_config.get(
-            self.hparams.model_type, {}).get(
-            self.hparams.model_weight, self.running_config['default'].get('max_seq_len'))
-
-        self.hparams.do_lower_case = self.task_config[self.hparams.task_name].get('do_lower_case', False)
-
         if not os.path.exists(self.hparams.output_dir):
             os.mkdir(self.hparams.output_dir)
 
@@ -81,7 +59,7 @@ class HuggingFaceClassifier(LightningModule):
         return logits.squeeze()
 
     def loss(self, labels, logits):
-        l = F.cross_entropy(logits, labels, reduction='sum')
+        l = F.cross_entropy(logits, labels, reduction='mean')
         return l
 
     def training_step(self, data_batch, batch_i):
@@ -94,7 +72,6 @@ class HuggingFaceClassifier(LightningModule):
             'attention_mask': data_batch['attention_mask'].reshape(-1, S),
         })
         loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, C))
-        # loss_val = loss_val / B
         if self.trainer.use_dp:
             loss_val = loss_val.unsqueeze(0)
 
