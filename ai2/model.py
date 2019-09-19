@@ -94,7 +94,7 @@ class HuggingFaceClassifier(LightningModule):
             'attention_mask': data_batch['attention_mask'].reshape(-1, S),
         })
         loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, C))
-        loss_val = loss_val / B
+        # loss_val = loss_val / B
         if self.trainer.use_dp:
             loss_val = loss_val.unsqueeze(0)
 
@@ -155,7 +155,7 @@ class HuggingFaceClassifier(LightningModule):
             output_file.write("\n".join(map(lambda l: '\t'.join(map(str, l)), proba.cpu().detach().numpy().tolist())))
 
         return {
-            'val_loss': loss.item() / truth.shape[0],
+            'val_loss': loss.item(),
             'val_acc': accuracy_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist()),
         }
 
