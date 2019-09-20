@@ -36,7 +36,7 @@ class HuggingFaceClassifier(LightningModule):
         self.encoder = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
         self.encoder.train()
         self.dropout = nn.Dropout(self.hparams.dropout)
-        self.linear = nn.Linear(self.encoder.dim, 1)
+        self.linear = nn.Linear(self.encoder.dim, self.hparams.output_dimension)
 
         self.linear.weight.data.normal_(mean=0.0, std=self.hparams.initializer_range)
         self.linear.bias.data.zero_()
@@ -71,12 +71,12 @@ class HuggingFaceClassifier(LightningModule):
             'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
             'attention_mask': data_batch['attention_mask'].reshape(-1, S),
         })
-        loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, C))
+        loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
         if self.trainer.use_dp:
             loss_val = loss_val.unsqueeze(0)
 
         return {
-            'logits': logits.reshape(B, C),
+            'logits': logits.reshape(B, -1),
             'loss': loss_val
         }
 
@@ -88,12 +88,12 @@ class HuggingFaceClassifier(LightningModule):
             'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
             'attention_mask': data_batch['attention_mask'].reshape(-1, S),
         })
-        loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, C))
+        loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
         if self.trainer.use_dp:
             loss_val = loss_val.unsqueeze(0)
 
         return {
-            'batch_logits': logits.reshape(B, C),
+            'batch_logits': logits.reshape(B, -1),
             'batch_loss': loss_val,
             'batch_truth': data_batch['y'].reshape(-1)
         }
@@ -108,7 +108,7 @@ class HuggingFaceClassifier(LightningModule):
         })
 
         return {
-            'batch_logits': logits.reshape(B, C),
+            'batch_logits': logits.reshape(B, -1),
         }
 
     def validation_end(self, outputs):
@@ -191,6 +191,8 @@ class HuggingFaceClassifier(LightningModule):
         y = None
 
         for example in examples:
+
+            # print(examples)
 
             tokens.append(example['tokens'])
             example_input_ids = pad_sequence(

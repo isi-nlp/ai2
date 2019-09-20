@@ -17,11 +17,13 @@ snli:
   task_formula: "[CLS] sentence1 [SEP] sentence2 [SEP]"
   type_formula: "0 0 0 1 1"
   label_formula: "gold_label"
+  label_offset: 0
   label_transform:
     neutral: 0
     entailment: 1
     contradiction: 2
     "-": 3
+  output_dimension: 4
   file_mapping:
     train:
       train_x: "snli_1.0/snli_1.0_train.jsonl"
