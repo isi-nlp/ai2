@@ -146,12 +146,8 @@ class AI2Dataset(Dataset):
                         example_token_type_ids = [e + [i for _ in t]
                                                   for t in example_tokens for e in example_token_type_ids]
 
-                if isinstance(example, list) and isinstance(example[0], list) and isinstance(example[0][0], str):
-                    tokens.extend(example)
-                    token_type_ids.extend(example_token_type_ids)
-                else:
-                    tokens.append(example)
-                    token_type_ids.append(example_token_type_ids)
+                tokens.append(example)
+                token_type_ids.append(example_token_type_ids)
 
         labels = None
         if y:

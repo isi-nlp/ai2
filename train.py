@@ -36,6 +36,7 @@ def main(hparams):
     hparams.learning_rate = float(running_config.get(
         hparams.model_type, {}).get(
         hparams.model_weight, running_config['default'].get('lr')))
+
     hparams.initializer_range = float(running_config.get(
         hparams.model_type, {}).get(
         hparams.model_weight, running_config['default'].get('initializer_range')))
@@ -53,6 +54,7 @@ def main(hparams):
         hparams.model_weight, running_config['default'].get('max_seq_len'))
 
     hparams.do_lower_case = task_config[hparams.task_name].get('do_lower_case', False)
+    hparams.output_dimension = task_config[hparams.task_name].get('output_dimension', 1)
 
     hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type
     hparams.tokenizer_weight = hparams.model_weight if hparams.tokenizer_weight is None else hparams.tokenizer_weight

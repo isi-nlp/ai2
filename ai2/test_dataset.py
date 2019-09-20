@@ -1,10 +1,9 @@
-import unittest
 
-import yaml
-from loguru import logger
-
-from ai2.dataset import download, AI2Dataset
 from ai2.interface import HuggingFaceTokenizerLoader
+from ai2.dataset import download, AI2Dataset
+from loguru import logger
+import yaml
+import unittest
 
 
 class TestDataset(unittest.TestCase):
@@ -43,8 +42,8 @@ class TestDataset(unittest.TestCase):
                                       label_formula=self.config[task].get('label_formula', None),
                                       label_offset=self.config[task].get('label_offset', 0),
                                       label_transform=self.config[task].get('label_transform', None),)
-            logger.info(dataset[0]['tokens'])
-            logger.debug(' '.join(dataset[0]['tokens']))
+            # logger.info(dataset[0]['tokens'])
+            logger.debug(' '.join(dataset[0]['tokens'][0]))
             self.assertTrue(dataset is not None)
 
 
