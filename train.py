@@ -1,7 +1,9 @@
 import os
 import pathlib
+import random
 import sys
 
+import numpy as np
 import torch
 import yaml
 from loguru import logger
@@ -11,9 +13,6 @@ from pytorch_lightning.utilities.arg_parse import add_default_args
 from test_tube import HyperOptArgumentParser, Experiment
 
 from ai2.model import HuggingFaceClassifier
-
-import random
-import numpy as np
 
 
 def set_seed(seed):
@@ -92,9 +91,9 @@ def main(hparams):
         hparams.model_type, {}).get(
         hparams.model_weight, running_config['default']).get('adam_epsilon', 1e-8))
 
-    hparams.accumulate_grad_batches = float(running_config.get(
+    hparams.accumulate_grad_batches = running_config.get(
         hparams.model_type, {}).get(
-        hparams.model_weight, running_config['default']).get('accumulate_grad_batches', 1))
+        hparams.model_weight, running_config['default']).get('accumulate_grad_batches', 1)
 
     hparams.model_save_path = model_save_path
 
