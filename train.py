@@ -13,6 +13,14 @@ from test_tube import HyperOptArgumentParser, Experiment
 from ai2.model import HuggingFaceClassifier
 
 
+def set_seed(args):
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    if args.n_gpu > 0:
+        torch.cuda.manual_seed_all(args.seed)
+
+
 def main(hparams):
     curr_dir = "output"
 
@@ -25,6 +33,10 @@ def main(hparams):
         save_dir=log_dir,
         autosave=True,
     )
+
+    model_save_path = os.path.join(curr_dir,
+                                   f"{hparams.model_type}-{hparams.model_weight}-checkpoints", hparams.task_name,
+                                   str(exp.version))
 
     running_config = yaml.safe_load(open(hparams.running_config_file, "r"))
     task_config = yaml.safe_load(open(hparams.task_config_file, 'r'))
@@ -59,11 +71,31 @@ def main(hparams):
     hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type
     hparams.tokenizer_weight = hparams.model_weight if hparams.tokenizer_weight is None else hparams.tokenizer_weight
 
+    hparams.seed = running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default']).get('seed', 42)
+
+    hparams.weight_decay = float(running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default']).get('weight_decay', 0.0))
+
+    hparams.warmup_steps = running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default']).get('warmup_steps', 0)
+
+    hparams.adam_epsilon = float(running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default']).get('adam_epsilon', 1e-8))
+
+    hparams.model_save_path = model_save_path
+
     logger.info(f"{hparams}")
 
     # set the hparams for the experiment
     exp.argparse(hparams)
     exp.save()
+
+    set_seed(hparams.seed)
 
     # build model
     model = HuggingFaceClassifier(hparams)
@@ -76,12 +108,8 @@ def main(hparams):
         mode=hparams.early_stop_mode
     )
 
-    model_save_path = os.path.join(curr_dir,
-                                   f"{hparams.model_type}-{hparams.model_weight}-checkpoints", hparams.task_name,
-                                   str(exp.version))
-
     checkpoint = ModelCheckpoint(
-        filepath=model_save_path,
+        filepath=hparams.model_save_path,
         save_best_only=True,
         verbose=True,
         monitor=hparams.model_save_monitor_value,

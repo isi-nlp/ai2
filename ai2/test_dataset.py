@@ -44,7 +44,9 @@ class TestDataset(unittest.TestCase):
                                       label_transform=self.config[task].get('label_transform', None),)
             # logger.info(dataset[0]['tokens'])
             logger.debug(' '.join(dataset[0]['tokens'][0]))
+            logger.debug(dataset[0]['attention_mask'][0])
             logger.debug(dataset[0]['token_type_ids'][0])
+            logger.debug(dataset[0]['input_ids'][0])
             self.assertTrue(dataset is not None)
 
 
