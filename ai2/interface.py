@@ -128,7 +128,9 @@ class HuggingFaceModelLoader(ModelLoader):
         """
         signature = getfullargspec(self.model.forward)
         return self.model.forward(
-            **{k: None if k == "token_type_ids" and self.model.config.type_vocab_size < 2 else v for k, v in kwargs.items() if k in signature.args})
+            **
+            {k: None if k == "token_type_ids" and getattr(self.model.config, 'type_vocab_size', 0) < 2 else v for k, v in kwargs.items()
+             if k in signature.args})
 
     @classmethod
     def load(cls, model_type: str, model_weights: str) -> HuggingFaceModelLoader:
