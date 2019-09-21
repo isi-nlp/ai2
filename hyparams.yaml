@@ -1,26 +1,31 @@
 bert:
   bert-large-cased:
-    lr: 1e-5
+    lr: 5e-6
     batch_size: 8
+    accumulate_grad_batches: 4
 gpt2:
   gpt2:
-    lr: 2e-5
+    lr: 5e-6
     batch_size: 16
+    accumulate_grad_batches: 2
     max_epochs: 4
 xlnet:
   xlnet-large-cased:
-    lr: 1e-5
+    lr: 5e-6
     batch_size: 8
+    accumulate_grad_batches: 4
 roberta:
   roberta-large:
-    lr: 1e-5
+    lr: 5e-6
     batch_size: 8
+    accumulate_grad_batches: 4
 xlm:
   xlm-mlm-en-2048:
-    lr: 1e-5
+    lr: 5e-6
     batch_size: 4
     max_epochs: 4
     warmup_steps: 120
+    accumulate_grad_batches: 8
 default:
   seed: 42
   lr: 2e-5
@@ -32,3 +37,4 @@ default:
   weight_decay: 0.0
   warmup_steps: 0
   adam_epsilon: 1e-8
+  accumulate_grad_batches: 1
