@@ -8,6 +8,7 @@ from pytorch_lightning.utilities.arg_parse import add_default_args
 from test_tube import HyperOptArgumentParser
 
 from ai2.model import HuggingFaceClassifier
+from train import set_seed
 
 
 def load_from_metrics(hparams, model_cls, weights_path, tags_csv, on_gpu, map_location=None):
@@ -51,10 +52,28 @@ def load_from_metrics(hparams, model_cls, weights_path, tags_csv, on_gpu, map_lo
         hparams.model_type, {}).get(
         hparams.model_weight, running_config['default']).get('max_seq_len', 128)
 
+    hparams.seed = running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default']).get('seed', 42)
+
+    hparams.weight_decay = float(running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default']).get('weight_decay', 0.0))
+
+    hparams.warmup_steps = running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default']).get('warmup_steps', 0)
+
+    hparams.adam_epsilon = float(running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default']).get('adam_epsilon', 1e-8))
+
     hparams.do_lower_case = task_config[hparams.task_name].get('do_lower_case', False)
 
     hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type
     hparams.tokenizer_weight = hparams.model_weight if hparams.tokenizer_weight is None else hparams.tokenizer_weight
+
+    set_seed(hparams.seed)
 
     model = model_cls(hparams)
     model.load_state_dict(checkpoint['state_dict'])

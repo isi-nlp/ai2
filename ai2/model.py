@@ -10,6 +10,7 @@ from pytorch_lightning.root_module.root_module import LightningModule
 from sklearn.metrics import accuracy_score
 from test_tube import HyperOptArgumentParser
 from torch import optim
+from pytorch_transformers import AdamW, WarmupLinearSchedule
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader
 
@@ -158,8 +159,18 @@ class HuggingFaceClassifier(LightningModule):
 
     def configure_optimizers(self):
 
-        optimizer = optim.AdamW(self.parameters(), lr=self.hparams.learning_rate)
-        return optimizer
+        # Prepare optimizer and schedule (linear warmup and decay)
+        t_total = len(self.tng_dataloader) // self.hparams.accumulate_grad_batches * self.hparams.max_epochs
+
+        no_decay = ['bias', 'LayerNorm.weight']
+        optimizer_grouped_parameters = [
+            {'params': [p for n, p in self.named_parameters() if not any(nd in n for nd in no_decay)], 'weight_decay': self.hparams.weight_decay},
+            {'params': [p for n, p in self.named_parameters() if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
+        ]
+        optimizer = AdamW(optimizer_grouped_parameters, lr=self.hparams.learning_rate, eps=self.hparams.adam_epsilon)
+        scheduler = WarmupLinearSchedule(optimizer, warmup_steps=self.hparams.warmup_steps, t_total=t_total)
+
+        return [optimizer], [scheduler]
 
     @pl.data_loader
     def tng_dataloader(self):
