@@ -12,13 +12,18 @@ from test_tube import HyperOptArgumentParser, Experiment
 
 from ai2.model import HuggingFaceClassifier
 
+import random
+import numpy as np
 
-def set_seed(args):
-    random.seed(args.seed)
-    np.random.seed(args.seed)
-    torch.manual_seed(args.seed)
-    if args.n_gpu > 0:
-        torch.cuda.manual_seed_all(args.seed)
+
+def set_seed():
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+        torch.cuda.manual_seed_all(seed)
 
 
 def main(hparams):
