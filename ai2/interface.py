@@ -120,6 +120,15 @@ class HuggingFaceModelLoader(ModelLoader):
     def __init__(self, model: Union[Module, PreTrainedModel]):
         super(HuggingFaceModelLoader, self).__init__(model)
 
+    def forward(self, **kwargs) -> Tuple:
+        """Follow the convention of omnx, return tuple whenever possible.
+
+        Returns:
+            Tuple -- Tuple of returned values of forwading.
+        """
+        signature = getfullargspec(self.model.forward)
+        return self.model.forward(**{k: v if self.model.config.type_vocab_size == 2 else None for k, v in kwargs.items() if k in signature.args})
+
     @classmethod
     def load(cls, model_type: str, model_weights: str) -> HuggingFaceModelLoader:
         assert model_type in MODELS, "Model type is not recognized."
