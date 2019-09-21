@@ -159,7 +159,7 @@ class HuggingFaceClassifier(LightningModule):
     def configure_optimizers(self):
 
         # Prepare optimizer and schedule (linear warmup and decay)
-        t_total = len(self.tng_dataloader) // self.hparams.accumulate_grad_batches * self.hparams.max_epochs
+        t_total = len(self.tng_dataloader) // self.hparams.accumulate_grad_batches * self.hparams.max_nb_epochs
 
         no_decay = ['bias', 'LayerNorm.weight']
         optimizer_grouped_parameters = [
