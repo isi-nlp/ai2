@@ -67,9 +67,9 @@ def load_from_metrics(hparams, model_cls, weights_path, tags_csv, on_gpu, map_lo
     hparams.adam_epsilon = float(running_config.get(
         hparams.model_type, {}).get(
         hparams.model_weight, running_config['default']).get('adam_epsilon', 1e-8))
-    hparams.accumulate_grad_batches = float(running_config.get(
+    hparams.accumulate_grad_batches = running_config.get(
         hparams.model_type, {}).get(
-        hparams.model_weight, running_config['default']).get('accumulate_grad_batches', 1))
+        hparams.model_weight, running_config['default']).get('accumulate_grad_batches', 1)
 
     hparams.do_lower_case = task_config[hparams.task_name].get('do_lower_case', False)
 
