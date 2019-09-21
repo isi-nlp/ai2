@@ -2,6 +2,7 @@ import os
 import sys
 
 import torch
+import yaml
 from pytorch_lightning import Trainer
 from pytorch_lightning.trainer.trainer_io import load_hparams_from_tags_csv
 from pytorch_lightning.utilities.arg_parse import add_default_args
