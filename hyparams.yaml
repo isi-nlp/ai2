@@ -15,6 +15,10 @@ roberta:
   roberta-large:
     lr: 1e-5
     batch_size: 8
+xlm:
+  xlm-mlm-en-2048:
+    batch_size: 8
+    max_epochs: 5
 default:
   lr: 2e-5
   dropout: 0.1
