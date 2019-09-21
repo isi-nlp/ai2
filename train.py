@@ -31,27 +31,27 @@ def main(hparams):
 
     hparams.max_nb_epochs = running_config.get(
         hparams.model_type, {}).get(
-        hparams.model_weight, running_config['default'].get('max_epochs', 3))
+        hparams.model_weight, running_config['default']).get('max_epochs', 3)
 
     hparams.learning_rate = float(running_config.get(
         hparams.model_type, {}).get(
-        hparams.model_weight, running_config['default'].get('lr')))
+        hparams.model_weight, running_config['default']).get('lr', 2e-5))
 
     hparams.initializer_range = float(running_config.get(
         hparams.model_type, {}).get(
-        hparams.model_weight, running_config['default'].get('initializer_range')))
+        hparams.model_weight, running_config['default']).get('initializer_range', 0.02))
 
     hparams.dropout = float(running_config.get(
         hparams.model_type, {}).get(
-        hparams.model_weight, running_config['default'].get('dropout')))
+        hparams.model_weight, running_config['default']).get('dropout', 0.1))
 
     hparams.batch_size = running_config.get(
         hparams.model_type, {}).get(
-        hparams.model_weight, running_config['default'].get('batch_size'))
+        hparams.model_weight, running_config['default']).get('batch_size', 32)
 
     hparams.max_seq_len = running_config.get(
         hparams.model_type, {}).get(
-        hparams.model_weight, running_config['default'].get('max_seq_len'))
+        hparams.model_weight, running_config['default']).get('max_seq_len', 128)
 
     hparams.do_lower_case = task_config[hparams.task_name].get('do_lower_case', False)
     hparams.output_dimension = task_config[hparams.task_name].get('output_dimension', 1)
