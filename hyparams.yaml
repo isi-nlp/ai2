@@ -4,9 +4,9 @@ bert:
     batch_size: 8
 gpt2:
   gpt2:
-    lr: 1e-5
-    batch_size: 8
-    max_epochs: 8
+    lr: 2e-5
+    batch_size: 16
+    max_epochs: 4
 xlnet:
   xlnet-large-cased:
     lr: 1e-5
@@ -18,7 +18,7 @@ roberta:
 xlm:
   xlm-mlm-en-2048:
     batch_size: 8
-    max_epochs: 5
+    max_epochs: 4
 default:
   lr: 2e-5
   dropout: 0.1
