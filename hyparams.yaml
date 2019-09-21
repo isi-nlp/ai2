@@ -9,7 +9,8 @@ gpt2:
     max_epochs: 4
   openai-gpt:
     lr: 5e-5
-    batch_size: 8
+    batch_size: 4
+    accumulate_grad_batches: 2
 xlnet:
   xlnet-large-cased:
     batch_size: 8
