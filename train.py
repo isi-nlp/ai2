@@ -87,6 +87,10 @@ def main(hparams):
         hparams.model_type, {}).get(
         hparams.model_weight, running_config['default']).get('adam_epsilon', 1e-8))
 
+    hparams.accumulate_grad_batches = float(running_config.get(
+        hparams.model_type, {}).get(
+        hparams.model_weight, running_config['default']).get('accumulate_grad_batches', 1))
+
     hparams.model_save_path = model_save_path
 
     logger.info(f"{hparams}")
