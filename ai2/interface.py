@@ -127,7 +127,8 @@ class HuggingFaceModelLoader(ModelLoader):
             Tuple -- Tuple of returned values of forwading.
         """
         signature = getfullargspec(self.model.forward)
-        return self.model.forward(**{k: v if self.model.config.type_vocab_size == 2 else None for k, v in kwargs.items() if k in signature.args})
+        return self.model.forward(
+            **{k: None if k == "token_type_ids" and self.model.config.type_vocab_size < 2 else v for k, v in kwargs.items() if k in signature.args})
 
     @classmethod
     def load(cls, model_type: str, model_weights: str) -> HuggingFaceModelLoader:
