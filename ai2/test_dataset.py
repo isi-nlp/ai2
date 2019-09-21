@@ -29,7 +29,7 @@ class TestDataset(unittest.TestCase):
         if getattr(self, 'config', None) is None:
             self.test_download()
 
-        tokenizer = HuggingFaceTokenizerLoader.load('bert', 'bert-base-cased', do_lower_case=False)
+        tokenizer = HuggingFaceTokenizerLoader.load('roberta', 'roberta-base', do_lower_case=False)
 
         for task, cache_dirs in self.cache_dirs:
             dataset_name = "dev"
@@ -44,6 +44,7 @@ class TestDataset(unittest.TestCase):
                                       label_transform=self.config[task].get('label_transform', None),)
             # logger.info(dataset[0]['tokens'])
             logger.debug(' '.join(dataset[0]['tokens'][0]))
+            logger.debug(dataset[0]['token_type_ids'][0])
             self.assertTrue(dataset is not None)
 
 
