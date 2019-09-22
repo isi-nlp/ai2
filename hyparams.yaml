@@ -45,7 +45,7 @@ hellaswag:
   bert:
     bert-large-cased:
       lr: 5e-6
-      batch_size: 16
+      batch_size: 8
   gpt2:
     gpt2:
       lr: 2e-6
@@ -61,11 +61,11 @@ hellaswag:
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
-      batch_size: 16
+      batch_size: 8
   roberta:
     roberta-large:
       lr: 5e-6
-      batch_size: 16
+      batch_size: 8
   xlm:
     xlm-mlm-en-2048:
       lr: 2e-6
