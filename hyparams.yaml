@@ -77,7 +77,7 @@ hellaswag:
     seed: 42
     lr: 2e-5
     dropout: 0.1
-    batch_size: 32
+    batch_size: 16
     max_seq_len: 160
     max_nb_epochs: 3
     initializer_range: 0.02
