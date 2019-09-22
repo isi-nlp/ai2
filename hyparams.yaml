@@ -51,13 +51,13 @@ hellaswag:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
-      accumulate_grad_batches: 4
+      accumulate_grad_batches: 2
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
-      accumulate_grad_batches: 4
+      accumulate_grad_batches: 2
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
