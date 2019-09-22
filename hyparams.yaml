@@ -9,7 +9,7 @@ alphanli:
     gpt2:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
   gpt:
     openai-gpt:
       lr: 2e-6
@@ -26,7 +26,7 @@ alphanli:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
       warmup_steps: 120
   default:
     seed: 42
@@ -34,7 +34,7 @@ alphanli:
     dropout: 0.1
     batch_size: 32
     max_seq_len: 128
-    max_epochs: 3
+    max_nb_epochs: 3
     initializer_range: 0.02
     weight_decay: 0.0
     warmup_steps: 0
@@ -49,12 +49,12 @@ hellaswag:
     gpt2:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -67,7 +67,7 @@ hellaswag:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
       warmup_steps: 120
   default:
     seed: 42
@@ -75,7 +75,7 @@ hellaswag:
     dropout: 0.1
     batch_size: 16
     max_seq_len: 160
-    max_epochs: 3
+    max_nb_epochs: 3
     initializer_range: 0.02
     weight_decay: 0.0
     warmup_steps: 0
@@ -90,7 +90,7 @@ physicaliqa:
     gpt2:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
   gpt:
     openai-gpt:
       lr: 2e-6
@@ -107,7 +107,7 @@ physicaliqa:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
       warmup_steps: 120
   default:
     seed: 42
@@ -115,7 +115,7 @@ physicaliqa:
     dropout: 0.1
     batch_size: 32
     max_seq_len: 128
-    max_epochs: 3
+    max_nb_epochs: 3
     initializer_range: 0.02
     weight_decay: 0.0
     warmup_steps: 0
@@ -130,7 +130,7 @@ socialiqa:
     gpt2:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
   gpt:
     openai-gpt:
       lr: 2e-6
@@ -147,7 +147,7 @@ socialiqa:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
       warmup_steps: 120
   default:
     seed: 42
@@ -155,7 +155,7 @@ socialiqa:
     dropout: 0.1
     batch_size: 32
     max_seq_len: 128
-    max_epochs: 3
+    max_nb_epochs: 3
     initializer_range: 0.02
     weight_decay: 0.0
     warmup_steps: 0
@@ -170,7 +170,7 @@ vcrqa:
     gpt2:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
   gpt:
     openai-gpt:
       lr: 2e-6
@@ -187,7 +187,7 @@ vcrqa:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
       warmup_steps: 120
   default:
     seed: 42
@@ -195,7 +195,7 @@ vcrqa:
     dropout: 0.1
     batch_size: 32
     max_seq_len: 128
-    max_epochs: 3
+    max_nb_epochs: 3
     initializer_range: 0.02
     weight_decay: 0.0
     warmup_steps: 0
@@ -210,7 +210,7 @@ vcrqr:
     gpt2:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
   gpt:
     openai-gpt:
       lr: 2e-6
@@ -227,7 +227,7 @@ vcrqr:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
-      max_epochs: 4
+      max_nb_epochs: 4
       warmup_steps: 120
   default:
     seed: 42
@@ -235,7 +235,7 @@ vcrqr:
     dropout: 0.1
     batch_size: 32
     max_seq_len: 128
-    max_epochs: 3
+    max_nb_epochs: 3
     initializer_range: 0.02
     weight_decay: 0.0
     warmup_steps: 0

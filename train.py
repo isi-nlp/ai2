@@ -2,6 +2,7 @@ import os
 import pathlib
 import random
 import sys
+from typing import Dict
 
 import numpy as np
 import torch
@@ -25,6 +26,15 @@ def set_seed(seed):
         torch.cuda.manual_seed_all(seed)
 
 
+def get_default(config: Dict, task_name: str, model_type: str, model_weight: str, field: str):
+    task_model_config = config[task_name].get(
+        model_type, {}).get(
+        model_weight,
+        config[task_name]['default'])
+
+    return task_model_config.get(field, config[task_name]['default'][field])
+
+
 def main(hparams):
     curr_dir = "output"
 
@@ -45,29 +55,26 @@ def main(hparams):
     running_config = yaml.safe_load(open(hparams.running_config_file, "r"))
     task_config = yaml.safe_load(open(hparams.task_config_file, 'r'))
 
-    hparams.max_nb_epochs = running_config[hparams.task_name].get(
-        hparams.model_type, {}).get(
-        hparams.model_weight, running_config[hparams.task_name]['default']).get('max_epochs', 3)
+    hparams.max_nb_epochs = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                                        'max_nb_epochs')
 
-    hparams.learning_rate = float(running_config[hparams.task_name].get(
-        hparams.model_type, {}).get(
-        hparams.model_weight, running_config[hparams.task_name]['default']).get('lr', 2e-5))
+    hparams.learning_rate = float(
+        get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                    'lr'))
 
-    hparams.initializer_range = float(running_config[hparams.task_name].get(
-        hparams.model_type, {}).get(
-        hparams.model_weight, running_config[hparams.task_name]['default']).get('initializer_range', 0.02))
+    hparams.initializer_range = float(
+        get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                    'initializer_range'))
 
-    hparams.dropout = float(running_config[hparams.task_name].get(
-        hparams.model_type, {}).get(
-        hparams.model_weight, running_config[hparams.task_name]['default']).get('dropout', 0.1))
+    hparams.dropout = float(
+        get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                    'dropout'))
 
-    hparams.batch_size = running_config[hparams.task_name].get(
-        hparams.model_type, {}).get(
-        hparams.model_weight, running_config[hparams.task_name]['default']).get('batch_size', 32)
+    hparams.batch_size = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                                     'batch_size')
 
-    hparams.max_seq_len = running_config[hparams.task_name].get(
-        hparams.model_type, {}).get(
-        hparams.model_weight, running_config[hparams.task_name]['default']).get('max_seq_len', 128)
+    hparams.max_seq_len = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                                      'max_seq_len')
 
     hparams.do_lower_case = task_config[hparams.task_name].get('do_lower_case', False)
     hparams.output_dimension = task_config[hparams.task_name].get('output_dimension', 1)
@@ -75,25 +82,23 @@ def main(hparams):
     hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type
     hparams.tokenizer_weight = hparams.model_weight if hparams.tokenizer_weight is None else hparams.tokenizer_weight
 
-    hparams.seed = running_config[hparams.task_name].get(
-        hparams.model_type, {}).get(
-        hparams.model_weight, running_config[hparams.task_name]['default']).get('seed', 42)
+    hparams.seed = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                               'seed')
 
-    hparams.weight_decay = float(running_config[hparams.task_name].get(
-        hparams.model_type, {}).get(
-        hparams.model_weight, running_config[hparams.task_name]['default']).get('weight_decay', 0.0))
+    hparams.weight_decay = float(
+        get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                    'weight_decay'))
 
-    hparams.warmup_steps = running_config[hparams.task_name].get(
-        hparams.model_type, {}).get(
-        hparams.model_weight, running_config[hparams.task_name]['default']).get('warmup_steps', 0)
+    hparams.warmup_steps = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                                       'warmup_steps')
 
-    hparams.adam_epsilon = float(running_config[hparams.task_name].get(
-        hparams.model_type, {}).get(
-        hparams.model_weight, running_config[hparams.task_name]['default']).get('adam_epsilon', 1e-8))
+    hparams.adam_epsilon = float(
+        get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                    'adam_epsilon'))
 
-    hparams.accumulate_grad_batches = running_config[hparams.task_name].get(
-        hparams.model_type, {}).get(
-        hparams.model_weight, running_config[hparams.task_name]['default']).get('accumulate_grad_batches', 1)
+    hparams.accumulate_grad_batches = get_default(running_config, hparams.task_name, hparams.model_type,
+                                                  hparams.model_weight,
+                                                  'accumulate_grad_batches')
 
     hparams.model_save_path = model_save_path
 
