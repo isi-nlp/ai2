@@ -1,33 +1,34 @@
-# lr: 2e-5 | 32, 5e-6 | 8, 2e-6 | 4
-# lr: 2e-5 | 16, 5e-6 | 8, 2e-6 | 4
 alphanli:
   bert:
     bert-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   gpt2:
     gpt2:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
+      accumulate_grad_batches: 2
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
+      accumulate_grad_batches: 2
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   roberta:
     roberta-large:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   xlm:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
       warmup_steps: 120
+      accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
@@ -44,36 +45,39 @@ hellaswag:
   bert:
     bert-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   gpt2:
     gpt2:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
+      accumulate_grad_batches: 4
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
+      accumulate_grad_batches: 4
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   roberta:
     roberta-large:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   xlm:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
       warmup_steps: 120
+      accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
     dropout: 0.1
-    batch_size: 16
+    batch_size: 32
     max_seq_len: 160
     max_nb_epochs: 3
     initializer_range: 0.02
@@ -85,30 +89,33 @@ physicaliqa:
   bert:
     bert-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   gpt2:
     gpt2:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
+      accumulate_grad_batches: 2
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
+      accumulate_grad_batches: 2
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   roberta:
     roberta-large:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   xlm:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
       warmup_steps: 120
+      accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
@@ -125,30 +132,33 @@ socialiqa:
   bert:
     bert-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   gpt2:
     gpt2:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
+      accumulate_grad_batches: 2
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
+      accumulate_grad_batches: 2
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   roberta:
     roberta-large:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   xlm:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
       warmup_steps: 120
+      accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
@@ -165,30 +175,33 @@ vcrqa:
   bert:
     bert-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   gpt2:
     gpt2:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
+      accumulate_grad_batches: 2
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
+      accumulate_grad_batches: 2
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   roberta:
     roberta-large:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   xlm:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
       warmup_steps: 120
+      accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
@@ -205,30 +218,33 @@ vcrqr:
   bert:
     bert-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   gpt2:
     gpt2:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
+      accumulate_grad_batches: 2
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
+      accumulate_grad_batches: 2
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   roberta:
     roberta-large:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   xlm:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
       warmup_steps: 120
+      accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
