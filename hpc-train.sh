@@ -1,6 +1,6 @@
 #!/bin/sh
 
-declare -a TASKS=(alphanli hellaswag physicaliqa socialiqa vcrqa vcrqr)
+declare -a TASKS=(hellaswag alphanli physicaliqa socialiqa vcrqa vcrqr)
 declare -a MODELS=(gpt,openai-gpt gpt2,gpt2 bert,bert-base-cased bert,bert-large-cased xlnet,xlnet-base-cased xlnet,xlnet-large-cased xlm,xlm-mlm-en-2048 roberta,roberta-base roberta,roberta-large)
 
 OLDIFS=$IFS
