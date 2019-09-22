@@ -289,7 +289,7 @@ class HuggingFaceClassifier(LightningModule):
                             max_nb_epochs=3
                             )
 
-        runing_group = parser.add_argument_group(title='Training/Evaluation options')
+        running_group = parser.add_argument_group(title='Training/Evaluation options')
         model_group = parser.add_argument_group(title='Model options')
         tokenizer_group = parser.add_argument_group(title='Tokenizer options')
         task_group = parser.add_argument_group(title='Task options')
@@ -308,7 +308,7 @@ class HuggingFaceClassifier(LightningModule):
         task_group.add_argument('--task_config_file', type=str, required=True)
         task_group.add_argument('--task_cache_dir', type=str, required=True)
 
-        runing_group.add_argument('--running_config_file', type=str, required=True)
+        running_group.add_argument('--running_config_file', type=str, required=True)
 
         parser.add_argument('--test_input_dir', type=str, required=False, default=None)
         parser.add_argument('--output_dir', type=str, required=False, default=None)

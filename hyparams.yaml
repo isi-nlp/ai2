@@ -1,39 +1,243 @@
-bert:
-  bert-large-cased:
-    batch_size: 8
-    accumulate_grad_batches: 4
-gpt2:
+# lr: 2e-5 | 32, 5e-6 | 8, 2e-6 | 4
+# lr: 2e-5 | 16, 5e-6 | 8, 2e-6 | 4
+alphanli:
+  bert:
+    bert-large-cased:
+      lr: 5e-6
+      batch_size: 8
   gpt2:
+    gpt2:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+  gpt:
+    openai-gpt:
+      lr: 2e-6
+      batch_size: 4
+  xlnet:
+    xlnet-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  roberta:
+    roberta-large:
+      lr: 5e-6
+      batch_size: 8
+  xlm:
+    xlm-mlm-en-2048:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+      warmup_steps: 120
+  default:
+    seed: 42
+    lr: 2e-5
+    dropout: 0.1
+    batch_size: 32
+    max_seq_len: 128
+    max_epochs: 3
+    initializer_range: 0.02
+    weight_decay: 0.0
+    warmup_steps: 0
+    adam_epsilon: 1e-8
+    accumulate_grad_batches: 1
+hellaswag:
+  bert:
+    bert-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  gpt2:
+    gpt2:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+  gpt:
+    openai-gpt:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+  xlnet:
+    xlnet-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  roberta:
+    roberta-large:
+      lr: 5e-6
+      batch_size: 8
+  xlm:
+    xlm-mlm-en-2048:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+      warmup_steps: 120
+  default:
+    seed: 42
+    lr: 2e-5
+    dropout: 0.1
     batch_size: 16
-    accumulate_grad_batches: 2
-    max_epochs: 4
-  openai-gpt:
-    lr: 5e-5
-    batch_size: 4
-    accumulate_grad_batches: 2
-xlnet:
-  xlnet-large-cased:
-    batch_size: 8
-    accumulate_grad_batches: 4
-roberta:
-  roberta-large:
-    batch_size: 8
-    accumulate_grad_batches: 4
-xlm:
-  xlm-mlm-en-2048:
-    batch_size: 4
-    max_epochs: 4
-    warmup_steps: 120
-    accumulate_grad_batches: 8
-default:
-  seed: 42
-  lr: 5e-6
-  dropout: 0.1
-  batch_size: 32
-  max_seq_len: 160
-  max_epochs: 3
-  initializer_range: 0.02
-  weight_decay: 0.0
-  warmup_steps: 0
-  adam_epsilon: 1e-8
-  accumulate_grad_batches: 1
+    max_seq_len: 160
+    max_epochs: 3
+    initializer_range: 0.02
+    weight_decay: 0.0
+    warmup_steps: 0
+    adam_epsilon: 1e-8
+    accumulate_grad_batches: 1
+physicaliqa:
+  bert:
+    bert-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  gpt2:
+    gpt2:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+  gpt:
+    openai-gpt:
+      lr: 2e-6
+      batch_size: 4
+  xlnet:
+    xlnet-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  roberta:
+    roberta-large:
+      lr: 5e-6
+      batch_size: 8
+  xlm:
+    xlm-mlm-en-2048:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+      warmup_steps: 120
+  default:
+    seed: 42
+    lr: 2e-5
+    dropout: 0.1
+    batch_size: 32
+    max_seq_len: 128
+    max_epochs: 3
+    initializer_range: 0.02
+    weight_decay: 0.0
+    warmup_steps: 0
+    adam_epsilon: 1e-8
+    accumulate_grad_batches: 1
+socialiqa:
+  bert:
+    bert-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  gpt2:
+    gpt2:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+  gpt:
+    openai-gpt:
+      lr: 2e-6
+      batch_size: 4
+  xlnet:
+    xlnet-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  roberta:
+    roberta-large:
+      lr: 5e-6
+      batch_size: 8
+  xlm:
+    xlm-mlm-en-2048:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+      warmup_steps: 120
+  default:
+    seed: 42
+    lr: 2e-5
+    dropout: 0.1
+    batch_size: 32
+    max_seq_len: 128
+    max_epochs: 3
+    initializer_range: 0.02
+    weight_decay: 0.0
+    warmup_steps: 0
+    adam_epsilon: 1e-8
+    accumulate_grad_batches: 1
+vcrqa:
+  bert:
+    bert-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  gpt2:
+    gpt2:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+  gpt:
+    openai-gpt:
+      lr: 2e-6
+      batch_size: 4
+  xlnet:
+    xlnet-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  roberta:
+    roberta-large:
+      lr: 5e-6
+      batch_size: 8
+  xlm:
+    xlm-mlm-en-2048:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+      warmup_steps: 120
+  default:
+    seed: 42
+    lr: 2e-5
+    dropout: 0.1
+    batch_size: 32
+    max_seq_len: 128
+    max_epochs: 3
+    initializer_range: 0.02
+    weight_decay: 0.0
+    warmup_steps: 0
+    adam_epsilon: 1e-8
+    accumulate_grad_batches: 1
+vcrqr:
+  bert:
+    bert-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  gpt2:
+    gpt2:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+  gpt:
+    openai-gpt:
+      lr: 2e-6
+      batch_size: 4
+  xlnet:
+    xlnet-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  roberta:
+    roberta-large:
+      lr: 5e-6
+      batch_size: 8
+  xlm:
+    xlm-mlm-en-2048:
+      lr: 2e-6
+      batch_size: 4
+      max_epochs: 4
+      warmup_steps: 120
+  default:
+    seed: 42
+    lr: 2e-5
+    dropout: 0.1
+    batch_size: 32
+    max_seq_len: 128
+    max_epochs: 3
+    initializer_range: 0.02
+    weight_decay: 0.0
+    warmup_steps: 0
+    adam_epsilon: 1e-8
+    accumulate_grad_batches: 1
