@@ -36,7 +36,7 @@ class ModelLoader(ABC, Module):
 
     @classmethod
     @abc.abstractmethod
-    def load(cls, *args, **kwargs) -> ModelLoader:
+    def load(cls, model_type: str, model_weights: str, *args, **kwargs) -> ModelLoader:
         raise NotImplementedError('Load is not implemented.')
 
     def forward(self, **kwargs) -> Tuple:
@@ -64,7 +64,7 @@ class TokenizerLoader(ABC):
 
     @classmethod
     @abc.abstractmethod
-    def load(cls, *args, **kwargs) -> TokenizerLoader:
+    def load(cls, model_type: str, model_weights: str, *args, **kwargs) -> TokenizerLoader:
         raise NotImplementedError("Load is not implemented.")
 
     @property
@@ -129,7 +129,8 @@ class HuggingFaceModelLoader(ModelLoader):
         signature = getfullargspec(self.model.forward)
         return self.model.forward(
             **
-            {k: None if k == "token_type_ids" and getattr(self.model.config, 'type_vocab_size', 0) < 2 else v for k, v in kwargs.items()
+            {k: None if k == "token_type_ids" and getattr(self.model.config, 'type_vocab_size', 0) < 2 else v for k, v
+             in kwargs.items()
              if k in signature.args})
 
     @classmethod
