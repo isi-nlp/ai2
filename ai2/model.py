@@ -33,14 +33,17 @@ class HuggingFaceClassifier(LightningModule):
         if not os.path.exists(self.hparams.output_dir):
             os.mkdir(self.hparams.output_dir)
 
+        ## TODO: Change to your own model loader
         self.encoder = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
         self.encoder.train()
+
         self.dropout = nn.Dropout(self.hparams.dropout)
         self.linear = nn.Linear(self.encoder.dim, self.hparams.output_dimension)
 
         self.linear.weight.data.normal_(mean=0.0, std=self.hparams.initializer_range)
         self.linear.bias.data.zero_()
 
+        ## TODO: Change to your own tokenizer loader
         self.tokenizer = HuggingFaceTokenizerLoader.load(
             self.hparams.tokenizer_type, self.hparams.tokenizer_weight, do_lower_case=self.hparams.do_lower_case)
 
@@ -72,6 +75,8 @@ class HuggingFaceClassifier(LightningModule):
             'attention_mask': data_batch['attention_mask'].reshape(-1, S),
         })
         loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
+
+        ## WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
         if self.trainer.use_dp:
             loss_val = loss_val.unsqueeze(0)
 
@@ -89,6 +94,8 @@ class HuggingFaceClassifier(LightningModule):
             'attention_mask': data_batch['attention_mask'].reshape(-1, S),
         })
         loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
+        ## WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
+
         if self.trainer.use_dp:
             loss_val = loss_val.unsqueeze(0)
 
@@ -192,6 +199,7 @@ class HuggingFaceClassifier(LightningModule):
                           shuffle=True, batch_size=self.hparams.batch_size)
 
     def collate_fn(self, examples):
+        """Padding examples into a batch."""
 
         padding_value = self.tokenizer.pad
 
