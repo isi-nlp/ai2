@@ -90,7 +90,6 @@ class HuggingFaceClassifier(LightningModule):
         return {
             'logits': logits.reshape(B, -1),
             'loss': loss_val / B,
-            'train_acc': train_acc,
         }
 
     def validation_step(self, data_batch, batch_i):
@@ -110,7 +109,6 @@ class HuggingFaceClassifier(LightningModule):
         return {
             'batch_logits': logits.reshape(B, -1),
             'batch_loss': loss_val / B,
-            'batch_size': [B],
             'batch_truth': data_batch['y'].reshape(-1)
         }
 
@@ -132,7 +130,8 @@ class HuggingFaceClassifier(LightningModule):
         truth = torch.cat([o['batch_truth'] for o in outputs], dim=0).reshape(-1)
         logits = torch.cat([o['batch_logits'] for o in outputs], dim=0).reshape(len(truth),
                                                                                 outputs[0]['batch_logits'].shape[1])
-        loss_sum = torch.cat([o['batch_loss'].reshape(-1) * o['batch_size'] for o in outputs], dim=0).reshape(-1)
+        loss_sum = torch.cat([o['batch_loss'].reshape(-1) * o['batch_logits'].shape[0] for o in outputs],
+                             dim=0).reshape(-1)
         loss_avg = torch.sum(loss_sum, dim=0).reshape(-1)
 
         assert truth.shape[0] == sum([o['batch_size'] for o in outputs]), "Mismatch size"
