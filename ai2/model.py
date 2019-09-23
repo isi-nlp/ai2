@@ -124,11 +124,12 @@ class HuggingFaceClassifier(LightningModule):
         truth = torch.cat([o['batch_truth'] for o in outputs], dim=0).reshape(-1)
         logits = torch.cat([o['batch_logits'] for o in outputs], dim=0).reshape(len(truth),
                                                                                 outputs[0]['batch_logits'].shape[1])
-        loss_avg = torch.cumsum([o['batch_loss'] * o['batch_logits'].shape[0] for o in outputs], dim=0).reshape(-1) / \
-                   truth.shape[0]
+        loss_sum = torch.cat([o['batch_loss'].reshape(-1) * o['batch_logits'].shape[0] for o in outputs],
+                             dim=0).reshape(-1)
+        loss_avg = torch.cumsum(loss_sum, dim=0).reshape(-1) / truth.shape[0]
 
         loss = self.loss(truth, logits)
-        assert loss_avg == loss, f"Loss not equal {loss} {loss_avg}"
+        assert torch.eq(loss_avg, loss), f"Loss not equal: {loss} VS. {loss_avg}"
 
         proba = F.softmax(logits, dim=-1)
         pred = torch.argmax(proba, dim=-1).reshape(-1)
