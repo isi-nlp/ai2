@@ -79,15 +79,18 @@ class HuggingFaceClassifier(LightningModule):
         proba = F.softmax(logits, dim=-1)
         pred = torch.argmax(proba, dim=-1).reshape(-1)
 
+        train_acc = accuracy_score(data_batch['y'].reshape(-1).cpu().detach().numpy().tolist(),
+                                   pred.cpu().detach().numpy().tolist())
+
         ## WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
         if self.trainer.use_dp:
             loss_val = loss_val.unsqueeze(0)
+            train_acc = [train_acc]
 
         return {
             'logits': logits.reshape(B, -1),
             'loss': loss_val / B,
-            'train_acc': accuracy_score(data_batch['y'].reshape(-1).cpu().detach().numpy().tolist(),
-                                        pred.cpu().detach().numpy().tolist()),
+            'train_acc': train_acc,
         }
 
     def validation_step(self, data_batch, batch_i):
@@ -107,7 +110,7 @@ class HuggingFaceClassifier(LightningModule):
         return {
             'batch_logits': logits.reshape(B, -1),
             'batch_loss': loss_val / B,
-            'batch_size': B,
+            'batch_size': [B],
             'batch_truth': data_batch['y'].reshape(-1)
         }
 
