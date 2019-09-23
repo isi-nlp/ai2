@@ -134,7 +134,7 @@ class HuggingFaceClassifier(LightningModule):
                              dim=0).reshape(-1)
         loss_avg = torch.sum(loss_sum, dim=0).reshape(-1)
 
-        assert truth.shape[0] == sum([o['batch_size'] for o in outputs]), "Mismatch size"
+        assert truth.shape[0] == sum([o['batch_logits'].shape[0] for o in outputs]), "Mismatch size"
 
         loss = self.loss(truth, logits)
 
