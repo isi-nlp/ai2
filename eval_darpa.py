@@ -89,7 +89,7 @@ if __name__ == "__main__":
     pretrained_model.freeze()
     pretrained_model.to(device)
 
-    dataloader = pretrained_model.val_dataloader if args.train_eval else pretrained_model.tng_dataloader 
+    dataloader = pretrained_model.tng_dataloader if args.train_eval else pretrained_model.val_dataloader 
 
     outputs = []
 
@@ -103,12 +103,9 @@ if __name__ == "__main__":
     pred = torch.cat([x['pred'] for x in outputs], dim=0).reshape(-1).cpu().detach().numpy().tolist()
     prob = torch.cat([x['prob'] for x in outputs], dim=0).cpu().detach().numpy().tolist()
 
-    assert truth == list(map(lambda x: int(x.decode("utf-8").strip('\n') if not isinstance(x, int) else x) - TASK['start'], pretrained_model.dev_y))
+    # assert truth == list(map(lambda x: int(x.decode("utf-8").strip('\n') if not isinstance(x, int) else x) - TASK['start'], pretrained_model.dev_y))
 
     with open(args.output, "w") as output:
-        output.write(f"Premise\tHypothesis\tTruth\tPrediction\tProbability\n")
-        for example, prediction, probabilities in tqdm(
-            zip(pretrained_model.helper.preprocess(pretrained_model.dev_x, pretrained_model.dev_y),
-                pred, prob)):
-            for i, (pair, probability) in enumerate(zip(example.pairs, probabilities)):
-                output.write(f"{pair.premise}\t{pair.hypothesis}\t{example.label == i}\t{prediction == i}\t{probability}\n")
+        output.write('\n'.join(map(lambda l: '\t'.join(map(str, l)), prob)))
+    with open(args.output.replace(".tsv", ".truth"), "w") as output:
+        output.write('\n'.join(map(str, truth)))
