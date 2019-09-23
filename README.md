@@ -19,6 +19,9 @@
 
 In step 1, when you follow the interface of a `HuggingFaceModelLoader` or a `HuggingFaceTokenizerLoader`, you will use a `model_type` and `model_weight`
 to direct your `load` function to find your model files. 
+
+Be sure to make modifications to test_dataset.py (change the tokenizer loader) and run your tokenizer on those datasets!
+
 Later, you can specify the training parameters in `hyparams.yaml` in the following format:
 
 ```yaml
