@@ -53,6 +53,7 @@ class HuggingFaceClassifier(LightningModule):
         #     logger.debug(f"Device: {next(self.encoder.model.parameters()).device}")
         #     logger.debug(f"Device: {input_ids.device} {token_type_ids.device} {attention_mask.device}")
 
+        ## TODO: Change to your own forward
         outputs = self.encoder.forward(
             **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
         output = torch.mean(outputs[0], dim=1).squeeze()
@@ -79,13 +80,9 @@ class HuggingFaceClassifier(LightningModule):
         proba = F.softmax(logits, dim=-1)
         pred = torch.argmax(proba, dim=-1).reshape(-1)
 
-        train_acc = accuracy_score(data_batch['y'].reshape(-1).cpu().detach().numpy().tolist(),
-                                   pred.cpu().detach().numpy().tolist())
-
         ## WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
         if self.trainer.use_dp:
             loss_val = loss_val.unsqueeze(0)
-            train_acc = [train_acc]
 
         return {
             'logits': logits.reshape(B, -1),
@@ -101,6 +98,7 @@ class HuggingFaceClassifier(LightningModule):
             'attention_mask': data_batch['attention_mask'].reshape(-1, S),
         })
         loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
+
         ## WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
 
         if self.trainer.use_dp:
@@ -108,7 +106,7 @@ class HuggingFaceClassifier(LightningModule):
 
         return {
             'batch_logits': logits.reshape(B, -1),
-            'batch_loss': loss_val / B,
+            'batch_loss': loss_val,
             'batch_truth': data_batch['y'].reshape(-1)
         }
 
@@ -128,20 +126,19 @@ class HuggingFaceClassifier(LightningModule):
     def validation_end(self, outputs):
 
         truth = torch.cat([o['batch_truth'] for o in outputs], dim=0).reshape(-1)
-        logits = torch.cat([o['batch_logits'] for o in outputs], dim=0).reshape(len(truth),
+        logits = torch.cat([o['batch_logits'] for o in outputs], dim=0).reshape(truth.shape[0],
                                                                                 outputs[0]['batch_logits'].shape[1])
-        loss_sum = torch.cat([o['batch_loss'].reshape(-1) * o['batch_logits'].shape[0] for o in outputs],
-                             dim=0).reshape(-1)
-        loss_avg = torch.sum(loss_sum, dim=0).reshape(-1)
+        loss_sum = torch.cat([o['batch_loss'].reshape(-1) for o in outputs], dim=0).reshape(-1)
+        loss_sum = torch.sum(loss_sum, dim=0).reshape(-1)
 
         assert truth.shape[0] == sum([o['batch_logits'].shape[0] for o in outputs]), "Mismatch size"
 
         loss = self.loss(truth, logits)
 
-        assert torch.eq(loss_avg.item(), loss.item()), f"Loss not equal: {loss.item()} VS. {loss_avg.item()}"
+        assert loss.item() == loss_sum.item(), f"Loss not equal: {loss.item()} VS. {loss_sum.item()}"
 
         loss /= truth.shape[0]
-        loss_avg /= truth.shape[0]
+        loss_sum /= truth.shape[0]
 
         proba = F.softmax(logits, dim=-1)
         pred = torch.argmax(proba, dim=-1).reshape(-1)
