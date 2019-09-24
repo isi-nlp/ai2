@@ -17,6 +17,13 @@ from ai2.interface import TokenizerLoader
 
 
 def download(urls: Union[str, List[str]], cache_dir: str) -> Union[str, List[str]]:
+    """
+    Download ai2 datasets from urls.
+
+    :param urls: List of urls or single url
+    :param cache_dir: path where to store the dataset.
+    :return: single path or list of paths.
+    """
     if isinstance(urls, str):
         filename = urls.split('/')[-1]
         filename = filename.replace('.zip', '').replace('.tar.gz', '')
@@ -63,22 +70,20 @@ class AI2Dataset(Dataset):
             cls, cache_dir: str, file_mapping: Dict, task_formula: str, type_formula: str,
             preprocessor: TokenizerLoader, pretokenized: bool = False,
             label_formula: str = None, label_offset: int = 0, label_transform: Dict = None) -> AI2Dataset:
-        """Load the dataset from a directory.
 
-        Arguments:
-            cache_dir {str} -- directory where the dataset is stored.
-            file_mapping {Dict} -- Mapping between the dataset name and the file. {'input_x': 'filex', 'input_y': 'filey'}  
-            task_formula {str} -- Task formula from the config. 
-            type_formula {str} -- Type formula for token_type_ids.
-            preprocessor {TokenizerLoader} -- TokenizerLoader.
+        """
+        Load the datase into a dataset class wrapper.
 
-        Keyword Arguments:
-            pretokenized {bool} -- Whether the input is pretokenized or not. (default: {False})
-            label_formula {str} -- Label field if the input y is a json file. (default: {None})
-            label_offset {int} -- Label offset. (default: {0})
-
-        Returns:
-            AI2Dataset -- [description]
+        :param cache_dir: Path to a dataset.
+        :param file_mapping: Dictionary where train_x/train_y/dev_x/dev_y are mapped to each file in the cache directory.
+        :param task_formula: How to formulate a task, configured in the tasks.yaml.
+        :param type_formula: Token type id formulation, configured in the tasks.yaml.
+        :param preprocessor: TokenizerLoader object.
+        :param pretokenized: Whether the field in task formula is pretokenized or not.
+        :param label_formula: None if label is an integer else a field in the dataset.
+        :param label_offset: Offset for integer labels.
+        :param label_transform: Mapping from string lables to integer labels.
+        :return: An AI2Dataset.
         """
 
         assert len(file_mapping) <= 2, "At most two files can be specified"
@@ -160,7 +165,8 @@ class AI2Dataset(Dataset):
                                 int(json.loads(line.strip('\r\n ').replace('\n', ' '))[label_formula]) - label_offset)
                         else:
                             labels.append(
-                                label_transform[json.loads(line.strip('\r\n ').replace('\n', ' '))[label_formula]] - label_offset)
+                                label_transform[
+                                    json.loads(line.strip('\r\n ').replace('\n', ' '))[label_formula]] - label_offset)
                     else:
                         labels.append(int(line) - label_offset)
 

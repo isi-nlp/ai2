@@ -17,7 +17,7 @@
 2.  Implement your own Classifier, as `HuggingFaceClassifier` in `ai2/model.py`. Or copy that file and make necessary changes to it.
 3.  Change the classifier in both `eval.py` as `train.py`
 
-In step 1, when you follow the interface of a `HuggingFaceModelLoader` or a `HuggingFaceTokenizerLoader`, you will use a `model_type` and `model_weight`
+In step 1, when you follow the interface of a `ModelLoader` or a `TokenizerLoader`, you will use a `model_type` and `model_weight`
 to direct your `load` function to find your model files. 
 
 Be sure to make modifications to test_dataset.py (change the tokenizer loader) and run your tokenizer on those datasets!
