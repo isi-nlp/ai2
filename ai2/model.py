@@ -1,3 +1,4 @@
+import math
 import os
 
 import numpy as np
@@ -135,7 +136,8 @@ class HuggingFaceClassifier(LightningModule):
 
         loss = self.loss(truth, logits)
 
-        assert loss.item() == loss_sum.item(), f"Loss not equal: {loss.item()} VS. {loss_sum.item()}"
+        assert math.isclose(loss.item(), loss_sum.item(),
+                            abs_tol=0.01), f"Loss not equal: {loss.item()} VS. {loss_sum.item()}"
 
         loss /= truth.shape[0]
         loss_sum /= truth.shape[0]
