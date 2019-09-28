@@ -1,5 +1,9 @@
+from __future__ import annotations
+
 import math
 import os
+
+from typing import *
 
 import numpy as np
 import pytorch_lightning as pl
@@ -7,15 +11,121 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import yaml
+
 from pytorch_lightning.root_module.root_module import LightningModule
-from pytorch_transformers import AdamW, WarmupLinearSchedule
+from transformers import *
 from sklearn.metrics import accuracy_score
 from test_tube import HyperOptArgumentParser
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader
+from torch.nn import Module
 
 from ai2.dataset import AI2Dataset, download
-from ai2.interface import HuggingFaceModelLoader, HuggingFaceTokenizerLoader
+from ai2.interface import *
+
+
+TOKENIZERS = {
+    'bert': BertTokenizer,
+    'xlm': XLMTokenizer,
+    'xlnet': XLNetTokenizer,
+    'roberta': RobertaTokenizer,
+    'gpt': OpenAIGPTTokenizer,
+    'gpt2': GPT2Tokenizer
+}
+
+MODELS = {
+    'bert': BertModel,
+    'xlm': XLMModel,
+    'xlnet': XLNetModel,
+    'roberta': RobertaModel,
+    'gpt': OpenAIGPTModel,
+    'gpt2': GPT2Model
+}
+
+
+class HuggingFaceModelLoader(ModelLoader):
+
+    def __init__(self, model: Union[Module, PreTrainedModel]):
+        super(HuggingFaceModelLoader, self).__init__(model)
+
+    def forward(self, **kwargs) -> Tuple:
+        """Follow the convention of omnx, return tuple whenever possible.
+
+        token_type_ids are used when a more is pretrained with {0, 1} token_type_ids. RoBERTa has the argument but does not support it yet.
+
+        Returns:
+            Tuple -- Tuple of returned values of forwading.
+        """
+        signature = getfullargspec(self.model.forward)
+        return self.model.forward(
+            **
+            {k: None if k == "token_type_ids" and getattr(self.model.config, 'type_vocab_size', 0) < 2 else v for k, v
+             in kwargs.items()
+             if k in signature.args})
+
+    @classmethod
+    def load(cls, model_type: str, model_weights: str) -> HuggingFaceModelLoader:
+        assert model_type in MODELS, "Model type is not recognized."
+        return HuggingFaceModelLoader(MODELS[model_type].from_pretrained(model_weights, cache_dir="./model_cache"))
+
+
+class HuggingFaceTokenizerLoader(TokenizerLoader):
+
+    @classmethod
+    def load(cls, model_type: str, model_weights: str, *args, **kargs) -> HuggingFaceTokenizerLoader:
+        assert model_type in TOKENIZERS, f"Tokenizer model type {model_type} is not recognized."
+        return HuggingFaceTokenizerLoader(
+            TOKENIZERS[model_type].from_pretrained(model_weights, *args, cache_dir="./model_cache", **kargs))
+
+    @property
+    def SEP(self) -> str:
+        if self.tokenizer._sep_token is None:
+            return self.UNK
+        return self.tokenizer._sep_token
+
+    @property
+    def sep(self) -> int:
+        return self.token2id(self.SEP)
+
+    @property
+    def CLS(self) -> str:
+        if self.tokenizer._cls_token is None:
+            return self.UNK
+        return self.tokenizer._cls_token
+
+    @property
+    def cls(self) -> int:
+        return self.token2id(self.CLS)
+
+    @property
+    def UNK(self) -> str:
+        if self.tokenizer._unk_token is None:
+            raise Exception('UNK token in tokenizer not found.')
+
+        return self.tokenizer._unk_token
+
+    @property
+    def unk(self) -> int:
+        return self.token2id(self.UNK)
+
+    @property
+    def PAD(self) -> str:
+        if self.tokenizer._pad_token is None:
+            return self.UNK
+        return self.tokenizer._pad_token
+
+    @property
+    def pad(self) -> int:
+        return self.token2id(self.PAD)
+
+    def token2id(self, token: str) -> int:
+        return self.tokenizer.convert_tokens_to_ids([token])[0]
+
+    def tokens2ids(self, tokens: List[str]) -> List[int]:
+        return self.tokenizer.convert_tokens_to_ids(tokens)
+
+    def tokenize(self, text: str) -> List[str]:
+        return self.tokenizer.tokenize(text)
 
 
 class HuggingFaceClassifier(LightningModule):
@@ -34,7 +144,7 @@ class HuggingFaceClassifier(LightningModule):
         if not os.path.exists(self.hparams.output_dir):
             os.mkdir(self.hparams.output_dir)
 
-        ## TODO: Change to your own model loader
+        # TODO: Change to your own model loader
         self.encoder = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
         self.encoder.train()
 
@@ -44,7 +154,7 @@ class HuggingFaceClassifier(LightningModule):
         self.linear.weight.data.normal_(mean=0.0, std=self.hparams.initializer_range)
         self.linear.bias.data.zero_()
 
-        ## TODO: Change to your own tokenizer loader
+        # TODO: Change to your own tokenizer loader
         self.tokenizer = HuggingFaceTokenizerLoader.load(
             self.hparams.tokenizer_type, self.hparams.tokenizer_weight, do_lower_case=self.hparams.do_lower_case)
 
@@ -54,7 +164,7 @@ class HuggingFaceClassifier(LightningModule):
         #     logger.debug(f"Device: {next(self.encoder.model.parameters()).device}")
         #     logger.debug(f"Device: {input_ids.device} {token_type_ids.device} {attention_mask.device}")
 
-        ## TODO: Change to your own forward
+        # TODO [Optional]: Change to your own forward
         outputs = self.encoder.forward(
             **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
         output = torch.mean(outputs[0], dim=1).squeeze()
@@ -81,7 +191,7 @@ class HuggingFaceClassifier(LightningModule):
         proba = F.softmax(logits, dim=-1)
         pred = torch.argmax(proba, dim=-1).reshape(-1)
 
-        ## WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
+        # WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
         if self.trainer.use_dp:
             loss_val = loss_val.unsqueeze(0)
 
@@ -100,7 +210,7 @@ class HuggingFaceClassifier(LightningModule):
         })
         loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
 
-        ## WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
+        # WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
 
         if self.trainer.use_dp:
             loss_val = loss_val.unsqueeze(0)
@@ -262,7 +372,8 @@ class HuggingFaceClassifier(LightningModule):
     def val_dataloader(self):
         dataset_name = "dev"
         cache_dirs = download(self.task_config[self.hparams.task_name]['urls'], self.hparams.task_cache_dir)
-        dataset = AI2Dataset.load(cache_dir=cache_dirs[0] if isinstance(cache_dirs, list) else cache_dirs,
+        # TODO: improve download file mapping
+        dataset = AI2Dataset.load(cache_dir=cache_dirs[-1] if isinstance(cache_dirs, list) else cache_dirs,
                                   file_mapping=self.task_config[self.hparams.task_name]['file_mapping'][dataset_name],
                                   task_formula=self.task_config[self.hparams.task_name]['task_formula'],
                                   type_formula=self.task_config[self.hparams.task_name]['type_formula'],

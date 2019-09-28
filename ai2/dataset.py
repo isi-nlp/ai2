@@ -5,10 +5,10 @@ import io
 import json
 import os
 import zipfile
+import requests
 from dataclasses import dataclass
 from typing import *
 
-import requests
 from loguru import logger
 from torch.utils.data import Dataset
 from tqdm import tqdm
@@ -70,7 +70,6 @@ class AI2Dataset(Dataset):
             cls, cache_dir: str, file_mapping: Dict, task_formula: str, type_formula: str,
             preprocessor: TokenizerLoader, pretokenized: bool = False,
             label_formula: str = None, label_offset: int = 0, label_transform: Dict = None) -> AI2Dataset:
-
         """
         Load the datase into a dataset class wrapper.
 

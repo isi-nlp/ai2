@@ -8,12 +8,12 @@ alphanli:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -24,11 +24,11 @@ alphanli:
       batch_size: 16
   xlm:
     xlm-mlm-en-2048:
-      lr: 2e-6
+      lr: 1e-6
       batch_size: 4
       max_nb_epochs: 4
       warmup_steps: 120
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 4
   default:
     seed: 42
     lr: 2e-5
@@ -51,13 +51,13 @@ hellaswag:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -72,7 +72,7 @@ hellaswag:
       batch_size: 4
       max_nb_epochs: 4
       warmup_steps: 120
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
@@ -115,7 +115,7 @@ physicaliqa:
       batch_size: 4
       max_nb_epochs: 4
       warmup_steps: 120
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
@@ -132,33 +132,33 @@ socialiqa:
   bert:
     bert-large-cased:
       lr: 5e-6
-      batch_size: 16
+      batch_size: 8
   gpt2:
     gpt2:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
-      batch_size: 16
+      batch_size: 8
   roberta:
     roberta-large:
       lr: 5e-6
-      batch_size: 16
+      batch_size: 8
   xlm:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
       warmup_steps: 120
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
@@ -181,12 +181,12 @@ vcrqa:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -201,7 +201,7 @@ vcrqa:
       batch_size: 4
       max_nb_epochs: 4
       warmup_steps: 120
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
@@ -224,12 +224,12 @@ vcrqr:
       lr: 2e-6
       batch_size: 4
       max_nb_epochs: 4
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   gpt:
     openai-gpt:
       lr: 2e-6
       batch_size: 4
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -244,7 +244,7 @@ vcrqr:
       batch_size: 4
       max_nb_epochs: 4
       warmup_steps: 120
-      accumulate_grad_batches: 2
+      # accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
