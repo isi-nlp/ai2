@@ -2,27 +2,25 @@ from __future__ import annotations
 
 import math
 import os
-
-from typing import *
 from inspect import getfullargspec
+from typing import *
+
 import numpy as np
 import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import yaml
-
 from pytorch_lightning.root_module.root_module import LightningModule
-from transformers import *
 from sklearn.metrics import accuracy_score
 from test_tube import HyperOptArgumentParser
+from torch.nn import Module
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader
-from torch.nn import Module
+from transformers import *
 
 from ai2.dataset import AI2Dataset, download
 from ai2.interface import *
-
 
 TOKENIZERS = {
     'bert': BertTokenizer,
@@ -51,10 +49,11 @@ class HuggingFaceModelLoader(ModelLoader):
     def forward(self, **kwargs) -> Tuple:
         """Follow the convention of omnx, return tuple whenever possible.
 
-        token_type_ids are used when a more is pretrained with {0, 1} token_type_ids. RoBERTa has the argument but does not support it yet.
+        token_type_ids are used when a more is pretrained with {0, 1} token_type_ids.
+        RoBERTa has the argument but does not support it yet.
 
         Returns:
-            Tuple -- Tuple of returned values of forwading.
+            Tuple -- Tuple of returned values of forward.
         """
         signature = getfullargspec(self.model.forward)
         return self.model.forward(
@@ -64,7 +63,7 @@ class HuggingFaceModelLoader(ModelLoader):
              if k in signature.args})
 
     @classmethod
-    def load(cls, model_type: str, model_weights: str) -> HuggingFaceModelLoader:
+    def load(cls, model_type: str, model_weights: str, *args, **kargs) -> HuggingFaceModelLoader:
         assert model_type in MODELS, "Model type is not recognized."
         return HuggingFaceModelLoader(MODELS[model_type].from_pretrained(model_weights, cache_dir="./model_cache"))
 
@@ -144,7 +143,7 @@ class HuggingFaceClassifier(LightningModule):
         if not os.path.exists(self.hparams.output_dir):
             os.mkdir(self.hparams.output_dir)
 
-        # TODO: Change to your own model loader
+        # TODO: Change it to your own model loader
         self.encoder = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
         self.encoder.train()
 
@@ -154,7 +153,7 @@ class HuggingFaceClassifier(LightningModule):
         self.linear.weight.data.normal_(mean=0.0, std=self.hparams.initializer_range)
         self.linear.bias.data.zero_()
 
-        # TODO: Change to your own tokenizer loader
+        # TODO: Change it to your own tokenizer loader
         self.tokenizer = HuggingFaceTokenizerLoader.load(
             self.hparams.tokenizer_type, self.hparams.tokenizer_weight, do_lower_case=self.hparams.do_lower_case)
 
@@ -164,7 +163,7 @@ class HuggingFaceClassifier(LightningModule):
         #     logger.debug(f"Device: {next(self.encoder.model.parameters()).device}")
         #     logger.debug(f"Device: {input_ids.device} {token_type_ids.device} {attention_mask.device}")
 
-        # TODO [Optional]: Change to your own forward
+        # TODO [Optional]: Change it to your own forward
         outputs = self.encoder.forward(
             **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
         output = torch.mean(outputs[0], dim=1).squeeze()
@@ -172,6 +171,20 @@ class HuggingFaceClassifier(LightningModule):
         logits = self.linear(logits)
 
         return logits.squeeze()
+
+    def intermediate(self, input_ids, token_type_ids=None, attention_mask=None):
+
+        # if input_ids is not None and token_type_ids is not None and attention_mask is not None:
+        #     logger.debug(f"Device: {next(self.encoder.model.parameters()).device}")
+        #     logger.debug(f"Device: {input_ids.device} {token_type_ids.device} {attention_mask.device}")
+
+        # TODO [Optional]: Change it to your own forward
+        with torch.no_grad():
+            outputs = self.encoder.forward(
+                **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
+            output = torch.mean(outputs[0], dim=1).squeeze()
+
+            return output
 
     def loss(self, labels, logits):
         l = F.cross_entropy(logits, labels, reduction='sum')
