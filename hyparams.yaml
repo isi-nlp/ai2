@@ -15,10 +15,6 @@ alphanli:
     bert-large-cased:
       lr: 5e-6
       batch_size: 16
-  gpt2:
-    gpt2:
-      lr: 5e-6
-      batch_size: 16
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -29,8 +25,8 @@ alphanli:
       batch_size: 16
   xlm:
     xlm-mlm-en-2048:
-      lr: 2e-6
-      batch_size: 8
+      lr: 5e-6
+      batch_size: 16
       warmup_steps: 120
   default:
     seed: 42
@@ -49,10 +45,6 @@ hellaswag:
     bert-large-cased:
       lr: 5e-6
       batch_size: 8
-  gpt2:
-    gpt2:
-      lr: 5e-6
-      batch_size: 8
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -63,8 +55,8 @@ hellaswag:
       batch_size: 8
   xlm:
     xlm-mlm-en-2048:
-      lr: 2e-6
-      batch_size: 4
+      lr: 5e-6
+      batch_size: 8
       warmup_steps: 120
   default:
     seed: 42
@@ -83,10 +75,6 @@ physicaliqa:
     bert-large-cased:
       lr: 5e-6
       batch_size: 16
-  gpt2:
-    gpt2:
-      lr: 5e-6
-      batch_size: 16
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -97,8 +85,8 @@ physicaliqa:
       batch_size: 16
   xlm:
     xlm-mlm-en-2048:
-      lr: 2e-6
-      batch_size: 8
+      lr: 5e-6
+      batch_size: 16
       warmup_steps: 120
   default:
     seed: 42
@@ -117,10 +105,6 @@ socialiqa:
     bert-large-cased:
       lr: 5e-6
       batch_size: 16
-  gpt2:
-    gpt2:
-      lr: 5e-6
-      batch_size: 16
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -131,8 +115,8 @@ socialiqa:
       batch_size: 16
   xlm:
     xlm-mlm-en-2048:
-      lr: 2e-6
-      batch_size: 8
+      lr: 5e-6
+      batch_size: 16
       warmup_steps: 120
   default:
     seed: 42
@@ -151,10 +135,6 @@ vcrqa:
     bert-large-cased:
       lr: 5e-6
       batch_size: 16
-  gpt2:
-    gpt2:
-      lr: 5e-6
-      batch_size: 16
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -165,8 +145,8 @@ vcrqa:
       batch_size: 16
   xlm:
     xlm-mlm-en-2048:
-      lr: 2e-6
-      batch_size: 8
+      lr: 5e-6
+      batch_size: 16
       warmup_steps: 120
   default:
     seed: 42
@@ -185,10 +165,6 @@ vcrqr:
     bert-large-cased:
       lr: 5e-6
       batch_size: 16
-  gpt2:
-    gpt2:
-      lr: 5e-6
-      batch_size: 16
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -199,8 +175,8 @@ vcrqr:
       batch_size: 16
   xlm:
     xlm-mlm-en-2048:
-      lr: 2e-6
-      batch_size: 8
+      lr: 5e-6
+      batch_size: 16
       warmup_steps: 120
   default:
     seed: 42
