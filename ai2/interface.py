@@ -5,7 +5,9 @@ from abc import ABC
 from dataclasses import dataclass
 from inspect import getfullargspec
 from typing import *
+
 from torch.nn import Module
+from transformers import PreTrainedTokenizer, PreTrainedModel
 
 
 class ModelLoader(ABC, Module):
