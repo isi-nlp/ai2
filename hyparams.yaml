@@ -1,3 +1,15 @@
+## Learning rates: [2e-5, 5e-6, 2e-6]
+## Batch size: [32/16, 16/8, 4/4]
+## Bert base: 110 M
+## Bert large: 340 M <-- large
+## openai gpt: 110 M
+## GPT2: 117 M
+## XLM: ~ 295 M <-- super large
+## XLnet: 110 M
+## XLNet large: 340 M <-- super large
+## roberta: 125 M
+## roberta large: 355 M <-- large
+
 alphanli:
   bert:
     bert-large-cased:
@@ -5,15 +17,8 @@ alphanli:
       batch_size: 16
   gpt2:
     gpt2:
-      lr: 2e-6
-      batch_size: 4
-      max_nb_epochs: 4
-      # accumulate_grad_batches: 2
-  gpt:
-    openai-gpt:
-      lr: 2e-6
-      batch_size: 4
-      # accumulate_grad_batches: 2
+      lr: 5e-6
+      batch_size: 16
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -24,11 +29,9 @@ alphanli:
       batch_size: 16
   xlm:
     xlm-mlm-en-2048:
-      lr: 1e-6
-      batch_size: 4
-      max_nb_epochs: 4
+      lr: 2e-6
+      batch_size: 8
       warmup_steps: 120
-      # accumulate_grad_batches: 4
   default:
     seed: 42
     lr: 2e-5
@@ -48,16 +51,8 @@ hellaswag:
       batch_size: 8
   gpt2:
     gpt2:
-      lr: 2e-6
-      batch_size: 4
-      max_nb_epochs: 4
-      # accumulate_grad_batches: 2
-  gpt:
-    openai-gpt:
-      lr: 2e-6
-      batch_size: 4
-      max_nb_epochs: 4
-      # accumulate_grad_batches: 2
+      lr: 5e-6
+      batch_size: 8
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -70,9 +65,7 @@ hellaswag:
     xlm-mlm-en-2048:
       lr: 2e-6
       batch_size: 4
-      max_nb_epochs: 4
       warmup_steps: 120
-      # accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
@@ -92,15 +85,8 @@ physicaliqa:
       batch_size: 16
   gpt2:
     gpt2:
-      lr: 2e-6
-      batch_size: 4
-      max_nb_epochs: 4
-      accumulate_grad_batches: 2
-  gpt:
-    openai-gpt:
-      lr: 2e-6
-      batch_size: 4
-      accumulate_grad_batches: 2
+      lr: 5e-6
+      batch_size: 16
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -112,10 +98,8 @@ physicaliqa:
   xlm:
     xlm-mlm-en-2048:
       lr: 2e-6
-      batch_size: 4
-      max_nb_epochs: 4
+      batch_size: 8
       warmup_steps: 120
-      # accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
@@ -132,33 +116,24 @@ socialiqa:
   bert:
     bert-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   gpt2:
     gpt2:
-      lr: 2e-6
-      batch_size: 4
-      max_nb_epochs: 4
-      # accumulate_grad_batches: 2
-  gpt:
-    openai-gpt:
-      lr: 2e-6
-      batch_size: 4
-      # accumulate_grad_batches: 2
+      lr: 5e-6
+      batch_size: 16
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   roberta:
     roberta-large:
       lr: 5e-6
-      batch_size: 8
+      batch_size: 16
   xlm:
     xlm-mlm-en-2048:
       lr: 2e-6
-      batch_size: 4
-      max_nb_epochs: 4
+      batch_size: 8
       warmup_steps: 120
-      # accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
@@ -178,15 +153,8 @@ vcrqa:
       batch_size: 16
   gpt2:
     gpt2:
-      lr: 2e-6
-      batch_size: 4
-      max_nb_epochs: 4
-      # accumulate_grad_batches: 2
-  gpt:
-    openai-gpt:
-      lr: 2e-6
-      batch_size: 4
-      # accumulate_grad_batches: 2
+      lr: 5e-6
+      batch_size: 16
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -198,10 +166,8 @@ vcrqa:
   xlm:
     xlm-mlm-en-2048:
       lr: 2e-6
-      batch_size: 4
-      max_nb_epochs: 4
+      batch_size: 8
       warmup_steps: 120
-      # accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
@@ -221,15 +187,8 @@ vcrqr:
       batch_size: 16
   gpt2:
     gpt2:
-      lr: 2e-6
-      batch_size: 4
-      max_nb_epochs: 4
-      # accumulate_grad_batches: 2
-  gpt:
-    openai-gpt:
-      lr: 2e-6
-      batch_size: 4
-      # accumulate_grad_batches: 2
+      lr: 5e-6
+      batch_size: 16
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -241,10 +200,8 @@ vcrqr:
   xlm:
     xlm-mlm-en-2048:
       lr: 2e-6
-      batch_size: 4
-      max_nb_epochs: 4
+      batch_size: 8
       warmup_steps: 120
-      # accumulate_grad_batches: 2
   default:
     seed: 42
     lr: 2e-5
