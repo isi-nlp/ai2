@@ -13,7 +13,7 @@ from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.utilities.arg_parse import add_default_args
 from test_tube import HyperOptArgumentParser, Experiment
 
-from ai2.model import HuggingFaceClassifier
+from ai2.huggingface import HuggingFaceClassifier
 
 
 def set_seed(seed):
