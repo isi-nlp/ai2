@@ -111,6 +111,7 @@ def main(hparams):
     set_seed(hparams.seed)
 
     # build model
+    # TODO: Change this to your own model
     model = HuggingFaceClassifier(hparams)
 
     # callbacks
@@ -169,6 +170,7 @@ if __name__ == '__main__':
     parent_parser = HyperOptArgumentParser(strategy='random_search', add_help=True)
     add_default_args(parent_parser, root_dir)
 
+    # TODO: Change this to your own model
     parser = HuggingFaceClassifier.add_model_specific_args(parent_parser)
     hyperparams = parser.parse_args()
 

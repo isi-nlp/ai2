@@ -8,7 +8,7 @@ from pytorch_lightning.trainer.trainer_io import load_hparams_from_tags_csv
 from pytorch_lightning.utilities.arg_parse import add_default_args
 from test_tube import HyperOptArgumentParser
 
-from ai2.model import HuggingFaceClassifier
+from ai2.huggingface import HuggingFaceClassifier
 from train import set_seed, get_default
 
 
@@ -83,6 +83,9 @@ def load_from_metrics(hparams, model_cls, weights_path, tags_csv, on_gpu, map_lo
 
 
 def main(hparams):
+
+    # TODO: Change this model loader to your own.
+
     model = load_from_metrics(
         hparams=hparams,
         model_cls=HuggingFaceClassifier,
@@ -102,6 +105,7 @@ if __name__ == '__main__':
     parent_parser = HyperOptArgumentParser(strategy='random_search', add_help=True)
     add_default_args(parent_parser, root_dir)
 
+    # TODO: Change this to your own model
     parser = HuggingFaceClassifier.add_model_specific_args(parent_parser)
     hyperparams = parser.parse_args()
 

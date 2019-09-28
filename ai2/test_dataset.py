@@ -1,15 +1,20 @@
-
-from ai2.interface import HuggingFaceTokenizerLoader
-from ai2.dataset import download, AI2Dataset
-from loguru import logger
-import yaml
 import unittest
+from typing import *
+from pathlib import Path
+
+import yaml
+from loguru import logger
+
+from ai2.dataset import download, AI2Dataset
 
 
 class TestDataset(unittest.TestCase):
 
+    path: Union[str, Path]
+
     def __post_init__(self):
-        with open("./tasks.yaml", 'r') as input_file:
+        self.path = Path().absolute()
+        with open(self.path / "tasks.yaml", 'r') as input_file:
             self.config = yaml.safe_load(input_file)
         self.cache_dirs = []
 
@@ -19,15 +24,16 @@ class TestDataset(unittest.TestCase):
             self.__post_init__()
 
         for task in ['snli', 'alphanli', 'hellaswag', 'physicaliqa', 'socialiqa', 'vcrqa', 'vcrqr']:
-            cache_dirs = download(self.config[task]['urls'], './cache')
+            cache_dirs = download(self.config[task]['urls'], self.path / 'cache')
             self.assertTrue(isinstance(cache_dirs, str) or isinstance(cache_dirs, list))
             self.cache_dirs.append((task, cache_dirs))
-        # print(self.cache_dirs)
 
     def test_preprocess(self):
 
         if getattr(self, 'config', None) is None:
             self.test_download()
+        # TODO Change the default tokenzier to your own tokenzier
+        from ai2.huggingface import HuggingFaceTokenizerLoader
 
         tokenizer = HuggingFaceTokenizerLoader.load('roberta', 'roberta-base', do_lower_case=False)
 
@@ -42,7 +48,6 @@ class TestDataset(unittest.TestCase):
                                       label_formula=self.config[task].get('label_formula', None),
                                       label_offset=self.config[task].get('label_offset', 0),
                                       label_transform=self.config[task].get('label_transform', None),)
-            # logger.info(dataset[0]['tokens'])
             logger.debug(' '.join(dataset[0]['tokens'][0]))
             logger.debug(dataset[0]['attention_mask'][0])
             logger.debug(dataset[0]['token_type_ids'][0])
