@@ -21,6 +21,7 @@ from transformers import *
 
 from ai2.dataset import AI2Dataset, download
 from ai2.interface import *
+from ai2 import set_seed, get_default
 
 TOKENIZERS = {
     'bert': BertTokenizer,
@@ -307,7 +308,7 @@ class HuggingFaceClassifier(LightningModule):
     def configure_optimizers(self):
 
         # Prepare optimizer and schedule (linear warmup and decay)
-        t_total = len(self.tng_dataloader) // self.hparams.accumulate_grad_batches * self.hparams.max_nb_epochs
+        t_total = len(self.train_dataloader) // self.hparams.accumulate_grad_batches * self.hparams.max_nb_epochs
 
         no_decay = ['bias', 'LayerNorm.weight']
         optimizer_grouped_parameters = [
@@ -321,7 +322,7 @@ class HuggingFaceClassifier(LightningModule):
         return [optimizer], [scheduler]
 
     @pl.data_loader
-    def tng_dataloader(self):
+    def train_dataloader(self):
         dataset_name = "train"
         cache_dirs = download(self.task_config[self.hparams.task_name]['urls'], self.hparams.task_cache_dir)
         dataset = AI2Dataset.load(cache_dir=cache_dirs[0] if isinstance(cache_dirs, list) else cache_dirs,
@@ -423,13 +424,86 @@ class HuggingFaceClassifier(LightningModule):
                           collate_fn=self.collate_fn,
                           shuffle=False, batch_size=self.hparams.batch_size)
 
+    @classmethod
+    def load_from_metrics(cls, hparams, weights_path, tags_csv, on_gpu, map_location=None):
+
+        from pytorch_lightning.trainer.trainer_io import load_hparams_from_tags_csv
+
+        prev_hparams = load_hparams_from_tags_csv(tags_csv)
+        prev_hparams.__dict__.update(hparams.__dict__)
+        hparams.__dict__.update({k: v for k, v in prev_hparams.__dict__.items() if k not in hparams.__dict__})
+        hparams.__setattr__('on_gpu', on_gpu)
+
+        if on_gpu:
+            if map_location is not None:
+                checkpoint = torch.load(weights_path, map_location=map_location)
+            else:
+                checkpoint = torch.load(weights_path)
+        else:
+            checkpoint = torch.load(weights_path, map_location=lambda storage, loc: storage)
+
+        running_config = yaml.safe_load(open(hparams.running_config_file, "r"))
+        task_config = yaml.safe_load(open(hparams.task_config_file, 'r'))
+
+        hparams.max_nb_epochs = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                                            'max_nb_epochs')
+
+        hparams.learning_rate = float(
+            get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                        'lr'))
+
+        hparams.initializer_range = float(
+            get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                        'initializer_range'))
+
+        hparams.dropout = float(
+            get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                        'dropout'))
+
+        hparams.batch_size = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                                         'batch_size')
+
+        hparams.max_seq_len = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                                          'max_seq_len')
+
+        hparams.seed = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                                   'seed')
+
+        hparams.weight_decay = float(
+            get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                        'weight_decay'))
+
+        hparams.warmup_steps = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                                           'warmup_steps')
+
+        hparams.adam_epsilon = float(
+            get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
+                        'adam_epsilon'))
+
+        hparams.accumulate_grad_batches = get_default(running_config, hparams.task_name, hparams.model_type,
+                                                      hparams.model_weight,
+                                                      'accumulate_grad_batches')
+
+        hparams.do_lower_case = task_config[hparams.task_name].get('do_lower_case', False)
+        hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type
+        hparams.tokenizer_weight = hparams.model_weight if hparams.tokenizer_weight is None else hparams.tokenizer_weight
+
+        set_seed(hparams.seed)
+
+        model = model_cls(hparams)
+        model.load_state_dict(checkpoint['state_dict'])
+
+        model.on_load_checkpoint(checkpoint)
+
+        return model
+
     @staticmethod
     def add_model_specific_args(parent_parser):  # pragma: no cover
 
         parser = HyperOptArgumentParser(strategy=parent_parser.strategy, parents=[parent_parser], add_help=False)
 
         # param overwrites
-        parser.set_defaults(gradient_clip=1.0,
+        parser.set_defaults(gradient_clip_val=1.0,
                             model_save_monitor_value='val_acc',
                             model_save_monitor_mode='max',
                             early_stop_metric='val_loss',
