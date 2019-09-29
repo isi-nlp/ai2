@@ -24,9 +24,9 @@ Be sure to make modifications to test_dataset.py (change the tokenizer loader) a
 Later, you can specify the training parameters in `hyparams.yaml` in the following format:
 
 ```yaml
-task_name:
-  model_type:
-    model_weight:
+$task_name:
+  $model_type:
+    $model_weight:
       seed: 42
       lr: 2e-5
       dropout: 0.1
@@ -39,6 +39,8 @@ task_name:
       adam_epsilon: 1e-8
       accumulate_grad_batches: 1
 ```
+
+You can also specify default parameters within each task.
 
 ### 2. Download the datasets
 
