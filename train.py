@@ -14,25 +14,7 @@ from pytorch_lightning.utilities.arg_parse import add_default_args
 from test_tube import HyperOptArgumentParser, Experiment
 
 from ai2.huggingface import HuggingFaceClassifier
-
-
-def set_seed(seed):
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    if torch.cuda.is_available():
-        torch.backends.cudnn.deterministic = True
-        torch.backends.cudnn.benchmark = False
-        torch.cuda.manual_seed_all(seed)
-
-
-def get_default(config: Dict, task_name: str, model_type: str, model_weight: str, field: str):
-    task_model_config = config[task_name].get(
-        model_type, {}).get(
-        model_weight,
-        config[task_name]['default'])
-
-    return task_model_config.get(field, config[task_name]['default'][field])
+from ai2 import set_seed, get_default
 
 
 def main(hparams):
@@ -135,7 +117,7 @@ def main(hparams):
         experiment=exp,
         checkpoint_callback=checkpoint,
         early_stop_callback=early_stop,
-        gradient_clip=hparams.gradient_clip,
+        gradient_clip_val=hparams.gradient_clip_val,
         process_position=0,
         nb_gpu_nodes=1,
         gpus=[i for i in range(torch.cuda.device_count())] if torch.cuda.is_available() else None,
@@ -152,7 +134,6 @@ def main(hparams):
         test_percent_check=hparams.val_percent_check,
         val_check_interval=hparams.val_check_interval,
         log_save_interval=hparams.log_save_interval,
-        add_log_row_interval=hparams.add_log_row_interval,
         distributed_backend='dp',
         use_amp=hparams.use_amp,
         print_nan_grads=hparams.check_grad_nans,
