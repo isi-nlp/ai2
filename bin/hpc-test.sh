@@ -13,7 +13,7 @@ for task in "${TASKS[@]}"; do
     for j in "${DATASETS[@]}"; do
       set -- $i
       tmux kill-session -t "$task-$1-$2-eval"
-      tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:k80:4 /bin/sh eval.sh $1 $2 $task $j"
+      tmux new-session -d -s "$task-$1-$2-eval" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:k80:4 /bin/sh bin/test.sh $1 $2 $task $j"
     done
   done
 done
