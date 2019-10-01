@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from transformers import *
 from loguru import logger
 
@@ -9,6 +8,7 @@ if __name__ == "__main__":
 
     MODELS = [(BertModel, BertTokenizer, 'bert-base-cased'),
               (BertModel, BertTokenizer, 'bert-large-cased'),
+              (DistilBertModel, DistilBertTokenizer, 'distilbert-base-uncased')
               (OpenAIGPTModel, OpenAIGPTTokenizer, 'openai-gpt'),
               (GPT2Model, GPT2Tokenizer, 'gpt2'),
               (GPT2Model, GPT2Tokenizer, 'gpt2-large'),
@@ -16,7 +16,8 @@ if __name__ == "__main__":
               (XLNetModel, XLNetTokenizer, 'xlnet-large-cased'),
               (XLMModel, XLMTokenizer, 'xlm-mlm-en-2048'),
               (RobertaModel, RobertaTokenizer, 'roberta-base'),
-              (RobertaModel, RobertaTokenizer, 'roberta-large')]
+              (RobertaModel, RobertaTokenizer, 'roberta-large'),
+              ]
 
     for model_class, tokenizer_class, pretrained_weights in MODELS:
         logger.info(f"Download model weights for {pretrained_weights}")

@@ -1,4 +1,4 @@
-# AI2 Eval Tool
+# AI2 DARPA Leaderboard Eval Tool
 
 ## Environment
 
@@ -13,10 +13,10 @@
 
 ### 1. Necessary Implementation
 
-1. Implement your own ModelLoader, TokenizerLoader, and Classifier, similar to those implemented in `ai2/huggingface.py`.
+1. Implement your own ModelLoader, TokenizerLoader, and Classifier, similar to those implemented in `huggingface.py`.
 2. Change the classifier in both `eval.py` as `train.py`
 
-In step 1, when you follow the interface of a `ModelLoader` or a `TokenizerLoader`, you will use a `model_type` and `model_weight`
+In step 1, when you follow the interface of a `textbook.interface.ModelLoader` or a `textbook.interface.TokenizerLoader`, you will use a `model_type` and `model_weight`
 to direct your `load` function to find your model files.
 
 Be sure to make modifications to test_dataset.py (change the tokenizer loader) and run your tokenizer on those datasets!

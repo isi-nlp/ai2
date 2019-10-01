@@ -3,46 +3,33 @@ from __future__ import annotations
 import abc
 from abc import ABC
 from dataclasses import dataclass
-from inspect import getfullargspec
 from typing import *
 
 from torch.nn import Module
-from transformers import PreTrainedTokenizer, PreTrainedModel
 
 
 class ModelLoader(ABC, Module):
 
-    def __init__(self, model: Union[Module, PreTrainedModel]):
+    def __init__(self, model: object):
         super(ModelLoader, self).__init__()
         self.model = model
 
     @classmethod
     @abc.abstractmethod
     def load(cls, model_type: str, model_weights: str, *args, **kwargs) -> ModelLoader:
-        raise NotImplementedError('Load is not implemented.')
+        raise NotImplementedError('ModelLoader: load is not implemented.')
 
     def forward(self, **kwargs) -> Tuple:
-        """Follow the convention of omnx, return tuple whenever possible.
-
-        Returns:
-            Tuple -- Tuple of returned values of forwading.
-        """
-        signature = getfullargspec(self.model.forward)
-        return self.model.forward(**{k: v for k, v in kwargs.items() if k in signature.args})
+        raise NotImplementedError('ModelLoader: forward is not implemented.')
 
     @property
     def dim(self) -> int:
-        """Return the hidden dimension of the last layer.
-
-        Returns:
-            int -- Last layer's dimension.
-        """
-        return [p.size(0) for p in self.model.parameters()][-1]
+        raise NotImplementedError('ModelLoader: dim is not implemented.')
 
 
 @dataclass
 class TokenizerLoader(ABC):
-    tokenizer: Union[object, PreTrainedTokenizer]
+    tokenizer: object
 
     @classmethod
     @abc.abstractmethod

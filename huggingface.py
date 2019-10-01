@@ -12,6 +12,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import yaml
 from pytorch_lightning.root_module.root_module import LightningModule
+from pytorch_lightning.trainer.trainer_io import load_hparams_from_tags_csv
 from sklearn.metrics import accuracy_score
 from test_tube import HyperOptArgumentParser
 from torch.nn import Module
@@ -19,12 +20,13 @@ from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader
 from transformers import *
 
-from ai2.dataset import AI2Dataset, download
-from ai2.interface import *
-from ai2 import set_seed, get_default
+from textbook.dataset import ClassificationDataset, download
+from textbook.interface import *
+from textbook.utils import set_seed, get_default_hyperparameter
 
 TOKENIZERS = {
     'bert': BertTokenizer,
+    'distilbert': DistilBertTokenizer,
     'xlm': XLMTokenizer,
     'xlnet': XLNetTokenizer,
     'roberta': RobertaTokenizer,
@@ -34,6 +36,7 @@ TOKENIZERS = {
 
 MODELS = {
     'bert': BertModel,
+    'distilbert': DistilBertModel,
     'xlm': XLMModel,
     'xlnet': XLNetModel,
     'roberta': RobertaModel,
@@ -67,6 +70,14 @@ class HuggingFaceModelLoader(ModelLoader):
     def load(cls, model_type: str, model_weights: str, *args, **kargs) -> HuggingFaceModelLoader:
         assert model_type in MODELS, "Model type is not recognized."
         return HuggingFaceModelLoader(MODELS[model_type].from_pretrained(model_weights, cache_dir="./model_cache"))
+
+    @property
+    def dim(self) -> int:
+        """Return the hidden dimension of the last layer.
+        Returns:
+            int -- Last layer's dimension.
+        """
+        return [p.size(0) for p in self.model.parameters()][-1]
 
 
 class HuggingFaceTokenizerLoader(TokenizerLoader):
@@ -325,16 +336,16 @@ class HuggingFaceClassifier(LightningModule):
     def train_dataloader(self):
         dataset_name = "train"
         cache_dirs = download(self.task_config[self.hparams.task_name]['urls'], self.hparams.task_cache_dir)
-        dataset = AI2Dataset.load(cache_dir=cache_dirs[0] if isinstance(cache_dirs, list) else cache_dirs,
-                                  file_mapping=self.task_config[self.hparams.task_name]['file_mapping'][dataset_name],
-                                  task_formula=self.task_config[self.hparams.task_name]['task_formula'],
-                                  type_formula=self.task_config[self.hparams.task_name]['type_formula'],
-                                  preprocessor=self.tokenizer,
-                                  pretokenized=self.task_config[self.hparams.task_name].get('pretokenized', False),
-                                  label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
-                                  label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
-                                  label_transform=self.task_config[self.hparams.task_name].get('label_transform', None),
-                                  )
+        dataset = ClassificationDataset.load(cache_dir=cache_dirs[0] if isinstance(cache_dirs, list) else cache_dirs,
+                                             file_mapping=self.task_config[self.hparams.task_name]['file_mapping'][dataset_name],
+                                             task_formula=self.task_config[self.hparams.task_name]['task_formula'],
+                                             type_formula=self.task_config[self.hparams.task_name]['type_formula'],
+                                             preprocessor=self.tokenizer,
+                                             pretokenized=self.task_config[self.hparams.task_name].get('pretokenized', False),
+                                             label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
+                                             label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
+                                             label_transform=self.task_config[self.hparams.task_name].get('label_transform', None),
+                                             )
 
         return DataLoader(dataset,
                           collate_fn=self.collate_fn,
@@ -386,17 +397,16 @@ class HuggingFaceClassifier(LightningModule):
     def val_dataloader(self):
         dataset_name = "dev"
         cache_dirs = download(self.task_config[self.hparams.task_name]['urls'], self.hparams.task_cache_dir)
-        # TODO: improve download file mapping
-        dataset = AI2Dataset.load(cache_dir=cache_dirs[-1] if isinstance(cache_dirs, list) else cache_dirs,
-                                  file_mapping=self.task_config[self.hparams.task_name]['file_mapping'][dataset_name],
-                                  task_formula=self.task_config[self.hparams.task_name]['task_formula'],
-                                  type_formula=self.task_config[self.hparams.task_name]['type_formula'],
-                                  preprocessor=self.tokenizer,
-                                  pretokenized=self.task_config[self.hparams.task_name].get('pretokenized', False),
-                                  label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
-                                  label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
-                                  label_transform=self.task_config[self.hparams.task_name].get('label_transform',
-                                                                                               None), )
+        dataset = ClassificationDataset.load(cache_dir=cache_dirs[-1] if isinstance(cache_dirs, list) else cache_dirs,
+                                             file_mapping=self.task_config[self.hparams.task_name]['file_mapping'][dataset_name],
+                                             task_formula=self.task_config[self.hparams.task_name]['task_formula'],
+                                             type_formula=self.task_config[self.hparams.task_name]['type_formula'],
+                                             preprocessor=self.tokenizer,
+                                             pretokenized=self.task_config[self.hparams.task_name].get('pretokenized', False),
+                                             label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
+                                             label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
+                                             label_transform=self.task_config[self.hparams.task_name].get('label_transform',
+                                                                                                          None), )
 
         return DataLoader(dataset,
                           collate_fn=self.collate_fn,
@@ -409,16 +419,16 @@ class HuggingFaceClassifier(LightningModule):
             return self.val_dataloader
 
         dataset_name = "test"
-        dataset = AI2Dataset.load(cache_dir=self.hparams.test_input_dir,
-                                  file_mapping={'input_x': None},
-                                  task_formula=self.task_config[self.hparams.task_name]['task_formula'],
-                                  type_formula=self.task_config[self.hparams.task_name]['type_formula'],
-                                  preprocessor=self.tokenizer,
-                                  pretokenized=self.task_config[self.hparams.task_name].get('pretokenized', False),
-                                  label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
-                                  label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
-                                  label_transform=self.task_config[self.hparams.task_name].get('label_transform',
-                                                                                               None), )
+        dataset = ClassificationDataset.load(cache_dir=self.hparams.test_input_dir,
+                                             file_mapping={'input_x': None},
+                                             task_formula=self.task_config[self.hparams.task_name]['task_formula'],
+                                             type_formula=self.task_config[self.hparams.task_name]['type_formula'],
+                                             preprocessor=self.tokenizer,
+                                             pretokenized=self.task_config[self.hparams.task_name].get('pretokenized', False),
+                                             label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
+                                             label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
+                                             label_transform=self.task_config[self.hparams.task_name].get('label_transform',
+                                                                                                          None), )
 
         return DataLoader(dataset,
                           collate_fn=self.collate_fn,
@@ -426,8 +436,6 @@ class HuggingFaceClassifier(LightningModule):
 
     @classmethod
     def load_from_metrics(cls, hparams, weights_path, tags_csv, on_gpu, map_location=None):
-
-        from pytorch_lightning.trainer.trainer_io import load_hparams_from_tags_csv
 
         prev_hparams = load_hparams_from_tags_csv(tags_csv)
         prev_hparams.__dict__.update(hparams.__dict__)
@@ -445,44 +453,21 @@ class HuggingFaceClassifier(LightningModule):
         running_config = yaml.safe_load(open(hparams.running_config_file, "r"))
         task_config = yaml.safe_load(open(hparams.task_config_file, 'r'))
 
-        hparams.max_nb_epochs = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                                            'max_nb_epochs')
+        default_parameter = partial(get_default_hyperparameter, config=running_config,
+                                    task_name=hparams.task_name, model_type=hparams.model_type,
+                                    model_weight=hparams.model_weight)
 
-        hparams.learning_rate = float(
-            get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                        'lr'))
-
-        hparams.initializer_range = float(
-            get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                        'initializer_range'))
-
-        hparams.dropout = float(
-            get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                        'dropout'))
-
-        hparams.batch_size = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                                         'batch_size')
-
-        hparams.max_seq_len = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                                          'max_seq_len')
-
-        hparams.seed = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                                   'seed')
-
-        hparams.weight_decay = float(
-            get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                        'weight_decay'))
-
-        hparams.warmup_steps = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                                           'warmup_steps')
-
-        hparams.adam_epsilon = float(
-            get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                        'adam_epsilon'))
-
-        hparams.accumulate_grad_batches = get_default(running_config, hparams.task_name, hparams.model_type,
-                                                      hparams.model_weight,
-                                                      'accumulate_grad_batches')
+        hparams.max_nb_epochs = default_parameter(field='max_nb_epochs')
+        hparams.learning_rate = float(default_parameter(field='lr'))
+        hparams.initializer_range = float(default_parameter(field='initializer_range'))
+        hparams.dropout = float(default_parameter(field='dropout'))
+        hparams.batch_size = default_parameter(field='batch_size')
+        hparams.max_seq_len = default_parameter(field='max_seq_len')
+        hparams.seed = default_parameter(field='seed')
+        hparams.weight_decay = default_parameter(field='weight_decay')
+        hparams.warmup_steps = default_parameter(field='warmup_steps')
+        hparams.adam_epsilon = default_parameter(field='adam_epsilon')
+        hparams.accumulate_grad_batches = default_parameter(field='accumulate_grad_batches')
 
         hparams.do_lower_case = task_config[hparams.task_name].get('do_lower_case', False)
         hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type

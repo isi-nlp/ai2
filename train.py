@@ -1,8 +1,9 @@
 import os
-import pathlib
 import random
 import sys
+from pathlib import Path
 from typing import Dict
+from functools import partial
 
 import numpy as np
 import torch
@@ -13,15 +14,16 @@ from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.utilities.arg_parse import add_default_args
 from test_tube import HyperOptArgumentParser, Experiment
 
-from ai2.huggingface import HuggingFaceClassifier
-from ai2 import set_seed, get_default
+from huggingface import HuggingFaceClassifier
+from textbook.utils import set_seed, get_default_hyperparameter
 
 
 def main(hparams):
-    curr_dir = "output"
+    curr_dir = Path("output")
 
-    log_dir = os.path.join(curr_dir, f"{hparams.model_type}-{hparams.model_weight}-log")
-    pathlib.Path(log_dir).mkdir(parents=True, exist_ok=True)
+    log_dir = curr_dir / f"{hparams.model_type}-{hparams.model_weight}-log"
+
+    Path(log_dir).mkdir(parents=True, exist_ok=True)
 
     exp = Experiment(
         name=hparams.task_name,
@@ -30,73 +32,42 @@ def main(hparams):
         autosave=True,
     )
 
-    model_save_path = os.path.join(curr_dir,
-                                   f"{hparams.model_type}-{hparams.model_weight}-checkpoints", hparams.task_name,
-                                   str(exp.version))
+    model_save_path = curr_dir / f"{hparams.model_type}-{hparams.model_weight}-checkpoints" / hparams.task_name / str(exp.version)
 
     running_config = yaml.safe_load(open(hparams.running_config_file, "r"))
     task_config = yaml.safe_load(open(hparams.task_config_file, 'r'))
 
-    hparams.max_nb_epochs = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                                        'max_nb_epochs')
+    default_parameter = partial(get_default_hyperparameter, config=running_config,
+                                task_name=hparams.task_name, model_type=hparams.model_type,
+                                model_weight=hparams.model_weight)
 
-    hparams.learning_rate = float(
-        get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                    'lr'))
-
-    hparams.initializer_range = float(
-        get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                    'initializer_range'))
-
-    hparams.dropout = float(
-        get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                    'dropout'))
-
-    hparams.batch_size = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                                     'batch_size')
-
-    hparams.max_seq_len = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                                      'max_seq_len')
-
+    hparams.max_nb_epochs = default_parameter(field='max_nb_epochs')
+    hparams.learning_rate = float(default_parameter(field='lr'))
+    hparams.initializer_range = float(default_parameter(field='initializer_range'))
+    hparams.dropout = float(default_parameter(field='dropout'))
+    hparams.batch_size = default_parameter(field='batch_size')
+    hparams.max_seq_len = default_parameter(field='max_seq_len')
+    hparams.seed = default_parameter(field='seed')
+    hparams.weight_decay = default_parameter(field='weight_decay')
+    hparams.warmup_steps = default_parameter(field='warmup_steps')
+    hparams.adam_epsilon = float(default_parameter(field='adam_epsilon'))
+    hparams.accumulate_grad_batches = default_parameter(field='accumulate_grad_batches')
+    hparams.model_save_path = model_save_path
     hparams.do_lower_case = task_config[hparams.task_name].get('do_lower_case', False)
     hparams.output_dimension = task_config[hparams.task_name].get('output_dimension', 1)
-
     hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type
     hparams.tokenizer_weight = hparams.model_weight if hparams.tokenizer_weight is None else hparams.tokenizer_weight
 
-    hparams.seed = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                               'seed')
-
-    hparams.weight_decay = float(
-        get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                    'weight_decay'))
-
-    hparams.warmup_steps = get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                                       'warmup_steps')
-
-    hparams.adam_epsilon = float(
-        get_default(running_config, hparams.task_name, hparams.model_type, hparams.model_weight,
-                    'adam_epsilon'))
-
-    hparams.accumulate_grad_batches = get_default(running_config, hparams.task_name, hparams.model_type,
-                                                  hparams.model_weight,
-                                                  'accumulate_grad_batches')
-
-    hparams.model_save_path = model_save_path
-
     logger.info(f"{hparams}")
 
-    # set the hparams for the experiment
     exp.argparse(hparams)
     exp.save()
 
     set_seed(hparams.seed)
 
-    # build model
     # TODO: Change this to your own model
     model = HuggingFaceClassifier(hparams)
 
-    # callbacks
     early_stop = EarlyStopping(
         monitor=hparams.early_stop_metric,
         patience=hparams.early_stop_patience,
@@ -112,7 +83,6 @@ def main(hparams):
         mode=hparams.model_save_monitor_mode
     )
 
-    # configure trainer
     trainer = Trainer(
         experiment=exp,
         checkpoint_callback=checkpoint,
@@ -121,6 +91,7 @@ def main(hparams):
         process_position=0,
         nb_gpu_nodes=1,
         gpus=[i for i in range(torch.cuda.device_count())] if torch.cuda.is_available() else None,
+        log_gpu_memory=True,
         show_progress_bar=True,
         overfit_pct=0.0,
         track_grad_norm=hparams.track_grad_norm,
@@ -134,6 +105,7 @@ def main(hparams):
         test_percent_check=hparams.val_percent_check,
         val_check_interval=hparams.val_check_interval,
         log_save_interval=hparams.log_save_interval,
+        row_log_interval=hparams.row_log_interval,
         distributed_backend='dp',
         use_amp=hparams.use_amp,
         print_nan_grads=hparams.check_grad_nans,
@@ -142,7 +114,6 @@ def main(hparams):
         nb_sanity_val_steps=5,
     )
 
-    # train model
     trainer.fit(model)
 
 
