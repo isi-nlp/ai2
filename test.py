@@ -8,8 +8,7 @@ from pytorch_lightning.trainer.trainer_io import load_hparams_from_tags_csv
 from pytorch_lightning.utilities.arg_parse import add_default_args
 from test_tube import HyperOptArgumentParser
 
-from ai2.huggingface import HuggingFaceClassifier
-from train import set_seed, get_default
+from huggingface import HuggingFaceClassifier
 
 
 def main(hparams):

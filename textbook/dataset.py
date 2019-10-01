@@ -13,7 +13,7 @@ from loguru import logger
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
-from ai2.interface import TokenizerLoader
+from textbook.interface import TokenizerLoader
 
 
 def download(urls: Union[str, List[str]], cache_dir: str) -> Union[str, List[str]]:
@@ -34,6 +34,8 @@ def download(urls: Union[str, List[str]], cache_dir: str) -> Union[str, List[str
             r = requests.get(urls)
             z = zipfile.ZipFile(io.BytesIO(r.content))
             z.extractall(target_dir)
+        else:
+            logger.debug(f"Dataset is already downloaded: {filename}")
 
         return target_dir
 
@@ -49,13 +51,14 @@ def download(urls: Union[str, List[str]], cache_dir: str) -> Union[str, List[str
                 r = requests.get(url)
                 z = zipfile.ZipFile(io.BytesIO(r.content))
                 z.extractall(target_dir)
-
+            else:
+                logger.debug(f"Dataset is already downloaded: {filename}")
             cache_dirs.append(target_dir)
         return cache_dirs
 
 
 @dataclass
-class AI2Dataset(Dataset):
+class ClassificationDataset(Dataset):
     tokens: List[List[str]]
     input_ids: List[List[int]]
     token_type_ids: List[List[int]]
@@ -69,7 +72,7 @@ class AI2Dataset(Dataset):
     def load(
             cls, cache_dir: str, file_mapping: Dict, task_formula: str, type_formula: str,
             preprocessor: TokenizerLoader, pretokenized: bool = False,
-            label_formula: str = None, label_offset: int = 0, label_transform: Dict = None) -> AI2Dataset:
+            label_formula: str = None, label_offset: int = 0, label_transform: Dict = None) -> ClassificationDataset:
         """
         Load the datase into a dataset class wrapper.
 
@@ -82,7 +85,7 @@ class AI2Dataset(Dataset):
         :param label_formula: None if label is an integer else a field in the dataset.
         :param label_offset: Offset for integer labels.
         :param label_transform: Mapping from string lables to integer labels.
-        :return: An AI2Dataset.
+        :return: A ClassificationDataset.
         """
 
         assert len(file_mapping) <= 2, "At most two files can be specified"
@@ -180,7 +183,7 @@ class AI2Dataset(Dataset):
             99 % of input length: {sorted(map(lambda e: max(map(len, e)), tokens))[int(len(tokens) * .99)]}
         """)
 
-        return AI2Dataset(tokens, input_ids, token_type_ids, attention_mask, labels)
+        return ClassificationDataset(tokens, input_ids, token_type_ids, attention_mask, labels)
 
     def __getitem__(self, index) -> Dict:
 
@@ -197,10 +200,11 @@ if __name__ == "__main__":
     import yaml
     import argparse
 
+    tasks = ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa', 'vcrqa', 'vcrqr']
+
     parser = argparse.ArgumentParser("Dataset download script.")
     parser.add_argument('--task_config', type=str, default='./tasks.yaml')
-    parser.add_argument('--task', type=str, choices=['alphanli', 'hellaswag', 'physicaliqa',
-                                                     'socialiqa', 'vcrqa', 'vcrqr', 'all'], default='alphanli')
+    parser.add_argument('--task', type=str, choices=tasks + ["all"], default='alphanli')
     parser.add_argument('--cache_dir', type=str, required=False, default='./cache')
 
     args = parser.parse_args()
@@ -209,7 +213,7 @@ if __name__ == "__main__":
         config = yaml.safe_load(input_file)
 
     if args.task == 'all':
-        for task in ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa', 'vcrqa', 'vcrqr']:
+        for task in tasks:
             cache_dirs = download(config[task]['urls'], args.cache_dir)
     else:
         cache_dirs = download(config[args.task]['urls'], args.cache_dir)

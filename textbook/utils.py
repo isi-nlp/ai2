@@ -4,7 +4,7 @@ import torch
 from typing import *
 
 
-def set_seed(seed):
+def set_seed(seed: int) -> None:
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -14,7 +14,7 @@ def set_seed(seed):
         torch.cuda.manual_seed_all(seed)
 
 
-def get_default(config: Dict, task_name: str, model_type: str, model_weight: str, field: str):
+def get_default_hyperparameter(config: Dict, task_name: str, model_type: str, model_weight: str, field: str) -> Any:
     task_model_config = config[task_name].get(
         model_type, {}).get(
         model_weight,
