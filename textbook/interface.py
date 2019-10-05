@@ -81,7 +81,7 @@ class TokenizerLoader(ABC):
 
     @abc.abstractmethod
     def tokenize(self, text: str) -> List[str]:
-        raise NotImplemented('tokenize is not implemented')
+        raise NotImplementedError('tokenize is not implemented')
 
 
 __all__ = ['ModelLoader', 'TokenizerLoader']
