@@ -134,8 +134,10 @@ class ClassificationDataset(Dataset):
                     if isinstance(segment, str):
 
                         if segment.startswith('[') and segment.endswith(']'):
-                            example = [e + [getattr(preprocessor, segment.strip('[]'))] for e in example]
-                            example_token_type_ids = [e + [i] for e in example_token_type_ids]
+                            special_token = getattr(preprocessor, segment.strip('[]'))
+                            if special_token:
+                                example = [e + [special_token] for e in example]
+                                example_token_type_ids = [e + [i] for e in example_token_type_ids]
 
                         elif isinstance(example_raw[segment], str):
                             example_tokens = preprocessor.tokenize(example_raw[segment])

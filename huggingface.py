@@ -96,7 +96,7 @@ class HuggingFaceTokenizerLoader(TokenizerLoader):
     @property
     def SEP(self) -> str:
         if self.tokenizer._sep_token is None:
-            return self.UNK
+            return ""
         return self.tokenizer._sep_token
 
     @property
@@ -106,7 +106,7 @@ class HuggingFaceTokenizerLoader(TokenizerLoader):
     @property
     def CLS(self) -> str:
         if self.tokenizer._cls_token is None:
-            return self.UNK
+            return ""
         return self.tokenizer._cls_token
 
     @property
@@ -127,7 +127,7 @@ class HuggingFaceTokenizerLoader(TokenizerLoader):
     @property
     def PAD(self) -> str:
         if self.tokenizer._pad_token is None:
-            return self.UNK
+            return ""
         return self.tokenizer._pad_token
 
     @property
@@ -186,7 +186,7 @@ class HuggingFaceClassifier(LightningModule):
         output = torch.mean(outputs[0], dim=1).squeeze()
         output = self.nonlinear(output)
         output = self.dropout(output)
-        
+
         BC, S = output.shape
         output = output.reshape(-1, self.task_config[self.hparams.task_name]["num_choices"], S)
         logits = self.bn(output)
