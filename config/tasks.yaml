@@ -4,6 +4,7 @@ alphanli:
   task_formula: "[CLS] obs1 [SEP] hyp1|hyp2 [SEP] obs2 [SEP]"
   type_formula: "0 0 0 1 1 0 0"
   label_offset: 1
+  num_choices: 2
   file_mapping:
     train:
       train_x: "train.jsonl"
@@ -18,6 +19,7 @@ snli:
   type_formula: "0 0 0 1 1"
   label_formula: "gold_label"
   label_offset: 0
+  num_choices: 1
   label_transform:
     neutral: 0
     entailment: 1
@@ -37,6 +39,7 @@ hellaswag:
   task_formula: "[CLS] ctx [SEP] ending_options [SEP]"
   type_formula: "0 0 0 1 1"
   label_offset: 0
+  num_choices: 4
   file_mapping:
     train:
       train_x: "hellaswag-train-dev/train.jsonl"
@@ -50,6 +53,7 @@ physicaliqa:
   task_formula: "[CLS] goal [SEP] sol1|sol2 [SEP]"
   type_formula: "0 0 0 1 1"
   label_offset: 0
+  num_choices: 2
   file_mapping:
     train:
       train_x: "physicaliqa-train-dev/train.jsonl"
@@ -63,6 +67,7 @@ socialiqa:
   task_formula: "[CLS] context [SEP] question [SEP] answerA|answerB|answerC [SEP]"
   type_formula: "0 0 0 0 0 1 1"
   label_offset: 1
+  num_choices: 3
   file_mapping:
     train:
       train_x: "socialiqa-train-dev/train.jsonl"
@@ -79,6 +84,7 @@ vcrqa:
   type_formula: "0 0 0 1 1"
   label_formula: "answer_label"
   label_offset: 0
+  num_choices: 4
   file_mapping:
     train:
       train_x: "train/qa.jsonl"
@@ -95,6 +101,7 @@ vcrqr:
   type_formula: "0 0 0 1 1"
   label_formula: "rationale_label"
   label_offset: 0
+  num_choices: 4
   file_mapping:
     train:
       train_x: "train/qar.jsonl"
