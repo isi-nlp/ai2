@@ -163,7 +163,7 @@ class HuggingFaceClassifier(LightningModule):
         # TODO: Change it to your own model loader
         self.encoder = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
         self.encoder.train()
-        self.bn = nn.BatchNorm1d(num_features=self.task_config.num_choices)
+        self.bn = nn.BatchNorm1d(num_features=self.task_config[self.hparams.task_name]["num_choices"])
         self.nonlinear = nn.ReLU()
         self.dropout = nn.Dropout(self.hparams.dropout)
         self.linear = nn.Linear(self.encoder.dim, self.hparams.output_dimension)
