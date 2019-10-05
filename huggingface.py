@@ -186,7 +186,12 @@ class HuggingFaceClassifier(LightningModule):
         output = torch.mean(outputs[0], dim=1).squeeze()
         output = self.nonlinear(output)
         output = self.dropout(output)
+        
+        BC, S = output.shape
+        output = output.reshape(-1, self.task_config[self.hparams.task_name]["num_choices"], S)
         logits = self.bn(output)
+
+        logits = logits.reshape(-1, S)
         logits = self.linear(logits)
 
         return logits.squeeze()
