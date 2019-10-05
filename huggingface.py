@@ -1,9 +1,12 @@
+# pylint: disable=unused-wildcard-import
+
 from __future__ import annotations
 
 import math
 import os
 from inspect import getfullargspec
 from typing import *
+from functools import partial
 
 import numpy as np
 import pytorch_lightning as pl
@@ -23,6 +26,8 @@ from transformers import *
 from textbook.dataset import ClassificationDataset, download
 from textbook.interface import *
 from textbook.utils import set_seed, get_default_hyperparameter
+
+# pylint: disable=no-member
 
 TOKENIZERS = {
     'bert': BertTokenizer,
@@ -158,10 +163,10 @@ class HuggingFaceClassifier(LightningModule):
         # TODO: Change it to your own model loader
         self.encoder = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
         self.encoder.train()
-
+        self.bn = nn.BatchNorm1d(num_features=self.task_config.num_choices)
+        self.nonlinear = nn.ReLU()
         self.dropout = nn.Dropout(self.hparams.dropout)
         self.linear = nn.Linear(self.encoder.dim, self.hparams.output_dimension)
-
         self.linear.weight.data.normal_(mean=0.0, std=self.hparams.initializer_range)
         self.linear.bias.data.zero_()
 
@@ -179,7 +184,9 @@ class HuggingFaceClassifier(LightningModule):
         outputs = self.encoder.forward(
             **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
         output = torch.mean(outputs[0], dim=1).squeeze()
-        logits = self.dropout(output)
+        output = self.nonlinear(output)
+        output = self.dropout(output)
+        logits = self.bn(output)
         logits = self.linear(logits)
 
         return logits.squeeze()
@@ -475,7 +482,7 @@ class HuggingFaceClassifier(LightningModule):
 
         set_seed(hparams.seed)
 
-        model = model_cls(hparams)
+        model = cls(hparams)
         model.load_state_dict(checkpoint['state_dict'])
 
         model.on_load_checkpoint(checkpoint)

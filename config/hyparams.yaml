@@ -13,28 +13,28 @@
 alphanli:
   bert:
     bert-large-cased:
-      lr: 1e-6
-      batch_size: 8
+      lr: 5e-6
+      batch_size: 16
   xlnet:
     xlnet-large-cased:
-      lr: 1e-6
-      batch_size: 8
+      lr: 5e-6
+      batch_size: 16
   roberta:
     roberta-large:
-      lr: 1e-6
-      batch_size: 8
+      lr: 5e-6
+      batch_size: 16
   xlm:
     xlm-mlm-en-2048:
-      lr: 1e-6
-      batch_size: 4
+      lr: 5e-6
+      batch_size: 1
       warmup_steps: 120
   default:
     seed: 42
-    lr: 5e-6
+    lr: 2e-5
     dropout: 0.5
-    batch_size: 32
+    batch_size: 48
     max_seq_len: 128
-    max_nb_epochs: 2
+    max_nb_epochs: 3
     initializer_range: 0.02
     weight_decay: 0.0
     warmup_steps: 0

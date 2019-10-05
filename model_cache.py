@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     MODELS = [(BertModel, BertTokenizer, 'bert-base-cased'),
               (BertModel, BertTokenizer, 'bert-large-cased'),
-              (DistilBertModel, DistilBertTokenizer, 'distilbert-base-uncased')
+              (DistilBertModel, DistilBertTokenizer, 'distilbert-base-uncased'),
               (OpenAIGPTModel, OpenAIGPTTokenizer, 'openai-gpt'),
               (GPT2Model, GPT2Tokenizer, 'gpt2'),
               (GPT2Model, GPT2Tokenizer, 'gpt2-large'),
