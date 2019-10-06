@@ -1,20 +1,27 @@
-## Learning rates: [2e-5, 5e-6, 2e-6]
-## Batch size: [32/16, 16/8, 4/4]
-## Bert base: 110 M
-## Bert large: 340 M <-- large
-## openai gpt: 110 M
-## GPT2: 117 M  <-- weird large
-## XLM: ~ 295 M <-- super large
-## XLnet: 110 M
-## XLNet large: 340 M <-- super large
-## roberta: 125 M
-## roberta large: 355 M <-- large
+## Learning rates:      [2e-5, 5e-6, 2e-6]
+## Batch size:          [32/16, 16/8, 4/4]
+## Bert base:           110 M
+## Bert large:          340 M         <-- large
+## openai gpt:          110 M
+## GPT2:                117 M         <-- weird large
+## XLM:                 >= 295 M      <-- super large
+## XLnet:               110 M
+## XLNet large:         340 M         <-- super large
+## roberta:             125 M
+## roberta large:       355 M         <-- large
+## distilbert:          60 M          <-- small
 
 alphanli:
   bert:
     bert-large-cased:
       lr: 5e-6
       batch_size: 16
+  distilbert:
+    distilbert-base-uncased:
+      do_lower_case: true
+      lr: 5e-5
+      batch_size: 128
+      max_nb_epochs: 6
   xlnet:
     xlnet-large-cased:
       lr: 5e-6
@@ -23,15 +30,10 @@ alphanli:
     roberta-large:
       lr: 5e-6
       batch_size: 16
-  xlm:
-    xlm-mlm-en-2048:
-      lr: 5e-6
-      batch_size: 1
-      warmup_steps: 120
   default:
     seed: 42
     lr: 2e-5
-    dropout: 0.5
+    dropout: 0.6
     batch_size: 48
     max_seq_len: 128
     max_nb_epochs: 3
@@ -40,6 +42,7 @@ alphanli:
     warmup_steps: 0
     adam_epsilon: 1e-8
     accumulate_grad_batches: 1
+    do_lower_case: false
 hellaswag:
   bert:
     bert-large-cased:
@@ -57,15 +60,16 @@ hellaswag:
     roberta-large:
       lr: 5e-6
       batch_size: 8
-  xlm:
-    xlm-mlm-en-2048:
-      lr: 2e-6
-      batch_size: 4
-      warmup_steps: 120
+  distilbert:
+    distilbert-base-uncased:
+      do_lower_case: true
+      lr: 5e-5
+      batch_size: 64
+      max_nb_epochs: 6
   default:
     seed: 42
     lr: 2e-5
-    dropout: 0.1
+    dropout: 0.5
     batch_size: 16
     max_seq_len: 160
     max_nb_epochs: 3
@@ -74,6 +78,7 @@ hellaswag:
     warmup_steps: 0
     adam_epsilon: 1e-8
     accumulate_grad_batches: 1
+    do_lower_case: false
 physicaliqa:
   bert:
     bert-large-cased:
@@ -87,15 +92,16 @@ physicaliqa:
     roberta-large:
       lr: 5e-6
       batch_size: 8
-  xlm:
-    xlm-mlm-en-2048:
-      lr: 2e-6
-      batch_size: 4
-      warmup_steps: 120
+  distilbert:
+    distilbert-base-uncased:
+      do_lower_case: true
+      lr: 5e-5
+      batch_size: 128
+      max_nb_epochs: 6
   default:
     seed: 42
     lr: 2e-5
-    dropout: 0.1
+    dropout: 0.5
     batch_size: 32
     max_seq_len: 128
     max_nb_epochs: 3
@@ -104,6 +110,7 @@ physicaliqa:
     warmup_steps: 0
     adam_epsilon: 1e-8
     accumulate_grad_batches: 1
+    do_lower_case: false
 socialiqa:
   bert:
     bert-large-cased:
@@ -117,15 +124,16 @@ socialiqa:
     roberta-large:
       lr: 5e-6
       batch_size: 8
-  xlm:
-    xlm-mlm-en-2048:
-      lr: 2e-6
-      batch_size: 4
-      warmup_steps: 120
+  distilbert:
+    distilbert-base-uncased:
+      do_lower_case: true
+      lr: 5e-5
+      batch_size: 128
+      max_nb_epochs: 6
   default:
     seed: 42
     lr: 2e-5
-    dropout: 0.1
+    dropout: 0.5
     batch_size: 32
     max_seq_len: 128
     max_nb_epochs: 3
@@ -134,6 +142,7 @@ socialiqa:
     warmup_steps: 0
     adam_epsilon: 1e-8
     accumulate_grad_batches: 1
+    do_lower_case: false
 vcrqa:
   bert:
     bert-large-cased:
@@ -151,15 +160,16 @@ vcrqa:
     roberta-large:
       lr: 5e-6
       batch_size: 8
-  xlm:
-    xlm-mlm-en-2048:
-      lr: 2e-6
-      batch_size: 4
-      warmup_steps: 120
+  distilbert:
+    distilbert-base-uncased:
+      do_lower_case: true
+      lr: 5e-5
+      batch_size: 128
+      max_nb_epochs: 6
   default:
     seed: 42
     lr: 2e-5
-    dropout: 0.1
+    dropout: 0.5
     batch_size: 32
     max_seq_len: 128
     max_nb_epochs: 3
@@ -168,6 +178,7 @@ vcrqa:
     warmup_steps: 0
     adam_epsilon: 1e-8
     accumulate_grad_batches: 1
+    do_lower_case: false
 vcrqr:
   bert:
     bert-large-cased:
@@ -185,15 +196,16 @@ vcrqr:
     roberta-large:
       lr: 5e-6
       batch_size: 8
-  xlm:
-    xlm-mlm-en-2048:
-      lr: 2e-6
-      batch_size: 4
-      warmup_steps: 120
+  distilbert:
+    distilbert-base-uncased:
+      do_lower_case: true
+      lr: 5e-5
+      batch_size: 128
+      max_nb_epochs: 6
   default:
     seed: 42
     lr: 2e-5
-    dropout: 0.1
+    dropout: 0.5
     batch_size: 32
     max_seq_len: 128
     max_nb_epochs: 3
@@ -202,3 +214,4 @@ vcrqr:
     warmup_steps: 0
     adam_epsilon: 1e-8
     accumulate_grad_batches: 1
+    do_lower_case: false

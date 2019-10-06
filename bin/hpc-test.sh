@@ -1,7 +1,7 @@
 #!/bin/sh
 
 declare -a TASKS=(alphanli hellaswag physicaliqa socialiqa vcrqa vcrqr)
-declare -a MODELS=(bert,bert-base-cased bert,bert-large-cased gpt,openai-gpt gpt2,gpt2 xlnet,xlnet-base-cased xlnet,xlnet-large-cased xlm,xlm-mlm-en-2048 roberta,roberta-base roberta,roberta-large)
+declare -a MODELS=(gpt,openai-gpt gpt2,gpt2 distilbert,distilbert-base-uncased xlnet,xlnet-base-cased bert,bert-base-cased bert,bert-large-cased xlnet,xlnet-large-cased roberta,roberta-base roberta,roberta-large)
 declare -a DATASETS=(train dev)
 
 OLDIFS=$IFS

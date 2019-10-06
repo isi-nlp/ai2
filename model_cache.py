@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Date    : 2019-10-06 09:17:36
+# @Author  : Chenghao Mou (chengham@isi.edu)
+# @Link    : https://github.com/ChenghaoMou/ai2
+
+# pylint: disable=unused-wildcard-import
+# pylint: disable=no-member
+
 from pathlib import Path
 from transformers import *
 from loguru import logger
