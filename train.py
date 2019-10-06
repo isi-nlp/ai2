@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Date    : 2019-10-06 09:17:36
+# @Author  : Chenghao Mou (chengham@isi.edu)
+# @Link    : https://github.com/ChenghaoMou/ai2
+
+# pylint: disable=unused-wildcard-import
+# pylint: disable=no-member
+
 import os
 import random
 import sys
@@ -52,13 +61,11 @@ def main(hparams):
     hparams.warmup_steps = default_parameter(field='warmup_steps')
     hparams.adam_epsilon = float(default_parameter(field='adam_epsilon'))
     hparams.accumulate_grad_batches = default_parameter(field='accumulate_grad_batches')
+    hparams.do_lower_case = default_parameter(field='do_lower_case')
     hparams.model_save_path = model_save_path
-    hparams.do_lower_case = task_config[hparams.task_name].get('do_lower_case', False)
     hparams.output_dimension = task_config[hparams.task_name].get('output_dimension', 1)
     hparams.tokenizer_type = hparams.model_type if hparams.tokenizer_type is None else hparams.tokenizer_type
     hparams.tokenizer_weight = hparams.model_weight if hparams.tokenizer_weight is None else hparams.tokenizer_weight
-
-    logger.info(f"{hparams}")
 
     exp.argparse(hparams)
     exp.save()
