@@ -170,8 +170,6 @@ class HuggingFaceClassifier(LightningModule):
         # TODO: Change it to your own model loader
         self.encoder = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
         self.encoder.train()
-        self.bn = nn.BatchNorm1d(num_features=self.task_config[self.hparams.task_name]["num_choices"])
-        self.nonlinear = nn.ReLU()
         self.dropout = nn.Dropout(self.hparams.dropout)
         self.linear = nn.Linear(self.encoder.dim, self.hparams.output_dimension)
         self.linear.weight.data.normal_(mean=0.0, std=self.hparams.initializer_range)
@@ -191,15 +189,8 @@ class HuggingFaceClassifier(LightningModule):
         outputs = self.encoder.forward(
             **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
         output = torch.mean(outputs[0], dim=1).squeeze()
-        output = self.nonlinear(output)
         output = self.dropout(output)
-
-        BC, S = output.shape
-        output = output.reshape(-1, self.task_config[self.hparams.task_name]["num_choices"], S)
-        logits = self.bn(output)
-
-        logits = logits.reshape(-1, S)
-        logits = self.linear(logits)
+        logits = self.linear(output)
 
         return logits.squeeze()
 
@@ -223,7 +214,7 @@ class HuggingFaceClassifier(LightningModule):
 
     def training_step(self, data_batch, batch_i):
 
-        B, C, S = data_batch['input_ids'].shape
+        B, _, S = data_batch['input_ids'].shape
 
         logits = self.forward(**{
             'input_ids': data_batch['input_ids'].reshape(-1, S),
@@ -231,9 +222,6 @@ class HuggingFaceClassifier(LightningModule):
             'attention_mask': data_batch['attention_mask'].reshape(-1, S),
         })
         loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
-
-        proba = F.softmax(logits, dim=-1)
-        pred = torch.argmax(proba, dim=-1).reshape(-1)
 
         # WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
         if self.trainer.use_dp:
@@ -245,7 +233,7 @@ class HuggingFaceClassifier(LightningModule):
         }
 
     def validation_step(self, data_batch, batch_i):
-        B, C, S = data_batch['input_ids'].shape
+        B, _, S = data_batch['input_ids'].shape
 
         logits = self.forward(**{
             'input_ids': data_batch['input_ids'].reshape(-1, S),
@@ -266,7 +254,7 @@ class HuggingFaceClassifier(LightningModule):
         }
 
     def test_step(self, data_batch, batch_i):
-        B, C, S = data_batch['input_ids'].shape
+        B, _, S = data_batch['input_ids'].shape
 
         logits = self.forward(**{
             'input_ids': data_batch['input_ids'].reshape(-1, S),
@@ -437,7 +425,6 @@ class HuggingFaceClassifier(LightningModule):
         if self.hparams.test_input_dir is None:
             return self.val_dataloader
 
-        dataset_name = "test"
         dataset = ClassificationDataset.load(cache_dir=self.hparams.test_input_dir,
                                              file_mapping={'input_x': None},
                                              task_formula=self.task_config[self.hparams.task_name]['task_formula'],
