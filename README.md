@@ -2,12 +2,22 @@
 
 ## Environment
 
-- python >= 3.6
-- torch
-- loguru
-- numpy
-- pytorch_lightning
-- transformers
+- python >= 3.7
+- `pip install -r requirements.txt`
+
+## Baseline Scores
+
+| Models                               | aNLI      | hellaswag | piqa      | siqa      | Config Commit                                                                              |
+| ------------------------------------ | --------- | --------- | --------- | --------- | ------------------------------------------------------------------------------------------ |
+| Bert (bert-base-cased)               | 63.32     | 37.83     | 65.29     | 60.33     | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
+| Bert (bert-large-cased)              | 66.28     | 43.84     | 68.67     | 65        | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
+| RoBERTa (roberta-base)               | 71.54     | 58.51     | 48.03     | 69.09     | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
+| RoBERTa (roberta-large)              | **84.39** | **82.42** | **76.96** | **77.12** | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
+| XLNet (xlnet-base-cased)             | 68.15     | 52.99     | 52.94     | 65.79     | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
+| XLNet (xlnet-large-cased)            | 80.16     | 80.38     | 69.27     | 75.23     | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
+| GPT (openai-gpt)                     | 64.23     | 38.15     | 67.11     | 61.73     | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
+| GPT2 (gpt2)                          | 53.46     | 26.52     | 48.05     | 35.16     | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
+| DistilBERT (distilbert-base-uncased) | 60.17     | 35.57     | 64.96     | 52.92     | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
 
 ## Run Your Own Model
 
