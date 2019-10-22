@@ -17,10 +17,12 @@
 | GPT2          | 117 M    | weird large |
 | XLM           | >= 295 M | super large |
 | XLnet         | 110 M    | base        |
-| XLNet large   | 340 M    | super large |
+| XLNet large   | 340 M    | large       |
 | roberta       | 125 M    | base        |
 | roberta large | 355 M    | large       |
 | distilbert    | 60 M     | small       |
+
+It is impossible to fit super large models in P100s on HPC. Weird large models are base models eating memory like a large one.
 
 ## 1.3. Baseline Scores
 
@@ -37,6 +39,8 @@
 | DistilBERT (distilbert-base-uncased) | 60.17     | 35.57     | 64.96     | 52.92     | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
 
 ## 1.4. Fine-tuning Time Reference
+
+With two P100s on HPC, it takes the following time to fine tune a model.
 
 |    Tasks    | Base Model(3 epochs) | Large Model(3 epochs) |
 | :---------: | :------------------: | :-------------------: |
