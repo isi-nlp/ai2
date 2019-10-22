@@ -75,6 +75,8 @@ def main(hparams):
     # TODO: Change this to your own model
     model = HuggingFaceClassifier(hparams)
 
+    print(model)
+
     early_stop = EarlyStopping(
         monitor=hparams.early_stop_metric,
         patience=hparams.early_stop_patience,

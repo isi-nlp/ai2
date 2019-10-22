@@ -113,3 +113,31 @@ It should generates all the predcitions in the `output_dir`:
 probabilities.lst
 predictions.lst
 ```
+
+### 6. Visualize your model [Optional]
+
+With integrated gradients, you can now visualize your model's token-level focus with Captum. Please refer to [Website](https://captum.io) for installation instructions.
+
+The `--embedding_layer` parameter is the name of the word embedding layer in your model.
+
+```bash
+PYTHON=/Users/chenghaomou/Anaconda/envs/Elisa/bin/python
+EVAL=gradient_visual.py
+```
+
+`bin/unittest-vis.sh`
+
+```bash
+$PYTHON -W ignore $EVAL --model_type distilbert \
+  --model_weight distilbert-base-uncased \
+  --task_name physicaliqa \
+  --task_config_file config/tasks.yaml \
+  --task_cache_dir ./cache \
+  --running_config_file config/hyparams.yaml \
+  --test_input_dir ./cache/physicaliqa-test-input \
+  --output_dir output/distilbert-distilbert-base-uncased-physicaliqa-test-pred \
+  --weights_path output/distilbert-distilbert-base-uncased-checkpoints/physicaliqa/0/_ckpt_epoch_5.ckpt \
+  --tags_csv output/distilbert-distilbert-base-uncased-log/physicaliqa/version_0/meta_tags.csv \
+  --embedding_layer encoder.model.embeddings.word_embeddings \
+  --output visualization.html
+```
