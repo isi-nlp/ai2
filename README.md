@@ -1,11 +1,43 @@
-# AI2 DARPA Leaderboard Eval Tool
+# 1. AI2 DARPA TASKS Eval Tool
 
-## Environment
+<!-- TOC -->
+
+- [1. AI2 DARPA TASKS Eval Tool](#1-ai2-darpa-tasks-eval-tool)
+  - [1.1. Environment](#11-environment)
+  - [1.2. Baseline models](#12-baseline-models)
+  - [1.3. Baseline Scores](#13-baseline-scores)
+  - [1.4. Fine-tuning Time Reference](#14-fine-tuning-time-reference)
+  - [1.5. Run Your Own Model](#15-run-your-own-model)
+    - [1.5.1. Necessary Implementation](#151-necessary-implementation)
+    - [1.5.2. Download the datasets](#152-download-the-datasets)
+    - [1.5.3. Optional: HuggingFace Pretrained Models](#153-optional-huggingface-pretrained-models)
+    - [1.5.4. Fine Tune the Model](#154-fine-tune-the-model)
+    - [1.5.5. Eval the model](#155-eval-the-model)
+    - [1.5.6. Visualize your model [Optional]](#156-visualize-your-model-optional)
+
+<!-- /TOC -->
+
+## 1.1. Environment
 
 - python >= 3.7
 - `pip install -r requirements.txt`
 
-## Baseline Scores
+## 1.2. Baseline models
+
+| Models        | Size     | Category    |
+| ------------- | -------- | ----------- |
+| Bert base     | 110 M    | base        |
+| Bert large    | 340 M    | large       |
+| openai gpt    | 110 M    | base        |
+| GPT2          | 117 M    | weird large |
+| XLM           | >= 295 M | super large |
+| XLnet         | 110 M    | base        |
+| XLNet large   | 340 M    | super large |
+| roberta       | 125 M    | base        |
+| roberta large | 355 M    | large       |
+| distilbert    | 60 M     | small       |
+
+## 1.3. Baseline Scores
 
 | Models                               | aNLI      | hellaswag | piqa      | siqa      | Config Commit                                                                              |
 | ------------------------------------ | --------- | --------- | --------- | --------- | ------------------------------------------------------------------------------------------ |
@@ -19,9 +51,18 @@
 | GPT2 (gpt2)                          | 53.46     | 26.52     | 48.05     | 35.16     | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
 | DistilBERT (distilbert-base-uncased) | 60.17     | 35.57     | 64.96     | 52.92     | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
 
-## Run Your Own Model
+## 1.4. Fine-tuning Time Reference
 
-### 1. Necessary Implementation
+|    Tasks    | Base Model(3 epochs) | Large Model(3 epochs) |
+| :---------: | :------------------: | --------------------- |
+|    aNLI     |      1 ~ 2 hrs       | ~ 7 hrs               |
+|  hellaswag  |      6 ~ 8 hrs       | 24 hrs                |
+| physicaliqa |         1 hr         | 3 ~ 4 hrs             |
+|  socialiqa  |         1 hr         | 4 ~ 5 hrs             |
+
+## 1.5. Run Your Own Model
+
+### 1.5.1. Necessary Implementation
 
 1. Implement your own ModelLoader, TokenizerLoader, and Classifier, similar to those implemented in `huggingface.py`.
 2. Change the classifier in both `test.py` as `train.py`
@@ -52,7 +93,7 @@ $task_name:
 
 You can also specify default parameters within each task.
 
-### 2. Download the datasets
+### 1.5.2. Download the datasets
 
 You can use git lfs to pull down all datasets into `./cache` directory.
 
@@ -60,7 +101,7 @@ You can use git lfs to pull down all datasets into `./cache` directory.
 git lfs pull
 ```
 
-### 3. Optional: HuggingFace Pretrained Models
+### 1.5.3. Optional: HuggingFace Pretrained Models
 
 You can also download all the pretrained models from HuggingFace by
 
@@ -68,7 +109,7 @@ You can also download all the pretrained models from HuggingFace by
 python model_cache.py
 ```
 
-### 4. Fine Tune the Model
+### 1.5.4. Fine Tune the Model
 
 Running train/eval should be straightforward.
 
@@ -92,7 +133,7 @@ dev-predictions.lst
 dev-labels.lst
 ```
 
-### 5. Eval the model
+### 1.5.5. Eval the model
 
 ```bash
 $PYTHON -W ignore test.py --model_type $MODEL_TYPE \
@@ -114,7 +155,7 @@ probabilities.lst
 predictions.lst
 ```
 
-### 6. Visualize your model [Optional]
+### 1.5.6. Visualize your model [Optional]
 
 With integrated gradients, you can now visualize your model's token-level focus with Captum. Please refer to [Website](https://captum.io) for installation instructions.
 
