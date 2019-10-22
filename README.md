@@ -1,6 +1,17 @@
 # 1. AI2 DARPA TASKS Eval Tool
 
-<!-- TOC -->autoauto- [1. AI2 DARPA TASKS Eval Tool](#1-ai2-darpa-tasks-eval-tool)auto    - [1.1. Environment](#11-environment)auto    - [1.2. Baseline models](#12-baseline-models)auto    - [1.3. Baseline Scores](#13-baseline-scores)auto    - [1.4. Fine-tuning Time Reference](#14-fine-tuning-time-reference)auto    - [1.5. Run Your Own Model](#15-run-your-own-model)auto        - [1.5.1. Necessary Implementation](#151-necessary-implementation)auto        - [1.5.2. Download the datasets](#152-download-the-datasets)auto        - [1.5.3. Optional: HuggingFace Pretrained Models](#153-optional-huggingface-pretrained-models)auto        - [1.5.4. Fine Tune the Model](#154-fine-tune-the-model)auto        - [1.5.5. Eval the model](#155-eval-the-model)auto        - [1.5.6. Visualize your model [Optional]](#156-visualize-your-model-optional)autoauto<!-- /TOC -->
+- [1. AI2 DARPA TASKS Eval Tool](#1-ai2-darpa-tasks-eval-tool)
+  - [1.1. Environment](#11-environment)
+  - [1.2. Baseline models](#12-baseline-models)
+  - [1.3. Baseline Scores](#13-baseline-scores)
+  - [1.4. Fine-tuning Time Reference](#14-fine-tuning-time-reference)
+  - [1.5. Run Your Own Model](#15-run-your-own-model)
+    - [1.5.1. Necessary Implementation](#151-necessary-implementation)
+    - [1.5.2. Download the datasets](#152-download-the-datasets)
+    - [1.5.3. Optional: HuggingFace Pretrained Models](#153-optional-huggingface-pretrained-models)
+    - [1.5.4. Fine Tune the Model](#154-fine-tune-the-model)
+    - [1.5.5. Eval the model](#155-eval-the-model)
+    - [1.5.6. Visualize your model [Optional]](#156-visualize-your-model-optional)
 
 ## 1.1. Environment
 
