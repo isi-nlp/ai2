@@ -39,8 +39,8 @@ def main(hparams):
 
         pred = model.forward(input_ids=input_embedding.reshape(-1, S, H).to(device),
                              token_type_ids=example['token_type_ids'].reshape(-1, S).to(device),
-                             attention_mask=example['attention_mask'].reshape(-1, S).to(device)).detach()
-        pred_ind = torch.softmax(pred, dim=-1).detach()
+                             attention_mask=example['attention_mask'].reshape(-1, S).to(device)).detach().cpu()
+        pred_ind = torch.softmax(pred, dim=-1)
         pred = pred.numpy()
 
         # generate reference for each sample
