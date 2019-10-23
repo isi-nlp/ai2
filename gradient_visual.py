@@ -48,8 +48,8 @@ def main(hparams):
         reference_embedding = interpretable_embedding.indices_to_embeddings(reference_indices)
 
         attributions_ig, delta = ig.attribute(
-            input_embedding.to(device),
-            reference_embedding.to(device),
+            input_embedding,
+            reference_embedding,
             additional_forward_args=(example['token_type_ids'].reshape(-1, S).to(device),
                                      example['attention_mask'].reshape(-1, S).to(device)),
             n_steps=5, return_convergence_delta=True)
