@@ -96,15 +96,16 @@ def main(hparams):
 
     for _, batch in enumerate(model.val_dataloader):
 
-        example = {
-            "tokens": batch["tokens"][0],
-            "input_ids": batch["input_ids"][0].unsqueeze(0),
-            "token_type_ids": batch["token_type_ids"][0].unsqueeze(0),
-            "attention_mask": batch["attention_mask"][0].unsqueeze(0),
-            "y": batch["y"][0].unsqueeze(0),
-        }
+        for i in range(batch["tokens"].shape[0]):
+            example = {
+                "tokens": batch["tokens"][i],
+                "input_ids": batch["input_ids"][i].unsqueeze(0),
+                "token_type_ids": batch["token_type_ids"][i].unsqueeze(0),
+                "attention_mask": batch["attention_mask"][i].unsqueeze(0),
+                "y": batch["y"][i].unsqueeze(0),
+            }
 
-        interpret_example(model, example)
+            interpret_example(model, example)
 
     print('Visualize attributions based on Integrated Gradients')
 
