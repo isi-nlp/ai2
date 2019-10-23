@@ -74,7 +74,7 @@ class HuggingFaceModelLoader(ModelLoader):
         signature = getfullargspec(self.model.forward)
         return self.model.forward(
             **
-            {k: None if k == "token_type_ids" and getattr(self.model.config, 'type_vocab_size', 0) < 2 else v for k, v
+            {k: torch.zeros_like(v) if k == "token_type_ids" and getattr(self.model.config, 'type_vocab_size', 0) < 2 else v for k, v
              in kwargs.items()
              if k in signature.args})
 

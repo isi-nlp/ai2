@@ -159,12 +159,33 @@ predictions.lst
 
 With integrated gradients, you can now visualize your model's token-level focus with Captum. Please refer to [Website](https://captum.io) for installation instructions.
 
+In order to run visualization, you have to change some code `${MODEL}Embeddings`in the model you want to run in transformers:
+
+````python
+ def forward(self, input_ids, token_type_ids=None, position_ids=None):
+        bc, seq_length, *_ = input_ids.shape # change this
+        if position_ids is None:
+            position_ids = torch.arange(seq_length, dtype=torch.long, device=input_ids.device)
+            position_ids = position_ids.unsqueeze(0).expand((bc, seq_length)) # change this
+        if token_type_ids is None:
+            token_type_ids = torch.zeros((bc, seq_length))
+
+        words_embeddings = self.word_embeddings(input_ids)
+        position_embeddings = self.position_embeddings(position_ids)
+        token_type_embeddings = self.token_type_embeddings(token_type_ids)
+
+        embeddings = words_embeddings + position_embeddings + token_type_embeddings
+        embeddings = self.LayerNorm(embeddings)
+        embeddings = self.dropout(embeddings)
+        return embeddings
+```
+
 The `--embedding_layer` parameter is the name of the word embedding layer in your model.
 
 ```bash
 PYTHON=/Users/chenghaomou/Anaconda/envs/Elisa/bin/python
 EVAL=gradient_visual.py
-```
+````
 
 `bin/unittest-vis.sh`
 
