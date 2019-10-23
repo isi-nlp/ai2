@@ -96,7 +96,7 @@ def main(hparams):
 
     for _, batch in enumerate(model.val_dataloader):
 
-        for i in range(batch["tokens"].shape[0]):
+        for i in range(batch["input_ids"].shape[0]):
             example = {
                 "tokens": batch["tokens"][i],
                 "input_ids": batch["input_ids"][i].unsqueeze(0),
