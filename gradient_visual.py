@@ -48,10 +48,10 @@ def main(hparams):
         reference_embedding = interpretable_embedding.indices_to_embeddings(reference_indices)
 
         attributions_ig, delta = ig.attribute(
-            input_embedding,
-            reference_embedding,
-            additional_forward_args=(example['token_type_ids'].reshape(-1, S),
-                                     example['attention_mask'].reshape(-1, S)),
+            input_embedding.to(device),
+            reference_embedding.to(device),
+            additional_forward_args=(example['token_type_ids'].reshape(-1, S).to(device),
+                                     example['attention_mask'].reshape(-1, S).to(device)),
             n_steps=5, return_convergence_delta=True)
 
         print('pred: ', np.argmax(pred_ind), '(', ','.join('%.2f' % d for d in pred), ')', ', delta: ', abs(delta))
