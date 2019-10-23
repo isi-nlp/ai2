@@ -90,6 +90,9 @@ def main(hparams):
         on_gpu=torch.cuda.is_available(),
         map_location=None
     )
+
+    model.to(device)
+
     token_reference = TokenReferenceBase(reference_token_idx=model.tokenizer.pad)
     interpretable_embedding = configure_interpretable_embedding_layer(model, hparams.embedding_layer)
     ig = IntegratedGradients(model)
