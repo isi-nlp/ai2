@@ -114,10 +114,10 @@ def main(hparams):
 if __name__ == '__main__':
     root_dir = os.path.split(os.path.dirname(sys.modules['__main__'].__file__))[0]
     parent_parser = HyperOptArgumentParser(strategy='random_search', add_help=True)
-    add_default_args(parent_parser, root_dir)
-    parent_parser.add_argument('--el', '--embedding_layer', type=str, help='Name of the embedding layer in the model',
+    parent_parser.add_argument('--embedding_layer', type=str, help='Name of the embedding layer in the model',
                                default='encoder.model.embeddings.word_embeddings')
-    parent_parser.add_argument('--vo', '--visualization_output', type=str, help='output visualization html file', default="vis.html")
+    parent_parser.add_argument('--visualization_output', type=str, help='output visualization html file', default="vis.html")
+    add_default_args(parent_parser, root_dir)
 
     # TODO: Change this to your own model
     parser = HuggingFaceClassifier.add_model_specific_args(parent_parser)
