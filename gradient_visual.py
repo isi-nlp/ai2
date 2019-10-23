@@ -70,7 +70,7 @@ def main(hparams):
     def add_attributions_to_visualizer(attributions, text, pred, pred_ind, label, delta, vis_data_records):
         attributions = attributions.sum(dim=2).squeeze(0)
         attributions = attributions / torch.norm(attributions)
-        attributions = attributions.detach().numpy()
+        attributions = attributions.detach().cpu().numpy()
 
         # storing couple samples in an array for visualization purposes
         vis_data_records.append(visualization.VisualizationDataRecord(
@@ -91,7 +91,7 @@ def main(hparams):
         map_location=None
     )
 
-    model.to(device)
+    model = model.to(device)
 
     token_reference = TokenReferenceBase(reference_token_idx=model.tokenizer.pad)
     interpretable_embedding = configure_interpretable_embedding_layer(model, hparams.embedding_layer)
