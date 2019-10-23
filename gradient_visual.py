@@ -37,9 +37,9 @@ def main(hparams):
         input_embedding = interpretable_embedding.indices_to_embeddings(example['input_ids'].reshape(-1, S))
         *_, H = input_embedding.shape
 
-        pred = model.forward(input_ids=input_embedding.reshape(-1, S, H),
-                             token_type_ids=example['token_type_ids'].reshape(-1, S),
-                             attention_mask=example['attention_mask'].reshape(-1, S)).detach()
+        pred = model.forward(input_ids=input_embedding.reshape(-1, S, H).to(device),
+                             token_type_ids=example['token_type_ids'].reshape(-1, S).to(device),
+                             attention_mask=example['attention_mask'].reshape(-1, S).to(device)).detach()
         pred_ind = torch.softmax(pred, dim=-1).detach()
         pred = pred.numpy()
 
