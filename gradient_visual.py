@@ -34,7 +34,7 @@ def main(hparams):
         model.zero_grad()
         B, C, S = example['input_ids'].shape
 
-        input_embedding = interpretable_embedding.indices_to_embeddings(example['input_ids'].reshape(-1, S))
+        input_embedding = interpretable_embedding.indices_to_embeddings(example['input_ids'].reshape(-1, S).to(device))
         *_, H = input_embedding.shape
 
         pred = model.forward(input_ids=input_embedding.reshape(-1, S, H).to(device),
