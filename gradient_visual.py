@@ -111,8 +111,8 @@ def main(hparams):
             interpret_example(model, example)
 
     print('Visualize attributions based on Integrated Gradients')
-
-    open(hparams.visualization_output, "w").write(visualization.visualize_text(vis_data_records_ig).data)
+    print(len(vis_data_records_ig))
+    open(hparams.visualization_output, "w").write((visualization.visualize_text(vis_data_records_ig)).data)
 
 
 if __name__ == '__main__':
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     parent_parser = HyperOptArgumentParser(strategy='random_search', add_help=True)
     parent_parser.add_argument('--embedding_layer', type=str, help='Name of the embedding layer in the model',
                                default='encoder.model.embeddings.word_embeddings')
-    parent_parser.add_argument('--visualization_output', type=str, help='output visualization html file', default="vis.html")
+    parent_parser.add_argument('--visualization_output', type=str, help='output visualization html file', default="viz.html")
     add_default_args(parent_parser, root_dir)
 
     # TODO: Change this to your own model
