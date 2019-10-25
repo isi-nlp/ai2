@@ -12,12 +12,11 @@ import math
 import glob
 from typing import *
 from pathlib import Path
-
+from loguru import logger
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 import pandas as pd
-# TODO: Generate heatmap graphs
 
 
 def heatmap(dirs: List[str], prefix: str = "dev-", output_file: str = None) -> None:
@@ -69,16 +68,19 @@ def heatmap(dirs: List[str], prefix: str = "dev-", output_file: str = None) -> N
 
                 else:
                     differences.append(np.NaN)
-            result[weight] = np.asarray(differences)
-            print(f"{weight}: {np.count_nonzero(~np.isnan(result[weight])) / len(result[weight]):.2f}")
+            accuracy = np.count_nonzero(~np.isnan(np.asarray(differences))) / len(differences)
+            result[weight + f" ({accuracy * 100: .2f})"] = np.asarray(differences)
     dataframe = pd.DataFrame(result)
     dataframe = dataframe.iloc[dataframe.isnull().sum(1).sort_values(ascending=False).index]
     dataframe = dataframe.transpose()
 
-    print(dataframe.head(5))
+    ax = sns.heatmap(dataframe, cmap="autumn", mask=dataframe.isnull(), xticklabels=False)
+    ax.hlines([i for i in range(dataframe.shape[0] + 1)], linewidth=1, *ax.get_xlim())
+    ax.vlines([0, dataframe.shape[1]], linewidth=1, *ax.get_ylim())
 
-    ax = sns.heatmap(dataframe, cmap="YlGnBu", mask=dataframe.isnull(), center=0.5, xticklabels=False)
-    plt.show()
+    ax.figure.tight_layout()
+
+    plt.savefig(output_file)
 
 
 if __name__ == "__main__":
