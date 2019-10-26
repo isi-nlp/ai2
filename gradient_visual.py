@@ -111,7 +111,6 @@ def main(hparams):
             interpret_example(model, example)
 
     print('Visualize attributions based on Integrated Gradients')
-    print(len(vis_data_records_ig))
     open(hparams.visualization_output, "w").write((visualization.visualize_text(vis_data_records_ig)).data)
 
 
