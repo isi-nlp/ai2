@@ -55,7 +55,9 @@ def heatmap(dirs: List[str], prefix: str = "dev-", output_file: str = None, offs
             if labels == [] or labels is None:
                 labels = model_labels_value
             else:
-                assert labels == model_labels_value, "Inconsistent labels"
+                if labels != model_labels_value:
+                    logger.warning("Inconsistent labels")
+                    continue
 
             differences = []
 
