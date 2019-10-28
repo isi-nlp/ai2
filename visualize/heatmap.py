@@ -82,4 +82,11 @@ def heatmap(dirs: List[str], prefix: str = "dev-", output_file: str = None, offs
 
 
 if __name__ == "__main__":
-    heatmap(glob.glob("./output/*alphanli-pred"), output_file="alphanli.svg", offset=1)
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--pred_dir', type=str, required=True)
+    parser.add_argument('--output_file', type=str, required=True)
+    parser.add_argument('--offset', type=int, required=True)
+
+    args = parser.parse_args()
+    heatmap(glob.glob(args.pred_dir), output_file=args.output_file, offset=args.offset)
