@@ -1,0 +1,118 @@
+alphanli:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/alphanli/alphanli-train-dev.zip"
+  task_formula: "[SEP] hyp1|hyp2 [SEP]"
+  type_formula: "0 1 1"
+  shuffle: true
+  label_offset: 1
+  num_choices: 2
+  file_mapping:
+    train:
+      train_x: "train.jsonl"
+      train_y: "train-labels.lst"
+    dev:
+      dev_x: "dev.jsonl"
+      dev_y: "dev-labels.lst"
+snli:
+  urls:
+    - "https://nlp.stanford.edu/projects/snli/snli_1.0.zip"
+  task_formula: "[CLS] sentence1 [SEP] sentence2 [SEP]"
+  type_formula: "0 0 0 1 1"
+  shuffle: true
+  label_formula: "gold_label"
+  label_offset: 0
+  num_choices: 1
+  label_transform:
+    neutral: 0
+    entailment: 1
+    contradiction: 2
+    "-": 3
+  output_dimension: 4
+  file_mapping:
+    train:
+      train_x: "snli_1.0/snli_1.0_train.jsonl"
+      train_y: "snli_1.0/snli_1.0_train.jsonl"
+    dev:
+      dev_x: "snli_1.0/snli_1.0_dev.jsonl"
+      dev_y: "snli_1.0/snli_1.0_dev.jsonl"
+hellaswag:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/hellaswag/hellaswag-train-dev.zip"
+  task_formula: "[SEP] ending_options [SEP]"
+  type_formula: "0 1 1"
+  shuffle: true
+  label_offset: 0
+  num_choices: 4
+  file_mapping:
+    train:
+      train_x: "hellaswag-train-dev/train.jsonl"
+      train_y: "hellaswag-train-dev/train-labels.lst"
+    dev:
+      dev_x: "hellaswag-train-dev/valid.jsonl"
+      dev_y: "hellaswag-train-dev/valid-labels.lst"
+physicaliqa:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/physicaliqa/physicaliqa-train-dev.zip"
+  task_formula: "[SEP] sol1|sol2 [SEP]"
+  type_formula: "0 1 1"
+  shuffle: true
+  label_offset: 0
+  num_choices: 2
+  file_mapping:
+    train:
+      train_x: "physicaliqa-train-dev/train.jsonl"
+      train_y: "physicaliqa-train-dev/train-labels.lst"
+    dev:
+      dev_x: "physicaliqa-train-dev/dev.jsonl"
+      dev_y: "physicaliqa-train-dev/dev-labels.lst"
+socialiqa:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/socialiqa/socialiqa-train-dev.zip"
+  task_formula: "[SEP] answerA|answerB|answerC [SEP]"
+  type_formula: "0 1 1"
+  shuffle: true
+  label_offset: 1
+  num_choices: 3
+  file_mapping:
+    train:
+      train_x: "socialiqa-train-dev/train.jsonl"
+      train_y: "socialiqa-train-dev/train-labels.lst"
+    dev:
+      dev_x: "socialiqa-train-dev/dev.jsonl"
+      dev_y: "socialiqa-train-dev/dev-labels.lst"
+vcrqa:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/vcr/train.tar.gz"
+    - "https://storage.googleapis.com/ai2-mosaic/public/vcr/val.tar.gz"
+  pretokenized: true
+  task_formula: "[SEP] answer_choices [SEP]"
+  type_formula: "0 0 0 1 1"
+  shuffle: true
+  label_formula: "answer_label"
+  label_offset: 0
+  num_choices: 4
+  file_mapping:
+    train:
+      train_x: "train/qa.jsonl"
+      train_y: "train/labels.jsonl"
+    dev:
+      dev_x: "val/qa.jsonl"
+      dev_y: "val/labels.jsonl"
+vcrqr:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/vcr/train.tar.gz"
+    - "https://storage.googleapis.com/ai2-mosaic/public/vcr/val.tar.gz"
+  pretokenized: true
+  task_formula: "[SEP] rationale_choices [SEP]"
+  type_formula: "0 1 1"
+  shuffle: true
+  label_formula: "rationale_label"
+  label_offset: 0
+  num_choices: 4
+  file_mapping:
+    train:
+      train_x: "train/qar.jsonl"
+      train_y: "train/labels.jsonl"
+    dev:
+      dev_x: "val/qar.jsonl"
+      dev_y: "val/labels.jsonl"
