@@ -352,6 +352,7 @@ class HuggingFaceClassifier(LightningModule):
                                              label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
                                              label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
                                              label_transform=self.task_config[self.hparams.task_name].get('label_transform', None),
+                                             shuffl=self.task_config[self.hparams.task_name].get('shuffl', False),
                                              )
 
         return DataLoader(dataset,
@@ -413,7 +414,8 @@ class HuggingFaceClassifier(LightningModule):
                                              label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
                                              label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
                                              label_transform=self.task_config[self.hparams.task_name].get('label_transform',
-                                                                                                          None), )
+                                                                                                          None),
+                                             shuffl=self.task_config[self.hparams.task_name].get('shuffl', False),)
 
         return DataLoader(dataset,
                           collate_fn=self.collate_fn,
@@ -434,7 +436,8 @@ class HuggingFaceClassifier(LightningModule):
                                              label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
                                              label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
                                              label_transform=self.task_config[self.hparams.task_name].get('label_transform',
-                                                                                                          None), )
+                                                                                                          None),
+                                             shuffl=self.task_config[self.hparams.task_name].get('shuffl', False),)
 
         return DataLoader(dataset,
                           collate_fn=self.collate_fn,

@@ -14,6 +14,7 @@ import io
 import json
 import os
 import io
+import random
 import zipfile
 import requests
 from dataclasses import dataclass
@@ -82,7 +83,7 @@ class ClassificationDataset(Dataset):
     def load(
             cls, cache_dir: str, file_mapping: Dict, task_formula: str, type_formula: str,
             preprocessor: TokenizerLoader, pretokenized: bool = False,
-            label_formula: str = None, label_offset: int = 0, label_transform: Dict = None) -> ClassificationDataset:
+            label_formula: str = None, label_offset: int = 0, label_transform: Dict = None, shuffle: bool = False) -> ClassificationDataset:
         """
         Load the datase into a dataset class wrapper.
 
@@ -95,6 +96,7 @@ class ClassificationDataset(Dataset):
         :param label_formula: None if label is an integer else a field in the dataset.
         :param label_offset: Offset for integer labels.
         :param label_transform: Mapping from string lables to integer labels.
+        :param shuffle: Shuffle the tokens.
         :return: A ClassificationDataset.
         """
 
@@ -150,11 +152,14 @@ class ClassificationDataset(Dataset):
                                 example_token_type_ids = [e + [i] for e in example_token_type_ids]
 
                         elif isinstance(example_raw[segment], str):
-                            example_tokens = preprocessor.tokenize(example_raw[segment])
+                            example_tokens = random.shuffle(
+                                preprocessor.tokenize(example_raw[segment])) if i == 1 else preprocessor.tokenize(
+                                example_raw[segment])
                             example = [e + example_tokens for e in example]
                             example_token_type_ids = [e + [i for _ in example_tokens] for e in example_token_type_ids]
                         elif isinstance(example_raw[segment], list):
-                            example_tokens = [preprocessor.tokenize(k) for k in example_raw[segment]]
+                            example_tokens = [random.shuffle(preprocessor.tokenize(k)) if i == 1 else preprocessor.tokenize(k)
+                                              for k in example_raw[segment]]
                             example = [e + t for t in example_tokens for e in example]
                             example_token_type_ids = [e + [i for _ in t]
                                                       for t in example_tokens for e in example_token_type_ids]
