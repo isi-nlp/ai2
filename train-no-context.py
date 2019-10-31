@@ -41,8 +41,8 @@ def main(hparams):
         autosave=True,
     )
 
-    model_save_path = curr_dir / f"{hparams.model_type}-{hparams.model_weight}-checkpoints" / hparams.task_name / str(exp.version)
-
+    model_save_path = curr_dir / f"{hparams.model_type}-{hparams.model_weight}-checkpoints" / hparams.task_name / str(exp.version) / ""
+    logger.info(f"Saving model to {model_save_path}")
     running_config = yaml.safe_load(open(hparams.running_config_file, "r"))
     task_config = yaml.safe_load(open(hparams.task_config_file, 'r'))
 
