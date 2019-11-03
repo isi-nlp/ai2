@@ -45,9 +45,19 @@ def visualgenome_relationships(
         alias: Union[str, Path],
         output_dir: Union[str, Path]) -> None:
 
-    with open(relationships, 'r') as f:
+    relationships, alias, output_dir = map(Path, [relationships, alias, output_dir])
+    Path.mkdir(output_dir, exist_ok=True)
+    with open(relationships, 'r') as f, open(output_dir / "train.txt", "w") as train, open(output_dir / "valid.txt", "w") as valid:
         data = json.loads(f.read())
-        print(data["relationships"][0])
+        cnt = 0
+        for subject in data:
+            for rel in data[subject]:
+                for obj in data[subject][rel]:
+                    if cnt % 100 == 0:
+                        valid.write(f"{subject} {rel} {obj}\n")
+                    else:
+                        train.write(f"{subject} {rel} {obj}\n")
+                    cnt += 1
 
 
 if __name__ == "__main__":
@@ -57,6 +67,6 @@ if __name__ == "__main__":
     #                           "visual_data/validation-annotations-vrd.csv"],
     #                          ["visual_data/open_image_train.txt", "visual_data/open_image_dev.txt"])
 
-    visualgenome_relationships("visual_data/relationships.json",
+    visualgenome_relationships("visual_data/subjects_all.json",
                                "visual_data/relationship_alias.txt",
-                               "visual_data/genome.txt")
+                               "visual_data/genome")
