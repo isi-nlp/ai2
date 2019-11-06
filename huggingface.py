@@ -27,7 +27,7 @@ from sklearn.metrics import accuracy_score
 from test_tube import HyperOptArgumentParser
 from torch.nn import Module
 from torch.nn.utils.rnn import pad_sequence
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, RandomSampler
 from transformers import *
 
 from textbook.dataset import ClassificationDataset, download
@@ -402,7 +402,7 @@ class HuggingFaceClassifier(LightningModule):
         }
 
     @pl.data_loader
-    def val_dataloader(self):
+    def val_dataloader(self, sampling=False):
         dataset_name = "dev"
         cache_dirs = download(self.task_config[self.hparams.task_name]['urls'], self.hparams.task_cache_dir)
         dataset = ClassificationDataset.load(cache_dir=cache_dirs[-1] if isinstance(cache_dirs, list) else cache_dirs,
@@ -416,10 +416,13 @@ class HuggingFaceClassifier(LightningModule):
                                              label_transform=self.task_config[self.hparams.task_name].get('label_transform',
                                                                                                           None),
                                              shuffle=self.task_config[self.hparams.task_name].get('shuffle', False),)
-
-        return DataLoader(dataset,
-                          collate_fn=self.collate_fn,
-                          shuffle=False, batch_size=self.hparams.batch_size)
+        if not sampling:
+            return DataLoader(dataset,
+                              collate_fn=self.collate_fn,
+                              shuffle=False, batch_size=self.hparams.batch_size)
+        else:
+            return DataLoader(dataset, collate_fn=self.collate_fn, sampler=RandomSampler(dataset, replacement=True),
+                              shuffle=False, batch_size=self.hparams.batch_size)
 
     @pl.data_loader
     def test_dataloader(self):

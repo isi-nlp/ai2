@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Date    : 2019-10-06 09:17:36
+# @Author  : Chenghao Mou (chengham@isi.edu)
+# @Link    : https://github.com/ChenghaoMou/ai2
+
+# pylint: disable=unused-wildcard-import
+# pylint: disable=no-member
+
+import os
+import sys
+
+import torch
+import numpy as np
+import yaml
+from loguru import logger
+from pytorch_lightning import Trainer
+from pytorch_lightning.trainer.trainer_io import load_hparams_from_tags_csv
+from pytorch_lightning.utilities.arg_parse import add_default_args
+from test_tube import HyperOptArgumentParser
+
+from huggingface import HuggingFaceClassifier
+
+
+def main(hparams):
+
+    # TODO: Change this model loader to your own.
+
+    model = HuggingFaceClassifier.load_from_metrics(
+        hparams=hparams,
+        weights_path=hparams.weights_path,
+        tags_csv=hparams.tags_csv,
+        on_gpu=torch.cuda.is_available(),
+        map_location=None
+    )
+
+    trainer = Trainer()
+    stats = []
+    for _ in range(100):
+
+        result = trainer.evaluate(model, model.val_dataloader(sampling=True), test=False, max_batches=float('inf'))
+        stats.append(result["val_acc"])
+
+    alpha = 0.95
+    p = ((1.0-alpha)/2.0) * 100
+    lower = max(0.0, np.percentile(stats, p))
+    p = (alpha+((1.0-alpha)/2.0)) * 100
+    upper = min(1.0, np.percentile(stats, p))
+    logger.info(f'{alpha*100:.1f} confidence interval {lower*100:.1f} and {upper*100:.1f}')
+
+
+if __name__ == '__main__':
+    root_dir = os.path.split(os.path.dirname(sys.modules['__main__'].__file__))[0]
+    parent_parser = HyperOptArgumentParser(strategy='random_search', add_help=True)
+    add_default_args(parent_parser, root_dir)
+
+    # TODO: Change this to your own model
+    parser = HuggingFaceClassifier.add_model_specific_args(parent_parser)
+    hyperparams = parser.parse_args()
+
+    main(hyperparams)
