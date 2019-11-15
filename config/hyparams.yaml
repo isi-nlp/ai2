@@ -80,6 +80,14 @@ hellaswag:
     accumulate_grad_batches: 1
     do_lower_case: false
 physicaliqa:
+  libert:
+    /auto/nlg-05/chengham/libert/output:
+      lr: 2e-5
+      batch_size: 32
+    bert-base-uncased:
+      lr: 2e-5
+      batch_size: 8  
+      accumulate_grad_batches: 4
   bert:
     bert-large-cased:
       lr: 5e-6
