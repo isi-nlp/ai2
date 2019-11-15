@@ -70,7 +70,7 @@ def main(hparams):
 
     exp.argparse(hparams)
     exp.save()
-
+    logger.info(hparams)
     set_seed(hparams.seed)
 
     # TODO: Change this to your own model
