@@ -55,7 +55,7 @@ MODELS = {
     'roberta': RobertaModel,
     'gpt': OpenAIGPTModel,
     'gpt2': GPT2Model,
-    'libert': LiBertModel
+    #    'libert': LiBertModel
 }
 
 
@@ -73,18 +73,18 @@ class HuggingFaceModelLoader(ModelLoader):
         Returns:
             Tuple -- Tuple of returned values of forward.
         """
-        signature = getfullargspec(self.model.forward)  
+        signature = getfullargspec(self.model.forward)
         valid_args = {k: torch.zeros_like(v) if k == "token_type_ids" and getattr(self.model.config, 'type_vocab_size', 0) < 2 else v for k, v
-             in kwargs.items()
-             if k in signature.args}
-            
+                      in kwargs.items()
+                      if k in signature.args}
+
         if "input_images" in signature.args:
             batch_size,  seq_len = valid_args['input_ids'].shape
             valid_args['input_images'] = torch.zeros((batch_size, 3, seq_len, 84, 84)).to(valid_args['input_ids'].device)
             valid_args['dummy'] = True
         return self.model.forward(
             **valid_args
-            )
+        )
 
     @classmethod
     def load(cls, model_type: str, model_weights: str, *args, **kargs) -> HuggingFaceModelLoader:
@@ -252,7 +252,7 @@ class HuggingFaceClassifier(LightningModule):
 
         # WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
 
-        if self.trainer.use_dp:
+        if self.trainer and self.trainer.use_dp:
             loss_val = loss_val.unsqueeze(0)
 
         return {
