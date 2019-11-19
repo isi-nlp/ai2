@@ -160,7 +160,7 @@ class ClassificationDataset(Dataset):
                             example_token_type_ids = [e + [i for _ in example_tokens] for e in example_token_type_ids]
                         elif isinstance(example_raw[segment], list):
                             
-                            example_tokens = [preprocessor.tokenize(k) for for k in example_raw[segment]]
+                            example_tokens = [preprocessor.tokenize(k) for k in example_raw[segment]]
                             if shuffle:
                                 for i in range(len(example_tokens)):
                                     random.shuffle(example_tokens[i])
