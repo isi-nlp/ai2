@@ -34,7 +34,18 @@ from textbook.dataset import ClassificationDataset, download
 from textbook.interface import *
 from textbook.utils import set_seed, get_default_hyperparameter
 
+import scipy.stats
+
+
+def mean_confidence_interval(data, confidence=0.95):
+    a = 1.0 * np.array(data)
+    n = len(a)
+    m, se = np.mean(a), scipy.stats.sem(a)
+    h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
+    return m, m-h, m+h
+
 # pylint: disable=no-member
+
 
 TOKENIZERS = {
     'bert': BertTokenizer,
@@ -306,9 +317,25 @@ class HuggingFaceClassifier(LightningModule):
         with open(os.path.join(self.hparams.output_dir, "dev-probabilities.lst"), "w") as output_file:
             output_file.write("\n".join(map(lambda l: '\t'.join(map(str, l)), proba.cpu().detach().numpy().tolist())))
 
+        stats = []
+        predl = pred.cpu().detach().numpy().tolist()
+        truthl = truth.cpu().detach().numpy().tolist()
+
+        for _ in range(10000):
+            predl = pred.cpu().detach().numpy().tolist()
+
+            indicies = np.random.randint(len(predl), size=len(predl))
+            sampled_pred = [predl[i] for i in indicies]
+            sampled_truth = [truth[i] for i in indicies]
+            stats.append(accuracy_score(sampled_truth, sampled_pred))
+
+        _, lower, upper = mean_confidence_interval(stats, self.hparams.ci_alpha)
+
         return {
             'val_loss': loss.item(),
             'val_acc': accuracy_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist()),
+            'val_cil': lower,
+            'val_ciu': upper,
         }
 
     def test_end(self, outputs):
@@ -527,6 +554,7 @@ class HuggingFaceClassifier(LightningModule):
 
         model_group.add_argument('--model_type', type=str, required=True)
         model_group.add_argument('--model_weight', type=str, required=True)
+        model_group.add_argument('--ci_alpha', type=float, default=0.95)
 
         tokenizer_group.add_argument('--tokenizer_type', type=str, default=None)
         tokenizer_group.add_argument('--tokenizer_weight', type=str, default=None)
