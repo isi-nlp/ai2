@@ -70,7 +70,7 @@ def main(hparams):
 
     exp.argparse(hparams)
     exp.save()
-
+    logger.info(hparams)
     set_seed(hparams.seed)
 
     # TODO: Change this to your own model
@@ -106,7 +106,7 @@ def main(hparams):
         overfit_pct=0.0,
         track_grad_norm=hparams.track_grad_norm,
         check_val_every_n_epoch=hparams.check_val_every_n_epoch,
-        fast_dev_run=hparams.fast_dev_run,
+        fast_dev_run=True,
         accumulate_grad_batches=hparams.accumulate_grad_batches,
         max_nb_epochs=hparams.max_nb_epochs,
         min_nb_epochs=hparams.min_nb_epochs,
