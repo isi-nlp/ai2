@@ -1,6 +1,6 @@
 #!/bin/sh
 PYTHON=/auto/nlg-05/chengham/anaconda3/envs/py37/bin/python
-$EVAL=test.py
+EVAL=test.py
 
 $PYTHON -W ignore $EVAL --model_type $1 \
   --model_weight $2 \
