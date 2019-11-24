@@ -15,5 +15,5 @@ $PYTHON -W ignore $EVAL --model_type $MODEL \
   --running_config_file config/hyparams.yaml \
   --test_input_dir $1 \
   --output_dir $2 \
-  --weights_path output/$MODEL-$MODEL_WEIGHT-checkpoints/$TASK/0/_ckpt_epoch_3.ckpt \
+  --weights_path output/$MODEL-$MODEL_WEIGHT-checkpoints/$TASK/0/_ckpt_epoch_2.ckpt \
   --tags_csv output/$MODEL-$MODEL_WEIGHT-log/$TASK/version_0/meta_tags.csv
