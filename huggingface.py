@@ -326,7 +326,7 @@ class HuggingFaceClassifier(LightningModule):
 
             indicies = np.random.randint(len(predl), size=len(predl))
             sampled_pred = [predl[i] for i in indicies]
-            sampled_truth = [truth[i] for i in indicies]
+            sampled_truth = [truthl[i] for i in indicies]
             stats.append(accuracy_score(sampled_truth, sampled_pred))
 
         _, lower, upper = mean_confidence_interval(stats, self.hparams.ci_alpha)
