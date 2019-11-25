@@ -326,7 +326,7 @@ class HuggingFaceClassifier(LightningModule):
 
             indicies = np.random.randint(len(predl), size=len(predl))
             sampled_pred = [predl[i] for i in indicies]
-            sampled_truth = [truth[i] for i in indicies]
+            sampled_truth = [truthl[i] for i in indicies]
             stats.append(accuracy_score(sampled_truth, sampled_pred))
 
         _, lower, upper = mean_confidence_interval(stats, self.hparams.ci_alpha)
@@ -511,9 +511,9 @@ class HuggingFaceClassifier(LightningModule):
         hparams.batch_size = default_parameter(field='batch_size')
         hparams.max_seq_len = default_parameter(field='max_seq_len')
         hparams.seed = default_parameter(field='seed')
-        hparams.weight_decay = default_parameter(field='weight_decay')
+        hparams.weight_decay = float(default_parameter(field='weight_decay'))
         hparams.warmup_steps = default_parameter(field='warmup_steps')
-        hparams.adam_epsilon = default_parameter(field='adam_epsilon')
+        hparams.adam_epsilon = float(default_parameter(field='adam_epsilon'))
         hparams.accumulate_grad_batches = default_parameter(field='accumulate_grad_batches')
 
         hparams.do_lower_case = task_config[hparams.task_name].get('do_lower_case', False)
