@@ -203,3 +203,24 @@ $PYTHON -W ignore $EVAL --model_type distilbert \
   --embedding_layer encoder.model.embeddings.word_embeddings \
   --output visualization.html
 ```
+
+
+## Submit your own model
+
+Build a docker image
+
+```bash
+docker build -t ${IMAGE_NAME} -f dockers/Dockerfile .
+```
+
+Tag your image
+```bash
+docker tag ${IMAGE_ID} ${USERNAM}/${REPO}:${TAG}
+```
+
+Uploaded it to beaker
+```bash
+beaker image create --name ${NAMEYOURMODEL} ${USERNAM}/${REPO}:${TAG}
+```
+
+Create the submission from the leaderboard!
