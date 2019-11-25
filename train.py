@@ -106,7 +106,7 @@ def main(hparams):
         overfit_pct=0.0,
         track_grad_norm=hparams.track_grad_norm,
         check_val_every_n_epoch=hparams.check_val_every_n_epoch,
-        fast_dev_run=True,
+        fast_dev_run=False,
         accumulate_grad_batches=hparams.accumulate_grad_batches,
         max_nb_epochs=hparams.max_nb_epochs,
         min_nb_epochs=hparams.min_nb_epochs,
