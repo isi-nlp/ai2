@@ -207,16 +207,22 @@ $PYTHON -W ignore $EVAL --model_type distilbert \
 
 ## Submit your own model
 
-Build a docker image
+Before you submit, you need to register with beaker and ai2 and contact ai2 for submission access. You can find details on how to contact them on the leaderboard.
+
+Build a docker image. Make sure everything is self-contained in the code root directory. e.g. Everything including all the checkpoints in output will be packed into the docker image, except the dot directories (caches) and modify the submit/*.sh scripts you see fit.
+
 
 ```bash
 docker build -t ${IMAGE_NAME} -f dockers/Dockerfile .
 ```
 
+
 Tag your image
 ```bash
 docker tag ${IMAGE_ID} ${USERNAM}/${REPO}:${TAG}
 ```
+
+Setting beaker cli on your machine should be easy, just follow the official tutorials.
 
 Uploaded it to beaker
 ```bash
