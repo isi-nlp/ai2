@@ -321,7 +321,7 @@ class HuggingFaceClassifier(LightningModule):
         predl = pred.cpu().detach().numpy().tolist()
         truthl = truth.cpu().detach().numpy().tolist()
 
-        for _ in range(10000):
+        for _ in range(1000):
             predl = pred.cpu().detach().numpy().tolist()
 
             indicies = np.random.randint(len(predl), size=len(predl))
