@@ -1,6 +1,6 @@
 #!/bin/sh
 PYTHON=/auto/nlg-05/chengham/anaconda3/envs/py37/bin/python
-TRAIN=train.py
+TRAIN=train-combine.py
 
 $PYTHON -W ignore $TRAIN --model_type $1 --model_weight $2 \
   --task_config_file config/tasks-combine.yaml \

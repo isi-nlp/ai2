@@ -12,6 +12,10 @@
 ## distilbert:          60 M          <-- small
 
 alphanli:
+  albert:
+    albert-xxlarge-v2:
+      lr: 5e-6
+      batch_size: 16
   bert:
     bert-large-cased:
       lr: 5e-6
@@ -44,6 +48,10 @@ alphanli:
     accumulate_grad_batches: 1
     do_lower_case: false
 hellaswag:
+  albert:
+    albert-xxlarge-v2:
+      lr: 5e-6
+      batch_size: 8
   bert:
     bert-large-cased:
       lr: 5e-6
@@ -80,13 +88,17 @@ hellaswag:
     accumulate_grad_batches: 1
     do_lower_case: false
 physicaliqa:
+  albert:
+    albert-xxlarge-v2:
+      lr: 5e-6
+      batch_size: 8
   libert:
     /auto/nlg-05/chengham/libert/output:
       lr: 2e-5
       batch_size: 32
     bert-base-uncased:
       lr: 2e-5
-      batch_size: 8  
+      batch_size: 8
       accumulate_grad_batches: 4
   bert:
     bert-large-cased:
@@ -120,6 +132,10 @@ physicaliqa:
     accumulate_grad_batches: 1
     do_lower_case: false
 socialiqa:
+  albert:
+    albert-xxlarge-v2:
+      lr: 5e-6
+      batch_size: 8
   bert:
     bert-large-cased:
       lr: 5e-6

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Sesame Street</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+</head>
+
+<body>
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <div class="container">
+    <div class="row">
+      <img
+        src="https://www.hbo.com//content/dam/hbodata/series/sesame-street/key-art/2019-special/sesame-street-special-ka-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg">
+    </div>
+    <div class="row">
+      <div class="two columns" style="margin-top: 5%">
+        <h4>Settings</h4>
+        <p>Here you can choose models you want to compare and look at the val/train set from their perspective</p>
+        <form method="POST">
+
+
+          <label for="selectTask">Select Task</label>
+          <select id="selectTask" name="task">
+            % for t in tasks:
+            <option value="{{t}}" {{"selected" if t == task else ""}}>{{t}}</option>
+            % end
+          </select>
+
+          % for model in models:
+          <fieldset>
+            <label for="">{{model}}</label>
+            <label for="">
+              <input type="radio" name="{{model}}" value="correct"
+                {{"checked" if filters.get(model) == 'correct' else ""}} />
+              <span>{{model}} correct</span>
+            </label>
+            <label for="">
+              <input type="radio" name="{{model}}" value="wrong"
+                {{"checked" if filters.get(model) == 'wrong' else ""}} />
+              <span>{{model}} wrong</span>
+            </label>
+          </fieldset>
+          % end
+          <input type="reset" onclick="$('input').attr('checked', false);"></input>
+          <button type="submit">Submit Form</button>
+
+        </form>
+      </div>
+
+      <div class="six columns" style="margin-top: 5%">
+        <h4>Validataion Examples {{len(result)}}/{{total}}</h4>
+
+        % for key in result:
+        <div class="example">
+          <pre>{{result[key]["ctx"]}}</pre>
+          % for choice in result[key]["choices"]:
+          <p>
+
+            % for model in choice["models"]:
+            <span class="model-choice"
+              style="padding: 5px;color:white;{{'background-color:green' if model[1] else 'background-color:red'}}"
+              onclick="select('{{model[0]}}', '{{key}}')">{{model[0]}}</span>
+            % end
+            {{":" if choice["models"] else ""}}
+            <span class="choice">{{choice["choice"]}}</span>
+            % end
+          </p>
+        </div>
+        % end
+      </div>
+
+      <div class="four columns"
+
+      id="examples">
+        <h4>Closest Training Examples</h4>
+
+      </div>
+    </div>
+  </div>
+
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+  function select(model, i) {
+
+    {/* prettier-ignore */ }
+    var data = {{!closest}};
+
+    $("#examples").html(
+      "<h4>Closest Training Examples</h4>" +
+      "<p>" + data[model][i] + "</p>"
+    )
+  }
+
+  $('#examples').css('margin-top', "5%");
+
+  $(window).scroll(function(){
+      if($(window).scrollTop()>$(window).height()){
+          $('#examples').css('position', 'fixed');
+          $('#examples').css('right', '3em');
+          $('#examples').css('top', "0.5em");
+          $('#examples').css('margin-top', 0);
+      } else {
+          $('#examples').css('position', 'relative');
+          $('#examples').css('margin-top', "5%");
+          $('#examples').css('right', 0);
+          $('#examples').css('top', 0);
+      }
+  });
+</script>
+
+</html>

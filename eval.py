@@ -39,30 +39,29 @@ def main(hparams):
 
     model = model.to(device)
     model.eval()
+    results = []
+    for batch in DataLoader(
+            model.val_dataloader.dataset, shuffle=False, batch_size=4, collate_fn=model.collate_fn):
 
-    trainer = Trainer()
+        batch["input_ids"] = batch["input_ids"].to(device)
+        batch["attention_mask"] = batch["attention_mask"].to(device)
+        batch["token_type_ids"] = batch["token_type_ids"].to(device)
+        batch["y"] = batch["y"].to(device)
+        with torch.no_grad():
+            results.append(model.validation_step(batch, -1))
+
     stats = []
     for _ in range(100):
-        results = []
-        for batch in DataLoader(
-                model.val_dataloader.dataset, sampler=RandomSampler(model.val_dataloader.dataset, replacement=True),
-                shuffle=False, batch_size=4, collate_fn=model.collate_fn):
-            # print(batch)
-            batch["input_ids"] = batch["input_ids"].to(device)
-            batch["attention_mask"] = batch["attention_mask"].to(device)
-            batch["token_type_ids"] = batch["token_type_ids"].to(device)
-            batch["y"] = batch["y"].to(device)
-            with torch.no_grad():
-                results.append(model.validation_step(batch, -1))
+        results_ = [results[i] for i in np.random.random_integers(0, len(results)-1, size=len(results))]
+        res = model.validation_end(results_)
+        stats.append(res['val_acc'])
 
-        stats.append(model.validation_end(results)['val_acc'])
-
-        alpha = 0.95
-        p = ((1.0-alpha)/2.0) * 100
-        lower = max(0.0, np.percentile(stats, p))
-        p = (alpha+((1.0-alpha)/2.0)) * 100
-        upper = min(1.0, np.percentile(stats, p))
-        logger.info(f'{alpha*100:.1f} confidence interval {lower*100:.1f} and {upper*100:.1f}')
+    alpha = 0.95
+    p = ((1.0-alpha)/2.0) * 100
+    lower = max(0.0, np.percentile(stats, p))
+    p = (alpha+((1.0-alpha)/2.0)) * 100
+    upper = min(1.0, np.percentile(stats, p))
+    logger.info(f'{alpha*100:.1f} confidence interval {lower*100:.1f} and {upper*100:.1f}')
 
 
 if __name__ == '__main__':

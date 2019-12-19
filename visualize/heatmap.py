@@ -42,7 +42,7 @@ def heatmap(dirs: List[str], prefix: str = "dev-", output_file: str = None, offs
     result = {}
 
     for d in dirs:
-        name, *weight, task, _ = os.path.split(d)[-1].split("-")
+        name, *weight, task, _ = [x for x in os.path.split(d)[-1].split("-") if x]
         weight = "-".join(weight)
 
         with open(d / (prefix + "labels.lst"), "r") as model_labels, \
@@ -55,8 +55,8 @@ def heatmap(dirs: List[str], prefix: str = "dev-", output_file: str = None, offs
             if labels == [] or labels is None:
                 labels = model_labels_value
             else:
-                if labels != model_labels_value:
-                    logger.warning("Inconsistent labels")
+                if [(x, y) for x, y in zip(labels, model_labels_value) if x != y] != []:
+                    logger.warning("Inconsistent labels " + str(d))
                     continue
 
             differences = []
@@ -69,7 +69,9 @@ def heatmap(dirs: List[str], prefix: str = "dev-", output_file: str = None, offs
                 else:
                     differences.append(np.NaN)
             accuracy = 1 - np.count_nonzero(~np.isnan(np.asarray(differences))) / len(differences)
-            result[weight + f" ({accuracy * 100: .2f})"] = np.asarray(differences)
+            # print(len(differences))
+            # print(weight.split('-', 1))
+            result['\n'.join(weight.split('-', 1)) + f"\n({accuracy * 100:.2f})"] = np.asarray(differences)
     dataframe = pd.DataFrame(result)
     dataframe = dataframe.iloc[dataframe.isnull().sum(1).sort_values(ascending=False).index]
     dataframe = dataframe.transpose()
@@ -86,9 +88,15 @@ def heatmap(dirs: List[str], prefix: str = "dev-", output_file: str = None, offs
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--pred_dir', type=str, required=True)
+    parser.add_argument('--pred_dirs', nargs='+', type=str, required=True)
     parser.add_argument('--output_file', type=str, required=True)
     parser.add_argument('--offset', type=int, required=True)
 
     args = parser.parse_args()
-    heatmap(glob.glob(args.pred_dir), output_file=args.output_file, offset=args.offset)
+    heatmap(args.pred_dirs, output_file=args.output_file, offset=args.offset)
+
+
+# python visualize/heatmap.py --pred_dir output/roberta-roberta-large-alphanli--pred output/roberta-roberta-base-alphanli--pred output/xlnet-xlnet-base-cased-alphanli--pred output/xlnet-xlnet-large-cased-alphanli--pred output/bert-bert-large-cased-alphanli--pred output/bert-bert-base-cased-alphanli--pred output/distilbert-distilbert-base-uncased-alphanli--pred --output_file anli.svg --offset 1
+# python visualize/heatmap.py --pred_dir output/roberta-roberta-large-hellaswag--pred output/roberta-roberta-base-hellaswag--pred output/xlnet-xlnet-base-cased-hellaswag--pred output/xlnet-xlnet-large-cased-hellaswag--pred output/bert-bert-large-cased-hellaswag--pred output/bert-bert-base-cased-hellaswag--pred output/distilbert-distilbert-base-uncased-hellaswag--pred --output_file hellaswag.svg --offset 0
+# python visualize/heatmap.py --pred_dir output/roberta-roberta-large-physicaliqa--pred output/roberta-roberta-base-physicaliqa--pred output/xlnet-xlnet-base-cased-physicaliqa--pred output/xlnet-xlnet-large-cased-physicaliqa--pred output/bert-bert-large-cased-physicaliqa--pred output/bert-bert-base-cased-physicaliqa--pred output/distilbert-distilbert-base-uncased-physicaliqa--pred --output_file piqa.svg --offset 0
+# python visualize/heatmap.py --pred_dir output/roberta-roberta-large-socialiqa--pred output/roberta-roberta-base-socialiqa--pred output/xlnet-xlnet-base-cased-socialiqa--pred output/xlnet-xlnet-large-cased-socialiqa--pred output/bert-bert-large-cased-socialiqa--pred output/bert-bert-base-cased-socialiqa--pred output/distilbert-distilbert-base-uncased-socialiqa--pred --output_file siqa.svg --offset 1

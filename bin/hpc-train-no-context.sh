@@ -11,7 +11,7 @@ for task in "${TASKS[@]}"; do
   for i in "${MODELS[@]}"; do
     set -- $i
     tmux kill-session -t "$task-$1-$2-train-no-context"
-    tmux new-session -d -s "$task-$1-$2-train-no-context" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 /bin/sh bin/train.sh $1 $2 $task"
+    tmux new-session -d -s "$task-$1-$2-train-no-context" "srun --partition=isi --mem=16GB --time=1200 --core-spec=8 --gres=gpu:p100:2 /bin/sh bin/train-no-context.sh $1 $2 $task"
   done
 done
 

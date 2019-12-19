@@ -212,6 +212,9 @@ Before you submit, you need to register with beaker and ai2 and contact ai2 for 
 Build a docker image. Make sure everything is self-contained in the code root directory. e.g. Everything including all the checkpoints in output will be packed into the docker image, except the dot directories (caches) and modify the submit/*.sh scripts you see fit.
 
 
+If you are using `transformers` in you model, be sure to add it to your requriements.txt.
+
+
 ```bash
 docker build -t ${IMAGE_NAME} -f dockers/Dockerfile .
 ```

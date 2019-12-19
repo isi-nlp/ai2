@@ -55,7 +55,8 @@ TOKENIZERS = {
     'roberta': RobertaTokenizer,
     'gpt': OpenAIGPTTokenizer,
     'gpt2': GPT2Tokenizer,
-    'libert': BertTokenizer
+    'libert': BertTokenizer,
+    'albert': AlbertTokenizer
 }
 
 MODELS = {
@@ -66,6 +67,7 @@ MODELS = {
     'roberta': RobertaModel,
     'gpt': OpenAIGPTModel,
     'gpt2': GPT2Model,
+    'albert': AlbertModel,
     #    'libert': LiBertModel
 }
 
@@ -205,8 +207,9 @@ class HuggingFaceClassifier(LightningModule):
         #     logger.debug(f"Device: {input_ids.device} {token_type_ids.device} {attention_mask.device}")
 
         # TODO [Optional]: Change it to your own forward
-        outputs = self.encoder.forward(
-            **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
+        with torch.no_grad():
+            outputs = self.encoder.forward(
+                **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
         output = torch.mean(outputs[0], dim=1).squeeze()
         output = self.dropout(output)
         logits = self.linear(output)
@@ -225,7 +228,7 @@ class HuggingFaceClassifier(LightningModule):
                 **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
             output = torch.mean(outputs[0], dim=1).squeeze()
 
-            return output
+        return output
 
     def loss(self, labels, logits):
         l = F.cross_entropy(logits, labels, reduction='sum')
@@ -321,7 +324,7 @@ class HuggingFaceClassifier(LightningModule):
         predl = pred.cpu().detach().numpy().tolist()
         truthl = truth.cpu().detach().numpy().tolist()
 
-        for _ in range(10000):
+        for _ in range(100):
             predl = pred.cpu().detach().numpy().tolist()
 
             indicies = np.random.randint(len(predl), size=len(predl))
@@ -370,7 +373,7 @@ class HuggingFaceClassifier(LightningModule):
             {'params': [p for n, p in self.named_parameters() if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
         ]
         optimizer = AdamW(optimizer_grouped_parameters, lr=self.hparams.learning_rate, eps=self.hparams.adam_epsilon)
-        scheduler = WarmupLinearSchedule(optimizer, warmup_steps=self.hparams.warmup_steps, t_total=t_total)
+        scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=self.hparams.warmup_steps, num_training_steps=t_total)
 
         return [optimizer], [scheduler]
 
