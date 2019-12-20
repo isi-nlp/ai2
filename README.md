@@ -24,7 +24,7 @@ A better way of processing commonsense datasets [Link](https://github.com/Chengh
 
 - python >= 3.7
 - `pip install -r requirements.txt`
-- `pip install transformers` if you are using transformers's model.
+- `pip install transformers==2.2.0` if you are using transformers's model.
 
 ## Baseline models
 
