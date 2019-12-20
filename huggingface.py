@@ -207,9 +207,8 @@ class HuggingFaceClassifier(LightningModule):
         #     logger.debug(f"Device: {input_ids.device} {token_type_ids.device} {attention_mask.device}")
 
         # TODO [Optional]: Change it to your own forward
-        with torch.no_grad():
-            outputs = self.encoder.forward(
-                **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
+        outputs = self.encoder.forward(
+            **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
         output = torch.mean(outputs[0], dim=1).squeeze()
         output = self.dropout(output)
         logits = self.linear(output)

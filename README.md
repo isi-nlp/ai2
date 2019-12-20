@@ -1,4 +1,4 @@
-A better way of processing commonsense datasets [Link](https://github.com/ChenghaoMou/textbook) and the [boilerplate](https://github.com/ChenghaoMou/libert) are now alive for preview. They will replace this repo in the near feature. 
+A better way of processing commonsense datasets [Link](https://github.com/ChenghaoMou/textbook) and the [boilerplate](https://github.com/ChenghaoMou/libert) are now alive for preview. They will replace this repo in the near feature.
 
 
 # 1. AI2 DARPA TASKS Eval Tool
@@ -15,6 +15,7 @@ A better way of processing commonsense datasets [Link](https://github.com/Chengh
     - [1.5.4. Fine Tune the Model](#154-fine-tune-the-model)
     - [1.5.5. Eval the model](#155-eval-the-model)
     - [1.5.6. Visualize your model [Optional]](#156-visualize-your-model-optional)
+  - [Submit your own model](#submit-your-own-model)
 
 ## 1.1. Environment
 
