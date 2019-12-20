@@ -16,7 +16,7 @@ A better way of processing commonsense datasets [Link](https://github.com/Chengh
   - [Run Your Own Model](#run-your-own-model)
     - [Necessary Implementation](#necessary-implementation)
     - [Fine Tune the Model](#fine-tune-the-model)
-    - [Eval the model](#eval-the-model)
+  - [Eval the model](#eval-the-model)
     - [Optional: Visualize your model](#optional-visualize-your-model)
   - [Submit your own model](#submit-your-own-model)
 
@@ -142,11 +142,16 @@ MODELS = {
 
 ### Run
 
-We provide a `train.sh`, `eval.sh` and `test.sh` in `bin/` for your use. Basically you need to specify the model_type, model_weight and task like this:
+We provide a `train.sh`, `eval.sh` and `test.sh` in `bin/` for your use. First, change the interpreter to your own. Basically you need to specify the model_type, model_weight and task like this:
+
+`bash bin/train.sh $model_type $model_weight $task`
+
+e.g.
 
 ```bash
 bash bin/train.sh roberta roberta-large physicaliqa
 ```
+
 
 Or if you are using hpc, you can use `hpc-train.sh`:
 
@@ -221,7 +226,7 @@ dev-predictions.lst
 dev-labels.lst
 ```
 
-### Eval the model
+## Eval the model
 
 ```bash
 $PYTHON -W ignore test.py --model_type $MODEL_TYPE \
