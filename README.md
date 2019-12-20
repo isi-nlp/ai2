@@ -1,28 +1,32 @@
 A better way of processing commonsense datasets [Link](https://github.com/ChenghaoMou/textbook) and the [boilerplate](https://github.com/ChenghaoMou/libert) are now alive for preview. They will replace this repo in the near feature.
 
 
-# 1. AI2 DARPA TASKS Eval Tool
+# AI2 DARPA TASKS Eval Tool
 
-- [1. AI2 DARPA TASKS Eval Tool](#1-ai2-darpa-tasks-eval-tool)
-  - [1.1. Environment](#11-environment)
-  - [1.2. Baseline models](#12-baseline-models)
-  - [1.3. Baseline Scores](#13-baseline-scores)
-  - [1.4. Fine-tuning Time Reference](#14-fine-tuning-time-reference)
-  - [1.5. Run Your Own Model](#15-run-your-own-model)
-    - [1.5.1. Necessary Implementation](#151-necessary-implementation)
-    - [1.5.2. Download the datasets](#152-download-the-datasets)
-    - [1.5.3. Optional: HuggingFace Pretrained Models](#153-optional-huggingface-pretrained-models)
-    - [1.5.4. Fine Tune the Model](#154-fine-tune-the-model)
-    - [1.5.5. Eval the model](#155-eval-the-model)
-    - [1.5.6. Visualize your model [Optional]](#156-visualize-your-model-optional)
+- [AI2 DARPA TASKS Eval Tool](#ai2-darpa-tasks-eval-tool)
+  - [Environment](#environment)
+  - [Baseline models](#baseline-models)
+  - [Baseline Scores](#baseline-scores)
+  - [Fine-tuning Time Reference](#fine-tuning-time-reference)
+  - [Download the datasets](#download-the-datasets)
+  - [Optional: Run a transformers Model](#optional-run-a-transformers-model)
+    - [Download Pretrained Models](#download-pretrained-models)
+    - [Conventions](#conventions)
+    - [Run](#run)
+  - [Run Your Own Model](#run-your-own-model)
+    - [Necessary Implementation](#necessary-implementation)
+    - [Fine Tune the Model](#fine-tune-the-model)
+    - [Eval the model](#eval-the-model)
+    - [Optional: Visualize your model](#optional-visualize-your-model)
   - [Submit your own model](#submit-your-own-model)
 
-## 1.1. Environment
+## Environment
 
 - python >= 3.7
 - `pip install -r requirements.txt`
+- `pip install transformers` if you are using transformers's model.
 
-## 1.2. Baseline models
+## Baseline models
 
 | Models        | Size     | Category    |
 | ------------- | -------- | ----------- |
@@ -39,7 +43,7 @@ A better way of processing commonsense datasets [Link](https://github.com/Chengh
 
 It is impossible to fit super large models in P100s on HPC. Weird large models are base models eating memory like a large one.
 
-## 1.3. Baseline Scores
+## Baseline Scores
 
 | Models                               | aNLI      | hellaswag | piqa      | siqa      | Config Commit                                                                              |
 | ------------------------------------ | --------- | --------- | --------- | --------- | ------------------------------------------------------------------------------------------ |
@@ -53,7 +57,7 @@ It is impossible to fit super large models in P100s on HPC. Weird large models a
 | GPT2 (gpt2)                          | 53.46     | 26.52     | 48.05     | 35.16     | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
 | DistilBERT (distilbert-base-uncased) | 60.17     | 35.57     | 64.96     | 52.92     | [commit](https://github.com/ChenghaoMou/ai2/tree/4729f25627281752b6f662f36b53ca6bddd606fa) |
 
-## 1.4. Fine-tuning Time Reference
+## Fine-tuning Time Reference
 
 With two P100s on HPC, it takes the following time to fine tune a model.
 
@@ -64,9 +68,101 @@ With two P100s on HPC, it takes the following time to fine tune a model.
 | physicaliqa |         1 hr         |       3 ~ 4 hrs       |
 |  socialiqa  |         1 hr         |       4 ~ 5 hrs       |
 
-## 1.5. Run Your Own Model
 
-### 1.5.1. Necessary Implementation
+## Download the datasets
+
+You can use git lfs to pull down all datasets into `./cache` directory.
+
+```bash
+git lfs pull
+```
+
+## Optional: Run a `transformers` Model
+
+### Download Pretrained Models
+
+You can also download all the pretrained models from HuggingFace by
+
+```bash
+python model_cache.py
+```
+
+### Conventions
+
+Follow the convention of shortcut names for both models and tokenizers from `transformers`, we use `model_type` and `model_weight` for both a model and a tokenizer.
+
+The model we current use in `huggingface.py` are defined in `MODELS` and `TOKENIZERS` in that file and the weights in `model_cache.py`.
+
+In `model_cache.py`, models/tokenizers are downloaded(the third column is the weight shortcut name - `model_weight`):
+
+```python
+MODELS = [(BertModel, BertTokenizer, 'bert-base-cased'),
+              (BertModel, BertTokenizer, 'bert-large-cased'),
+              (DistilBertModel, DistilBertTokenizer, 'distilbert-base-uncased'),
+              (OpenAIGPTModel, OpenAIGPTTokenizer, 'openai-gpt'),
+              (GPT2Model, GPT2Tokenizer, 'gpt2'),
+              (GPT2Model, GPT2Tokenizer, 'gpt2-large'),
+              (XLNetModel, XLNetTokenizer, 'xlnet-base-cased'),
+              (XLNetModel, XLNetTokenizer, 'xlnet-large-cased'),
+              (XLMModel, XLMTokenizer, 'xlm-mlm-en-2048'),
+              (RobertaModel, RobertaTokenizer, 'roberta-base'),
+              (RobertaModel, RobertaTokenizer, 'roberta-large'),
+              ]
+```
+
+In `huggingface.py`, models' name are defined as follows, key being the `model_type`:
+
+```python
+TOKENIZERS = {
+    'bert': BertTokenizer,
+    'distilbert': DistilBertTokenizer,
+    'xlm': XLMTokenizer,
+    'xlnet': XLNetTokenizer,
+    'roberta': RobertaTokenizer,
+    'gpt': OpenAIGPTTokenizer,
+    'gpt2': GPT2Tokenizer
+}
+
+MODELS = {
+    'bert': BertModel,
+    'distilbert': DistilBertModel,
+    'xlm': XLMModel,
+    'xlnet': XLNetModel,
+    'roberta': RobertaModel,
+    'gpt': OpenAIGPTModel,
+    'gpt2': GPT2Model,
+}
+```
+
+
+
+
+
+
+
+### Run
+
+We provide a `train.sh`, `eval.sh` and `test.sh` in `bin/` for your use. Basically you need to specify the model_type, model_weight and task like this:
+
+```bash
+bash bin/train.sh roberta roberta-large physicaliqa
+```
+
+Or if you are using hpc, you can use `hpc-train.sh`:
+
+specify the model, weight and task you want to use in the first two lines as follows:
+
+```bash
+declare -a MODELS=(roberta,roberta-large)
+declare -a TASKS=(alphanli)
+```
+
+and execute `./bin/hpc-train.sh`
+
+
+## Run Your Own Model
+
+### Necessary Implementation
 
 1. Implement your own ModelLoader, TokenizerLoader, and Classifier, similar to those implemented in `huggingface.py`.
 2. Change the classifier in both `test.py` as `train.py`
@@ -97,23 +193,11 @@ $task_name:
 
 You can also specify default parameters within each task.
 
-### 1.5.2. Download the datasets
 
-You can use git lfs to pull down all datasets into `./cache` directory.
 
-```bash
-git lfs pull
-```
 
-### 1.5.3. Optional: HuggingFace Pretrained Models
 
-You can also download all the pretrained models from HuggingFace by
-
-```bash
-python model_cache.py
-```
-
-### 1.5.4. Fine Tune the Model
+### Fine Tune the Model
 
 Running train/eval should be straightforward.
 
@@ -137,7 +221,7 @@ dev-predictions.lst
 dev-labels.lst
 ```
 
-### 1.5.5. Eval the model
+### Eval the model
 
 ```bash
 $PYTHON -W ignore test.py --model_type $MODEL_TYPE \
@@ -159,7 +243,7 @@ probabilities.lst
 predictions.lst
 ```
 
-### 1.5.6. Visualize your model [Optional]
+### Optional: Visualize your model
 
 With integrated gradients, you can now visualize your model's token-level focus with Captum. Please refer to [Website](https://captum.io) for installation instructions.
 
