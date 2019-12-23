@@ -1,5 +1,6 @@
 A better way of processing commonsense datasets [Link](https://github.com/ChenghaoMou/textbook) and the [boilerplate](https://github.com/ChenghaoMou/libert) are now alive for preview. They will replace this repo in the near feature.
 
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) ![PyPI - License](https://img.shields.io/pypi/l/textbook) ![Madein](https://img.shields.io/badge/MADEIN-ISI-brightgreen)
 
 # AI2 DARPA TASKS Eval Tool
 
@@ -20,6 +21,7 @@ A better way of processing commonsense datasets [Link](https://github.com/Chengh
     - [Optional: Visualize your model](#optional-visualize-your-model)
   - [Submit your own model](#submit-your-own-model)
   - [Run a New Task](#run-a-new-task)
+- [Contact](#contact)
 
 ## Environment
 
@@ -433,4 +435,8 @@ If you are using my `huggingface.py`, you should add your task in the `task_name
 
 Then you should be able to run a the new task with the same script (`bin/train.sh`) with a the new `task_name`.
 
+# Contact
 
+Author: Chenghao Mou
+
+Email: mouchenghao@gmail.com
