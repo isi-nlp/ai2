@@ -109,3 +109,21 @@ vcrqr:
     dev:
       dev_x: "val/qar.jsonl"
       dev_y: "val/labels.jsonl"
+qqp:
+  urls: []
+  task_formula: "[CLS] question1 [SEP] question2 [SEP]" # special tokens and fields
+  type_formula: "0 0 0 1 1" # segment id for each part of task_formula
+  label_formula: "is_duplicate"
+  label_offset: 0
+  num_choices: 1 # single sentence classification
+  label_transform:
+    "0": 0
+    "1": 1
+  output_dimension: 2
+  file_mapping:
+    train:
+      train_x: "qqp/train.jsonl"
+      train_y: "qqp/train.jsonl"
+    dev:
+      dev_x: "qqp/eval.jsonl"
+      dev_y: "qqp/eval.jsonl"

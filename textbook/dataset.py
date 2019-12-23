@@ -51,7 +51,7 @@ def download(urls: Union[str, List[str]], cache_dir: str) -> Union[str, List[str
         return target_dir
 
     elif isinstance(urls, list):
-        cache_dirs = []
+        cache_dirs = [cache_dir] if urls == [] else []
         for url in urls:
             filename = url.split('/')[-1]
             filename = filename.replace('.zip', '').replace('.tar.gz', '')
@@ -129,7 +129,8 @@ class ClassificationDataset(Dataset):
 
             for line in tqdm(input_file.readlines()):
                 example_raw = json.loads(line.strip('\r\n ').replace('\n', ''))
-
+                if y and label_formula is not None and label_formula not in example_raw:
+                    continue
                 if pretokenized:
                     for k in example_raw:
                         if isinstance(example_raw[k], list):
@@ -141,6 +142,7 @@ class ClassificationDataset(Dataset):
                 example = [[]]
                 example_token_type_ids = [[]]
 
+
                 for i, segment in zip(type_formula_mapping, task_formula_mapping):
 
                     if isinstance(segment, str):
@@ -151,15 +153,15 @@ class ClassificationDataset(Dataset):
                                 example = [e + [special_token] for e in example]
                                 example_token_type_ids = [e + [i] for e in example_token_type_ids]
 
-                        elif isinstance(example_raw[segment], str):
+                        elif segment in example_raw and isinstance(example_raw[segment], str):
                             example_tokens = preprocessor.tokenize(example_raw[segment])
                             if shuffle:
                                 random.shuffle(example_tokens)
-                            
+
                             example = [e + example_tokens for e in example]
                             example_token_type_ids = [e + [i for _ in example_tokens] for e in example_token_type_ids]
-                        elif isinstance(example_raw[segment], list):
-                            
+                        elif segment in example_raw and isinstance(example_raw[segment], list):
+
                             example_tokens = [preprocessor.tokenize(k) for k in example_raw[segment]]
                             if shuffle:
                                 for i in range(len(example_tokens)):
@@ -168,7 +170,9 @@ class ClassificationDataset(Dataset):
                             example = [e + t for t in example_tokens for e in example]
                             example_token_type_ids = [e + [i for _ in t]
                                                       for t in example_tokens for e in example_token_type_ids]
-
+                        else:
+                            logger.debug(str(example_raw))
+                            continue
                     elif isinstance(segment, list):
                         example_tokens = [preprocessor.tokenize(example_raw[k]) for k in segment]
                         example = [e + t for t in example_tokens for e in example]
@@ -183,7 +187,8 @@ class ClassificationDataset(Dataset):
             labels = []
             with open(os.path.join(cache_dir, file_mapping[y])) as input_file:
                 for line in input_file:
-                    if label_formula is not None:
+                    jd = json.loads(line.strip('\r\n ').replace('\n', ' '))
+                    if label_formula is not None and label_formula in jd:
                         if label_transform is None:
                             labels.append(
                                 int(json.loads(line.strip('\r\n ').replace('\n', ' '))[label_formula]) - label_offset)
@@ -191,8 +196,12 @@ class ClassificationDataset(Dataset):
                             labels.append(
                                 label_transform[
                                     json.loads(line.strip('\r\n ').replace('\n', ' '))[label_formula]] - label_offset)
-                    else:
+                    elif label_formula is None:
                         labels.append(int(line) - label_offset)
+                    else:
+                        logger.debug(jd)
+                        continue
+            assert len(labels) == len(tokens)
 
         input_ids = [[preprocessor.tokens2ids(ee) for ee in e] for e in tokens]
         attention_mask = [[[1 for _ in ee] for ee in e] for e in tokens]
