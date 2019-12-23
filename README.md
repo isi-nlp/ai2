@@ -19,6 +19,7 @@ A better way of processing commonsense datasets [Link](https://github.com/Chengh
   - [Eval the model](#eval-the-model)
     - [Optional: Visualize your model](#optional-visualize-your-model)
   - [Submit your own model](#submit-your-own-model)
+  - [Run a New Task](#run-a-new-task)
 
 ## Environment
 
@@ -326,3 +327,112 @@ beaker image create --name ${NAMEYOURMODEL} ${USERNAM}/${REPO}:${TAG}
 ```
 
 Create the submission from the leaderboard!
+
+## Run a New Task
+
+Set up your task in tasks.yaml:
+
+I preprocessed the following tasks and transformed all of them into `jsonl` format so that you can use them easily with the configuration:
+
+Link follows the format of `https://textbook-datasets.s3-us-west-1.amazonaws.com/$TASK/{train/eval/test}.jsonl`
+
+- BoolQ
+- CB
+- COPA
+- CommonsenseQA
+- CosmosQA
+- MNLI_matched
+- MNLI_mismatched
+- QNLI
+- QQP
+- RTE
+- SST2
+- WNLI
+- WiC
+- alphanli
+- hellaswag
+- physicaliqa
+- socialiqa
+
+In addition to multiple choice classification like alphanli, it also supports one sentence classification(e.g SNLI, QQP). We use QQP as an example here:
+
+json content:
+
+```json
+{"id": "201359", "qid1": "303345", "qid2": "303346", "question1": "Why are African-Americans so beautiful?", "question2": "Why are hispanics so beautiful?", "is_duplicate": "0"}
+```
+
+configuration:
+
+```yaml
+qqp:
+  urls: # multiple urls for multiple files
+    - "https://textbook-datasets.s3-us-west-1.amazonaws.com/QQP/train.jsonl"
+    - "https://textbook-datasets.s3-us-west-1.amazonaws.com/QQP/eval.jsonl"
+    - "https://textbook-datasets.s3-us-west-1.amazonaws.com/QQP/test.jsonl"
+  task_formula: "[CLS] question1 [SEP] question2 [SEP]" # special tokens and fields
+  type_formula: "0 0 0 1 1" # segment id for each part of task_formula
+  label_formula: "is_duplicate"
+  label_offset: 0
+  num_choices: 1 # single sentence classification
+  label_transform:
+    "0": 0
+    "1": 1
+  output_dimension: 2
+  file_mapping:
+    train:
+      train_x: "train.jsonl"
+      train_y: "train.jsonl"
+    dev:
+      dev_x: "eval.jsonl"
+      dev_y: "eval.jsonl"
+```
+Configure the hyperparameters:
+
+```yaml
+qqp:
+  albert:
+    albert-xxlarge-v2:
+      lr: 5e-6
+      batch_size: 8
+  bert:
+    bert-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  gpt2:
+    gpt2:
+      lr: 5e-6
+      batch_size: 8
+  xlnet:
+    xlnet-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  roberta:
+    roberta-large:
+      lr: 5e-6
+      batch_size: 8
+  distilbert:
+    distilbert-base-uncased:
+      do_lower_case: true
+      lr: 5e-5
+      batch_size: 64
+      max_nb_epochs: 6
+  default:
+    seed: 42
+    lr: 2e-5
+    dropout: 0.5
+    batch_size: 16
+    max_seq_len: 160
+    max_nb_epochs: 3
+    initializer_range: 0.02
+    weight_decay: 0.0
+    warmup_steps: 0
+    adam_epsilon: 1e-8
+    accumulate_grad_batches: 1
+    do_lower_case: false
+```
+
+If you are using my `huggingface.py`, you should add your task in the `task_name` argument in the function called `add_model_specific_args` .
+
+Then you should be able to run a the new task with the same script with a the new task name.
+
