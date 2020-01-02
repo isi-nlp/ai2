@@ -36,8 +36,8 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
     <div class="row">
-      <img
-        src="https://www.hbo.com//content/dam/hbodata/series/sesame-street/key-art/2019-special/sesame-street-special-ka-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg">
+      <!-- <img src="https://www.hbo.com//content/dam/hbodata/series/sesame-street/key-art/2019-special/sesame-street-special-ka-1920.jpg/_jcr_content/renditions/cq5dam.web.1200.675.jpeg"> -->
+      <div id="main" style="width: 100%;height:100%;min-height: 500px;"></div>
     </div>
     <div class="row">
       <div class="two columns" style="margin-top: 5%">
@@ -108,6 +108,7 @@
 
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@4.6.0/dist/echarts.js"></script>
 <script>
   function select(model, i) {
 
@@ -120,6 +121,74 @@
     )
   }
 
+  {/* prettier-ignore */ }
+  var heatmap_data = {{!heatmap}};
+
+  console.log(heatmap_data);
+
+  var myChart = echarts.init(document.getElementById('main'));
+
+  var xData = [...Array({{!total}}).keys()];
+  var yData = {{!models}};
+
+  if(heatmap_data.length > 0){
+    $("#main").css("display", "block");
+    option = {
+    title:{
+      show: true,
+      left: 'center',
+      text: "Error margin heatmap visualization on dev examples"
+    },
+    tooltip: {
+        position: 'top'
+    },
+    animation: false,
+    grid: {
+        height: '50%',
+        top: '10%'
+    },
+    xAxis: {
+        type: 'category',
+        data: xData,
+        splitArea: {
+            show: false
+        }
+    },
+    yAxis: {
+        type: 'category',
+        data: yData,
+        splitArea: {
+            show: true
+        }
+    },
+    visualMap: {
+        min: 0,
+        max: 1,
+        calculable: true,
+        orient: 'horizontal',
+        left: 'center',
+        bottom: '15%'
+    },
+    series: [{
+        name: 'Dev',
+        type: 'heatmap',
+        data: heatmap_data,
+        label: {
+            show: false
+        },
+        emphasis: {
+            itemStyle: {
+                shadowBlur: 10,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+        }
+    }]
+  };
+  myChart.setOption(option);
+  }
+  else{
+    $("#main").css("display", "none");
+  }
   $('#examples').css('margin-top', "5%");
 
   $(window).scroll(function(){

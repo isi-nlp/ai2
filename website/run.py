@@ -2,6 +2,7 @@ from bottle import route, run, template, static_file, request
 import bottle
 import os
 import json
+from collections import defaultdict
 bottle.TEMPLATE_PATH.insert(0, 'views')
 
 # pylint: disable=no-member
@@ -84,7 +85,7 @@ def index():
         'index.html', tasks=['anli', 'hellaswag', 'piqa', 'siqa'],
         models=['roberta', 'bert', 'xlnet'],
         filters={},
-        task="anli", result={}, total=0, closest={})
+        task="anli", result={}, total=0, closest={}, heatmap=[])
 
 
 @route('/', method='POST')
@@ -105,6 +106,25 @@ def retrieve():
                                 labels=labels,
                                 mode=filters[model],
                                 source=model) for model in filters]
+    probs = [
+        get_model_prob(os.path.join(predictions[model][task], "dev-probabilities.lst"),
+                    os.path.join(predictions[model][task], "dev-predictions.lst"),
+                    labels=labels,
+                    source=model,
+                    offset=dataset[task]["offset"]) for model in filters
+    ]
+
+    all_probs = []
+
+    indices = probs[0].keys()
+    sorted_indices = sorted(indices, key=lambda idx: len([ps[idx][1] for ps in probs if ps[idx][1] == '-']))
+
+    for i, ps in enumerate(probs):
+        for j in range(len(sorted_indices)):
+            all_probs.append([j, i, ps[sorted_indices[j]][1]])
+
+    print(all_probs)
+
 
     d = get_dataset(dataset[task]['data'])
 
@@ -124,7 +144,7 @@ def retrieve():
     return template(
         'index.html', tasks=['anli', 'hellaswag', 'piqa', 'siqa'],
         models=['roberta', 'bert', 'xlnet'],
-        filters=filters, task=task, result=result, total=len(labels), closest=closest)
+        filters=filters, task=task, result=result, total=len(labels), closest=closest, heatmap=all_probs)
 
 
 def get_dataset(path):
@@ -143,6 +163,24 @@ def get_model_result(pred_path, labels, mode, source):
     print(pred_path)
     assert len(preds) == len(labels), f"{len(preds), len(labels)}"
     return {i: (source, preds[i], labels[i] == preds[i]) for i in range(len(labels)) if (mode == 'correct' and labels[i] == preds[i]) or (mode == 'wrong' and labels[i] != preds[i])}
+
+def get_model_prob(prob_path, pred_path, labels, source, offset=0):
+
+    results = {}
+
+    with open(prob_path) as f, open(pred_path) as ff:
+        for i, (probs, pred, label) in enumerate(zip(f.read().split('\n'), ff.read().split('\n'), labels)):
+            ps = list(map(float, probs.split('\t')))
+            pred = int(pred) - offset
+            label = int(label) - offset
+            results[i] = (
+                source,
+                "-" if pred == label else ps[pred] - ps[label]
+            )
+    return results
+
+
+
 
 
 def merge(*results):
