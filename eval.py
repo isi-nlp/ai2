@@ -41,7 +41,7 @@ def main(hparams):
     model.eval()
     results = []
     for batch in DataLoader(
-            model.val_dataloader.dataset, shuffle=False, batch_size=4, collate_fn=model.collate_fn):
+            model.val_dataloader()[0].dataset, shuffle=False, batch_size=4, collate_fn=model.collate_fn):
 
         batch["input_ids"] = batch["input_ids"].to(device)
         batch["attention_mask"] = batch["attention_mask"].to(device)
@@ -50,9 +50,17 @@ def main(hparams):
         with torch.no_grad():
             results.append(model.validation_step(batch, -1))
 
+    logits = torch.cat([o['batch_logits'] for o in results], dim=0).reshape(-1, results[0]['batch_logits'].shape[1])
+    pred = torch.argmax(logits, dim=-1).reshape(-1)
+
+
+    with open(f"{hparams.task_name}-{hparams.model_weight}-predictions.lst", "w") as output_file:
+        output_file.write("\n".join(map(str, (pred + model.task_config[hparams.task_name]['label_offset']).cpu().numpy().tolist())))
+
     stats = []
     for _ in range(100):
         results_ = [results[i] for i in np.random.random_integers(0, len(results)-1, size=len(results))]
+
         res = model.validation_end(results_)
         stats.append(res['val_acc'])
 
@@ -61,7 +69,7 @@ def main(hparams):
     lower = max(0.0, np.percentile(stats, p))
     p = (alpha+((1.0-alpha)/2.0)) * 100
     upper = min(1.0, np.percentile(stats, p))
-    logger.info(f'{alpha*100:.1f} confidence interval {lower*100:.1f} and {upper*100:.1f}')
+    logger.info(f'{alpha*100:.1f} confidence interval {lower*100:.1f} and {upper*100:.1f}, average: {np.mean(stats)*100:.1f}')
 
 
 if __name__ == '__main__':

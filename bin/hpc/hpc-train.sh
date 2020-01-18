@@ -1,7 +1,7 @@
 #!/bin/sh
 declare -a TASKS=(alphanli hellaswag physicaliqa socialiqa)
-declare -a MODELS=(roberta,roberta-large)
-
+#declare -a MODELS=(roberta,roberta-large)
+declare -a MODELS=(gpt,openai-gpt gpt2,gpt2 distilbert,distilbert-base-uncased xlnet,xlnet-base-cased bert,bert-base-cased bert,bert-large-cased xlnet,xlnet-large-cased roberta,roberta-base roberta,roberta-large)
 OLDIFS=$IFS
 tmux set-option -g remain-on-exit on
 
