@@ -61,6 +61,34 @@ physicaliqa:
     dev:
       dev_x: "physicaliqa-train-dev/dev.jsonl"
       dev_y: "physicaliqa-train-dev/dev-labels.lst"
+physicaliqa-carved:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/physicaliqa/physicaliqa-train-dev.zip"
+  task_formula: "physicaliqa-carved"
+  type_formula: "0 0 0 1 1"
+  label_offset: 0
+  num_choices: 2
+  file_mapping:
+    train:
+      train_x: "physicaliqa-train-dev/train.jsonl"
+      train_y: "physicaliqa-train-dev/train-labels.lst"
+    dev:
+      dev_x: "physicaliqa-train-dev/dev.jsonl"
+      dev_y: "physicaliqa-train-dev/dev-labels.lst"
+physicaliqa-carved-single-word:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/physicaliqa/physicaliqa-train-dev.zip"
+  task_formula: "physicaliqa-carved single-word"
+  type_formula: "0 0 0 1 1"
+  label_offset: 0
+  num_choices: 2
+  file_mapping:
+    train:
+      train_x: "physicaliqa-train-dev/train.jsonl"
+      train_y: "physicaliqa-train-dev/train-labels.lst"
+    dev:
+      dev_x: "physicaliqa-train-dev/dev.jsonl"
+      dev_y: "physicaliqa-train-dev/dev-labels.lst"
 socialiqa:
   urls:
     - "https://storage.googleapis.com/ai2-mosaic/public/socialiqa/socialiqa-train-dev.zip"

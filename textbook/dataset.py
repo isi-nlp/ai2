@@ -16,6 +16,8 @@ import os
 import io
 import random
 import zipfile
+from difflib import SequenceMatcher
+
 import requests
 from dataclasses import dataclass
 from typing import *
@@ -68,6 +70,60 @@ def download(urls: Union[str, List[str]], cache_dir: str) -> Union[str, List[str
         return cache_dirs
 
 
+# Helper function to carve piqa questions for piqa-carved tasks
+def tokenize_physicaliqa_carved(goal: str, sol1: str, sol2: str, preprocessor: TokenizerLoader):
+    mask = preprocessor.tokenizer.mask_token
+    sep = preprocessor.tokenizer.sep_token
+    cls = preprocessor.tokenizer.cls_token
+
+    goal = [cls] + preprocessor.tokenize(goal) + [sep]
+    sol1_tokens = preprocessor.tokenize(sol1)
+    sol2_tokens = preprocessor.tokenize(sol2)
+    # get the blocks that are matching between two lists of tokens
+    s = SequenceMatcher(None, sol1_tokens, sol2_tokens)
+    context_indices = list(s.get_matching_blocks())
+    context1 = []
+    context2 = []
+    answers1 = []
+    answers2 = []
+    last_answer_1_index = 0
+    last_answer_2_index = 0
+
+    # For each block
+    for i, j, k in context_indices:
+        # add mask for the un-match so far
+        if last_answer_1_index < i:
+            context1.append(mask)
+        if last_answer_2_index < j:
+            context2.append(mask)
+        # add shared context
+        context1.extend(sol1_tokens[i:i+k])
+        context2.extend(sol2_tokens[j:j+k])
+
+        # and set answers that are different
+        answers1.extend(sol1_tokens[last_answer_1_index:i])
+        answers2.extend(sol2_tokens[last_answer_2_index:j])
+        # Add separator if an answer was added
+        if last_answer_1_index != i:
+            answers1.append(sep)
+        if last_answer_2_index != j:
+            answers2.append(sep)
+
+        # update last index
+        last_answer_1_index = i + k
+        last_answer_2_index = j + k
+
+    # Convert to token / token id format
+    complete_context1 = goal + context1 + [sep]
+    complete_context2 = goal + context2 + [sep]
+    example = [complete_context1 + answers1, complete_context2 + answers2]
+    example_token_type_ids = [[0]*len(complete_context1) + [1]*(len(answers1)),
+                              [0]*len(complete_context2) + [1]*(len(answers2))]
+
+    is_single_word_dif = len(answers1) < 3 and len(answers2) < 3
+    return example, example_token_type_ids, is_single_word_dif
+
+
 @dataclass
 class ClassificationDataset(Dataset):
     tokens: List[List[str]]
@@ -100,8 +156,15 @@ class ClassificationDataset(Dataset):
         :return: A ClassificationDataset.
         """
 
+        # Get the single-word only parameter
+        single_word_data_only = False
+        if 'physicaliqa-carved' in task_formula:
+            single_word_data_only = 'single-word' in task_formula
+        single_word_indices = []
+
         assert len(file_mapping) <= 2, "At most two files can be specified"
 
+        # Get data and label file directories
         x = [k for k in file_mapping.keys() if k.endswith('_x')]
         y = [k for k in file_mapping.keys() if k.endswith('_y')]
 
@@ -123,64 +186,85 @@ class ClassificationDataset(Dataset):
         else:
             x = os.path.join(cache_dir, file_mapping[x])
 
+        index = 0
+        # Load data file
         with open(x) as input_file:
             tokens = []
             token_type_ids = []
 
-            for line in tqdm(input_file.readlines()):
-                example_raw = json.loads(line.strip('\r\n ').replace('\n', ''))
-                if y and label_formula is not None and label_formula not in example_raw:
-                    continue
-                if pretokenized:
-                    for k in example_raw:
-                        if isinstance(example_raw[k], list):
-                            if all(isinstance(i, list) for i in example_raw[k]):
-                                example_raw[k] = [' '.join(map(str, s)) for s in example_raw[k]]
+            # Specific data parsing for the carved piqa tasj
+            if 'physicaliqa-carved' in task_formula:
+                for line in tqdm(input_file.readlines()):
+                    example_raw = json.loads(line.strip('\r\n ').replace('\n', ''))
+
+                    goal = example_raw['goal']
+                    sol1 = example_raw['sol1']
+                    sol2 = example_raw['sol2']
+
+                    example, example_token_type_ids, single_word = tokenize_physicaliqa_carved(goal, sol1, sol2,
+                                                                                               preprocessor)
+
+                    tokens.append(example)
+                    token_type_ids.append(example_token_type_ids)
+                    if single_word:
+                        single_word_indices.append(index)
+                    index += 1
+
+            else:
+                for line in tqdm(input_file.readlines()):
+                    example_raw = json.loads(line.strip('\r\n ').replace('\n', ''))
+                    if y and label_formula is not None and label_formula not in example_raw:
+                        continue
+                    if pretokenized:
+                        for k in example_raw:
+                            if isinstance(example_raw[k], list):
+                                if all(isinstance(i, list) for i in example_raw[k]):
+                                    example_raw[k] = [' '.join(map(str, s)) for s in example_raw[k]]
+                                else:
+                                    example_raw[k] = ' '.join(map(str, example_raw[k]))
+
+                    example = [[]]
+                    example_token_type_ids = [[]]
+
+
+                    for i, segment in zip(type_formula_mapping, task_formula_mapping):
+
+                        if isinstance(segment, str):
+
+                            if segment.startswith('[') and segment.endswith(']'):
+                                special_token = getattr(preprocessor, segment.strip('[]'))
+                                if special_token:
+                                    example = [e + [special_token] for e in example]
+                                    example_token_type_ids = [e + [i] for e in example_token_type_ids]
+
+                            elif segment in example_raw and isinstance(example_raw[segment], str):
+                                example_tokens = preprocessor.tokenize(example_raw[segment])
+                                if shuffle:
+                                    random.shuffle(example_tokens)
+
+                                example = [e + example_tokens for e in example]
+                                example_token_type_ids = [e + [i for _ in example_tokens] for e in example_token_type_ids]
+                            elif segment in example_raw and isinstance(example_raw[segment], list):
+
+                                example_tokens = [preprocessor.tokenize(k) for k in example_raw[segment]]
+                                if shuffle:
+                                    for i in range(len(example_tokens)):
+                                        random.shuffle(example_tokens[i])
+
+                                example = [e + t for t in example_tokens for e in example]
+                                example_token_type_ids = [e + [i for _ in t]
+                                                          for t in example_tokens for e in example_token_type_ids]
                             else:
-                                example_raw[k] = ' '.join(map(str, example_raw[k]))
-
-                example = [[]]
-                example_token_type_ids = [[]]
-
-
-                for i, segment in zip(type_formula_mapping, task_formula_mapping):
-
-                    if isinstance(segment, str):
-
-                        if segment.startswith('[') and segment.endswith(']'):
-                            special_token = getattr(preprocessor, segment.strip('[]'))
-                            if special_token:
-                                example = [e + [special_token] for e in example]
-                                example_token_type_ids = [e + [i] for e in example_token_type_ids]
-
-                        elif segment in example_raw and isinstance(example_raw[segment], str):
-                            example_tokens = preprocessor.tokenize(example_raw[segment])
-                            if shuffle:
-                                random.shuffle(example_tokens)
-
-                            example = [e + example_tokens for e in example]
-                            example_token_type_ids = [e + [i for _ in example_tokens] for e in example_token_type_ids]
-                        elif segment in example_raw and isinstance(example_raw[segment], list):
-
-                            example_tokens = [preprocessor.tokenize(k) for k in example_raw[segment]]
-                            if shuffle:
-                                for i in range(len(example_tokens)):
-                                    random.shuffle(example_tokens[i])
-
+                                logger.debug(str(example_raw))
+                                continue
+                        elif isinstance(segment, list):
+                            example_tokens = [preprocessor.tokenize(example_raw[k]) for k in segment]
                             example = [e + t for t in example_tokens for e in example]
                             example_token_type_ids = [e + [i for _ in t]
                                                       for t in example_tokens for e in example_token_type_ids]
-                        else:
-                            logger.debug(str(example_raw))
-                            continue
-                    elif isinstance(segment, list):
-                        example_tokens = [preprocessor.tokenize(example_raw[k]) for k in segment]
-                        example = [e + t for t in example_tokens for e in example]
-                        example_token_type_ids = [e + [i for _ in t]
-                                                  for t in example_tokens for e in example_token_type_ids]
 
-                tokens.append(example)
-                token_type_ids.append(example_token_type_ids)
+                    tokens.append(example)
+                    token_type_ids.append(example_token_type_ids)
 
         labels = None
         if y:
@@ -203,9 +287,23 @@ class ClassificationDataset(Dataset):
                         continue
             assert len(labels) == len(tokens)
 
+        # Get the single word data points if we are in single word mode
+        if single_word_data_only:
+            labels = [labels[index] for index in single_word_indices]
+            tokens = [tokens[index] for index in single_word_indices]
+            token_type_ids = [token_type_ids[index] for index in single_word_indices]
+
         input_ids = [[preprocessor.tokens2ids(ee) for ee in e] for e in tokens]
         attention_mask = [[[1 for _ in ee] for ee in e] for e in tokens]
 
+        logger.info(f"""
+            Task formula: {task_formula}
+            Example: {tokens[0]}
+            Type ids: {token_type_ids[0]}
+            Label: {labels[0]}
+            Input ids: {input_ids[0]}
+            Mask: {attention_mask[0]}
+        """)
         logger.info(f"""
             {x}
             Total number of examples: {len(tokens)}

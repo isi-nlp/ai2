@@ -562,7 +562,9 @@ class HuggingFaceClassifier(LightningModule):
         tokenizer_group.add_argument('--tokenizer_weight', type=str, default=None)
 
         task_group.add_argument('--task_name',
-                                choices=['qqp', 'alphanli', 'snli', 'hellaswag', 'physicaliqa', 'socialiqa', 'vcrqa', 'vcrqr'],
+                                choices=['qqp', 'alphanli', 'snli', 'hellaswag', 'physicaliqa',
+                                         'socialiqa', 'vcrqa', 'vcrqr',
+                                         'physicaliqa-carved', 'physicaliqa-carved-single-word'],
                                 required=True)
         task_group.add_argument('--task_config_file', type=str, required=True)
         task_group.add_argument('--task_cache_dir', type=str, required=True)
