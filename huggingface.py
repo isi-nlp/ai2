@@ -300,7 +300,7 @@ class HuggingFaceClassifier(LightningModule):
         loss = self.loss(truth, logits)
 
         assert math.isclose(loss.item(), loss_sum.item(),
-                            abs_tol=0.01), f"Loss not equal: {loss.item()} VS. {loss_sum.item()}"
+                            abs_tol=1), f"Loss not equal: {loss.item()} VS. {loss_sum.item()}"
 
         loss /= truth.shape[0]
         loss_sum /= truth.shape[0]

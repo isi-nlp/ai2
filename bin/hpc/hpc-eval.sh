@@ -1,6 +1,7 @@
 #!/bin/sh
 
-declare -a TASKS=(alphanli hellaswag physicaliqa socialiqa)
+#declare -a TASKS=(alphanli hellaswag physicaliqa socialiqa)
+declare -a TASKS=(vcrqa vcrqr)
 declare -a MODELS=(distilbert,distilbert-base-uncased xlnet,xlnet-base-cased bert,bert-base-cased bert,bert-large-cased xlnet,xlnet-large-cased roberta,roberta-base roberta,roberta-large)
 #declare -a MODELS=(distilbert,distilbert-base-uncased)
 OLDIFS=$IFS

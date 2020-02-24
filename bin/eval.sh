@@ -10,6 +10,9 @@ if [ ! -f "$FILE" ]; then
     FILE=$OUTPUT/$1-$2-checkpoints/$3/0/_ckpt_epoch_3.ckpt
     if [ ! -f "$FILE" ]; then
       FILE=$OUTPUT/$1-$2-checkpoints/$3/0/_ckpt_epoch_2.ckpt
+      if [ ! -f "$FILE" ]; then
+        FILE=$OUTPUT/$1-$2-checkpoints/$3/0/_ckpt_epoch_1.ckpt
+      fi
     fi
   fi
 fi

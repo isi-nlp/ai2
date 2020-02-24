@@ -126,11 +126,15 @@ class ClassificationDataset(Dataset):
         with open(x) as input_file:
             tokens = []
             token_type_ids = []
-
             for line in tqdm(input_file.readlines()):
-                example_raw = json.loads(line.strip('\r\n ').replace('\n', ''))
-                if y and label_formula is not None and label_formula not in example_raw:
+                line = line.strip('\r\n ').replace('\n', '')
+                if not line:
                     continue
+                # print(line)
+                example_raw = json.loads(line)
+                if not y and label_formula is not None and label_formula not in example_raw:
+                    continue
+                # print(example_raw)
                 if pretokenized:
                     for k in example_raw:
                         if isinstance(example_raw[k], list):
@@ -138,7 +142,6 @@ class ClassificationDataset(Dataset):
                                 example_raw[k] = [' '.join(map(str, s)) for s in example_raw[k]]
                             else:
                                 example_raw[k] = ' '.join(map(str, example_raw[k]))
-
                 example = [[]]
                 example_token_type_ids = [[]]
 
@@ -146,7 +149,7 @@ class ClassificationDataset(Dataset):
                 for i, segment in zip(type_formula_mapping, task_formula_mapping):
 
                     if isinstance(segment, str):
-
+                        # print(segment)
                         if segment.startswith('[') and segment.endswith(']'):
                             special_token = getattr(preprocessor, segment.strip('[]'))
                             if special_token:
@@ -178,7 +181,7 @@ class ClassificationDataset(Dataset):
                         example = [e + t for t in example_tokens for e in example]
                         example_token_type_ids = [e + [i for _ in t]
                                                   for t in example_tokens for e in example_token_type_ids]
-
+                # print(example)
                 tokens.append(example)
                 token_type_ids.append(example_token_type_ids)
 
@@ -201,7 +204,7 @@ class ClassificationDataset(Dataset):
                     else:
                         logger.debug(jd)
                         continue
-            assert len(labels) == len(tokens)
+            assert len(labels) == len(tokens), f"{len(labels)}, {len(tokens)}"
 
         input_ids = [[preprocessor.tokens2ids(ee) for ee in e] for e in tokens]
         attention_mask = [[[1 for _ in ee] for ee in e] for e in tokens]
