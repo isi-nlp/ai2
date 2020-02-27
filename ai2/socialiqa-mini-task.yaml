@@ -1,4 +1,0 @@
-max_sequence_length: 128
-lr: 5e-5
-max_epochs: 4
-batch_size: 4
