@@ -1101,8 +1101,8 @@ class HuggingFaceClassifier(LightningModule):
         tokenizer_group.add_argument('--tokenizer_weight', type=str, default=None)
 
         task_group.add_argument('--task_name',
-                                choices=['alphanli', 'snli', 'hellaswag', 'physicaliqa', 'socialiqa',
-                                         'vcrqa', 'vcrqr', 'physicaliqa-carved'],
+                                choices=['alphanli', 'snli', 'hellaswag', 'physicaliqa', 'physicaliqa-25pc', 'socialiqa',
+                                         'vcrqa', 'vcrqr', 'physicaliqa-carved', 'physicaliqa-carved-25pc'],
                                 required=True)
         task_group.add_argument('--task_name2', default=None,
                                 choices=['atomic_attr_qa_random_name',
@@ -1113,7 +1113,11 @@ class HuggingFaceClassifier(LightningModule):
                                          'cn_all_cs_10k',
                                          'cn_all_cs_20k',
                                          'cn_all_cs_50k',
-                                         'cn_all_cs_30k', 'cn_physical_cs_relaxed', 'cn_physical_cs_narrow'
+                                         'cn_all_cs_30k', 'cn_physical_cs_relaxed', 'cn_physical_cs_narrow',
+                                         'cn_all_cs_10k',
+                                         'cn_all_cs_20k',
+                                         'cn_physical_10k',
+                                         'cn_carved_10k',
                                          ],
                                 required=False)
         task_group.add_argument('--task2_separate_fc', type=bool, required=False, default=False)

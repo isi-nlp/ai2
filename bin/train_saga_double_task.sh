@@ -14,8 +14,8 @@ conda activate ai2
 MODEL_TYPE=$1
 MODEL_WEIGHT=$2
 TASK_NAME=$3
-EXPERIMENT_NAME=$4
-
+TASK_NAME2=$4
+EXPERIMENT_NAME=$5
 
 . /scratch/spack/share/spack/setup-env.sh
 # When using `tensorflow-gpu`, paths to CUDA and CUDNN libraries are required
@@ -32,4 +32,8 @@ python3 -W ignore $TRAIN --model_type $MODEL_TYPE --model_weight $MODEL_WEIGHT \
   --task_cache_dir ./cache \
   --output_dir output/$EXPERIMENT_NAME/$MODEL_TYPE-$MODEL_WEIGHT-$TASK_NAME-pred \
   --log_save_interval 25 --row_log_interval 25 \
-  --experiment_name $EXPERIMENT_NAME
+  --experiment_name $EXPERIMENT_NAME \
+  --task_name2 $TASK_NAME2 \
+  --task2_separate_fc true \
+  --output_dir2 output/$EXPERIMENT_NAME/$MODEL_TYPE-$MODEL_WEIGHT-$TASK_NAME2-pred \
+
