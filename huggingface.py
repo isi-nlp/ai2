@@ -20,6 +20,7 @@ import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.nn import CrossEntropyLoss
 import yaml
 from pytorch_lightning.root_module.root_module import LightningModule
 from pytorch_lightning.trainer.trainer_io import load_hparams_from_tags_csv
@@ -35,14 +36,16 @@ from textbook.interface import *
 from textbook.utils import set_seed, get_default_hyperparameter
 
 import scipy.stats
+import random
 
 
 def mean_confidence_interval(data, confidence=0.95):
     a = 1.0 * np.array(data)
     n = len(a)
     m, se = np.mean(a), scipy.stats.sem(a)
-    h = se * scipy.stats.t.ppf((1 + confidence) / 2., n-1)
-    return m, m-h, m+h
+    h = se * scipy.stats.t.ppf((1 + confidence) / 2., n - 1)
+    return m, m - h, m + h
+
 
 # pylint: disable=no-member
 
@@ -65,6 +68,7 @@ MODELS = {
     'xlm': XLMModel,
     'xlnet': XLNetModel,
     'roberta': RobertaModel,
+    'roberta_mlm': RobertaForMaskedLM,
     'gpt': OpenAIGPTModel,
     'gpt2': GPT2Model,
     'albert': AlbertModel,
@@ -74,8 +78,11 @@ MODELS = {
 
 class HuggingFaceModelLoader(ModelLoader):
 
-    def __init__(self, model: Union[Module, PreTrainedModel]):
+    def __init__(self, model: Union[Module, PreTrainedModel], model_type: str):
         super(HuggingFaceModelLoader, self).__init__(model)
+        if model_type == 'roberta_mlm':
+            self.lm_head = self.model.lm_head
+            self.model = self.model.roberta
 
     def forward(self, **kwargs) -> Tuple:
         """Follow the convention of omnx, return tuple whenever possible.
@@ -87,13 +94,15 @@ class HuggingFaceModelLoader(ModelLoader):
             Tuple -- Tuple of returned values of forward.
         """
         signature = getfullargspec(self.model.forward)
-        valid_args = {k: torch.zeros_like(v) if k == "token_type_ids" and getattr(self.model.config, 'type_vocab_size', 0) < 2 else v for k, v
+        valid_args = {k: torch.zeros_like(v) if k == "token_type_ids" and getattr(self.model.config, 'type_vocab_size',
+                                                                                  0) < 2 else v for k, v
                       in kwargs.items()
                       if k in signature.args}
 
         if "input_images" in signature.args:
-            batch_size,  seq_len = valid_args['input_ids'].shape
-            valid_args['input_images'] = torch.zeros((batch_size, 3, seq_len, 84, 84)).to(valid_args['input_ids'].device)
+            batch_size, seq_len = valid_args['input_ids'].shape
+            valid_args['input_images'] = torch.zeros((batch_size, 3, seq_len, 84, 84)).to(
+                valid_args['input_ids'].device)
             valid_args['dummy'] = True
         return self.model.forward(
             **valid_args
@@ -102,7 +111,8 @@ class HuggingFaceModelLoader(ModelLoader):
     @classmethod
     def load(cls, model_type: str, model_weights: str, *args, **kargs) -> HuggingFaceModelLoader:
         assert model_type in MODELS, "Model type is not recognized."
-        return HuggingFaceModelLoader(MODELS[model_type].from_pretrained(model_weights, cache_dir="./model_cache"))
+        return HuggingFaceModelLoader(MODELS[model_type].from_pretrained(model_weights, cache_dir="./model_cache"),
+                                      model_type=model_type)
 
     @property
     def dim(self) -> int:
@@ -120,6 +130,9 @@ class HuggingFaceTokenizerLoader(TokenizerLoader):
         assert model_type in TOKENIZERS, f"Tokenizer model type {model_type} is not recognized."
         return HuggingFaceTokenizerLoader(
             TOKENIZERS[model_type].from_pretrained(model_weights, *args, cache_dir="./model_cache", **kargs))
+        # tokenizer_dir = "large_roberta"
+        # return HuggingFaceTokenizerLoader(
+        #     TOKENIZERS[model_type].from_pretrained(tokenizer_dir, *args, cache_dir="./model_cache", **kargs))
 
     @property
     def SEP(self) -> str:
@@ -172,6 +185,22 @@ class HuggingFaceTokenizerLoader(TokenizerLoader):
         return self.tokenizer.tokenize(text)
 
 
+class MultiTaskDataset(torch.utils.data.Dataset):
+    def __init__(self, dataloaders, shuffle: bool = True):
+        self.data: List = []
+        for loader in dataloaders:
+            for batch in loader:
+                self.data.append(batch)
+        if shuffle:
+            random.shuffle(self.data)
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, index):
+        return self.data[index]
+
+
 class HuggingFaceClassifier(LightningModule):
 
     def __init__(self, hparams):
@@ -187,35 +216,73 @@ class HuggingFaceClassifier(LightningModule):
 
         if not os.path.exists(self.hparams.output_dir):
             os.mkdir(self.hparams.output_dir)
+        if self.hparams.task_name2 is not None:
+            if not os.path.exists(self.hparams.output_dir2):
+                os.mkdir(self.hparams.output_dir2)
 
         # TODO: Change it to your own model loader
+        assert not (self.hparams.comet_cn_train100k is True and self.hparams.task2_separate_fc is True)
+        if self.hparams.comet_cn_train100k:
+            self.hparams.model_type = 'roberta_mlm'
         self.encoder = HuggingFaceModelLoader.load(self.hparams.model_type, self.hparams.model_weight)
+        print(self.encoder)
+        print(MODELS[self.hparams.model_type])
+        if self.hparams.comet_cn_train100k:
+            self.lm_head = self.encoder.lm_head
+            self.max_e1 = 10
+            self.max_r = 5
+            self.max_e2 = 10
+            self.cn_input_length = self.max_e1 + self.max_r + self.max_e2
+            self.encoder_dim = self.encoder.dim
         self.encoder.train()
         self.dropout = nn.Dropout(self.hparams.dropout)
-        self.linear = nn.Linear(self.encoder.dim, self.hparams.output_dimension)
-        self.linear.weight.data.normal_(mean=0.0, std=self.hparams.initializer_range)
-        self.linear.bias.data.zero_()
+
+        if not self.hparams.comet_cn_train100k:
+            self.linear = nn.Linear(self.encoder.dim, self.hparams.output_dimension)
+            self.linear.weight.data.normal_(mean=0.0, std=self.hparams.initializer_range)
+            self.linear.bias.data.zero_()
+            if self.hparams.task2_separate_fc:
+                self.linear2 = nn.Linear(self.encoder.dim, self.hparams.output_dimension)
+                self.linear2.weight.data.normal_(mean=0.0, std=self.hparams.initializer_range)
+                self.linear2.bias.data.zero_()
+        else:
+            self.linear = nn.Linear(self.encoder_dim, self.hparams.output_dimension)
+            self.linear.weight.data.normal_(mean=0.0, std=self.hparams.initializer_range)
+            self.linear.bias.data.zero_()
 
         # TODO: Change it to your own tokenizer loader
         self.tokenizer = HuggingFaceTokenizerLoader.load(
             self.hparams.tokenizer_type, self.hparams.tokenizer_weight, do_lower_case=self.hparams.do_lower_case)
 
-    def forward(self, input_ids, token_type_ids=None, attention_mask=None):
+    def forward(self, input_ids, token_type_ids=None, attention_mask=None, task_id=None):
 
         # if input_ids is not None and token_type_ids is not None and attention_mask is not None:
         #     logger.debug(f"Device: {next(self.encoder.model.parameters()).device}")
         #     logger.debug(f"Device: {input_ids.device} {token_type_ids.device} {attention_mask.device}")
 
         # TODO [Optional]: Change it to your own forward
-        outputs = self.encoder.forward(
-            **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
+        if not self.hparams.comet_cn_train100k:
+            outputs = self.encoder.forward(
+                **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
+        elif self.hparams.comet_cn_train100k and task_id == 1:
+            outputs = self.encoder.forward(
+                **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
+        elif self.hparams.comet_cn_train100k and task_id == 2:
+            outputs = self.encoder.model.forward(
+                **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
+            sequence_output = outputs[0]
+            prediction_scores = self.lm_head(sequence_output)
+            return prediction_scores
         output = torch.mean(outputs[0], dim=1).squeeze()
         output = self.dropout(output)
-        logits = self.linear(output)
+        if self.hparams.task2_separate_fc and task_id == 2 and not self.hparams.comet_cn_train100k:
+            logits = self.linear2(output)
+        else:
+            logits = self.linear(output)
 
         return logits.squeeze()
 
-    def intermediate(self, input_ids, token_type_ids=None, attention_mask=None):
+    def intermediate(self, input_ids, token_type_ids=None, attention_mask=None, task_id=None):
 
         # if input_ids is not None and token_type_ids is not None and attention_mask is not None:
         #     logger.debug(f"Device: {next(self.encoder.model.parameters()).device}")
@@ -227,86 +294,319 @@ class HuggingFaceClassifier(LightningModule):
                 **{'input_ids': input_ids, 'token_type_ids': token_type_ids, 'attention_mask': attention_mask})
             output = torch.mean(outputs[0], dim=1).squeeze()
 
-        return output
+            return output
 
     def loss(self, labels, logits):
         l = F.cross_entropy(logits, labels, reduction='sum')
         return l
 
+    def loss_mlm(self, labels, logits):
+        loss_fct = CrossEntropyLoss(ignore_index=-1)
+        l = loss_fct(logits.view(-1, self.tokenizer.tokenizer.vocab_size), labels.view(-1))
+        return l
+
     def training_step(self, data_batch, batch_i):
 
-        B, _, S = data_batch['input_ids'].shape
+        task2 = False
+        if not self.hparams.comet_cn_train100k:
+            if 'task_id' in data_batch:
+                if data_batch['task_id'] is not None:
+                    if data_batch['task_id'][0] == 2:
+                        task2 = True
 
-        logits = self.forward(**{
-            'input_ids': data_batch['input_ids'].reshape(-1, S),
-            'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
-            'attention_mask': data_batch['attention_mask'].reshape(-1, S),
-        })
-        loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
+        if self.hparams.comet_cn_train100k:
+            if type(data_batch) is not dict:
+                task2 = True
 
-        # WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
-        if self.trainer.use_dp:
-            loss_val = loss_val.unsqueeze(0)
+        if not self.hparams.comet_cn_train100k:
 
-        return {
-            'logits': logits.reshape(B, -1),
-            'loss': loss_val / B,
-        }
+            B, _, S = data_batch['input_ids'].shape
 
-    def validation_step(self, data_batch, batch_i):
-        B, _, S = data_batch['input_ids'].shape
+            logits = self.forward(**{
+                'input_ids': data_batch['input_ids'].reshape(-1, S),
+                'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
+                'attention_mask': data_batch['attention_mask'].reshape(-1, S),
+                'task_id': 1 if not task2 else 2,
+            })
+            loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
 
-        logits = self.forward(**{
-            'input_ids': data_batch['input_ids'].reshape(-1, S),
-            'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
-            'attention_mask': data_batch['attention_mask'].reshape(-1, S),
-        })
-        loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
+            # WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
+            if self.trainer.use_dp:
+                loss_val = loss_val.unsqueeze(0)
 
-        # WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
+            train_res_dict = {
+                'logits': logits.reshape(B, -1),
+                'loss': loss_val / B,
+            }
 
-        if self.trainer and self.trainer.use_dp:
-            loss_val = loss_val.unsqueeze(0)
+            if task2:
+                train_res_dict['progress'] = {
+                    'loss_2': loss_val / B,
+                }
 
-        return {
-            'batch_logits': logits.reshape(B, -1),
-            'batch_loss': loss_val,
-            'batch_truth': data_batch['y'].reshape(-1)
-        }
+        else:
 
-    def test_step(self, data_batch, batch_i):
-        B, _, S = data_batch['input_ids'].shape
+            if not task2:
+                B, _, S = data_batch['input_ids'].shape
 
-        logits = self.forward(**{
-            'input_ids': data_batch['input_ids'].reshape(-1, S),
-            'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
-            'attention_mask': data_batch['attention_mask'].reshape(-1, S),
-        })
+                logits = self.forward(**{
+                    'input_ids': data_batch['input_ids'].reshape(-1, S),
+                    'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
+                    'attention_mask': data_batch['attention_mask'].reshape(-1, S),
+                    'task_id': 1 if not task2 else 2,
+                })
+                loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
 
-        return {
-            'batch_logits': logits.reshape(B, -1),
-        }
+                # WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
+                if self.trainer.use_dp:
+                    loss_val = loss_val.unsqueeze(0)
+
+                train_res_dict = {
+                    'logits': logits.reshape(B, -1),
+                    'loss': loss_val / B,
+                }
+
+            else:
+                input_ids, lm_labels, input_mask = data_batch
+                B = input_ids.shape[0]
+                logits = self.forward(**{
+                    'input_ids': input_ids,
+                    'token_type_ids': None,
+                    'attention_mask': input_mask,
+                    'task_id': 2,
+                })
+                loss_val = self.loss_mlm(lm_labels, logits)
+
+                # WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
+                if self.trainer.use_dp:
+                    loss_val = loss_val.unsqueeze(0)
+
+                train_res_dict = {
+                    'logits': logits,
+                    'loss': loss_val / B,
+                }
+
+                train_res_dict['progress'] = {
+                    'comet_loss': loss_val / B,
+                }
+
+        return train_res_dict
+
+    def validation_step(self, data_batch, batch_i, dataset_idx=None):
+
+        task2 = False
+        if not self.hparams.comet_cn_train100k:
+            if 'task_id' in data_batch:
+                if data_batch['task_id'] is not None:
+                    if data_batch['task_id'][0] == 2:
+                        task2 = True
+
+        if self.hparams.comet_cn_train100k:
+            if type(data_batch) is not dict:
+                task2 = True
+
+        if not self.hparams.comet_cn_train100k:
+            B, _, S = data_batch['input_ids'].shape
+            # print (data_batch['task_id'], batch_i, dataset_idx)
+
+            logits = self.forward(**{
+                'input_ids': data_batch['input_ids'].reshape(-1, S),
+                'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
+                'attention_mask': data_batch['attention_mask'].reshape(-1, S),
+                'task_id': 1 if not task2 else 2,
+            })
+            loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
+
+            # WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
+
+            if self.trainer and self.trainer.use_dp:
+                loss_val = loss_val.unsqueeze(0)
+
+            return {
+                'batch_logits': logits.reshape(B, -1),
+                'batch_loss': loss_val,
+                'batch_truth': data_batch['y'].reshape(-1)
+            }
+
+        else:
+            if not task2:
+                B, _, S = data_batch['input_ids'].shape
+                # print (data_batch['task_id'], batch_i, dataset_idx)
+
+                logits = self.forward(**{
+                    'input_ids': data_batch['input_ids'].reshape(-1, S),
+                    'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
+                    'attention_mask': data_batch['attention_mask'].reshape(-1, S),
+                    'task_id': 1 if not task2 else 2,
+                })
+                loss_val = self.loss(data_batch['y'].reshape(-1), logits.reshape(B, -1))
+
+                # WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
+
+                if self.trainer and self.trainer.use_dp:
+                    loss_val = loss_val.unsqueeze(0)
+
+                return {
+                    'batch_logits': logits.reshape(B, -1),
+                    'batch_loss': loss_val,
+                    'batch_truth': data_batch['y'].reshape(-1)
+                }
+
+            else:
+                input_ids, lm_labels, input_mask = data_batch
+                B = input_ids.shape[0]
+                logits = self.forward(**{
+                    'input_ids': input_ids,
+                    'token_type_ids': None,
+                    'attention_mask': input_mask,
+                    'task_id': 2,
+                })
+                loss_val = self.loss_mlm(lm_labels, logits)
+
+                # WARNING: If your loss is a scalar, add one dimension in the beginning for multi-gpu training!
+                if self.trainer.use_dp:
+                    loss_val = loss_val.unsqueeze(0)
+
+                return {
+                    'batch_logits': logits,
+                    'batch_loss': loss_val,
+                    'batch_truth': lm_labels
+                }
+
+    def test_step(self, data_batch, batch_i, dataset_idx=None):
+
+        task2 = False
+        if not self.hparams.comet_cn_train100k:
+            if 'task_id' in data_batch:
+                if data_batch['task_id'] is not None:
+                    if data_batch['task_id'][0] == 2:
+                        task2 = True
+
+        if self.hparams.comet_cn_train100k:
+            if type(data_batch) is not dict:
+                task2 = True
+
+        if not self.hparams.comet_cn_train100k:
+            B, _, S = data_batch['input_ids'].shape
+
+            logits = self.forward(**{
+                'input_ids': data_batch['input_ids'].reshape(-1, S),
+                'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
+                'attention_mask': data_batch['attention_mask'].reshape(-1, S),
+                'task_id': 1 if not task2 else 2,
+            })
+
+            return {
+                'batch_logits': logits.reshape(B, -1),
+            }
+
+        else:
+            if not task2:
+                B, _, S = data_batch['input_ids'].shape
+
+                logits = self.forward(**{
+                    'input_ids': data_batch['input_ids'].reshape(-1, S),
+                    'token_type_ids': data_batch['token_type_ids'].reshape(-1, S),
+                    'attention_mask': data_batch['attention_mask'].reshape(-1, S),
+                    'task_id': 1 if not task2 else 2,
+                })
+
+                return {
+                    'batch_logits': logits.reshape(B, -1),
+                }
+            else:
+                input_ids, lm_labels, input_mask = data_batch
+                logits = self.forward(**{
+                    'input_ids': input_ids,
+                    'token_type_ids': None,
+                    'attention_mask': input_mask,
+                    'task_id': 2,
+                })
+
+                return {
+                    'batch_logits': logits,
+                }
 
     def validation_end(self, outputs):
+        multi_dataset = False
+        if type(outputs[0]) == list:
+            multi_dataset = True
 
-        truth = torch.cat([o['batch_truth'] for o in outputs], dim=0).reshape(-1)
-        logits = torch.cat([o['batch_logits'] for o in outputs], dim=0).reshape(truth.shape[0],
-                                                                                outputs[0]['batch_logits'].shape[1])
-        loss_sum = torch.cat([o['batch_loss'].reshape(-1) for o in outputs], dim=0).reshape(-1)
-        loss_sum = torch.sum(loss_sum, dim=0).reshape(-1)
+        if multi_dataset:
+            truth = torch.cat([o['batch_truth'] for o in outputs[0]], dim=0).reshape(-1)
+            logits = torch.cat([o['batch_logits'] for o in outputs[0]], dim=0).reshape(truth.shape[0],
+                                                                                       outputs[0][0][
+                                                                                           'batch_logits'].shape[1])
+            loss_sum = torch.cat([o['batch_loss'].reshape(-1) for o in outputs[0]], dim=0).reshape(-1)
+            loss_sum = torch.sum(loss_sum, dim=0).reshape(-1)
 
-        assert truth.shape[0] == sum([o['batch_logits'].shape[0] for o in outputs]), "Mismatch size"
+            assert truth.shape[0] == sum([o['batch_logits'].shape[0] for o in outputs[0]]), "Mismatch size"
 
-        loss = self.loss(truth, logits)
+            loss = self.loss(truth, logits)
 
-        assert math.isclose(loss.item(), loss_sum.item(),
-                            abs_tol=0.01), f"Loss not equal: {loss.item()} VS. {loss_sum.item()}"
+            assert math.isclose(loss.item(), loss_sum.item(),
+                                abs_tol=0.01), f"Loss not equal: {loss.item()} VS. {loss_sum.item()}"
 
-        loss /= truth.shape[0]
-        loss_sum /= truth.shape[0]
+            loss /= truth.shape[0]
+            loss_sum /= truth.shape[0]
 
-        proba = F.softmax(logits, dim=-1)
-        pred = torch.argmax(proba, dim=-1).reshape(-1)
+            proba = F.softmax(logits, dim=-1)
+            pred = torch.argmax(proba, dim=-1).reshape(-1)
+        else:
+            truth = torch.cat([o['batch_truth'] for o in outputs], dim=0).reshape(-1)
+            logits = torch.cat([o['batch_logits'] for o in outputs], dim=0).reshape(truth.shape[0],
+                                                                                    outputs[0]['batch_logits'].shape[1])
+            loss_sum = torch.cat([o['batch_loss'].reshape(-1) for o in outputs], dim=0).reshape(-1)
+            loss_sum = torch.sum(loss_sum, dim=0).reshape(-1)
+
+            assert truth.shape[0] == sum([o['batch_logits'].shape[0] for o in outputs]), "Mismatch size"
+
+            loss = self.loss(truth, logits)
+
+            assert math.isclose(loss.item(), loss_sum.item(),
+                                abs_tol=0.01), f"Loss not equal: {loss.item()} VS. {loss_sum.item()}"
+
+            loss /= truth.shape[0]
+            loss_sum /= truth.shape[0]
+
+            proba = F.softmax(logits, dim=-1)
+            pred = torch.argmax(proba, dim=-1).reshape(-1)
+
+        if multi_dataset and not self.hparams.comet_cn_train100k:
+            truth2 = torch.cat([o['batch_truth'] for o in outputs[1]], dim=0).reshape(-1)
+            logits2 = torch.cat([o['batch_logits'] for o in outputs[1]], dim=0).reshape(truth2.shape[0],
+                                                                                        outputs[1][0][
+                                                                                            'batch_logits'].shape[1])
+            loss_sum2 = torch.cat([o['batch_loss'].reshape(-1) for o in outputs[1]], dim=0).reshape(-1)
+            loss_sum2 = torch.sum(loss_sum2, dim=0).reshape(-1)
+
+            assert truth2.shape[0] == sum([o['batch_logits'].shape[0] for o in outputs[1]]), "Mismatch size"
+
+            loss2 = self.loss(truth2, logits2)
+
+            assert math.isclose(loss2.item(), loss_sum2.item(),
+                                abs_tol=0.01), f"Loss not equal: {loss.item()} VS. {loss_sum.item()}"
+
+            loss2 /= truth2.shape[0]
+            loss_sum2 /= truth2.shape[0]
+
+            proba2 = F.softmax(logits2, dim=-1)
+            pred2 = torch.argmax(proba2, dim=-1).reshape(-1)
+
+        elif multi_dataset and self.hparams.comet_cn_train100k:
+            # truth2 = torch.cat([o['batch_truth'] for o in outputs[1]], dim=0).reshape(-1)
+            # truth2 = torch.cat([o['batch_truth'] for o in outputs[1]], dim=0)
+            # bz = outputs[1][0]['batch_truth'].shape[0]
+            # logits2 = torch.cat([o['batch_logits'] for o in outputs[1]], dim=0)
+            loss_sum2 = torch.cat([o['batch_loss'].reshape(-1) for o in outputs[1]], dim=0).reshape(-1)
+            length = loss_sum2.shape[0]
+            loss_sum2 = torch.sum(loss_sum2, dim=0).reshape(-1)
+            loss2 = loss_sum2
+
+            loss2 /= length
+
+            # proba2 = F.softmax(logits2, dim=-1)
+            # pred2 = torch.argmax(proba2, dim=-1)
 
         with open(os.path.join(self.hparams.output_dir, "dev-labels.lst"), "w") as output_file:
             output_file.write("\n".join(map(str, (truth + self.task_config[self.hparams.task_name][
@@ -318,6 +618,20 @@ class HuggingFaceClassifier(LightningModule):
 
         with open(os.path.join(self.hparams.output_dir, "dev-probabilities.lst"), "w") as output_file:
             output_file.write("\n".join(map(lambda l: '\t'.join(map(str, l)), proba.cpu().detach().numpy().tolist())))
+
+        if multi_dataset and not self.hparams.comet_cn_train100k:
+            with open(os.path.join(self.hparams.output_dir2, "dev-labels.lst"), "w") as output_file2:
+                output_file2.write("\n".join(map(str, (truth2 + self.task_config[self.hparams.task_name2][
+                    'label_offset']).cpu().numpy().tolist())))
+
+            with open(os.path.join(self.hparams.output_dir2, "dev-predictions.lst"), "w") as output_file2:
+                output_file2.write("\n".join(
+                    map(str,
+                        (pred2 + self.task_config[self.hparams.task_name2]['label_offset']).cpu().numpy().tolist())))
+
+            with open(os.path.join(self.hparams.output_dir2, "dev-probabilities.lst"), "w") as output_file2:
+                output_file2.write(
+                    "\n".join(map(lambda l: '\t'.join(map(str, l)), proba2.cpu().detach().numpy().tolist())))
 
         stats = []
         predl = pred.cpu().detach().numpy().tolist()
@@ -333,12 +647,42 @@ class HuggingFaceClassifier(LightningModule):
 
         _, lower, upper = mean_confidence_interval(stats, self.hparams.ci_alpha)
 
-        return {
+        if multi_dataset and not self.hparams.comet_cn_train100k:
+            stats2 = []
+            predl2 = pred2.cpu().detach().numpy().tolist()
+            truthl2 = truth2.cpu().detach().numpy().tolist()
+
+            for _ in range(10000):
+                predl2 = pred2.cpu().detach().numpy().tolist()
+
+                indicies2 = np.random.randint(len(predl2), size=len(predl2))
+                sampled_pred2 = [predl2[i] for i in indicies2]
+                sampled_truth2 = [truthl2[i] for i in indicies2]
+                stats2.append(accuracy_score(sampled_truth2, sampled_pred2))
+
+            _2, lower2, upper2 = mean_confidence_interval(stats2, self.hparams.ci_alpha)
+
+        result_dict = {
             'val_loss': loss.item(),
             'val_acc': accuracy_score(truth.cpu().detach().numpy().tolist(), pred.cpu().detach().numpy().tolist()),
             'val_cil': lower,
             'val_ciu': upper,
         }
+
+        if multi_dataset and not self.hparams.comet_cn_train100k:
+            result_dict['val_loss2'] = loss2.item()
+            result_dict['val_acc2'] = accuracy_score(truth2.cpu().detach().numpy().tolist(),
+                                                     pred2.cpu().detach().numpy().tolist())
+            result_dict['val_cil2'] = lower2
+            result_dict['val_ciu2'] = upper2
+
+        elif multi_dataset and self.hparams.comet_cn_train100k:
+            result_dict['comet_loss'] = loss2.item()
+            # print (loss2.item(), loss2.cpu().item(), np.exp(loss2.cpu().item())); raise
+            ppl = np.exp(loss2.cpu()) if loss2.item() < 300 else np.inf
+            result_dict['comet_ppl'] = ppl
+
+        return result_dict
 
     def test_end(self, outputs):
         """
@@ -347,9 +691,20 @@ class HuggingFaceClassifier(LightningModule):
         :param outputs:
         :return: dic_with_metrics for tqdm
         """
-        logits = torch.cat([o['batch_logits'] for o in outputs], dim=0).reshape(-1, outputs[0]['batch_logits'].shape[1])
-        proba = F.softmax(logits, dim=-1)
-        pred = torch.argmax(proba, dim=-1).reshape(-1)
+        multi_dataset = False
+        if type(outputs[0]) == list:
+            multi_dataset = True
+
+        if multi_dataset:
+            logits = torch.cat([o[0]['batch_logits'] for o in outputs], dim=0).reshape(-1, outputs[0][0][
+                'batch_logits'].shape[1])
+            proba = F.softmax(logits, dim=-1)
+            pred = torch.argmax(proba, dim=-1).reshape(-1)
+        else:
+            logits = torch.cat([o['batch_logits'] for o in outputs], dim=0).reshape(-1,
+                                                                                    outputs[0]['batch_logits'].shape[1])
+            proba = F.softmax(logits, dim=-1)
+            pred = torch.argmax(proba, dim=-1).reshape(-1)
 
         with open(os.path.join(self.hparams.output_dir, "predictions.lst"), "w") as output_file:
             output_file.write("\n".join(map(str, (pred + self.task_config[self.hparams.task_name][
@@ -357,6 +712,20 @@ class HuggingFaceClassifier(LightningModule):
 
         with open(os.path.join(self.hparams.output_dir, "probabilities.lst"), "w") as output_file:
             output_file.write("\n".join(map(lambda l: '\t'.join(map(str, l)), proba.cpu().detach().numpy().tolist())))
+
+        if multi_dataset and not self.hparams.comet_cn_train100k:
+            logits2 = torch.cat([o[1]['batch_logits'] for o in outputs], dim=0).reshape(-1, outputs[0][1][
+                'batch_logits'].shape[1])
+            proba2 = F.softmax(logits2, dim=-1)
+            pred2 = torch.argmax(proba2, dim=-1).reshape(-1)
+
+            with open(os.path.join(self.hparams.output_dir2, "predictions.lst"), "w") as output_file2:
+                output_file2.write("\n".join(map(str, (pred2 + self.task_config[self.hparams.task_name2][
+                    'label_offset']).cpu().detach().numpy().tolist())))
+
+            with open(os.path.join(self.hparams.output_dir2, "probabilities.lst"), "w") as output_file2:
+                output_file2.write(
+                    "\n".join(map(lambda l: '\t'.join(map(str, l)), proba2.cpu().detach().numpy().tolist())))
 
         return {}
 
@@ -372,7 +741,8 @@ class HuggingFaceClassifier(LightningModule):
             {'params': [p for n, p in self.named_parameters() if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
         ]
         optimizer = AdamW(optimizer_grouped_parameters, lr=self.hparams.learning_rate, eps=self.hparams.adam_epsilon)
-        scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=self.hparams.warmup_steps, num_training_steps=t_total)
+        scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=self.hparams.warmup_steps,
+                                                    num_training_steps=t_total)
 
         return [optimizer], [scheduler]
 
@@ -381,16 +751,74 @@ class HuggingFaceClassifier(LightningModule):
         dataset_name = "train"
         cache_dirs = download(self.task_config[self.hparams.task_name]['urls'], self.hparams.task_cache_dir)
         dataset = ClassificationDataset.load(cache_dir=cache_dirs[0] if isinstance(cache_dirs, list) else cache_dirs,
-                                             file_mapping=self.task_config[self.hparams.task_name]['file_mapping'][dataset_name],
+                                             file_mapping=self.task_config[self.hparams.task_name]['file_mapping'][
+                                                 dataset_name],
                                              task_formula=self.task_config[self.hparams.task_name]['task_formula'],
                                              type_formula=self.task_config[self.hparams.task_name]['type_formula'],
                                              preprocessor=self.tokenizer,
-                                             pretokenized=self.task_config[self.hparams.task_name].get('pretokenized', False),
-                                             label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
-                                             label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
-                                             label_transform=self.task_config[self.hparams.task_name].get('label_transform', None),
+                                             pretokenized=self.task_config[self.hparams.task_name].get('pretokenized',
+                                                                                                       False),
+                                             label_formula=self.task_config[self.hparams.task_name].get('label_formula',
+                                                                                                        None),
+                                             label_offset=self.task_config[self.hparams.task_name].get('label_offset',
+                                                                                                       0),
+                                             label_transform=self.task_config[self.hparams.task_name].get(
+                                                 'label_transform', None),
                                              shuffle=self.task_config[self.hparams.task_name].get('shuffle', False),
                                              )
+
+        if self.hparams.task_name2 is not None:
+            cache_dirs2 = download(self.task_config[self.hparams.task_name2]['urls'], self.hparams.task_cache_dir)
+            dataset2 = ClassificationDataset.load(
+                cache_dir=cache_dirs2[0] if isinstance(cache_dirs2, list) else cache_dirs2,
+                file_mapping=self.task_config[self.hparams.task_name2]['file_mapping'][dataset_name],
+                task_formula=self.task_config[self.hparams.task_name2]['task_formula'],
+                type_formula=self.task_config[self.hparams.task_name2]['type_formula'],
+                preprocessor=self.tokenizer,
+                pretokenized=self.task_config[self.hparams.task_name2].get('pretokenized', False),
+                label_formula=self.task_config[self.hparams.task_name2].get('label_formula', None),
+                label_offset=self.task_config[self.hparams.task_name2].get('label_offset', 0),
+                label_transform=self.task_config[self.hparams.task_name2].get('label_transform', None),
+                shuffle=self.task_config[self.hparams.task_name2].get('shuffle', False),
+                task_id=2)
+
+            dataloader = DataLoader(dataset, collate_fn=self.collate_fn,
+                                    shuffle=True, batch_size=self.hparams.batch_size)
+            dataloader2 = DataLoader(dataset2, collate_fn=self.collate_fn,
+                                     shuffle=True, batch_size=self.hparams.batch_size)
+            dataloaders = [dataloader, dataloader2]
+            multidatasets = MultiTaskDataset(dataloaders)
+            multi_dataloader = DataLoader(multidatasets,
+                                          collate_fn=lambda examples: examples[0],
+                                          shuffle=True, batch_size=1)
+            return multi_dataloader
+
+        if self.hparams.comet_cn_train100k:
+            from mcs.comet_train_masked import pre_process_datasets
+            from mcs.conceptnet_utils import load_comet_dataset
+            from mcs.data_utils import tokenize_and_encode
+            from torch.utils.data import TensorDataset
+
+            mask_token_id = self.tokenizer.tokenizer.encode(self.tokenizer.tokenizer.mask_token)[0]
+            cn_train_dataset = load_comet_dataset('mcs/train100k.txt',
+                                                  rel_lang=True, sep=True, prefix="<s>")
+            cn_encoded_datasets = tokenize_and_encode([cn_train_dataset], self.tokenizer.tokenizer)
+            cn_tensor_datasets = pre_process_datasets(cn_encoded_datasets, self.cn_input_length,
+                                                      self.max_e1, self.max_r, self.max_e2, mask_parts='e2',
+                                                      mask_token=mask_token_id)
+            cn_train_tensor_dataset = cn_tensor_datasets[0]
+            cn_train_data = TensorDataset(*cn_train_tensor_dataset)
+            cn_train_dataloader = DataLoader(cn_train_data, batch_size=self.hparams.batch_size, shuffle=True)
+
+            dataloader = DataLoader(dataset, collate_fn=self.collate_fn,
+                                    shuffle=True, batch_size=self.hparams.batch_size)
+
+            dataloaders = [dataloader, cn_train_dataloader]
+            multidatasets = MultiTaskDataset(dataloaders)
+            multi_dataloader = DataLoader(multidatasets,
+                                          collate_fn=lambda examples: examples[0],
+                                          shuffle=True, batch_size=1)
+            return multi_dataloader
 
         return DataLoader(dataset,
                           collate_fn=self.collate_fn,
@@ -406,6 +834,7 @@ class HuggingFaceClassifier(LightningModule):
         token_type_ids = []
         attention_mask = []
         y = None
+        task_ids = None
 
         for example in examples:
 
@@ -427,6 +856,8 @@ class HuggingFaceClassifier(LightningModule):
             attention_mask.append(example_attention_mask[..., :self.hparams.max_seq_len].transpose(0, 1))
             if example['y'] is not None:
                 y = [example['y']] if y is None else y + [example['y']]
+            if 'task_id' in example:
+                task_ids = [example['task_id']] if task_ids is None else task_ids + [example['task_id']]
 
         return {
             'tokens': tokens,
@@ -436,6 +867,7 @@ class HuggingFaceClassifier(LightningModule):
             'attention_mask': pad_sequence(attention_mask, batch_first=True, padding_value=padding_value).transpose(1,
                                                                                                                     2),
             'y': y if y is None else torch.from_numpy(np.asarray(y)).long(),
+            'task_id': task_ids if task_ids is None else torch.from_numpy(np.asarray(task_ids)).long(),
         }
 
     @pl.data_loader
@@ -443,23 +875,77 @@ class HuggingFaceClassifier(LightningModule):
         dataset_name = "dev"
         cache_dirs = download(self.task_config[self.hparams.task_name]['urls'], self.hparams.task_cache_dir)
         dataset = ClassificationDataset.load(cache_dir=cache_dirs[-1] if isinstance(cache_dirs, list) else cache_dirs,
-                                             file_mapping=self.task_config[self.hparams.task_name]['file_mapping'][dataset_name],
+                                             file_mapping=self.task_config[self.hparams.task_name]['file_mapping'][
+                                                 dataset_name],
                                              task_formula=self.task_config[self.hparams.task_name]['task_formula'],
                                              type_formula=self.task_config[self.hparams.task_name]['type_formula'],
                                              preprocessor=self.tokenizer,
-                                             pretokenized=self.task_config[self.hparams.task_name].get('pretokenized', False),
-                                             label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
-                                             label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
-                                             label_transform=self.task_config[self.hparams.task_name].get('label_transform',
-                                                                                                          None),
-                                             shuffle=self.task_config[self.hparams.task_name].get('shuffle', False),)
+                                             pretokenized=self.task_config[self.hparams.task_name].get('pretokenized',
+                                                                                                       False),
+                                             label_formula=self.task_config[self.hparams.task_name].get('label_formula',
+                                                                                                        None),
+                                             label_offset=self.task_config[self.hparams.task_name].get('label_offset',
+                                                                                                       0),
+                                             label_transform=self.task_config[self.hparams.task_name].get(
+                                                 'label_transform',
+                                                 None),
+                                             shuffle=self.task_config[self.hparams.task_name].get('shuffle', False), )
+
+        if self.hparams.task_name2 is not None:
+            cache_dirs2 = download(self.task_config[self.hparams.task_name2]['urls'], self.hparams.task_cache_dir)
+            dataset2 = ClassificationDataset.load(
+                cache_dir=cache_dirs2[-1] if isinstance(cache_dirs2, list) else cache_dirs2,
+                file_mapping=self.task_config[self.hparams.task_name2]['file_mapping'][dataset_name],
+                task_formula=self.task_config[self.hparams.task_name2]['task_formula'],
+                type_formula=self.task_config[self.hparams.task_name2]['type_formula'],
+                preprocessor=self.tokenizer,
+                pretokenized=self.task_config[self.hparams.task_name2].get('pretokenized', False),
+                label_formula=self.task_config[self.hparams.task_name2].get('label_formula', None),
+                label_offset=self.task_config[self.hparams.task_name2].get('label_offset', 0),
+                label_transform=self.task_config[self.hparams.task_name2].get('label_transform',
+                                                                              None),
+                shuffle=self.task_config[self.hparams.task_name2].get('shuffle', False),
+                task_id=2, )
+
         if not sampling:
-            return DataLoader(dataset,
-                              collate_fn=self.collate_fn,
-                              shuffle=False, batch_size=self.hparams.batch_size)
+            dataloader = DataLoader(dataset,
+                                    collate_fn=self.collate_fn,
+                                    shuffle=False, batch_size=self.hparams.batch_size)
         else:
-            return DataLoader(dataset, collate_fn=self.collate_fn, sampler=RandomSampler(dataset, replacement=True),
-                              shuffle=False, batch_size=self.hparams.batch_size)
+            dataloader = DataLoader(dataset, collate_fn=self.collate_fn,
+                                    sampler=RandomSampler(dataset, replacement=True),
+                                    shuffle=False, batch_size=self.hparams.batch_size)
+
+        if self.hparams.comet_cn_train100k:
+            from mcs.comet_train_masked import pre_process_datasets
+            from mcs.conceptnet_utils import load_comet_dataset
+            from mcs.data_utils import tokenize_and_encode
+            from torch.utils.data import TensorDataset
+
+            mask_token_id = self.tokenizer.tokenizer.encode(self.tokenizer.tokenizer.mask_token)[0]
+            cn_val_dataset = load_comet_dataset('mcs/dev1.txt',
+                                                rel_lang=True, sep=True, prefix="<s>")
+            cn_encoded_datasets = tokenize_and_encode([cn_val_dataset], self.tokenizer.tokenizer)
+            cn_tensor_datasets = pre_process_datasets(cn_encoded_datasets, self.cn_input_length,
+                                                      self.max_e1, self.max_r, self.max_e2, mask_parts='e2',
+                                                      mask_token=mask_token_id)
+            cn_val_tensor_dataset = cn_tensor_datasets[0]
+            cn_val_data = TensorDataset(*cn_val_tensor_dataset)
+            cn_val_dataloader = DataLoader(cn_val_data, batch_size=self.hparams.batch_size, shuffle=True)
+            return [dataloader, cn_val_dataloader]
+
+        if self.hparams.task_name2 is not None:
+            if not sampling:
+                dataloader2 = DataLoader(dataset2,
+                                         collate_fn=self.collate_fn,
+                                         shuffle=False, batch_size=self.hparams.batch_size)
+            else:
+                dataloader2 = DataLoader(dataset2, collate_fn=self.collate_fn,
+                                         sampler=RandomSampler(dataset2, replacement=True),
+                                         shuffle=False, batch_size=self.hparams.batch_size)
+            return [dataloader, dataloader2]
+
+        return dataloader
 
     @pl.data_loader
     def test_dataloader(self):
@@ -472,16 +958,69 @@ class HuggingFaceClassifier(LightningModule):
                                              task_formula=self.task_config[self.hparams.task_name]['task_formula'],
                                              type_formula=self.task_config[self.hparams.task_name]['type_formula'],
                                              preprocessor=self.tokenizer,
-                                             pretokenized=self.task_config[self.hparams.task_name].get('pretokenized', False),
-                                             label_formula=self.task_config[self.hparams.task_name].get('label_formula', None),
-                                             label_offset=self.task_config[self.hparams.task_name].get('label_offset', 0),
-                                             label_transform=self.task_config[self.hparams.task_name].get('label_transform',
-                                                                                                          None),
-                                             shuffle=self.task_config[self.hparams.task_name].get('shuffle', False),)
+                                             pretokenized=self.task_config[self.hparams.task_name].get('pretokenized',
+                                                                                                       False),
+                                             label_formula=self.task_config[self.hparams.task_name].get('label_formula',
+                                                                                                        None),
+                                             label_offset=self.task_config[self.hparams.task_name].get('label_offset',
+                                                                                                       0),
+                                             label_transform=self.task_config[self.hparams.task_name].get(
+                                                 'label_transform',
+                                                 None),
+                                             shuffle=self.task_config[self.hparams.task_name].get('shuffle', False), )
 
-        return DataLoader(dataset,
-                          collate_fn=self.collate_fn,
-                          shuffle=False, batch_size=self.hparams.batch_size)
+        if self.hparams.task_name2 is not None:
+            dataset2 = ClassificationDataset.load(cache_dir=self.hparams.test_input_dir2,
+                                                  file_mapping={'input_x': None},
+                                                  task_formula=self.task_config[self.hparams.task_name2][
+                                                      'task_formula'],
+                                                  type_formula=self.task_config[self.hparams.task_name2][
+                                                      'type_formula'],
+                                                  preprocessor=self.tokenizer,
+                                                  pretokenized=self.task_config[self.hparams.task_name2].get(
+                                                      'pretokenized', False),
+                                                  label_formula=self.task_config[self.hparams.task_name2].get(
+                                                      'label_formula', None),
+                                                  label_offset=self.task_config[self.hparams.task_name2].get(
+                                                      'label_offset', 0),
+                                                  label_transform=self.task_config[self.hparams.task_name2].get(
+                                                      'label_transform',
+                                                      None),
+                                                  shuffle=self.task_config[self.hparams.task_name2].get('shuffle',
+                                                                                                        False),
+                                                  task_id=2, )
+
+        self.hparams.batch_size = 4
+        print(self.hparams.batch_size)
+        dataloader = DataLoader(dataset,
+                                collate_fn=self.collate_fn,
+                                shuffle=False, batch_size=self.hparams.batch_size)
+
+        if self.hparams.comet_cn_train100k:
+            from mcs.comet_train_masked import pre_process_datasets
+            from mcs.conceptnet_utils import load_comet_dataset
+            from mcs.data_utils import tokenize_and_encode
+            from torch.utils.data import TensorDataset
+
+            mask_token_id = self.tokenizer.tokenizer.encode(self.tokenizer.tokenizer.mask_token)[0]
+            cn_val_dataset = load_comet_dataset('mcs/dev1.txt',
+                                                rel_lang=True, sep=True, prefix="<s>")
+            cn_encoded_datasets = tokenize_and_encode([cn_val_dataset], self.tokenizer.tokenizer)
+            cn_tensor_datasets = pre_process_datasets(cn_encoded_datasets, self.cn_input_length,
+                                                      self.max_e1, self.max_r, self.max_e2, mask_parts='e2',
+                                                      mask_token=mask_token_id)
+            cn_val_tensor_dataset = cn_tensor_datasets[0]
+            cn_val_data = TensorDataset(*cn_val_tensor_dataset)
+            cn_val_dataloader = DataLoader(cn_val_data, batch_size=self.hparams.batch_size, shuffle=True)
+            return [dataloader, cn_val_dataloader]
+
+        if self.hparams.task_name2 is not None:
+            dataloader2 = DataLoader(dataset2,
+                                     collate_fn=self.collate_fn,
+                                     shuffle=False, batch_size=self.hparams.batch_size)
+            return [dataloader, dataloader2]
+
+        return dataloader
 
     @classmethod
     def load_from_metrics(cls, hparams, weights_path, tags_csv, on_gpu, map_location=None):
@@ -562,10 +1101,23 @@ class HuggingFaceClassifier(LightningModule):
         tokenizer_group.add_argument('--tokenizer_weight', type=str, default=None)
 
         task_group.add_argument('--task_name',
-                                choices=['qqp', 'alphanli', 'snli', 'hellaswag', 'physicaliqa',
-                                         'socialiqa', 'vcrqa', 'vcrqr',
-                                         'physicaliqa-carved', 'physicaliqa-carved-single-word'],
+                                choices=['alphanli', 'snli', 'hellaswag', 'physicaliqa', 'socialiqa',
+                                         'vcrqa', 'vcrqr', 'physicaliqa-carved'],
                                 required=True)
+        task_group.add_argument('--task_name2', default=None,
+                                choices=['atomic_attr_qa_random_name',
+                                         'atomic_attr_qa',
+                                         'atomic_which_one_qa',
+                                         'atomic_temporal_qa',
+                                         'cn_all_cs',
+                                         'cn_all_cs_10k',
+                                         'cn_all_cs_20k',
+                                         'cn_all_cs_50k',
+                                         'cn_all_cs_30k', 'cn_physical_cs_relaxed', 'cn_physical_cs_narrow'
+                                         ],
+                                required=False)
+        task_group.add_argument('--task2_separate_fc', type=bool, required=False, default=False)
+        task_group.add_argument('--comet_cn_train100k', type=bool, required=False, default=False)
         task_group.add_argument('--task_config_file', type=str, required=True)
         task_group.add_argument('--task_cache_dir', type=str, required=True)
 
@@ -574,6 +1126,7 @@ class HuggingFaceClassifier(LightningModule):
         parser.add_argument('--experiment_name', type=str, required=True, default=None)
         parser.add_argument('--test_input_dir', type=str, required=False, default=None)
         parser.add_argument('--output_dir', type=str, required=False, default=None)
+        parser.add_argument('--output_dir2', type=str, required=False, default=None)
         parser.add_argument('--weights_path', type=str, required=False, default=None)
         parser.add_argument('--tags_csv', type=str, required=False, default=None)
 
