@@ -28,7 +28,7 @@ from textbook.utils import set_seed, get_default_hyperparameter
 
 
 def main(hparams):
-    curr_dir = Path("output")
+    curr_dir = Path("output") / f"{hparams.experiment_name}"
 
     log_dir = curr_dir / f"{hparams.model_type}-{hparams.model_weight}-log"
 
