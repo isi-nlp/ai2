@@ -41,7 +41,7 @@ def main(hparams):
     model.eval()
     results = []
     for batch in DataLoader(
-            model.val_dataloader()[0].dataset, shuffle=False, batch_size=4, collate_fn=model.collate_fn):
+            model.val_dataloader.dataset, shuffle=False, batch_size=4, collate_fn=model.collate_fn):
 
         batch["input_ids"] = batch["input_ids"].to(device)
         batch["attention_mask"] = batch["attention_mask"].to(device)
