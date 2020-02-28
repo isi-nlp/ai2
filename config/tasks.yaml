@@ -183,20 +183,20 @@ qqp:
     dev:
       dev_x: "qqp/eval.jsonl"
       dev_y: "qqp/eval.jsonl"
-cn_carved_words:
+cn_carved_10k:
   urls:
-    - "https://storage.googleapis.com/ai2-mosaic/public/cn_carved_words/cn_carved_words-train-dev.zip"
+    - "https://storage.googleapis.com/ai2-mosaic/public/cn_carved_10k/cn_carved_10k-train-dev.zip"
   task_formula: "[CLS] e1 [SEP] e2 [SEP] sol1|sol2|sol3|sol4|sol5|sol6|sol7 [SEP]"
   type_formula: "0 0 0 0 0 1 1"
   label_offset: 0
   num_choices: 7
   file_mapping:
     train:
-      train_x: "cn_carved_words-train-dev/train.jsonl"
-      train_y: "cn_carved_words-train-dev/train-labels.lst"
+      train_x: "cn_carved_10k-train-dev/train.jsonl"
+      train_y: "cn_carved_10k-train-dev/train-labels.lst"
     dev:
-      dev_x: "cn_carved_words-train-dev/dev.jsonl"
-      dev_y: "cn_carved_words-train-dev/dev-labels.lst"
+      dev_x: "cn_carved_10k-train-dev/dev.jsonl"
+      dev_y: "cn_carved_10k-train-dev/dev-labels.lst"
 cn_physical_10k:
   urls:
     - "https://storage.googleapis.com/ai2-mosaic/public/cn_physical_10k/cn_physical_10k-train-dev.zip"

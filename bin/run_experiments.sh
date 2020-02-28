@@ -12,4 +12,4 @@ do
     EXP_NAME="${MODEL_TYPE}-${TASK1}-${TASK2}";
     sbatch -J "$EXP_NAME" -o "${EXP_NAME}.out" "bin/train_saga_double_task.sh" "$MODEL_TYPE" "$MODEL_WEIGHTS" "$TASK1" "$TASK2" "$EXP_NAME"
   done
-don
+done

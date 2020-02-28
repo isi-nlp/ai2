@@ -131,6 +131,7 @@ class ClassificationDataset(Dataset):
     token_type_ids: List[List[int]]
     attention_mask: List[List[int]]
     y: List[int] = None
+    task_id: int = None
 
     def __len__(self):
         return len(self.tokens)
@@ -139,7 +140,8 @@ class ClassificationDataset(Dataset):
     def load(
             cls, cache_dir: str, file_mapping: Dict, task_formula: str, type_formula: str,
             preprocessor: TokenizerLoader, pretokenized: bool = False,
-            label_formula: str = None, label_offset: int = 0, label_transform: Dict = None, shuffle: bool = False) -> ClassificationDataset:
+            label_formula: str = None, label_offset: int = 0, label_transform: Dict = None, shuffle: bool = False,
+            task_id: int = None) -> ClassificationDataset:
         """
         Load the datase into a dataset class wrapper.
 
@@ -312,17 +314,21 @@ class ClassificationDataset(Dataset):
             99 % of input length: {sorted(map(lambda e: max(map(len, e)), tokens))[int(len(tokens) * .99)]}
         """)
 
-        return ClassificationDataset(tokens, input_ids, token_type_ids, attention_mask, labels)
+        return ClassificationDataset(tokens, input_ids, token_type_ids, attention_mask, labels, task_id)
 
     def __getitem__(self, index) -> Dict:
 
-        return {
+        d = {
             'tokens': self.tokens[index],
             'input_ids': self.input_ids[index],
             'token_type_ids': self.token_type_ids[index],
             'attention_mask': self.attention_mask[index],
             'y': self.y[index] if self.y is not None else None
         }
+        if self.task_id is not None:
+            d['task_id'] = self.task_id
+
+        return d
 
 
 if __name__ == "__main__":
