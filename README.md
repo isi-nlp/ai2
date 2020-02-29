@@ -25,7 +25,7 @@ python eval.py \
     --output pred.lst
 ```
 
-### Get predictions with evaluation(f1, CI)
+### Get predictions with evaluation(accuracy, confidence interval)
 
 ```bash
 python eval.py \
