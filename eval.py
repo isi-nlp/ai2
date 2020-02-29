@@ -31,26 +31,26 @@ if __name__ == "__main__":
     for batch in tqdm(DataLoader(model.dataloader(args.input_x, args.input_y), batch_size=model.hparams["batch_size"] * 2, collate_fn=model.collate, shuffle=False)):
         for key in batch:
             if isinstance(batch[key], torch.Tensor):
-                batch[key].to(device)
-        print(batch)
+                batch[key] = batch[key].to(device)
+        
         with torch.no_grad():
             logits = model.forward(batch)
         preds.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
-    preds = [p + Classifier.label_offset for p in preds]
+    preds = [p + model.label_offset for p in preds]
 
     if args.input_y:
 
-        from sklearn.metrics import f1_score
+        from sklearn.metrics import accuracy_score
         import pandas as pd
         import numpy as np
 
         labels = pd.read_csv(args.input_y, sep='\t', header=None).values.tolist()
-        logger.info(f"F1 score: {f1_score(labels, preds):.3f}")
+        logger.info(f"F1 score: {accuracy_score(labels, preds):.3f}")
 
         stats = []
         for _ in range(100):
             indices = [i for i in np.random.random_integers(0, len(preds)-1, size=len(preds))]
-            stats.append(f1_score([labels[j] for j in indices], [preds[j] for j in indices]))
+            stats.append(accuracy_score([labels[j] for j in indices], [preds[j] for j in indices]))
 
         alpha = 0.95
         p = ((1.0-alpha)/2.0) * 100

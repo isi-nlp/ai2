@@ -1,6 +1,16 @@
 # Minimal Code Base For AI2 Commonsense Leaderboard
 
+## Dependencies
+
+install apex if you want to use half precision: https://github.com/NVIDIA/apex
+
+
+```bash
+pip install -r requirements.txt
+```
+
 ## Train
+
 
 Modify `config.yaml` as you like and run `python train.py` to train a model. It loads the config file and outputs all the logs/checkpoints in `outputs`
 
@@ -25,3 +35,12 @@ python eval.py \
     --input_y cache/physicaliqa-train-dev/physicaliqa-train-dev/dev-labels.lst \
     --output pred.lst
 ```
+
+## Results
+
+Hardware: V100 * 1
+
+### PIQA
+|     Model     | Bootstrapped Accuracy Mean | Bootstrapped Accuracy CI | Accuracy |
+|:-------------:|:--------------------------:|:------------------------:|:--------:|
+| Roberta large |            77.4            |        75.7 - 79.4       |   77.3   |

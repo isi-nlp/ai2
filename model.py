@@ -9,7 +9,6 @@ import pytorch_lightning as pl
 import torch.nn as nn
 import pandas as pd
 import numpy as np
-from sklearn.metrics import f1_score
 from loguru import logger
 from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
@@ -38,6 +37,7 @@ class Classifier(pl.LightningModule):
         self.tokenizer = AutoTokenizer.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache", use_fast=False)
 
         self.embedder.train()
+        self.label_offset = 0
         self.classifier = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
 
         self.loss = nn.CrossEntropyLoss(ignore_index=-1, reduction="mean")
