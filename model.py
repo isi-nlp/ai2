@@ -51,7 +51,8 @@ class Classifier(pl.LightningModule):
         assert len(batch["input_ids"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["attention_mask"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["token_type_ids"].shape) == 2, "LM only take two-dimensional input"
-
+        
+        batch["token_type_ids"] = None if "roberta" in self.hparams["model"] else batch["token_type_ids"]
 
         results = self.embedder(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"], token_type_ids=batch["token_type_ids"])
 
