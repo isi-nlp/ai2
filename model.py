@@ -42,13 +42,11 @@ class Classifier(pl.LightningModule):
 
         self.loss = nn.CrossEntropyLoss(ignore_index=-1, reduction="mean")
 
-        # raise Exception("Please initialize the classifier as the model you want to use. Please refer to huggingface's implementations for details")
         self.classifier.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
         self.classifier.bias.data.zero_()
 
     def forward(self, batch):
 
-        # logger.warning("token type ids is not always supported")
 
         assert len(batch["input_ids"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["attention_mask"].shape) == 2, "LM only take two-dimensional input"
@@ -107,14 +105,14 @@ class Classifier(pl.LightningModule):
     @pl.data_loader
     def train_dataloader(self):
 
-        return DataLoader(self.__dataloader(self.root_path / self.hparams["train_x"], self.root_path / self.hparams["train_y"]), batch_size=self.hparams["batch_size"], collate_fn=self.__collate)
+        return DataLoader(self.dataloader(self.root_path / self.hparams["train_x"], self.root_path / self.hparams["train_y"]), batch_size=self.hparams["batch_size"], collate_fn=self.collate)
 
     @pl.data_loader
     def val_dataloader(self):
-        return DataLoader(self.__dataloader(self.root_path / self.hparams["val_x"], self.root_path / self.hparams["val_y"]), batch_size=self.hparams["batch_size"], collate_fn=self.__collate)
+        return DataLoader(self.dataloader(self.root_path / self.hparams["val_x"], self.root_path / self.hparams["val_y"]), batch_size=self.hparams["batch_size"], collate_fn=self.collate)
 
 
-    def __dataloader(self, x_path: Union[str, pathlib.Path], y_path: Union[str, pathlib.Path] = None):
+    def dataloader(self, x_path: Union[str, pathlib.Path], y_path: Union[str, pathlib.Path] = None):
 
         df = pd.read_json(x_path, lines=True)
         if y_path:
@@ -122,13 +120,13 @@ class Classifier(pl.LightningModule):
             self.label_offset = np.asarray(labels).min()
             df["label"] = np.asarray(labels) - self.label_offset
 
-        df["text"] = df.apply(self.__transform(self.hparams["formula"]), axis=1)
+        df["text"] = df.apply(self.transform(self.hparams["formula"]), axis=1)
         print(df.head())
         return ClassificationDataset(df[["text", "label"]].to_dict("records"))
 
 
     @staticmethod
-    def __transform(formula):
+    def transform(formula):
 
         def warpper(row):
 
@@ -147,7 +145,7 @@ class Classifier(pl.LightningModule):
         return warpper
 
 
-    def __collate(self, examples):
+    def collate(self, examples):
 
         batch_size = len(examples)
         num_choice = len(examples[0]["text"])

@@ -1,9 +1,8 @@
 task_name: physicaliqa
 model: "roberta-large"
 accumulate_grad_batches: 8
-use_amp: true # Half precison only works with volta architectures such as V100
+use_amp: true # Half precison only works best with volta architectures such as V100
 max_epochs: 4
-weight_decay: 0.02
 learning_rate: 2e-6
 adam_epsilon: 10e-8
 warmup_steps: 150
