@@ -137,7 +137,87 @@ physicaliqa:
     adam_epsilon: 1e-8
     accumulate_grad_batches: 1
     do_lower_case: false
+physicaliqa-25pc:
+  albert:
+    albert-xxlarge-v2:
+      lr: 5e-6
+      batch_size: 2
+      accumulate_grad_batches: 4
+  libert:
+    /auto/nlg-05/chengham/libert/output:
+      lr: 2e-5
+      batch_size: 32
+    bert-base-uncased:
+      lr: 2e-5
+      batch_size: 8
+      accumulate_grad_batches: 4
+  bert:
+    bert-large-cased:
+      lr: 5e-6
+      batch_size: 8
+    bert-base-cased:
+      lr: 5e-6
+      batch_size: 4
+      accumulate_grad_batches: 2
+  xlnet:
+    xlnet-large-cased:
+      lr: 5e-6
+      batch_size: 8
+  roberta:
+    roberta-large:
+      lr: 5e-6
+      batch_size: 4
+      accumulate_grad_batches: 2
+  distilbert:
+    distilbert-base-uncased:
+      do_lower_case: true
+      lr: 5e-5
+      batch_size: 128
+      max_nb_epochs: 6
+  default:
+    seed: 42
+    lr: 2e-5
+    dropout: 0.5
+    batch_size: 32
+    max_seq_len: 128
+    max_nb_epochs: 3
+    initializer_range: 0.02
+    weight_decay: 0.0
+    warmup_steps: 0
+    adam_epsilon: 1e-8
+    accumulate_grad_batches: 1
+    do_lower_case: false
 physicaliqa-carved:
+  bert:
+    bert-base-cased:
+      lr: 5e-6
+      batch_size: 4
+      accumulate_grad_batches: 2
+  albert:
+    albert-xxlarge-v2:
+      lr: 5e-6
+      batch_size: 2
+      accumulate_grad_batches: 4
+  roberta:
+    roberta-large:
+      lr: 5e-6
+      batch_size: 4
+      accumulate_grad_batches: 4
+      max_nb_epochs: 6
+  default:
+    seed: 42
+    lr: 2e-5
+    dropout: 0.5
+    batch_size: 32
+    max_seq_len: 128
+    max_nb_epochs: 3
+    initializer_range: 0.02
+    weight_decay: 0.0
+    warmup_steps: 0
+    adam_epsilon: 1e-8
+    accumulate_grad_batches: 1
+    do_lower_case: false
+physicaliqa-carved-25pc:
   bert:
     bert-base-cased:
       lr: 5e-6
