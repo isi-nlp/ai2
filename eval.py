@@ -40,8 +40,9 @@ def main(hparams):
     model = model.to(device)
     model.eval()
     results = []
+    dataset = model.val_dataloader[0].dataset if hparams.task_name2 is not None else model.val_dataloader.dataset
     for batch in DataLoader(
-            model.val_dataloader.dataset, shuffle=False, batch_size=4, collate_fn=model.collate_fn):
+            dataset, shuffle=False, batch_size=4, collate_fn=model.collate_fn):
 
         batch["input_ids"] = batch["input_ids"].to(device)
         batch["attention_mask"] = batch["attention_mask"].to(device)
