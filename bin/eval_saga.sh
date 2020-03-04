@@ -21,7 +21,7 @@ PYTHON=python
 #MODEL_TYPE=$1
 #MODEL_WEIGHT=$2
 #TASK_NAME=$3
-EXPERIMENT_NAME=$4
+EXPERIMENT_NAME=$5
 EVAL=eval.py
 
 
@@ -43,9 +43,13 @@ fi
 $PYTHON -W ignore $EVAL --model_type $1 \
   --model_weight $2 \
   --task_name $3 \
+  --experiment_name $EXPERIMENT_NAME \
   --task_config_file config/tasks.yaml \
   --task_cache_dir ./cache \
   --running_config_file config/hyparams.yaml \
   --output_dir $OUTPUT/$1-$2-$3-pred \
   --weights_path $FILE \
-  --tags_csv $OUTPUT/$1-$2-log/$3/version_0/meta_tags.csv
+  --tags_csv $OUTPUT/$1-$2-log/$3/version_0/meta_tags.csv \
+  --task_name2 $4 \
+  --task2_separate_fc true \
+  --output_dir2 $OUTPUT/$1-$2-$3-pred \
