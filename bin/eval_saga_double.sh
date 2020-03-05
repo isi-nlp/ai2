@@ -21,7 +21,8 @@ PYTHON=python
 #MODEL_TYPE=$1
 #MODEL_WEIGHT=$2
 #TASK_NAME=$3
-EXPERIMENT_NAME=$4
+#TASK2_NAME=$4
+EXPERIMENT_NAME=$5
 EVAL=eval.py
 
 
@@ -50,3 +51,6 @@ $PYTHON -W ignore $EVAL --model_type $1 \
   --output_dir $OUTPUT/$1-$2-$3-pred \
   --weights_path $FILE \
   --tags_csv $OUTPUT/$1-$2-log/$3/version_0/meta_tags.csv \
+  --task_name2 $4 \
+  --task2_separate_fc true \
+  --output_dir2 $OUTPUT/$1-$2-$3-pred \
