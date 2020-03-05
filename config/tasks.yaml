@@ -75,6 +75,20 @@ physicaliqa-carved:
     dev:
       dev_x: "physicaliqa-train-dev/dev.jsonl"
       dev_y: "physicaliqa-train-dev/dev-labels.lst"
+physicaliqa-10pc:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/physicaliqa-10pc/physicaliqa-10pc-train-dev.zip"
+  task_formula: "[CLS] goal [SEP] sol1|sol2 [SEP]"
+  type_formula: "0 0 0 1 1"
+  label_offset: 0
+  num_choices: 2
+  file_mapping:
+    train:
+      train_x: "physicaliqa-10pc-train-dev/train.jsonl"
+      train_y: "physicaliqa-10pc-train-dev/train-labels.lst"
+    dev:
+      dev_x: "physicaliqa-10pc-train-dev/dev.jsonl"
+      dev_y: "physicaliqa-10pc-train-dev/dev-labels.lst"
 physicaliqa-25pc:
   urls:
     - "https://storage.googleapis.com/ai2-mosaic/public/physicaliqa-25pc/physicaliqa-25pc-train-dev.zip"
@@ -239,3 +253,17 @@ cn_all_cs_20k:
     dev:
       dev_x: "cn_all_cs_20k-train-dev/dev.jsonl"
       dev_y: "cn_all_cs_20k-train-dev/dev-labels.lst"
+cn_all_cs_40k:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/cn_all_cs_40k/cn_all_cs_40k-train-dev.zip"
+  task_formula: "[CLS] e1 [SEP] e2 [SEP] sol1|sol2|sol3|sol4|sol5|sol6|sol7 [SEP]"
+  type_formula: "0 0 0 0 0 1 1"
+  label_offset: 0
+  num_choices: 7
+  file_mapping:
+    train:
+      train_x: "cn_all_cs_40k-train-dev/train.jsonl"
+      train_y: "cn_all_cs_40k-train-dev/train-labels.lst"
+    dev:
+      dev_x: "cn_all_cs_40k-train-dev/dev.jsonl"
+      dev_y: "cn_all_cs_40k-train-dev/dev-labels.lst"
