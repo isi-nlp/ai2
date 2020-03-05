@@ -1,4 +1,7 @@
-A better way of processing commonsense datasets [Link](https://github.com/ChenghaoMou/textbook) and the [boilerplate](https://github.com/ChenghaoMou/libert) are now alive for preview. They will replace this repo in the near feature.
+~~A better way of processing commonsense datasets [Link](https://github.com/ChenghaoMou/textbook) and the [boilerplate](https://github.com/ChenghaoMou/libert) are now alive for preview. They will replace this repo in the near feature.~~
+
+Please use `master` branch for individual experiments. This `new` branch should be used as a reference for comparative model evaluation on HPC. Some reported converge issues with this branch so proceed with caution.
+
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/) ![PyPI - License](https://img.shields.io/pypi/l/textbook) ![Madein](https://img.shields.io/badge/MADEIN-ISI-brightgreen)
 
