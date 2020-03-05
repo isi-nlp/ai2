@@ -10,7 +10,8 @@ do
   for TASK2 in "${arr2[@]}"
   do
     EXP_NAME="${MODEL_WEIGHTS}-${TASK1}-${TASK2}";
-    echo $EXP_NAME
-    bash "bin/eval_saga.sh" "$MODEL_TYPE" "$MODEL_WEIGHTS" "$TASK1" "$TASK2" "$EXP_NAME"
+    echo $EXP_NAME | tee -a 'eval.out'
+    sh 'bin/eval_saga.sh' $MODEL_TYPE $MODEL_WEIGHTS $TASK1 $TASK2 $EXP_NAME &>> 'eval.out'
+    grep 'confidence' 'eval.out' | tail -1
   done
 done

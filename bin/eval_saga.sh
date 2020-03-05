@@ -50,6 +50,6 @@ $PYTHON -W ignore $EVAL --model_type $1 \
   --output_dir $OUTPUT/$1-$2-$3-pred \
   --weights_path $FILE \
   --tags_csv $OUTPUT/$1-$2-log/$3/version_0/meta_tags.csv \
-  --task_name2 $4 \
-  --task2_separate_fc true \
-  --output_dir2 $OUTPUT/$1-$2-$3-pred \
+  #--task_name2 $4 \
+  #--task2_separate_fc true \
+  #--output_dir2 $OUTPUT/$1-$2-$3-pred \
