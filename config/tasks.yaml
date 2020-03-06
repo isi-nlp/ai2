@@ -235,10 +235,24 @@ cn_all_cs_10k:
   file_mapping:
     train:
       train_x: "cn_all_cs_10k-train-dev/train.jsonl"
-      train_y: "cn_all_cs_10k-train-dev/train-labels.lst"
+      train_y: "cn_all_cs_10k-train-dev_2/train-labels.lst"
     dev:
       dev_x: "cn_all_cs_10k-train-dev/dev.jsonl"
       dev_y: "cn_all_cs_10k-train-dev/dev-labels.lst"
+cn_all_cs_10k_2:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/cn_all_cs_10k_2/cn_all_cs_10k-train-dev_2.zip"
+  task_formula: "[CLS] e1 [SEP] e2 [SEP] sol1|sol2|sol3|sol4|sol5|sol6|sol7 [SEP]"
+  type_formula: "0 0 0 0 0 1 1"
+  label_offset: 0
+  num_choices: 7
+  file_mapping:
+    train:
+      train_x: "cn_all_cs_10k-train-dev_2/train.jsonl"
+      train_y: "cn_all_cs_10k-train-dev_2/train-labels.lst"
+    dev:
+      dev_x: "cn_all_cs_10k-train-dev_2/dev.jsonl"
+      dev_y: "cn_all_cs_10k-train-dev_2/dev-labels.lst"
 cn_all_cs_20k:
   urls:
     - "https://storage.googleapis.com/ai2-mosaic/public/cn_all_cs_20k/cn_all_cs_20k-train-dev.zip"
@@ -253,6 +267,20 @@ cn_all_cs_20k:
     dev:
       dev_x: "cn_all_cs_20k-train-dev/dev.jsonl"
       dev_y: "cn_all_cs_20k-train-dev/dev-labels.lst"
+cn_all_cs_20k_2:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/cn_all_cs_20k_2/cn_all_cs_20k-train-dev_2.zip"
+  task_formula: "[CLS] e1 [SEP] e2 [SEP] sol1|sol2|sol3|sol4|sol5|sol6|sol7 [SEP]"
+  type_formula: "0 0 0 0 0 1 1"
+  label_offset: 0
+  num_choices: 7
+  file_mapping:
+    train:
+      train_x: "cn_all_cs_20k-train-dev_2/train.jsonl"
+      train_y: "cn_all_cs_20k-train-dev_2/train-labels.lst"
+    dev:
+      dev_x: "cn_all_cs_20k-train-dev_2/dev.jsonl"
+      dev_y: "cn_all_cs_20k-train-dev_2/dev-labels.lst"
 cn_all_cs_40k:
   urls:
     - "https://storage.googleapis.com/ai2-mosaic/public/cn_all_cs_40k/cn_all_cs_40k-train-dev.zip"
@@ -263,7 +291,21 @@ cn_all_cs_40k:
   file_mapping:
     train:
       train_x: "cn_all_cs_40k-train-dev/train.jsonl"
-      train_y: "cn_all_cs_40k-train-dev/train-labels.lst"
+      train_y: "cn_all_cs_40k-train-dev_2/train-labels.lst"
     dev:
       dev_x: "cn_all_cs_40k-train-dev/dev.jsonl"
       dev_y: "cn_all_cs_40k-train-dev/dev-labels.lst"
+cn_all_cs_40k_2:
+  urls:
+    - "https://storage.googleapis.com/ai2-mosaic/public/cn_all_cs_40k_2/cn_all_cs_40k-train-dev_2.zip"
+  task_formula: "[CLS] e1 [SEP] e2 [SEP] sol1|sol2|sol3|sol4|sol5|sol6|sol7 [SEP]"
+  type_formula: "0 0 0 0 0 1 1"
+  label_offset: 0
+  num_choices: 7
+  file_mapping:
+    train:
+      train_x: "cn_all_cs_40k-train-dev_2/train.jsonl"
+      train_y: "cn_all_cs_40k-train-dev_2/train-labels.lst"
+    dev:
+      dev_x: "cn_all_cs_40k-train-dev_2/dev.jsonl"
+      dev_y: "cn_all_cs_40k-train-dev_2/dev-labels.lst"
