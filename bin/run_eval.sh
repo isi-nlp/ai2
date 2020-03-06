@@ -1,7 +1,7 @@
 MODEL_TYPE="roberta"
 MODEL_WEIGHTS="roberta-large"
 
-declare -a experiments=("physicaliqa-10pc,cn_physical_10k" "physicaliqa-25pc,cn_all_cs_10k" "physicaliqa,cn_all_cs_10k" \
+declare -a experiments=("physicaliqa-10pc,cn_all_cs_10k" "physicaliqa-25pc,cn_all_cs_10k" "physicaliqa,cn_all_cs_10k" \
                         "physicaliqa-10pc,cn_all_cs_20k_2" "physicaliqa-25pc,cn_all_cs_20k_2" "physicaliqa,cn_all_cs_20k_2" \
                         "physicaliqa-10pc,cn_all_cs_40k_2" "physicaliqa-25pc,cn_all_cs_40k_2" "physicaliqa,cn_all_cs_40k_2")
 
