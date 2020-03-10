@@ -41,7 +41,8 @@ def main(hparams):
         autosave=True,
     )
 
-    model_save_path = curr_dir / f"{hparams.model_type}-{hparams.model_weight}-checkpoints" / hparams.task_name / str(exp.version) / ""
+    model_save_path = curr_dir / f"{hparams.model_type}-{hparams.model_weight}-checkpoints" / hparams.task_name / str(
+        exp.version) / ""
     logger.info(f"Saving model to {model_save_path}")
 
     running_config = yaml.safe_load(open(hparams.running_config_file, "r"))
@@ -51,11 +52,15 @@ def main(hparams):
                                 task_name=hparams.task_name, model_type=hparams.model_type,
                                 model_weight=hparams.model_weight)
 
+    # Check parameter that might be specified in the script for search, if none, get default
+    if hparams.batch_size is None:
+        hparams.batch_size = default_parameter(field='batch_size')
+    if hparams.learning_rate is None:
+        hparams.learning_rate = float(default_parameter(field='lr'))
+
     hparams.max_nb_epochs = default_parameter(field='max_nb_epochs')
-    hparams.learning_rate = float(default_parameter(field='lr'))
     hparams.initializer_range = float(default_parameter(field='initializer_range'))
     hparams.dropout = float(default_parameter(field='dropout'))
-    hparams.batch_size = default_parameter(field='batch_size')
     hparams.max_seq_len = default_parameter(field='max_seq_len')
     hparams.seed = default_parameter(field='seed')
     hparams.weight_decay = default_parameter(field='weight_decay')

@@ -1097,6 +1097,10 @@ class HuggingFaceClassifier(LightningModule):
         model_group.add_argument('--model_weight', type=str, required=True)
         model_group.add_argument('--ci_alpha', type=float, default=0.95)
 
+        # Optional args for parameter tuning
+        model_group.add_argument('--batch_size', type=int, default=None)
+        model_group.add_argument('--learning_rate', type=float, default=None)
+
         tokenizer_group.add_argument('--tokenizer_type', type=str, default=None)
         tokenizer_group.add_argument('--tokenizer_weight', type=str, default=None)
 
