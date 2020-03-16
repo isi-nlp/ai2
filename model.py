@@ -88,16 +88,13 @@ class Classifier(pl.LightningModule):
         val_loss_mean = torch.stack([o['val_loss'] for o in outputs]).mean()
         val_logits = torch.cat([o["val_batch_logits"] for o in outputs])
         val_labels = torch.cat([o["val_batch_labels"] for o in outputs])
-        return {
-            'val_loss': val_loss_mean,
-            "progress_bar": {
-                "val_accuracy": torch.sum(val_labels == torch.argmax(val_logits, dim=1)) / (val_labels.shape[0] * 1.0)
-            }
-        }
+        correct = torch.sum(val_labels == torch.argmax(val_logits, dim=1))
+        val_accuracy = torch.tensor(float(correct)) / (val_labels.shape[0] * 1.0)
+        return {'val_loss': val_loss_mean, "val_accuracy": val_accuracy }
 
     def configure_optimizers(self):
 
-        t_total = len(self.train_dataloader()) // self.hparams["accumulate_grad_batches"] * self.hparams["max_epochs"]
+        t_total = len(self.train_dataloader) // self.hparams["accumulate_grad_batches"] * self.hparams["max_epochs"]
 
         optimizer = AdamW(self.parameters(), lr=float(self.hparams["learning_rate"]), eps=float(self.hparams["adam_epsilon"]))
 
