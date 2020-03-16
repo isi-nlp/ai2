@@ -2,7 +2,14 @@
 
 ## Dependencies
 
-install apex if you want to use half precision: https://github.com/NVIDIA/apex. Conda env file is also included for reference, the apex might not be compatiable with conda directly so you can remove that before you create an environment.
+Create and run a virtual environment with Python 3.7:
+
+```
+conda create --name ai2 python=3.7
+conda activate ai2
+```
+
+Then run:
 
 ```bash
 pip install -r requirements.txt
@@ -40,5 +47,4 @@ python eval.py \
 ### PIQA
 |     Model     | Bootstrapped Accuracy Mean | Bootstrapped Accuracy CI | Accuracy |
 |:-------------:|:--------------------------:|:------------------------:|:--------:|
-| Roberta large (V100) |            77.4            |        75.7 - 79.4       |   77.3   |
-| Roberta large (K80)  |            74.0            |        72.4 - 76.2       |   74.2   |
+| Roberta large (SAGA) |            76.9            |        75.2 - 78.6       |   76.9   |
