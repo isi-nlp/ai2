@@ -16,6 +16,7 @@ def train(config):
 
     logger.info(config)
 
+    torch.manual_seed(42)
     np.random.seed(42)
     random.seed(42)
 

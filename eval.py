@@ -8,8 +8,9 @@ import yaml
 
 if __name__ == "__main__":
 
+    torch.manual_seed(42)
     import argparse
-
+    
     parser = argparse.ArgumentParser("evaluate script")
     parser.add_argument("--input_x", type=str, required=True)
     parser.add_argument("--config", type=str, required=True)
@@ -43,6 +44,7 @@ if __name__ == "__main__":
         from sklearn.metrics import accuracy_score
         import pandas as pd
         import numpy as np
+        np.random.seed(42)
 
         labels = pd.read_csv(args.input_y, sep='\t', header=None).values.tolist()
         logger.info(f"F1 score: {accuracy_score(labels, preds):.3f}")
