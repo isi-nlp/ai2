@@ -2,7 +2,7 @@
 
 ## Dependencies
 
-Create and run a virtual environment with Python 3.7. If you're using conda, make sure to use a version `>=4.8.2`.
+Create and run a virtual environment with Python 3.7. If you're using conda, make sure to use conda version `>=4.8.2`.
 
 ```
 conda create --name ai2 python=3.7
