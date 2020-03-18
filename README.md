@@ -18,7 +18,9 @@ pip install -r requirements.txt
 ## Train
 
 
-Modify `config.yaml` as you like and run `python train.py` to train a model. It loads the config file and outputs all the logs/checkpoints in `outputs`. To submit it as a job on SAGA cluster, you should be able to simply run:
+The main code to train a model is in `train.py`. It loads the configuration file `config.yaml` and outputs all the logs/checkpoints in `outputs`. 
+
+To submit it as a job on SAGA cluster, you should be able to simply run:
 
 ```
 sbatch run_saga.sh
