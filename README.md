@@ -18,7 +18,13 @@ pip install -r requirements.txt
 ## Train
 
 
-Modify `config.yaml` as you like and run `python train.py` to train a model. It loads the config file and outputs all the logs/checkpoints in `outputs`
+The main code to train a model is in `train.py`. It loads the configuration file `config.yaml` and outputs all the logs/checkpoints in `outputs`. 
+
+To submit it as a job on SAGA cluster, you should be able to simply run:
+
+```
+sbatch run_saga.sh
+```
 
 ## Eval
 
@@ -27,7 +33,7 @@ Modify `config.yaml` as you like and run `python train.py` to train a model. It 
 python eval.py \
     --input_x cache/physicaliqa-train-dev/physicaliqa-train-dev/dev.jsonl \
     --config config.yaml \
-    --checkpoint outputs/2020-02-26/20-26-22/lightning_logs/version_6341419/checkpoints/_ckpt_epoch_3_v0.ckpt \
+    --checkpoint outputs/path_to_checkpoint/_ckpt_epoch_3_v0.ckpt \
     --output pred.lst
 ```
 
@@ -37,7 +43,7 @@ python eval.py \
 python eval.py \
     --input_x cache/physicaliqa-train-dev/physicaliqa-train-dev/dev.jsonl \
     --config config.yaml \
-    --checkpoint outputs/2020-02-26/20-26-22/lightning_logs/version_6341419/checkpoints/_ckpt_epoch_3_v0.ckpt \
+    --checkpoint outputs/path_to_checkpoint/_ckpt_epoch_3_v0.ckpt \
     --input_y cache/physicaliqa-train-dev/physicaliqa-train-dev/dev-labels.lst \
     --output pred.lst
 ```
