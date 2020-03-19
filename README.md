@@ -53,4 +53,4 @@ python eval.py \
 ### PIQA
 |     Model     | Bootstrapped Accuracy Mean | Bootstrapped Accuracy CI | Accuracy |
 |:-------------:|:--------------------------:|:------------------------:|:--------:|
-| Roberta large (SAGA) |            76.9            |        75.2 - 78.6       |   76.9   |
+| Roberta large (SAGA) |            76.0            |        74.0 - 78.0       |   76.0   |
