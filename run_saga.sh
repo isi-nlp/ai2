@@ -9,7 +9,7 @@
 #SBATCH --mem-per-cpu=4g
 
 source ~/.bashrc
-conda activate ai2
+conda activate ai2_stable
 
 . /scratch/spack/share/spack/setup-env.sh
 # When using `tensorflow-gpu`, paths to CUDA and CUDNN libraries are required
