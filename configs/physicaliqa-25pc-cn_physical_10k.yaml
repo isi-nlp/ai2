@@ -1,0 +1,23 @@
+task_name: physicaliqa-25pc
+model: roberta-large
+accumulate_grad_batches: 16
+use_amp: false
+max_epochs: 4
+learning_rate: 2e-6
+adam_epsilon: 10e-8
+warmup_steps: 150
+batch_size: 4
+max_length: 128
+formula: "goal -> sol1|sol2"
+train_x: "cache/physicaliqa-25pc-train-dev/physicaliqa-25pc-train-dev/train.jsonl"
+train_y: "cache/physicaliqa-25pc-train-dev/physicaliqa-25pc-train-dev/train-labels.lst"
+val_x: "cache/physicaliqa-25pc-train-dev/physicaliqa-25pc-train-dev/dev.jsonl"
+val_y: "cache/physicaliqa-25pc-train-dev/physicaliqa-25pc-train-dev/dev-labels.lst"
+save_path: "outputs/roberta-large-physicaliqa-25pc-cn_physical_10k"
+task_name2: cn_physical_10k
+train2_x: "cache/cn_physical_10k-train-dev/cn_physical_10k-train-dev/train.jsonl"
+train2_y: "cache/cn_physical_10k-train-dev/cn_physical_10k-train-dev/train-labels.lst"
+val2_x: "cache/cn_physical_10k-train-dev/cn_physical_10k-train-dev/dev.jsonl"
+val2_y: "cache/cn_physical_10k-train-dev/cn_physical_10k-train-dev/dev-labels.lst"
+formula2: "e1 + e2 -> sol1|sol2|sol3|sol4|sol5|sol6|sol7"   
+

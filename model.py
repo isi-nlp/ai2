@@ -20,6 +20,7 @@ from abc import ABC
 from torch.nn import Module
 from transformers import *
 from inspect import getfullargspec
+random.seed(42)
 
 MODELS = {
     'bert': BertModel,
@@ -112,17 +113,15 @@ class Classifier(pl.LightningModule):
         self.root_path = pathlib.Path(__file__).parent.absolute()
         self.embedder = AutoModel.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache")
         self.tokenizer = AutoTokenizer.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache", use_fast=False)
-
         self.embedder.train()
+
         self.label_offset = 0
+
         self.classifier = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
-
         self.loss = nn.CrossEntropyLoss(ignore_index=-1, reduction="mean")
-
         self.classifier.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
         self.classifier.bias.data.zero_()
 
-        # If there is a second task for trainin,
         if "task_name2" in self.hparams:
             self.classifier2 = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
             self.classifier2.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
@@ -204,6 +203,7 @@ class Classifier(pl.LightningModule):
 
     def validation_end(self, outputs):
 
+        print(len(outputs))
         if "task_name2" in self.hparams:
             val_loss_mean = torch.stack([o['val_loss'] for o in outputs[0]]).mean()
             val_logits = torch.cat([o["val_batch_logits"] for o in outputs[0]])
