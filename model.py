@@ -1,4 +1,4 @@
-
+import random
 import os
 import pathlib
 from typing import *
@@ -13,11 +13,30 @@ from loguru import logger
 from torch.nn import functional as F
 from torch.utils.data import DataLoader, Dataset
 from transformers import AutoModel, AutoTokenizer, AdamW, get_linear_schedule_with_warmup
+from transformers import RobertaTokenizer, RobertaForMaskedLM, RobertaModel
+from tensorboardX import SummaryWriter
+import abc
+from abc import ABC
+from torch.nn import Module
+from transformers import *
+from inspect import getfullargspec
+
+MODELS = {
+    'bert': BertModel,
+    'distilbert': DistilBertModel,
+    'xlm': XLMModel,
+    'xlnet': XLNetModel,
+    'roberta': RobertaModel,
+    'roberta_mlm': RobertaForMaskedLM,
+    'gpt': OpenAIGPTModel,
+    'gpt2': GPT2Model,
+    #    'libert': LiBertModel
+}
+
 
 class ClassificationDataset(Dataset):
 
     def __init__(self, instances):
-
         self.instances = instances
 
     def __len__(self):
@@ -25,6 +44,64 @@ class ClassificationDataset(Dataset):
 
     def __getitem__(self, idx):
         return self.instances[idx]
+
+
+class MultiTaskDataset(torch.utils.data.Dataset):
+    def __init__(self, dataloaders, shuffle: bool = True):
+        self.data: List = []
+        for loader in dataloaders:
+            for batch in loader:
+                self.data.append(batch)
+        if shuffle:
+            random.shuffle(self.data)
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, index):
+        return self.data[index]
+
+
+class ModelLoader(ABC, Module):
+
+    def __init__(self, model: object):
+        super(ModelLoader, self).__init__()
+        self.model = model
+
+    @classmethod
+    @abc.abstractmethod
+    def load(cls, model_type: str, model_weights: str, *args, **kwargs):
+        raise NotImplementedError('ModelLoader: load is not implemented.')
+
+    def forward(self, **kwargs) -> Tuple:
+        raise NotImplementedError('ModelLoader: forward is not implemented.')
+
+    @property
+    def dim(self) -> int:
+        raise NotImplementedError('ModelLoader: dim is not implemented.')
+
+
+class HuggingFaceModelLoader(ModelLoader):
+
+    def __init__(self, model: Union[Module, PreTrainedModel], model_type: str):
+        super(HuggingFaceModelLoader, self).__init__(model)
+        if model_type == 'roberta_mlm':
+            self.lm_head = self.model.lm_head
+            self.model = self.model.roberta
+
+    @classmethod
+    def load(cls, model_type: str, model_weights: str, *args, **kargs):
+        assert model_type in MODELS, "Model type is not recognized."
+        return HuggingFaceModelLoader(MODELS[model_type].from_pretrained(model_weights, cache_dir="./model_cache"),
+                                      model_type=model_type)
+
+    @property
+    def dim(self) -> int:
+        """Return the hidden dimension of the last layer.
+        Returns:
+            int -- Last layer's dimension.
+        """
+        return [p.size(0) for p in self.model.parameters()][-1]
 
 
 class Classifier(pl.LightningModule):
@@ -45,34 +122,76 @@ class Classifier(pl.LightningModule):
         self.classifier.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
         self.classifier.bias.data.zero_()
 
-    def forward(self, batch):
+        # If there is a second task for trainin,
+        if "task_name2" in self.hparams:
+            self.classifier2 = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
+            self.classifier2.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
+            self.classifier2.bias.data.zero_()
 
+    def forward(self, batch):
+        if False:
+            print(batch["input_ids"])
+            for i in range(len(batch["input_ids"])):
+                dd = batch["input_ids"][i]
+                print(self.tokenizer.decode(dd))
+            # print (batch["labels"]); raise
 
         assert len(batch["input_ids"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["attention_mask"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["token_type_ids"].shape) == 2, "LM only take two-dimensional input"
-        
-        batch["token_type_ids"] = None if "roberta" in self.hparams["model"] else batch["token_type_ids"]
 
-        results = self.embedder(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"], token_type_ids=batch["token_type_ids"])
+        batch["token_type_ids"] = None if "roberta" in self.hparams["model"] or "lm_finetuned" \
+                                          in self.hparams["model"] else batch["token_type_ids"]
+
+
+        results = self.embedder(input_ids=batch["input_ids"],
+                                # results = self.encoder.model(input_ids=batch["input_ids"],
+                                attention_mask=batch["attention_mask"],
+                                token_type_ids=batch["token_type_ids"])
 
         token_embeddings, *_ = results
-        logits = self.classifier(token_embeddings.mean(dim=1)).squeeze(dim=1)
-        logits = logits.reshape(-1, batch["num_choice"])
+
+        if batch["task_id"] == 2:
+            logits = self.classifier2(token_embeddings.mean(dim=1)).squeeze(dim=1)
+        elif batch["task_id"] == 0:
+            logits = self.classifier(token_embeddings.mean(dim=1)).squeeze(dim=1)
+            # logits = self.linear(token_embeddings.mean(dim=1)).squeeze(dim=1)
+        else:
+            raise
+
+        if batch["task_id"] == 0:
+            if 'bin' not in self.hparams['task_name']:
+                logits = logits.reshape(-1, batch["num_choice"])
+            else:
+                batch["num_choice"] = 1
+        elif batch["task_id"] == 2:
+            if 'bin' not in self.hparams['task_name2']:
+                logits = logits.reshape(-1, batch["num_choice"])
+            else:
+                batch["num_choice"] = 1
 
         return logits
 
-    def training_step(self, batch, batch_idx):
+    def training_step(self, batch, batch_idx, task_id=None):
 
         logits = self.forward(batch)
         loss = self.loss(logits, batch["labels"])
         if self.trainer and self.trainer.use_dp:
             loss = loss.unsqueeze(0)
+
+        if batch["task_id"] == 2:
+            return {
+                "loss": loss,
+                "progress": {
+                    "loss2": loss
+                },
+            }
+
         return {
-            "loss": loss
+            "loss": loss,
         }
 
-    def validation_step(self, batch, batch_idx):
+    def validation_step(self, batch, batch_idx, task_id=None):
         logits = self.forward(batch)
         loss = self.loss(logits, batch["labels"])
         if self.trainer and self.trainer.use_dp:
@@ -85,32 +204,90 @@ class Classifier(pl.LightningModule):
 
     def validation_end(self, outputs):
 
-        val_loss_mean = torch.stack([o['val_loss'] for o in outputs]).mean()
-        val_logits = torch.cat([o["val_batch_logits"] for o in outputs])
-        val_labels = torch.cat([o["val_batch_labels"] for o in outputs])
-        correct = torch.sum(val_labels == torch.argmax(val_logits, dim=1))
-        val_accuracy = torch.tensor(float(correct)) / (val_labels.shape[0] * 1.0)
-        return {'val_loss': val_loss_mean, "val_accuracy": val_accuracy }
+        if "task_name2" in self.hparams:
+            val_loss_mean = torch.stack([o['val_loss'] for o in outputs[0]]).mean()
+            val_logits = torch.cat([o["val_batch_logits"] for o in outputs[0]])
+            val_labels = torch.cat([o["val_batch_labels"] for o in outputs[0]])
+            correct = torch.sum(val_labels == torch.argmax(val_logits, dim=1))
+            val_accuracy = torch.tensor(float(correct)) / (val_labels.shape[0] * 1.0)
+
+            val_loss_mean2 = torch.stack([o['val_loss'] for o in outputs[1]]).mean()
+            val_logits2 = torch.cat([o["val_batch_logits"] for o in outputs[1]])
+            val_labels2 = torch.cat([o["val_batch_labels"] for o in outputs[1]])
+            correct2 = torch.sum(val_labels2 == torch.argmax(val_logits2, dim=1))
+            val_accuracy2 = torch.tensor(float(correct2)) / (val_labels2.shape[0] * 1.0)
+
+            return {
+                'val_loss': val_loss_mean,
+                "val_accuracy": val_accuracy,
+                'val_loss2': val_loss_mean2,
+                "val_accuracy2": val_accuracy2,
+            }
+
+        else:
+            val_loss_mean = torch.stack([o['val_loss'] for o in outputs]).mean()
+            val_logits = torch.cat([o["val_batch_logits"] for o in outputs])
+            val_labels = torch.cat([o["val_batch_labels"] for o in outputs])
+            correct = torch.sum(val_labels == torch.argmax(val_logits, dim=1))
+            val_accuracy = torch.tensor(float(correct)) / (val_labels.shape[0] * 1.0)
+            return {
+                'val_loss': val_loss_mean,
+                "val_accuracy": val_accuracy,
+            }
 
     def configure_optimizers(self):
 
+        # t_total = len(self.train_dataloader()) // self.hparams["accumulate_grad_batches"] * self.hparams["max_epochs"]
         t_total = len(self.train_dataloader) // self.hparams["accumulate_grad_batches"] * self.hparams["max_epochs"]
 
-        optimizer = AdamW(self.parameters(), lr=float(self.hparams["learning_rate"]), eps=float(self.hparams["adam_epsilon"]))
+        optimizer = AdamW(self.parameters(), lr=float(self.hparams["learning_rate"]),
+                          eps=float(self.hparams["adam_epsilon"]))
 
         return optimizer
 
     @pl.data_loader
     def train_dataloader(self):
+        dataloader = DataLoader(self.dataloader(self.root_path / self.hparams["train_x"],
+                                                self.root_path / self.hparams["train_y"]),
+                                batch_size=self.hparams["batch_size"],
+                                collate_fn=self.collate, shuffle=True)
 
-        return DataLoader(self.dataloader(self.root_path / self.hparams["train_x"], self.root_path / self.hparams["train_y"]), batch_size=self.hparams["batch_size"], collate_fn=self.collate)
+        if "train2_x" in self.hparams:
+            dataloader2 = DataLoader(self.dataloader(self.root_path / self.hparams["train2_x"],
+                                                     self.root_path / self.hparams["train2_y"], task_id=2),
+                                     batch_size=self.hparams["batch_size"],
+                                     collate_fn=self.collate, shuffle=True)
+
+            dataloaders = [dataloader, dataloader2]
+            multidatasets = MultiTaskDataset(dataloaders)
+            multi_dataloader = DataLoader(multidatasets,
+                                          collate_fn=lambda examples: examples[0],
+                                          shuffle=True, batch_size=1)
+            return multi_dataloader
+
+        return dataloader
 
     @pl.data_loader
     def val_dataloader(self):
-        return DataLoader(self.dataloader(self.root_path / self.hparams["val_x"], self.root_path / self.hparams["val_y"]), batch_size=self.hparams["batch_size"], collate_fn=self.collate)
+        dataloader = DataLoader(self.dataloader(self.root_path / self.hparams["val_x"],
+                                                self.root_path / self.hparams["val_y"]),
+                                batch_size=self.hparams["batch_size"],
+                                collate_fn=self.collate)
 
+        if "val2_x" in self.hparams:
+            dataloader2 = DataLoader(self.dataloader(self.root_path / self.hparams["val2_x"],
+                                                     self.root_path / self.hparams["val2_y"], task_id=2),
+                                     batch_size=self.hparams["batch_size"],
+                                     collate_fn=self.collate, shuffle=False)
 
-    def dataloader(self, x_path: Union[str, pathlib.Path], y_path: Union[str, pathlib.Path] = None):
+            dataloaders = [dataloader, dataloader2]
+            return dataloaders
+
+        return dataloader
+
+    def dataloader(self, x_path: Union[str, pathlib.Path],
+                   y_path: Union[str, pathlib.Path] = None,
+                   task_id=None):
 
         df = pd.read_json(x_path, lines=True)
         if y_path:
@@ -118,21 +295,21 @@ class Classifier(pl.LightningModule):
             self.label_offset = np.asarray(labels).min()
             df["label"] = np.asarray(labels) - self.label_offset
 
-        df["text"] = df.apply(self.transform(self.hparams["formula"]), axis=1)
-        print(df.head())
-        return ClassificationDataset(df[["text", "label"]].to_dict("records"))
+        if task_id is None:
+            task_id_str = ""
+        else:
+            task_id_str = str(task_id)
 
+        df["text"] = df.apply(self.transform(self.hparams["formula{}".format(task_id_str)]), axis=1)
+        df["task_id"] = task_id if task_id is not None else 0
+        print(df.head())
+        return ClassificationDataset(df[["text", "label", "task_id"]].to_dict("records"))
 
     @staticmethod
     def transform(formula):
 
         def warpper(row):
-
             context, choices = formula.split("->")
-            # (context + question -> answerA|answerB|answerC)
-            # (obs1 + obs2 -> hyp1|hyp2)
-            # (ctx_a + ctx_b -> ending_options)
-            # (goal -> sol1|sol2)
             context = context.split("+")
             choices = choices.split("|")
 
@@ -142,24 +319,31 @@ class Classifier(pl.LightningModule):
 
         return warpper
 
-
     def collate(self, examples):
 
         batch_size = len(examples)
         num_choice = len(examples[0]["text"])
+        task_id = examples[0]["task_id"]
 
         pairs = [pair for example in examples for pair in example["text"]]
-        results = self.tokenizer.batch_encode_plus(pairs, add_special_tokens=True, max_length=self.hparams["max_length"], return_tensors='pt', return_attention_masks=True, pad_to_max_length=True)
+        results = self.tokenizer.batch_encode_plus(pairs,
+                                                   add_special_tokens=True, max_length=self.hparams["max_length"],
+                                                   return_tensors='pt', return_attention_masks=True,
+                                                   pad_to_max_length=True)
 
-        assert results["input_ids"].shape[0] == batch_size * num_choice, f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
+        assert results["input_ids"].shape[0] == batch_size * num_choice, \
+            f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
 
-        return {
+        batch = {
             "input_ids": results["input_ids"],
             "attention_mask": results["attention_mask"],
             "token_type_ids": results["token_type_ids"],
             "labels": torch.LongTensor([e["label"] for e in examples]) if "label" in examples[0] else None,
-            "num_choice": num_choice
+            "num_choice": num_choice,
+            "task_id": task_id
         }
 
+        # TODO: provide associated tree ids here
+        batch['additional_position_ids'] = torch.zeros_like(results["input_ids"])
 
-
+        return batch
