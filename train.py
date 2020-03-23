@@ -1,5 +1,4 @@
 from typing import *
-import hydra
 import torch
 import random
 import numpy as np
@@ -10,8 +9,9 @@ from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 import argparse
 from test_tube import HyperOptArgumentParser, Experiment
 import os
+import yaml
 
-@hydra.main(config_path="config.yaml")
+
 def train(config):
 
     logger.info(config)
@@ -61,5 +61,22 @@ def train(config):
     trainer.fit(model)
 
 
+def get_parser():
+    def str2bool(v):
+        v = v.lower()
+        assert v == 'true' or v == 'false'
+        return v.lower() == 'true'
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+                                     conflict_handler='resolve')
+    parser.add_argument('--config_file', type=str, required=True, help='path to the datasets')
+    parser.add_argument('--verbose', type=str2bool, default=False,
+                        help='if verbose')
+    return parser
+
+
 if __name__ == "__main__":
-    train()
+    parser = get_parser()
+    args = parser.parse_args()
+    with open(args.config_file, 'r') as ymlfile:
+        config = yaml.load(ymlfile)
+    train(config)
