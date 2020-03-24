@@ -20,20 +20,17 @@ spack load cudnn@7.6.5.32-9.0-linux-x64
 EXPERIMENT_NAME=$1
 CONF=$2
 
-OUTPUT=outputs/${EXPERIMENT_NAME}
-#FILE=$OUTPUT/$1-$2-checkpoints/$3/0/_ckpt_epoch_6.ckpt
-#if [ ! -f "$FILE" ]; then
-#  FILE=$OUTPUT/$1-$2-checkpoints/$3/0/_ckpt_epoch_5.ckpt
-#  if [ ! -f "$FILE" ]; then
-#    FILE=$OUTPUT/$1-$2-checkpoints/$3/0/_ckpt_epoch_3.ckpt
-#    if [ ! -f "$FILE" ]; then
-#      FILE=$OUTPUT/$1-$2-checkpoints/$3/0/_ckpt_epoch_2.ckpt
+OUTPUT=outputs/${EXPERIMENT_NAME}/checkpoints
+FILE=$OUTPUT/_ckpt_epoch_4.ckpt
 if [ ! -f "$FILE" ]; then
-  FILE=$OUTPUT/checkpoints/_ckpt_epoch_4.ckpt
+  FILE=$OUTPUT/_ckpt_epoch_3.ckpt
+  if [ ! -f "$FILE" ]; then
+    FILE=$OUTPUT/_ckpt_epoch_2.ckpt
+    if [ ! -f "$FILE" ]; then
+      FILE=$OUTPUT/_ckpt_epoch_1.ckpt
+    fi
+  fi
 fi
-#    fi
-#  fi
-#fi
 
 python eval.py \
   --input_x cache/physicaliqa-train-dev/physicaliqa-train-dev/dev.jsonl \
