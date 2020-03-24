@@ -20,7 +20,7 @@ spack load cudnn@7.6.5.32-9.0-linux-x64
 EXPERIMENT_NAME=$1
 CONF=$2
 
-OUTPUT=output/${EXPERIMENT_NAME}
+OUTPUT=outputs/${EXPERIMENT_NAME}
 #FILE=$OUTPUT/$1-$2-checkpoints/$3/0/_ckpt_epoch_6.ckpt
 #if [ ! -f "$FILE" ]; then
 #  FILE=$OUTPUT/$1-$2-checkpoints/$3/0/_ckpt_epoch_5.ckpt
