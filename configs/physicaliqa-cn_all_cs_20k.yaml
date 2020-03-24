@@ -1,12 +1,13 @@
 task_name: physicaliqa
 model: roberta-large
-accumulate_grad_batches: 16
+batch_size: 4
+accumulate_grad_batches: 2
 use_amp: false
 max_epochs: 4
-learning_rate: 2e-6
-adam_epsilon: 10e-8
+learning_rate: 5e-6
+adam_epsilon: 1e-8
+dropout: 0.5
 warmup_steps: 150
-batch_size: 4
 max_length: 128
 formula: "goal -> sol1|sol2"
 train_x: "cache/physicaliqa-train-dev/physicaliqa-train-dev/train.jsonl"

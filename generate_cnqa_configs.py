@@ -1,16 +1,23 @@
 model = "roberta-large"
+batchsize = 4
+accumulate_grad_batches = 2
+learning_rate = '5e-6'
+dropout = 0.5
+adam_epsilon = '1e-8'
+epochs = 4
 
 for taskname in ["physicaliqa-10pc","physicaliqa-25pc","physicaliqa"]:
     # Generate single task configs
     template = f'''task_name: {taskname}
 model: {model}
-accumulate_grad_batches: 16
+batch_size: {batchsize}
+accumulate_grad_batches: {accumulate_grad_batches}
 use_amp: false
-max_epochs: 4
-learning_rate: 2e-6
-adam_epsilon: 10e-8
+max_epochs: {epochs}
+learning_rate: {learning_rate}
+adam_epsilon: {adam_epsilon}
+dropout: {dropout}
 warmup_steps: 150
-batch_size: 4
 max_length: 128
 formula: "goal -> sol1|sol2"
 train_x: "cache/{taskname}-train-dev/{taskname}-train-dev/train.jsonl"
@@ -27,13 +34,14 @@ save_path: "outputs/{model}-{taskname}"
         with open(f'configs/{taskname}-{taskname2}.yaml', 'w') as confile:
             template = f'''task_name: {taskname}
 model: {model}
-accumulate_grad_batches: 16
+batch_size: {batchsize}
+accumulate_grad_batches: {accumulate_grad_batches}
 use_amp: false
-max_epochs: 4
-learning_rate: 2e-6
-adam_epsilon: 10e-8
+max_epochs: {epochs}
+learning_rate: {learning_rate}
+adam_epsilon: {adam_epsilon}
+dropout: {dropout}
 warmup_steps: 150
-batch_size: 4
 max_length: 128
 formula: "goal -> sol1|sol2"
 train_x: "cache/{taskname}-train-dev/{taskname}-train-dev/train.jsonl"

@@ -114,6 +114,7 @@ class Classifier(pl.LightningModule):
         self.embedder = AutoModel.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache")
         self.tokenizer = AutoTokenizer.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache", use_fast=False)
         self.embedder.train()
+        self.dropout = nn.Dropout(config["dropout"])
 
         self.label_offset = 0
 
@@ -133,7 +134,6 @@ class Classifier(pl.LightningModule):
             for i in range(len(batch["input_ids"])):
                 dd = batch["input_ids"][i]
                 print(self.tokenizer.decode(dd))
-            # print (batch["labels"]); raise
 
         assert len(batch["input_ids"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["attention_mask"].shape) == 2, "LM only take two-dimensional input"
@@ -144,30 +144,20 @@ class Classifier(pl.LightningModule):
 
 
         results = self.embedder(input_ids=batch["input_ids"],
-                                # results = self.encoder.model(input_ids=batch["input_ids"],
                                 attention_mask=batch["attention_mask"],
                                 token_type_ids=batch["token_type_ids"])
 
         token_embeddings, *_ = results
-
+        output = torch.mean(token_embeddings, dim=1).squeeze()
+        output = self.dropout(output)
         if batch["task_id"] == 2:
-            logits = self.classifier2(token_embeddings.mean(dim=1)).squeeze(dim=1)
+            logits = self.classifier2(output).squeeze(dim=1)
         elif batch["task_id"] == 0:
-            logits = self.classifier(token_embeddings.mean(dim=1)).squeeze(dim=1)
-            # logits = self.linear(token_embeddings.mean(dim=1)).squeeze(dim=1)
+            logits = self.classifier(output).squeeze(dim=1)
         else:
             raise
 
-        if batch["task_id"] == 0:
-            if 'bin' not in self.hparams['task_name']:
-                logits = logits.reshape(-1, batch["num_choice"])
-            else:
-                batch["num_choice"] = 1
-        elif batch["task_id"] == 2:
-            if 'bin' not in self.hparams['task_name2']:
-                logits = logits.reshape(-1, batch["num_choice"])
-            else:
-                batch["num_choice"] = 1
+        logits = logits.reshape(-1, batch["num_choice"])
 
         return logits
 
