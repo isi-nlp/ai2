@@ -12,6 +12,7 @@ for i in "${experiments[@]}"; do
     CONF="configs/${TASK1}-${TASK2}.yaml"
     echo "$EXP_NAME" | tee -a 'eval.out'
     sh 'bin/eval_saga.sh' "$EXP_NAME" "$CONF" &>> 'eval.out'
+    echo "$EXP_NAME" | tee -a 'eval_results.out'
     grep 'confidence' 'eval.out' | tail -1 | tee -a 'eval_results.out'
 done
 
@@ -22,6 +23,6 @@ for TASK1 in "${experiments[@]}"; do
     CONF="configs/${TASK1}.yaml"
     echo "$EXP_NAME" | tee -a 'eval.out'
     sh 'bin/eval_saga.sh' "$EXP_NAME" "$CONF" &>> 'eval.out'
-    grep 'confidence' 'eval.out' | tail -1
+    echo "$EXP_NAME" | tee -a 'eval_results.out'
     grep 'confidence' 'eval.out' | tail -1 | tee -a 'eval_results.out'
 done
