@@ -20,7 +20,7 @@ from abc import ABC
 from torch.nn import Module
 from transformers import *
 from inspect import getfullargspec
-random.seed(42)
+random.seed(0)
 
 MODELS = {
     'bert': BertModel,

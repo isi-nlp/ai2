@@ -7,7 +7,7 @@ max_epochs: 4
 learning_rate: 5e-6
 adam_epsilon: 1e-8
 dropout: 0.5
-warmup_steps: 150
+warmup_steps: 0
 max_length: 128
 formula: "goal -> sol1|sol2"
 train_x: "cache/physicaliqa-10pc-train-dev/physicaliqa-10pc-train-dev/train.jsonl"
@@ -20,5 +20,6 @@ train2_x: "cache/cn_all_cs_20k-train-dev/cn_all_cs_20k-train-dev/train.jsonl"
 train2_y: "cache/cn_all_cs_20k-train-dev/cn_all_cs_20k-train-dev/train-labels.lst"
 val2_x: "cache/cn_all_cs_20k-train-dev/cn_all_cs_20k-train-dev/dev.jsonl"
 val2_y: "cache/cn_all_cs_20k-train-dev/cn_all_cs_20k-train-dev/dev-labels.lst"
-formula2: "e1 + e2 -> sol1|sol2|sol3|sol4|sol5|sol6|sol7"   
+formula2: "e1 + e2 -> sol1|sol2|sol3|sol4|sol5|sol6|sol7"
+save_best_only: true
 
