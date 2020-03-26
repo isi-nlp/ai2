@@ -16,9 +16,10 @@ def train(config):
 
     logger.info(config)
 
-    torch.manual_seed(0)
-    np.random.seed(0)
-    random.seed(0)
+    seed = config['random_seed']
+    torch.manual_seed(seed)
+    np.random.seed(seed)
+    random.seed(seed)
 
     if torch.cuda.is_available():
         torch.backends.cuda.deterministic = True

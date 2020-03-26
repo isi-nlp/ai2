@@ -16,4 +16,5 @@ val_x: "cache/physicaliqa-train-dev/physicaliqa-train-dev/dev.jsonl"
 val_y: "cache/physicaliqa-train-dev/physicaliqa-train-dev/dev-labels.lst"
 save_path: "outputs/roberta-large-physicaliqa"
 save_best_only: true
+random_seed: 42
 
