@@ -14,7 +14,7 @@ train_x: "cache/physicaliqa-10pc-train-dev/physicaliqa-10pc-train-dev/train.json
 train_y: "cache/physicaliqa-10pc-train-dev/physicaliqa-10pc-train-dev/train-labels.lst"
 val_x: "cache/physicaliqa-10pc-train-dev/physicaliqa-10pc-train-dev/dev.jsonl"
 val_y: "cache/physicaliqa-10pc-train-dev/physicaliqa-10pc-train-dev/dev-labels.lst"
-save_path: "outputs/roberta-large-physicaliqa-10pc"
+save_path: "outputs/roberta-large-physicaliqa-10pc-42"
 save_best_only: true
 random_seed: 42
 

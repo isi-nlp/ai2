@@ -14,7 +14,7 @@ train_x: "cache/physicaliqa-10pc-train-dev/physicaliqa-10pc-train-dev/train.json
 train_y: "cache/physicaliqa-10pc-train-dev/physicaliqa-10pc-train-dev/train-labels.lst"
 val_x: "cache/physicaliqa-10pc-train-dev/physicaliqa-10pc-train-dev/dev.jsonl"
 val_y: "cache/physicaliqa-10pc-train-dev/physicaliqa-10pc-train-dev/dev-labels.lst"
-save_path: "outputs/roberta-large-physicaliqa-10pc-cn_all_cs_40k"
+save_path: "outputs/roberta-large-physicaliqa-10pc-cn_all_cs_40k-42"
 task_name2: cn_all_cs_40k
 train2_x: "cache/cn_all_cs_40k-train-dev/cn_all_cs_40k-train-dev/train.jsonl"
 train2_y: "cache/cn_all_cs_40k-train-dev/cn_all_cs_40k-train-dev/train-labels.lst"
