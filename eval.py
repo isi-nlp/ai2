@@ -47,7 +47,6 @@ if __name__ == "__main__":
         np.random.seed(42)
 
         labels = pd.read_csv(args.input_y, sep='\t', header=None).values.tolist()
-        logger.info(f"F1 score: {accuracy_score(labels, preds):.3f}")
 
         stats = []
         for _ in range(100):
@@ -59,8 +58,8 @@ if __name__ == "__main__":
         lower = max(0.0, np.percentile(stats, p))
         p = (alpha+((1.0-alpha)/2.0)) * 100
         upper = min(1.0, np.percentile(stats, p))
+        logger.info(f"F1 score: {accuracy_score(labels, preds):.3f}")
         logger.info(f'{alpha*100:.1f} confidence interval {lower*100:.1f} and {upper*100:.1f}, average: {np.mean(stats)*100:.1f}')
-        logger.info(f' Actual test accuracy over entire set: {accuracy_score([labels, preds])}')
 
     with open(args.output, "w") as f:
         f.write("\n".join(map(str, preds)))
