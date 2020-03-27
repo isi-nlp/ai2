@@ -14,7 +14,7 @@ for i in "${experiments[@]}"; do
     echo "$EXP_NAME" | tee -a 'eval.out'
     sh 'bin/eval_saga.sh' "$EXP_NAME" "$CONF" &>> 'eval.out'
     echo "$EXP_NAME" | tee -a "eval_results-${SEED}.out"
-    grep 'F1' 'eval.out' | tail -1 | tee -a "eval_results-${SEED}.out"
+    grep 'Accuracy score' 'eval.out' | tail -1 | tee -a "eval_results-${SEED}.out"
     grep 'confidence' 'eval.out' | tail -1 | tee -a "eval_results-${SEED}.out"
 done
 
@@ -26,6 +26,6 @@ for TASK1 in "${experiments[@]}"; do
     echo "$EXP_NAME" | tee -a 'eval.out'
     sh 'bin/eval_saga.sh' "$EXP_NAME" "$CONF" &>> 'eval.out'
     echo "$EXP_NAME" | tee -a "eval_results-${SEED}.out"
-    grep 'F1' 'eval.out' | tail -1 | tee -a "eval_results-${SEED}.out"
+    grep 'Accuracy score' 'eval.out' | tail -1 | tee -a "eval_results-${SEED}.out"
     grep 'confidence' 'eval.out' | tail -1 | tee -a "eval_results-${SEED}.out"
 done

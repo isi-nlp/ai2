@@ -49,7 +49,7 @@ if __name__ == "__main__":
         labels = pd.read_csv(args.input_y, sep='\t', header=None).values.tolist()
 
         stats = []
-        for _ in range(100):
+        for _ in range(1000):
             indices = [i for i in np.random.random_integers(0, len(preds)-1, size=len(preds))]
             stats.append(accuracy_score([labels[j] for j in indices], [preds[j] for j in indices]))
 
@@ -58,7 +58,7 @@ if __name__ == "__main__":
         lower = max(0.0, np.percentile(stats, p))
         p = (alpha+((1.0-alpha)/2.0)) * 100
         upper = min(1.0, np.percentile(stats, p))
-        logger.info(f"F1 score: {accuracy_score(labels, preds):.3f}")
+        logger.info(f"Accuracy score: {accuracy_score(labels, preds):.3f}")
         logger.info(f'{alpha*100:.1f} confidence interval {lower*100:.1f} and {upper*100:.1f}, average: {np.mean(stats)*100:.1f}')
 
     with open(args.output, "w") as f:

@@ -9,7 +9,7 @@ data = defaultdict(dict)
 errors = defaultdict(dict)
 with open(eval_file) as eval:
     lines = eval.readlines()
-    for i in range(0, len(lines), 2):
+    for i in range(0, len(lines), 3):
         experiment = lines[i].strip('roberta-large-').replace(seed, '').strip()
         # Get task name
         if 'cn' in experiment:
@@ -26,10 +26,11 @@ with open(eval_file) as eval:
         task2 = task2.replace('all_cs_','').replace('cn', 'CN')
 
         # Get value
-        result_tokens = lines[i+1].strip().split()
+        result_tokens = lines[i+2].strip().split()
         low, high, ave = result_tokens[-5], result_tokens[-3].strip(','), result_tokens[-1]
+        acc = lines[i+1].strip().split()[-1]
         e = (float(high) - float(low))/2
-        data[task1][task2] = ave
+        data[task1][task2] = '{:2.1f}'.format(float(acc)*100)
         errors[task1][task2] = e
 
 # Convert dictionary to dataframe
