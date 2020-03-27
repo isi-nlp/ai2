@@ -60,7 +60,7 @@ if __name__ == "__main__":
         p = (alpha+((1.0-alpha)/2.0)) * 100
         upper = min(1.0, np.percentile(stats, p))
         logger.info(f'{alpha*100:.1f} confidence interval {lower*100:.1f} and {upper*100:.1f}, average: {np.mean(stats)*100:.1f}')
-
+        logger.info(f' Actual test accuracy over entire set: {accuracy_score([labels, preds])}')
 
     with open(args.output, "w") as f:
         f.write("\n".join(map(str, preds)))
