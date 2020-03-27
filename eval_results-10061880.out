@@ -1,0 +1,30 @@
+roberta-large-physicaliqa-10pc-cn_all_cs_10k-10061880
+2020-03-27 06:33:40.044 | INFO     | __main__:<module>:62 - 95.0 confidence interval 62.9 and 67.2, average: 65.1
+roberta-large-physicaliqa-25pc-cn_all_cs_10k-10061880
+2020-03-27 06:34:45.433 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.7 and 73.4, average: 71.6
+roberta-large-physicaliqa-cn_all_cs_10k-10061880
+2020-03-27 06:35:51.380 | INFO     | __main__:<module>:62 - 95.0 confidence interval 74.6 and 78.6, average: 76.9
+roberta-large-physicaliqa-10pc-cn_all_cs_20k-10061880
+2020-03-27 06:36:57.279 | INFO     | __main__:<module>:62 - 95.0 confidence interval 61.6 and 65.4, average: 63.5
+roberta-large-physicaliqa-25pc-cn_all_cs_20k-10061880
+2020-03-27 06:38:02.602 | INFO     | __main__:<module>:62 - 95.0 confidence interval 66.9 and 71.4, average: 69.3
+roberta-large-physicaliqa-cn_all_cs_20k-10061880
+2020-03-27 06:39:07.921 | INFO     | __main__:<module>:62 - 95.0 confidence interval 75.2 and 79.1, average: 77.4
+roberta-large-physicaliqa-10pc-cn_all_cs_40k-10061880
+2020-03-27 06:40:13.401 | INFO     | __main__:<module>:62 - 95.0 confidence interval 62.7 and 66.9, average: 65.0
+roberta-large-physicaliqa-25pc-cn_all_cs_40k-10061880
+2020-03-27 06:41:19.320 | INFO     | __main__:<module>:62 - 95.0 confidence interval 68.6 and 72.9, average: 70.9
+roberta-large-physicaliqa-cn_all_cs_40k-10061880
+2020-03-27 06:42:25.327 | INFO     | __main__:<module>:62 - 95.0 confidence interval 74.9 and 78.8, average: 77.0
+roberta-large-physicaliqa-10pc-cn_physical_10k-10061880
+2020-03-27 06:43:30.861 | INFO     | __main__:<module>:62 - 95.0 confidence interval 66.7 and 70.4, average: 68.5
+roberta-large-physicaliqa-25pc-cn_physical_10k-10061880
+2020-03-27 06:44:36.398 | INFO     | __main__:<module>:62 - 95.0 confidence interval 67.7 and 72.5, average: 70.2
+roberta-large-physicaliqa-cn_physical_10k-10061880
+2020-03-27 06:45:42.940 | INFO     | __main__:<module>:62 - 95.0 confidence interval 76.6 and 80.6, average: 78.6
+roberta-large-physicaliqa-10pc-10061880
+2020-03-27 06:46:51.059 | INFO     | __main__:<module>:62 - 95.0 confidence interval 65.1 and 69.1, average: 67.3
+roberta-large-physicaliqa-25pc-10061880
+2020-03-27 06:47:56.946 | INFO     | __main__:<module>:62 - 95.0 confidence interval 70.6 and 74.9, average: 72.8
+roberta-large-physicaliqa-10061880
+2020-03-27 06:49:03.223 | INFO     | __main__:<module>:62 - 95.0 confidence interval 77.1 and 80.7, average: 79.3
