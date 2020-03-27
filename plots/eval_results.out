@@ -1,0 +1,30 @@
+roberta-large-physicaliqa-10pc-cn_all_cs_10k
+2020-03-26 06:25:13.473 | INFO     | __main__:<module>:62 - 95.0 confidence interval 62.3 and 66.4, average: 64.3
+roberta-large-physicaliqa-25pc-cn_all_cs_10k
+2020-03-26 06:26:17.209 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.3 and 73.3, average: 71.6
+roberta-large-physicaliqa-cn_all_cs_10k
+2020-03-26 06:27:23.648 | INFO     | __main__:<module>:62 - 95.0 confidence interval 75.5 and 79.6, average: 77.9
+roberta-large-physicaliqa-10pc-cn_all_cs_20k
+2020-03-26 06:28:34.197 | INFO     | __main__:<module>:62 - 95.0 confidence interval 65.5 and 69.6, average: 67.6
+roberta-large-physicaliqa-25pc-cn_all_cs_20k
+2020-03-26 06:29:42.639 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.1 and 73.4, average: 71.4
+roberta-large-physicaliqa-cn_all_cs_20k
+2020-03-26 06:30:48.979 | INFO     | __main__:<module>:62 - 95.0 confidence interval 73.9 and 78.1, average: 76.4
+roberta-large-physicaliqa-10pc-cn_all_cs_40k
+2020-03-26 06:31:55.069 | INFO     | __main__:<module>:62 - 95.0 confidence interval 59.4 and 63.6, average: 61.6
+roberta-large-physicaliqa-25pc-cn_all_cs_40k
+2020-03-26 06:33:01.061 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.6 and 72.9, average: 71.2
+roberta-large-physicaliqa-cn_all_cs_40k
+2020-03-26 06:34:06.892 | INFO     | __main__:<module>:62 - 95.0 confidence interval 74.5 and 78.7, average: 77.1
+roberta-large-physicaliqa-10pc-cn_physical_10k
+2020-03-26 06:35:12.213 | INFO     | __main__:<module>:62 - 95.0 confidence interval 62.0 and 66.5, average: 64.6
+roberta-large-physicaliqa-25pc-cn_physical_10k
+2020-03-26 06:36:18.074 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.5 and 73.7, average: 71.7
+roberta-large-physicaliqa-cn_physical_10k
+2020-03-26 06:37:23.992 | INFO     | __main__:<module>:62 - 95.0 confidence interval 74.1 and 78.1, average: 76.3
+roberta-large-physicaliqa-10pc
+2020-03-26 06:38:30.002 | INFO     | __main__:<module>:62 - 95.0 confidence interval 61.5 and 65.8, average: 63.9
+roberta-large-physicaliqa-25pc
+2020-03-26 06:39:36.845 | INFO     | __main__:<module>:62 - 95.0 confidence interval 49.3 and 53.8, average: 51.6
+roberta-large-physicaliqa
+2020-03-26 06:40:42.912 | INFO     | __main__:<module>:62 - 95.0 confidence interval 76.3 and 80.5, average: 78.5
