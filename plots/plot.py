@@ -64,7 +64,7 @@ for enum, frames in enumerate([(df, e_df), (df.T, e_df.T)]):
     ])
     fig.update_yaxes(range=[50, 85], title='Accuracy')
     fig.update_layout(
-    title="Accuracy vs Training Dataset",
+    title="Accuracy vs Training Dataset random seed:"+seed,
     yaxis_title="Accuracy",
     font=dict(
         size=30,

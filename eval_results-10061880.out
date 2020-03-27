@@ -1,45 +1,45 @@
 roberta-large-physicaliqa-10pc-cn_all_cs_10k-10061880
-2020-03-27 09:07:17.459 | INFO     | __main__:<module>:61 - F1 score: 0.652
-2020-03-27 09:07:17.459 | INFO     | __main__:<module>:62 - 95.0 confidence interval 62.9 and 67.2, average: 65.1
+2020-03-27 09:54:31.184 | INFO     | __main__:<module>:61 - Accuracy score: 0.652
+2020-03-27 09:54:31.184 | INFO     | __main__:<module>:62 - 95.0 confidence interval 62.9 and 67.2, average: 65.1
 roberta-large-physicaliqa-25pc-cn_all_cs_10k-10061880
-2020-03-27 09:08:16.875 | INFO     | __main__:<module>:61 - F1 score: 0.719
-2020-03-27 09:08:16.875 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.7 and 73.4, average: 71.6
+2020-03-27 09:55:38.952 | INFO     | __main__:<module>:61 - Accuracy score: 0.719
+2020-03-27 09:55:38.953 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.7 and 73.8, average: 71.8
 roberta-large-physicaliqa-cn_all_cs_10k-10061880
-2020-03-27 09:09:22.032 | INFO     | __main__:<module>:61 - F1 score: 0.770
-2020-03-27 09:09:22.033 | INFO     | __main__:<module>:62 - 95.0 confidence interval 74.6 and 78.6, average: 76.9
+2020-03-27 09:56:46.521 | INFO     | __main__:<module>:61 - Accuracy score: 0.770
+2020-03-27 09:56:46.521 | INFO     | __main__:<module>:62 - 95.0 confidence interval 75.1 and 78.8, average: 77.0
 roberta-large-physicaliqa-10pc-cn_all_cs_20k-10061880
-2020-03-27 09:10:32.520 | INFO     | __main__:<module>:61 - F1 score: 0.635
-2020-03-27 09:10:32.521 | INFO     | __main__:<module>:62 - 95.0 confidence interval 61.6 and 65.4, average: 63.5
+2020-03-27 09:57:55.065 | INFO     | __main__:<module>:61 - Accuracy score: 0.635
+2020-03-27 09:57:55.065 | INFO     | __main__:<module>:62 - 95.0 confidence interval 61.3 and 65.6, average: 63.5
 roberta-large-physicaliqa-25pc-cn_all_cs_20k-10061880
-2020-03-27 09:11:37.894 | INFO     | __main__:<module>:61 - F1 score: 0.694
-2020-03-27 09:11:37.894 | INFO     | __main__:<module>:62 - 95.0 confidence interval 66.9 and 71.4, average: 69.3
+2020-03-27 09:59:04.875 | INFO     | __main__:<module>:61 - Accuracy score: 0.694
+2020-03-27 09:59:04.876 | INFO     | __main__:<module>:62 - 95.0 confidence interval 67.0 and 71.3, average: 69.4
 roberta-large-physicaliqa-cn_all_cs_20k-10061880
-2020-03-27 09:12:45.326 | INFO     | __main__:<module>:61 - F1 score: 0.776
-2020-03-27 09:12:45.326 | INFO     | __main__:<module>:62 - 95.0 confidence interval 75.2 and 79.1, average: 77.4
+2020-03-27 10:00:14.924 | INFO     | __main__:<module>:61 - Accuracy score: 0.776
+2020-03-27 10:00:14.924 | INFO     | __main__:<module>:62 - 95.0 confidence interval 75.6 and 79.6, average: 77.6
 roberta-large-physicaliqa-10pc-cn_all_cs_40k-10061880
-2020-03-27 09:13:51.173 | INFO     | __main__:<module>:61 - F1 score: 0.652
-2020-03-27 09:13:51.173 | INFO     | __main__:<module>:62 - 95.0 confidence interval 62.7 and 66.9, average: 65.0
+2020-03-27 10:01:24.316 | INFO     | __main__:<module>:61 - Accuracy score: 0.652
+2020-03-27 10:01:24.317 | INFO     | __main__:<module>:62 - 95.0 confidence interval 63.1 and 67.2, average: 65.1
 roberta-large-physicaliqa-25pc-cn_all_cs_40k-10061880
-2020-03-27 09:14:56.507 | INFO     | __main__:<module>:61 - F1 score: 0.712
-2020-03-27 09:14:56.507 | INFO     | __main__:<module>:62 - 95.0 confidence interval 68.6 and 72.9, average: 70.9
+2020-03-27 10:02:34.223 | INFO     | __main__:<module>:61 - Accuracy score: 0.712
+2020-03-27 10:02:34.224 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.1 and 73.2, average: 71.2
 roberta-large-physicaliqa-cn_all_cs_40k-10061880
-2020-03-27 09:16:01.894 | INFO     | __main__:<module>:61 - F1 score: 0.770
-2020-03-27 09:16:01.895 | INFO     | __main__:<module>:62 - 95.0 confidence interval 74.9 and 78.8, average: 77.0
+2020-03-27 10:03:44.351 | INFO     | __main__:<module>:61 - Accuracy score: 0.770
+2020-03-27 10:03:44.351 | INFO     | __main__:<module>:62 - 95.0 confidence interval 75.1 and 78.9, average: 77.0
 roberta-large-physicaliqa-10pc-cn_physical_10k-10061880
-2020-03-27 09:17:08.047 | INFO     | __main__:<module>:61 - F1 score: 0.686
-2020-03-27 09:17:08.047 | INFO     | __main__:<module>:62 - 95.0 confidence interval 66.7 and 70.4, average: 68.5
+2020-03-27 10:04:57.764 | INFO     | __main__:<module>:61 - Accuracy score: 0.686
+2020-03-27 10:04:57.765 | INFO     | __main__:<module>:62 - 95.0 confidence interval 66.5 and 70.7, average: 68.6
 roberta-large-physicaliqa-25pc-cn_physical_10k-10061880
-2020-03-27 09:18:14.663 | INFO     | __main__:<module>:61 - F1 score: 0.703
-2020-03-27 09:18:14.663 | INFO     | __main__:<module>:62 - 95.0 confidence interval 67.7 and 72.5, average: 70.2
+2020-03-27 10:06:11.085 | INFO     | __main__:<module>:61 - Accuracy score: 0.703
+2020-03-27 10:06:11.086 | INFO     | __main__:<module>:62 - 95.0 confidence interval 68.3 and 72.5, average: 70.4
 roberta-large-physicaliqa-cn_physical_10k-10061880
-2020-03-27 09:19:20.985 | INFO     | __main__:<module>:61 - F1 score: 0.788
-2020-03-27 09:19:20.986 | INFO     | __main__:<module>:62 - 95.0 confidence interval 76.6 and 80.6, average: 78.6
+2020-03-27 10:07:23.198 | INFO     | __main__:<module>:61 - Accuracy score: 0.788
+2020-03-27 10:07:23.198 | INFO     | __main__:<module>:62 - 95.0 confidence interval 76.8 and 80.7, average: 78.8
 roberta-large-physicaliqa-10pc-10061880
-2020-03-27 09:20:27.340 | INFO     | __main__:<module>:61 - F1 score: 0.674
-2020-03-27 09:20:27.341 | INFO     | __main__:<module>:62 - 95.0 confidence interval 65.1 and 69.1, average: 67.3
+2020-03-27 10:08:33.764 | INFO     | __main__:<module>:61 - Accuracy score: 0.674
+2020-03-27 10:08:33.764 | INFO     | __main__:<module>:62 - 95.0 confidence interval 65.2 and 69.4, average: 67.4
 roberta-large-physicaliqa-25pc-10061880
-2020-03-27 09:21:33.344 | INFO     | __main__:<module>:61 - F1 score: 0.730
-2020-03-27 09:21:33.344 | INFO     | __main__:<module>:62 - 95.0 confidence interval 70.6 and 74.9, average: 72.8
+2020-03-27 10:09:43.841 | INFO     | __main__:<module>:61 - Accuracy score: 0.730
+2020-03-27 10:09:43.841 | INFO     | __main__:<module>:62 - 95.0 confidence interval 70.9 and 74.9, average: 73.0
 roberta-large-physicaliqa-10061880
-2020-03-27 09:22:40.631 | INFO     | __main__:<module>:61 - F1 score: 0.794
-2020-03-27 09:22:40.632 | INFO     | __main__:<module>:62 - 95.0 confidence interval 77.1 and 80.7, average: 79.3
+2020-03-27 10:10:54.829 | INFO     | __main__:<module>:61 - Accuracy score: 0.794
+2020-03-27 10:10:54.829 | INFO     | __main__:<module>:62 - 95.0 confidence interval 77.5 and 81.2, average: 79.4

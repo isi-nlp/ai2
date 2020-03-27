@@ -1,30 +1,45 @@
-roberta-large-physicaliqa-10pc-cn_all_cs_10k
-2020-03-26 06:25:13.473 | INFO     | __main__:<module>:62 - 95.0 confidence interval 62.3 and 66.4, average: 64.3
-roberta-large-physicaliqa-25pc-cn_all_cs_10k
-2020-03-26 06:26:17.209 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.3 and 73.3, average: 71.6
-roberta-large-physicaliqa-cn_all_cs_10k
-2020-03-26 06:27:23.648 | INFO     | __main__:<module>:62 - 95.0 confidence interval 75.5 and 79.6, average: 77.9
-roberta-large-physicaliqa-10pc-cn_all_cs_20k
-2020-03-26 06:28:34.197 | INFO     | __main__:<module>:62 - 95.0 confidence interval 65.5 and 69.6, average: 67.6
-roberta-large-physicaliqa-25pc-cn_all_cs_20k
-2020-03-26 06:29:42.639 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.1 and 73.4, average: 71.4
-roberta-large-physicaliqa-cn_all_cs_20k
-2020-03-26 06:30:48.979 | INFO     | __main__:<module>:62 - 95.0 confidence interval 73.9 and 78.1, average: 76.4
-roberta-large-physicaliqa-10pc-cn_all_cs_40k
-2020-03-26 06:31:55.069 | INFO     | __main__:<module>:62 - 95.0 confidence interval 59.4 and 63.6, average: 61.6
-roberta-large-physicaliqa-25pc-cn_all_cs_40k
-2020-03-26 06:33:01.061 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.6 and 72.9, average: 71.2
-roberta-large-physicaliqa-cn_all_cs_40k
-2020-03-26 06:34:06.892 | INFO     | __main__:<module>:62 - 95.0 confidence interval 74.5 and 78.7, average: 77.1
-roberta-large-physicaliqa-10pc-cn_physical_10k
-2020-03-26 06:35:12.213 | INFO     | __main__:<module>:62 - 95.0 confidence interval 62.0 and 66.5, average: 64.6
-roberta-large-physicaliqa-25pc-cn_physical_10k
-2020-03-26 06:36:18.074 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.5 and 73.7, average: 71.7
-roberta-large-physicaliqa-cn_physical_10k
-2020-03-26 06:37:23.992 | INFO     | __main__:<module>:62 - 95.0 confidence interval 74.1 and 78.1, average: 76.3
-roberta-large-physicaliqa-10pc
-2020-03-26 06:38:30.002 | INFO     | __main__:<module>:62 - 95.0 confidence interval 61.5 and 65.8, average: 63.9
-roberta-large-physicaliqa-25pc
-2020-03-26 06:39:36.845 | INFO     | __main__:<module>:62 - 95.0 confidence interval 49.3 and 53.8, average: 51.6
-roberta-large-physicaliqa
-2020-03-26 06:40:42.912 | INFO     | __main__:<module>:62 - 95.0 confidence interval 76.3 and 80.5, average: 78.5
+roberta-large-physicaliqa-10pc-cn_all_cs_10k-0
+2020-03-27 10:30:11.020 | INFO     | __main__:<module>:61 - Accuracy score: 0.643
+2020-03-27 10:30:11.021 | INFO     | __main__:<module>:62 - 95.0 confidence interval 62.1 and 66.4, average: 64.3
+roberta-large-physicaliqa-25pc-cn_all_cs_10k-0
+2020-03-27 10:31:21.451 | INFO     | __main__:<module>:61 - Accuracy score: 0.717
+2020-03-27 10:31:21.451 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.6 and 73.6, average: 71.6
+roberta-large-physicaliqa-cn_all_cs_10k-0
+2020-03-27 10:32:32.164 | INFO     | __main__:<module>:61 - Accuracy score: 0.780
+2020-03-27 10:32:32.164 | INFO     | __main__:<module>:62 - 95.0 confidence interval 76.0 and 79.8, average: 78.0
+roberta-large-physicaliqa-10pc-cn_all_cs_20k-0
+2020-03-27 10:33:42.505 | INFO     | __main__:<module>:61 - Accuracy score: 0.675
+2020-03-27 10:33:42.505 | INFO     | __main__:<module>:62 - 95.0 confidence interval 65.2 and 69.5, average: 67.4
+roberta-large-physicaliqa-25pc-cn_all_cs_20k-0
+2020-03-27 10:34:52.081 | INFO     | __main__:<module>:61 - Accuracy score: 0.721
+2020-03-27 10:34:52.082 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.9 and 73.9, average: 72.0
+roberta-large-physicaliqa-cn_all_cs_20k-0
+2020-03-27 10:36:02.477 | INFO     | __main__:<module>:61 - Accuracy score: 0.766
+2020-03-27 10:36:02.477 | INFO     | __main__:<module>:62 - 95.0 confidence interval 74.4 and 78.3, average: 76.5
+roberta-large-physicaliqa-10pc-cn_all_cs_40k-0
+2020-03-27 10:37:13.881 | INFO     | __main__:<module>:61 - Accuracy score: 0.624
+2020-03-27 10:37:13.881 | INFO     | __main__:<module>:62 - 95.0 confidence interval 60.2 and 64.5, average: 62.4
+roberta-large-physicaliqa-25pc-cn_all_cs_40k-0
+2020-03-27 10:38:24.096 | INFO     | __main__:<module>:61 - Accuracy score: 0.724
+2020-03-27 10:38:24.096 | INFO     | __main__:<module>:62 - 95.0 confidence interval 70.2 and 74.4, average: 72.3
+roberta-large-physicaliqa-cn_all_cs_40k-0
+2020-03-27 10:39:37.509 | INFO     | __main__:<module>:61 - Accuracy score: 0.772
+2020-03-27 10:39:37.510 | INFO     | __main__:<module>:62 - 95.0 confidence interval 75.2 and 79.1, average: 77.2
+roberta-large-physicaliqa-10pc-cn_physical_10k-0
+2020-03-27 10:40:50.030 | INFO     | __main__:<module>:61 - Accuracy score: 0.648
+2020-03-27 10:40:50.031 | INFO     | __main__:<module>:62 - 95.0 confidence interval 62.6 and 66.8, average: 64.8
+roberta-large-physicaliqa-25pc-cn_physical_10k-0
+2020-03-27 10:42:00.903 | INFO     | __main__:<module>:61 - Accuracy score: 0.719
+2020-03-27 10:42:00.903 | INFO     | __main__:<module>:62 - 95.0 confidence interval 69.7 and 73.8, average: 71.8
+roberta-large-physicaliqa-cn_physical_10k-0
+2020-03-27 10:43:12.795 | INFO     | __main__:<module>:61 - Accuracy score: 0.766
+2020-03-27 10:43:12.796 | INFO     | __main__:<module>:62 - 95.0 confidence interval 74.6 and 78.3, average: 76.6
+roberta-large-physicaliqa-10pc-0
+2020-03-27 10:44:22.798 | INFO     | __main__:<module>:61 - Accuracy score: 0.639
+2020-03-27 10:44:22.799 | INFO     | __main__:<module>:62 - 95.0 confidence interval 61.6 and 66.2, average: 63.9
+roberta-large-physicaliqa-25pc-0
+2020-03-27 10:45:34.935 | INFO     | __main__:<module>:61 - Accuracy score: 0.517
+2020-03-27 10:45:34.936 | INFO     | __main__:<module>:62 - 95.0 confidence interval 49.5 and 53.9, average: 51.7
+roberta-large-physicaliqa-0
+2020-03-27 10:46:45.830 | INFO     | __main__:<module>:61 - Accuracy score: 0.787
+2020-03-27 10:46:45.831 | INFO     | __main__:<module>:62 - 95.0 confidence interval 76.6 and 80.6, average: 78.7
