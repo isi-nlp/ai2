@@ -1,3 +1,4 @@
+# Default values - these can be overwritten in the training script
 model = "roberta-large"
 batchsize = 4
 accumulate_grad_batches = 2
@@ -5,7 +6,7 @@ learning_rate = '5e-6'
 dropout = 0.5
 adam_epsilon = '1e-8'
 epochs = 4
-warmup_steps = 0
+warmup_steps = 150
 random_seed = 42
 
 for taskname in ["physicaliqa-10pc","physicaliqa-25pc","physicaliqa"]:
@@ -26,7 +27,7 @@ train_x: "cache/{taskname}-train-dev/{taskname}-train-dev/train.jsonl"
 train_y: "cache/{taskname}-train-dev/{taskname}-train-dev/train-labels.lst"
 val_x: "cache/{taskname}-train-dev/{taskname}-train-dev/dev.jsonl"
 val_y: "cache/{taskname}-train-dev/{taskname}-train-dev/dev-labels.lst"
-save_path: "outputs/{model}-{taskname}-{random_seed}"
+save_path: "outputs/{model}-{taskname}"
 save_best_only: true
 random_seed: {random_seed}
 '''
@@ -52,7 +53,7 @@ train_x: "cache/{taskname}-train-dev/{taskname}-train-dev/train.jsonl"
 train_y: "cache/{taskname}-train-dev/{taskname}-train-dev/train-labels.lst"
 val_x: "cache/{taskname}-train-dev/{taskname}-train-dev/dev.jsonl"
 val_y: "cache/{taskname}-train-dev/{taskname}-train-dev/dev-labels.lst"
-save_path: "outputs/{model}-{taskname}-{taskname2}-{random_seed}"
+save_path: "outputs/{model}-{taskname}-{taskname2}"
 task_name2: {taskname2}
 train2_x: "cache/{taskname2}-train-dev/{taskname2}-train-dev/train.jsonl"
 train2_y: "cache/{taskname2}-train-dev/{taskname2}-train-dev/train-labels.lst"

@@ -7,14 +7,14 @@ max_epochs: 4
 learning_rate: 5e-6
 adam_epsilon: 1e-8
 dropout: 0.5
-warmup_steps: 0
+warmup_steps: 150
 max_length: 128
 formula: "goal -> sol1|sol2"
 train_x: "cache/physicaliqa-25pc-train-dev/physicaliqa-25pc-train-dev/train.jsonl"
 train_y: "cache/physicaliqa-25pc-train-dev/physicaliqa-25pc-train-dev/train-labels.lst"
 val_x: "cache/physicaliqa-25pc-train-dev/physicaliqa-25pc-train-dev/dev.jsonl"
 val_y: "cache/physicaliqa-25pc-train-dev/physicaliqa-25pc-train-dev/dev-labels.lst"
-save_path: "outputs/roberta-large-physicaliqa-25pc-cn_all_cs_10k-42"
+save_path: "outputs/roberta-large-physicaliqa-25pc-cn_all_cs_10k"
 task_name2: cn_all_cs_10k
 train2_x: "cache/cn_all_cs_10k-train-dev/cn_all_cs_10k-train-dev/train.jsonl"
 train2_y: "cache/cn_all_cs_10k-train-dev/cn_all_cs_10k-train-dev/train-labels.lst"

@@ -81,6 +81,7 @@ def get_parser():
     parser.add_argument('--warmup_steps', type=int, default=None)
     parser.add_argument('--dropout', type=float, default=None)
     parser.add_argument('--random_seed', type=int, default=None)
+    parser.add_argument('--save_path', type=str, default=None)
 
     return parser
 
@@ -105,6 +106,7 @@ if __name__ == "__main__":
         config['dropout'] = args.dropout
     if args.random_seed is not None:
         config['random_seed'] = args.random_seed
+    if args.save_path is not None:
+        config['save_path'] = args.save_path
 
-    print(config)
     train(config)
