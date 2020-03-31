@@ -72,6 +72,16 @@ def get_parser():
     parser.add_argument('--config_file', type=str, required=True, help='path to the datasets')
     parser.add_argument('--verbose', type=str2bool, default=False,
                         help='if verbose')
+
+    # Optional parameters
+    parser.add_argument('--max_epochs', type=int, default=None)
+    parser.add_argument('--accumulate_grad_batches', type=int, default=None)
+    parser.add_argument('--learning_rate', type=float, default=None)
+    parser.add_argument('--adam_epsilon', type=float, default=None)
+    parser.add_argument('--warmup_steps', type=int, default=None)
+    parser.add_argument('--dropout', type=float, default=None)
+    parser.add_argument('--random_seed', type=int, default=None)
+
     return parser
 
 
@@ -80,4 +90,21 @@ if __name__ == "__main__":
     args = parser.parse_args()
     with open(args.config_file, 'r') as ymlfile:
         config = yaml.load(ymlfile)
+    # if specified, update parameters in the config
+    if args.max_epochs is not None:
+        config['max_epochs'] = args.max_epochs
+    if args.accumulate_grad_batches is not None:
+        config['accumulate_grad_batches'] = args.accumulate_grad_batches
+    if args.learning_rate is not None:
+        config['learning_rate'] = args.learning_rate
+    if args.adam_epsilon is not None:
+        config['adam_epsilon'] = args.adam_epsilon
+    if args.warmup_steps is not None:
+        config['warmup_steps'] = args.warmup_steps
+    if args.dropout is not None:
+        config['dropout'] = args.dropout
+    if args.random_seed is not None:
+        config['random_seed'] = args.random_seed
+
+    print(config)
     train(config)
