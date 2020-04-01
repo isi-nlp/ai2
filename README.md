@@ -31,9 +31,9 @@ sbatch run_saga.sh
 ### Get predictions without evaluation
 ```bash
 python eval.py \
-    --input_x cache/physicaliqa-train-dev/physicaliqa-train-dev/dev.jsonl \
+    --input_x task_data/physicaliqa-train-dev/dev.jsonl \
     --config config.yaml \
-    --checkpoint outputs/path_to_checkpoint/_ckpt_epoch_3_v0.ckpt \
+    --checkpoint outputs/2020-03-20/16-37-40/outputs/checkpoints/_ckpt_epoch_4.ckpt \
     --output pred.lst
 ```
 
@@ -41,10 +41,10 @@ python eval.py \
 
 ```bash
 python eval.py \
-    --input_x cache/physicaliqa-train-dev/physicaliqa-train-dev/dev.jsonl \
+    --input_x task_data/physicaliqa-train-dev/dev.jsonl \
     --config config.yaml \
-    --checkpoint outputs/path_to_checkpoint/_ckpt_epoch_3_v0.ckpt \
-    --input_y cache/physicaliqa-train-dev/physicaliqa-train-dev/dev-labels.lst \
+    --checkpoint outputs/2020-03-20/16-37-40/outputs/checkpoints/_ckpt_epoch_4.ckpt \
+    --input_y task_data/physicaliqa-train-dev/dev-labels.lst \
     --output pred.lst
 ```
 

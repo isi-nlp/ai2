@@ -11,9 +11,9 @@ import argparse
 from test_tube import HyperOptArgumentParser, Experiment
 import os
 
+
 @hydra.main(config_path="config.yaml")
 def train(config):
-
     logger.info(config)
 
     torch.manual_seed(42)
@@ -38,8 +38,8 @@ def train(config):
         autosave=True,
     )
     trainer = Trainer(
-        gradient_clip_val = 0,
-        gpus = None if not torch.cuda.is_available() else [i for i in range(torch.cuda.device_count())],
+        gradient_clip_val=0,
+        gpus=None if not torch.cuda.is_available() else [i for i in range(torch.cuda.device_count())],
         log_gpu_memory=True,
         show_progress_bar=True,
         accumulate_grad_batches=config["accumulate_grad_batches"],
@@ -48,7 +48,7 @@ def train(config):
         val_check_interval=0.02,
         log_save_interval=25,
         row_log_interval=25,
-        distributed_backend = "dp",
+        distributed_backend="dp",
         use_amp=config["use_amp"],
         nb_sanity_val_steps=5,
         checkpoint_callback=checkpoint,
