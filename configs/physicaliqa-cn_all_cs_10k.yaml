@@ -22,5 +22,5 @@ val2_x: "cache/cn_all_cs_10k-train-dev/cn_all_cs_10k-train-dev/dev.jsonl"
 val2_y: "cache/cn_all_cs_10k-train-dev/cn_all_cs_10k-train-dev/dev-labels.lst"
 formula2: "e1 + e2 -> sol1|sol2|sol3|sol4|sol5|sol6|sol7"
 save_best_only: true
-random_seed: 42
+random_seed: 10061880
 

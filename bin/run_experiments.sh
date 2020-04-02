@@ -1,6 +1,6 @@
 MODEL_TYPE="roberta"
 MODEL_WEIGHTS="roberta-large"
-SEED=42
+SEED=10061880
 
 # Declare doube task and single task experiments
 declare -a double_experiments=("physicaliqa-10pc,cn_all_cs_10k" "physicaliqa-25pc,cn_all_cs_10k" "physicaliqa,cn_all_cs_10k" \
@@ -9,15 +9,14 @@ declare -a double_experiments=("physicaliqa-10pc,cn_all_cs_10k" "physicaliqa-25p
                         "physicaliqa-10pc,cn_physical_10k" "physicaliqa-25pc,cn_physical_10k" "physicaliqa,cn_physical_10k")
 declare -a single_experiments=("physicaliqa-10pc" "physicaliqa-25pc" "physicaliqa")
 
-# Sweep parameters accumulate_grad_batches, learning_rate, adam_epsilon, and dropout
-for ACB in 2 8 16; do
-  for LR in '2e-6' '3e-6' '5e-6' '7e-6'; do
-    for AE in '1e-6' '1e-7' '1e-8' '1e-9'; do
+# Sweep parameters
+for BS in 3 4; do
+  for ACB in 2 8 16; do
+    for WS in 150 300; do
       for DR in '0' '0.3' '0.5'; do
-
         # For each parameter setup, prepate arguments and the output directory
-        SWEEP_PARAMS="--accumulate_grad_batches ${ACB} --learning_rate ${LR} --adam_epsilon ${AE} --dropout ${DR} --random_seed ${SEED}"
-        SETUP_NAME="rs${SEED}_acb${ACB}_lr${LR}_ae${AE}_dr${DR}"
+        SWEEP_PARAMS="--accumulate_grad_batches ${ACB} --batch_size ${BS} --warmup_steps ${WS}--dropout ${DR} --random_seed ${SEED}"
+        SETUP_NAME="rs${SEED}_bs${BS}_acb${ACB}_ws${WS}_dr${DR}"
 
         # Train double task experiments
         for i in "${double_experiments[@]}"; do

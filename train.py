@@ -76,6 +76,7 @@ def get_parser():
     # Optional parameters
     parser.add_argument('--max_epochs', type=int, default=None)
     parser.add_argument('--accumulate_grad_batches', type=int, default=None)
+    parser.add_argument('--batch_size', type=int, default=None)
     parser.add_argument('--learning_rate', type=float, default=None)
     parser.add_argument('--adam_epsilon', type=float, default=None)
     parser.add_argument('--warmup_steps', type=int, default=None)
@@ -96,6 +97,8 @@ if __name__ == "__main__":
         config['max_epochs'] = args.max_epochs
     if args.accumulate_grad_batches is not None:
         config['accumulate_grad_batches'] = args.accumulate_grad_batches
+    if args.batch_size is not None:
+        config['batch_size'] = args.batch_size
     if args.learning_rate is not None:
         config['learning_rate'] = args.learning_rate
     if args.adam_epsilon is not None:

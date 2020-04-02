@@ -7,7 +7,7 @@ dropout = 0.5
 adam_epsilon = '1e-8'
 epochs = 4
 warmup_steps = 150
-random_seed = 42
+random_seed = 10061880
 
 for taskname in ["physicaliqa-10pc","physicaliqa-25pc","physicaliqa"]:
     # Generate single task configs
