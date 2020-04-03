@@ -20,7 +20,7 @@ conda activate ai2
 spack load cuda@9.0.176
 spack load cudnn@7.6.5.32-9.0-linux-x64
 
-ARGS=$(head -n 1 "sweep_args/args_${SLURM_ARRAY_TASK_ID}.txt")
-echo "Running task ${SLURM_ARRAY_TASK_ID}"
+ARGS="$(head -n 1 "sweep_args/args_${SLURM_ARRAY_TASK_ID}.txt")"
+echo "Running task ${SLURM_ARRAY_TASK_ID} for ${ARGS}"
 
-python train.py "${ARGS}"
+python train.py $ARGS}
