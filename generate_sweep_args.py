@@ -14,7 +14,7 @@ for BS in [3, 4]:
             for DR in ['0', '0.3', '0.5']:
 
                 # For each parameter setup, prepate arguments file
-                SWEEP_PARAMS=f"--accumulate_grad_batches {ACB} --batch_size {BS} --warmup_steps {WS}--dropout {DR} --random_seed {SEED}"
+                SWEEP_PARAMS=f"--accumulate_grad_batches {ACB} --batch_size {BS} --warmup_steps {WS} --dropout {DR} --random_seed {SEED}"
                 SETUP_NAME=f"rs{SEED}_bs{BS}_acb{ACB}_ws{WS}_dr{DR}"
 
                 # Train double task experiments
