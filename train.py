@@ -112,4 +112,5 @@ if __name__ == "__main__":
     if args.save_path is not None:
         config['save_path'] = args.save_path
 
+    print('Running train for config:', config)
     train(config)
