@@ -23,4 +23,4 @@ spack load cudnn@7.6.5.32-9.0-linux-x64
 ARGS=$(head -n 1 "sweep_args/args_${SLURM_ARRAY_TASK_ID}.txt")
 echo "Running task ${SLURM_ARRAY_TASK_ID}"
 
-python train.py "${1}"
+python train.py $1
