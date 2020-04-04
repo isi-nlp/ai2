@@ -5,25 +5,24 @@
 Create and run a virtual environment with Python 3.7. If you're using conda, make sure to use conda version `>=4.8.2`.
 
 ```
-conda create --name ai2 python=3.7
-conda activate ai2
+conda create --name ai2_stable python=3.7
+conda activate ai2_stable
 ```
 
 Then run:
 
 ```bash
-pip install -r requirements.txt
+pip install -r python_environment/requirements.txt
 ```
 
 ## Train
-
 
 The main code to train a model is in `train.py`. It loads the configuration file `config.yaml` and outputs all the logs/checkpoints in `outputs`. 
 
 To submit it as a job on SAGA cluster, you should be able to simply run:
 
 ```
-sbatch run_saga.sh
+sbatch hpc_job_script/run_saga.sh
 ```
 
 ## Eval
@@ -33,7 +32,7 @@ sbatch run_saga.sh
 python eval.py \
     --input_x task_data/physicaliqa-train-dev/dev.jsonl \
     --config config.yaml \
-    --checkpoint outputs/2020-03-20/16-37-40/outputs/checkpoints/_ckpt_epoch_4.ckpt \
+    --checkpoint outputs/path_to_checkpoint/_ckpt_epoch_4.ckpt \
     --output pred.lst
 ```
 
@@ -43,7 +42,7 @@ python eval.py \
 python eval.py \
     --input_x task_data/physicaliqa-train-dev/dev.jsonl \
     --config config.yaml \
-    --checkpoint outputs/2020-03-20/16-37-40/outputs/checkpoints/_ckpt_epoch_4.ckpt \
+    --checkpoint outputs/path_to_checkpoint/_ckpt_epoch_4.ckpt \
     --input_y task_data/physicaliqa-train-dev/dev-labels.lst \
     --output pred.lst
 ```

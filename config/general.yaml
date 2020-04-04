@@ -1,7 +1,9 @@
+random_seed: 42
+save_best_only: True
 task_name: physicaliqa
 model: "roberta-large"
 accumulate_grad_batches: 16
-use_amp: false # Half precison only works best with volta architectures such as V100
+use_amp: false # Half precision only works best with volta architectures such as V100
 max_epochs: 4
 learning_rate: 2e-6
 adam_epsilon: 10e-8

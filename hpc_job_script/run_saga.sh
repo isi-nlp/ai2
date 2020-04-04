@@ -19,7 +19,7 @@ spack load cudnn@7.6.5.32-9.0-linux-x64
 
 python eval.py \
     --input_x task_data/physicaliqa-train-dev/dev.jsonl \
-    --config config.yaml \
+    --config general.yaml \
     --checkpoint outputs/2020-03-20/16-37-40/outputs/checkpoints/_ckpt_epoch_4.ckpt \
     --input_y task_data/physicaliqa-train-dev/dev-labels.lst \
     --output pred.lst

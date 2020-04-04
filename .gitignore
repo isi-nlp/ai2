@@ -114,3 +114,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Add playground file for one time scripts not related to the project
+playground.py
