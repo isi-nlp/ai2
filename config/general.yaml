@@ -1,18 +1,5 @@
+defaults:
+  - model: roberta-large
+  - task: physicaliqa
 random_seed: 42
-save_best_only: True
-task_name: physicaliqa
-model: "roberta-large"
-accumulate_grad_batches: 16
-use_amp: false # Half precision only works best with volta architectures such as V100
-max_epochs: 4
-learning_rate: 2e-6
-adam_epsilon: 10e-8
-warmup_steps: 150
-batch_size: 4
-max_length: 128
-formula: "goal -> sol1|sol2"
-train_x: "task_data/physicaliqa-train-dev/train.jsonl"
-train_y: "task_data/physicaliqa-train-dev/train-labels.lst"
-val_x: "task_data/physicaliqa-train-dev/dev.jsonl"
-val_y: "task_data/physicaliqa-train-dev/dev-labels.lst"
-save_path: "outputs"
+save_best_only: False

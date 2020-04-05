@@ -1,34 +1,38 @@
-from typing import *
-import hydra
-import torch
-import random
-import numpy as np
-from pytorch_lightning import Trainer
-from loguru import logger
-from model import Classifier
-from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
-import argparse
-from test_tube import HyperOptArgumentParser, Experiment
 import os
+import random
+
+import hydra
+import numpy as np
+import torch
+from loguru import logger
+from pytorch_lightning import Trainer
+from pytorch_lightning.callbacks import ModelCheckpoint
+from test_tube import Experiment
+
+from model import Classifier
 
 
-@hydra.main(config_path="config.yaml")
+@hydra.main(config_path="config/general.yaml")
 def train(config):
     logger.info(config)
 
-    torch.manual_seed(42)
-    np.random.seed(42)
-    random.seed(42)
+    # If the training is deterministic for debugging purposes, we set the random seed
+    if config['random_seed']:
+        logger.info(f"Running deterministic model with seed {config['random_seed']}")
+        torch.manual_seed(config['random_seed'])
+        np.random.seed(config['random_seed'])
+        random.seed(config['random_seed'])
+        if torch.cuda.is_available():
+            torch.backends.cuda.deterministic = True
+            torch.backends.cuda.benchmark = False
 
-    if torch.cuda.is_available():
-        torch.backends.cuda.deterministic = True
-        torch.backends.cuda.benchmark = False
-
+    # Initialize the classifier by arguments specified in config file
     model = Classifier(config)
 
+    # Define the trainer along with its checkpoint and experiment instance
     checkpoint = ModelCheckpoint(
         filepath=os.path.join(config['save_path'], 'checkpoints'),
-        save_best_only=config['save_best_only'] if 'save_best_only' in config else False,
+        save_best_only=config['save_best_only'],
         verbose=True,
     )
     exp = Experiment(
