@@ -39,16 +39,17 @@ if [ ! -f "$FILE" ]; then
 fi
 
 # Write results to eval file
-echo "" > "eval/eval_${SLURM_ARRAY_TASK_ID}.out"
-echo "$EXP_PATH" | tee -a "eval/eval_${SLURM_ARRAY_TASK_ID}.out"
+EVAL_FILE="eval/eval_${SLURM_ARRAY_TASK_ID}.out"
+echo "" > "${EVAL_FILE}"
+echo "$EXP_PATH" | tee -a "${EVAL_FILE}"
 python eval.py \
   --input_x cache/physicaliqa-train-dev/physicaliqa-train-dev/dev.jsonl \
   --input_y cache/physicaliqa-train-dev/physicaliqa-train-dev/dev-labels.lst \
   --checkpoint "$FILE" \
   --output pred.lst \
   $ARGS  \
-  &>> "eval/eval_${SLURM_ARRAY_TASK_ID}.out"
+  &>> "${EVAL_FILE}"
 
 echo "$EXP_PATH" | tee -a "search_eval_results.out"
-grep 'Accuracy score' "eval/eval_${SLURM_ARRAY_TASK_ID}.out" | tail -1 | tee -a "search_eval_results.out"
-grep 'confidence' "eval/eval_${SLURM_ARRAY_TASK_ID}.out" | tail -1 | tee -a "search_eval_results.out"
+grep 'Accuracy score' "${EVAL_FILE}" | tail -1 | tee -a "search_eval_results.out"
+grep 'confidence' "${EVAL_FILE}" | tail -1 | tee -a "search_eval_results.out"
