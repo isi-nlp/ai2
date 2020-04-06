@@ -32,8 +32,8 @@ if __name__ == "__main__":
 
     device = 'cpu' if not torch.cuda.is_available() else "cuda"
     checkpoint = torch.load(args.checkpoint, map_location=device)
-    with open(args.config_file, "r") as f:
-        config = yaml.safe_load(f.read())
+    with open(args.config_file, 'r') as ymlfile:
+        config = yaml.load(ymlfile)
         if args.max_epochs is not None:
             config['max_epochs'] = args.max_epochs
         if args.accumulate_grad_batches is not None:
