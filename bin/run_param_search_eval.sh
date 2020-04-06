@@ -1,7 +1,6 @@
 #!/bin/sh
 
-#SBATCH --partition=ephemeral
-#SBATCH --qos=ephemeral
+#SBATCH --partition=mics
 #SBATCH --account=mics
 #SBATCH --ntasks=1
 #SBATCH --time=12:00:00
