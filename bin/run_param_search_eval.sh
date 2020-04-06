@@ -29,11 +29,11 @@ EXP_PATH=$(echo $ARGS | awk -F'save_path ' '{print $2}' | cut -d ' ' -f 1)
 FILE=$EXP_PATH/checkpoints/_ckpt_epoch_4.ckpt
 
 if [ ! -f "$FILE" ]; then
-  FILE=$EXP_PATH/_ckpt_epoch_3.ckpt
+  FILE=$EXP_PATH/checkpoints/_ckpt_epoch_3.ckpt
   if [ ! -f "$FILE" ]; then
-    FILE=$EXP_PATH/_ckpt_epoch_2.ckpt
+    FILE=$EXP_PATH/checkpoints/_ckpt_epoch_2.ckpt
     if [ ! -f "$FILE" ]; then
-      FILE=$EXP_PATH/_ckpt_epoch_1.ckpt
+      FILE=$EXP_PATH/checkpoints/_ckpt_epoch_1.ckpt
     fi
   fi
 fi
