@@ -1,23 +1,19 @@
-
-import os
 import pathlib
-from typing import *
 from itertools import cycle
+from typing import *
 
-import torch
-import pytorch_lightning as pl
-import torch.nn as nn
-import pandas as pd
 import numpy as np
-from loguru import logger
-from torch.nn import functional as F
+import pandas as pd
+import pytorch_lightning as pl
+import torch
+import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
-from transformers import AutoModel, AutoTokenizer, AdamW, get_linear_schedule_with_warmup
+from transformers import AutoModel, AutoTokenizer, AdamW
+
 
 class ClassificationDataset(Dataset):
 
     def __init__(self, instances):
-
         self.instances = instances
 
     def __len__(self):
@@ -34,7 +30,8 @@ class Classifier(pl.LightningModule):
         self.hparams = config
         self.root_path = pathlib.Path(__file__).parent.absolute()
         self.embedder = AutoModel.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache")
-        self.tokenizer = AutoTokenizer.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache", use_fast=False)
+        self.tokenizer = AutoTokenizer.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache",
+                                                       use_fast=False)
 
         self.embedder.train()
         self.label_offset = 0
@@ -47,14 +44,14 @@ class Classifier(pl.LightningModule):
 
     def forward(self, batch):
 
-
         assert len(batch["input_ids"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["attention_mask"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["token_type_ids"].shape) == 2, "LM only take two-dimensional input"
-        
+
         batch["token_type_ids"] = None if "roberta" in self.hparams["model"] else batch["token_type_ids"]
 
-        results = self.embedder(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"], token_type_ids=batch["token_type_ids"])
+        results = self.embedder(input_ids=batch["input_ids"], attention_mask=batch["attention_mask"],
+                                token_type_ids=batch["token_type_ids"])
 
         token_embeddings, *_ = results
         logits = self.classifier(token_embeddings.mean(dim=1)).squeeze(dim=1)
@@ -90,25 +87,29 @@ class Classifier(pl.LightningModule):
         val_labels = torch.cat([o["val_batch_labels"] for o in outputs])
         correct = torch.sum(val_labels == torch.argmax(val_logits, dim=1))
         val_accuracy = torch.tensor(float(correct)) / (val_labels.shape[0] * 1.0)
-        return {'val_loss': val_loss_mean, "val_accuracy": val_accuracy }
+        return {'val_loss': val_loss_mean, "val_accuracy": val_accuracy}
 
     def configure_optimizers(self):
 
         t_total = len(self.train_dataloader) // self.hparams["accumulate_grad_batches"] * self.hparams["max_epochs"]
 
-        optimizer = AdamW(self.parameters(), lr=float(self.hparams["learning_rate"]), eps=float(self.hparams["adam_epsilon"]))
+        optimizer = AdamW(self.parameters(), lr=float(self.hparams["learning_rate"]),
+                          eps=float(self.hparams["adam_epsilon"]))
 
         return optimizer
 
     @pl.data_loader
     def train_dataloader(self):
 
-        return DataLoader(self.dataloader(self.root_path / self.hparams["train_x"], self.root_path / self.hparams["train_y"]), batch_size=self.hparams["batch_size"], collate_fn=self.collate)
+        return DataLoader(
+            self.dataloader(self.root_path / self.hparams["train_x"], self.root_path / self.hparams["train_y"]),
+            batch_size=self.hparams["batch_size"], collate_fn=self.collate)
 
     @pl.data_loader
     def val_dataloader(self):
-        return DataLoader(self.dataloader(self.root_path / self.hparams["val_x"], self.root_path / self.hparams["val_y"]), batch_size=self.hparams["batch_size"], collate_fn=self.collate)
-
+        return DataLoader(
+            self.dataloader(self.root_path / self.hparams["val_x"], self.root_path / self.hparams["val_y"]),
+            batch_size=self.hparams["batch_size"], collate_fn=self.collate)
 
     def dataloader(self, x_path: Union[str, pathlib.Path], y_path: Union[str, pathlib.Path] = None):
 
@@ -122,12 +123,10 @@ class Classifier(pl.LightningModule):
         print(df.head())
         return ClassificationDataset(df[["text", "label"]].to_dict("records"))
 
-
     @staticmethod
     def transform(formula):
 
         def warpper(row):
-
             context, choices = formula.split("->")
             # (context + question -> answerA|answerB|answerC)
             # (obs1 + obs2 -> hyp1|hyp2)
@@ -142,16 +141,18 @@ class Classifier(pl.LightningModule):
 
         return warpper
 
-
     def collate(self, examples):
 
         batch_size = len(examples)
         num_choice = len(examples[0]["text"])
 
         pairs = [pair for example in examples for pair in example["text"]]
-        results = self.tokenizer.batch_encode_plus(pairs, add_special_tokens=True, max_length=self.hparams["max_length"], return_tensors='pt', return_attention_masks=True, pad_to_max_length=True)
+        results = self.tokenizer.batch_encode_plus(pairs, add_special_tokens=True,
+                                                   max_length=self.hparams["max_length"], return_tensors='pt',
+                                                   return_attention_masks=True, pad_to_max_length=True)
 
-        assert results["input_ids"].shape[0] == batch_size * num_choice, f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
+        assert results["input_ids"].shape[
+                   0] == batch_size * num_choice, f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
 
         return {
             "input_ids": results["input_ids"],
@@ -160,6 +161,3 @@ class Classifier(pl.LightningModule):
             "labels": torch.LongTensor([e["label"] for e in examples]) if "label" in examples[0] else None,
             "num_choice": num_choice
         }
-
-
-

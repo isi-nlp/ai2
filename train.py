@@ -28,17 +28,18 @@ def train(config):
 
     # Initialize the classifier by arguments specified in config file
     model = Classifier(config)
+    save_path = f"{config['model']}_{config['task_name']}"
 
     # Define the trainer along with its checkpoint and experiment instance
     checkpoint = ModelCheckpoint(
-        filepath=os.path.join(config['save_path'], 'checkpoints'),
+        filepath=os.path.join(save_path, 'checkpoints'),
         save_best_only=config['save_best_only'],
         verbose=True,
     )
     exp = Experiment(
         name=config['task_name'],
         version=0,
-        save_dir=config['save_path'],
+        save_dir=save_path,
         autosave=True,
     )
     trainer = Trainer(
