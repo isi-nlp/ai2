@@ -39,6 +39,7 @@ if [ ! -f "$FILE" ]; then
 fi
 
 # Write results to eval file
+echo "" > "eval/eval_${SLURM_ARRAY_TASK_ID}.out"
 echo "$EXP_PATH" | tee -a "eval/eval_${SLURM_ARRAY_TASK_ID}.out"
 python eval.py \
   --input_x cache/physicaliqa-train-dev/physicaliqa-train-dev/dev.jsonl \
