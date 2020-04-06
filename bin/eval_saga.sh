@@ -34,7 +34,7 @@ fi
 
 python eval.py \
   --input_x cache/physicaliqa-train-dev/physicaliqa-train-dev/dev.jsonl \
-  --config "$CONF" \
+  --config_file "$CONF" \
   --checkpoint "$FILE" \
   --input_y cache/physicaliqa-train-dev/physicaliqa-train-dev/dev-labels.lst \
   --output pred.lst

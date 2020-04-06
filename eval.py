@@ -13,7 +13,7 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser("evaluate script")
     parser.add_argument("--input_x", type=str, required=True)
-    parser.add_argument("--config", type=str, required=True)
+    parser.add_argument("--config_file", type=str, required=True)
     parser.add_argument("--checkpoint", type=str, required=True)
     parser.add_argument("--output", type=str, required=True)
     parser.add_argument("--input_y", type=str)
