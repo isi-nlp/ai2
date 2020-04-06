@@ -50,8 +50,8 @@ if __name__ == "__main__":
             config['dropout'] = args.dropout
         if args.random_seed is not None:
             config['random_seed'] = args.random_seed
+        model = Classifier(config)
 
-        model = Classifier(yaml.safe_load(f.read()))
     model.load_state_dict(checkpoint['state_dict'])
     model.to(device)
     model.eval()
