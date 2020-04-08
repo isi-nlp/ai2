@@ -8,7 +8,7 @@
 #SBATCH --gpus-per-task=1
 #SBATCH --mem-per-cpu=4g
 #SBATCH --output=param_search.out
-#SBATCH --array=0-47%18
+#SBATCH --array=0-71%18
 
 source ~/.bashrc
 conda activate ai2

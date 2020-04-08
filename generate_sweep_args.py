@@ -9,7 +9,7 @@ single_experiments=[]
 all_args = []
 
 # Sweep parameters
-for BS in [1, 2]:
+for BS in [1, 2, 3]:
     for ACB in [2, 8]:
         for WS in [150, 300]:
             for DR in ['0', '0.2', '0.3']:
