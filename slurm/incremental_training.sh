@@ -38,7 +38,7 @@ modelPercentage=${allPercentage[${SLURM_ARRAY_TASK_ID}]}
 echo ""
 echo "This is for percentage"
 echo "$modelPercentage"
-python train.py task=alphanli_incre_"$modelPercentage"
+python train.py task=alphanli-incre-"$modelPercentage"
 echo ""
 
 ### Finishing up the job and copy the output off of staging

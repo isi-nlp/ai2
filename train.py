@@ -1,4 +1,5 @@
 import os
+import pathlib
 import random
 from typing import *
 
@@ -15,9 +16,12 @@ from tqdm import tqdm
 
 from model import Classifier
 
+# Save root path as hydra will create copies of this code in a folder
+ROOT_PATH = pathlib.Path(__file__).parent.absolute()
 
-@hydra.main(config_path="config/general.yaml")
-def train(config):
+
+@hydra.main(config_path="config/train.yaml")
+def train_w_eval(config):
     logger.info(config)
 
     # If the training is deterministic for debugging purposes, we set the random seed
@@ -69,17 +73,16 @@ def train(config):
     )
     trainer.fit(model)
 
-    # eval
-
+    # Evaluate the model after it was trained
     device = 'cpu' if not torch.cuda.is_available() else "cuda"
     model.to(device)
     model.eval()
 
-    preds: List[int] = []
-    proba: List[List[float]] = []
+    predictions: List[int] = []
+    probabilities: List[List[float]] = []
     for batch in tqdm(DataLoader(model.dataloader(
-            "../../../" + config["val_x"],
-            "../../../" + config["val_y"]),
+            ROOT_PATH / config["val_x"],
+            ROOT_PATH / config["val_y"]),
             batch_size=model.hparams["batch_size"] * 2,
             collate_fn=model.collate,
             shuffle=False)):
@@ -90,14 +93,16 @@ def train(config):
 
         with torch.no_grad():
             logits = model.forward(batch)
-        preds.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
-        proba.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())
-    preds = [p + model.label_offset for p in preds]
-    with open(f"{save_path}/preds.lst", "w") as f:
-        f.write("\n".join(map(str, preds)))
-    with open("{save_path}/proba.lst", "w") as f:
-        f.write("\n".join(map(lambda l: '\t'.join(map(str, l)), proba)))
+        predictions.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
+        probabilities.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())
+    predictions = [p + model.label_offset for p in predictions]
+
+    # Save the prediction and the probability
+    with open(f"{save_path}/preds.lst", "w+") as f:
+        f.write("\n".join(map(str, predictions)))
+    with open(f"{save_path}/proba.lst", "w+") as f:
+        f.write("\n".join(map(lambda l: '\t'.join(map(str, l)), probabilities)))
 
 
 if __name__ == "__main__":
-    train()
+    train_w_eval()

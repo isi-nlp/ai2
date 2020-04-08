@@ -1,4 +1,4 @@
-task_name: alphanli_incre_15
+task_name: alphanli-incre-15
 train_x: "task_data/alphanli-train-dev/increment_training/15/train.jsonl"
 train_y: "task_data/alphanli-train-dev/increment_training/15/train-labels.lst"
 val_x: "task_data/alphanli-train-dev/dev.jsonl"
