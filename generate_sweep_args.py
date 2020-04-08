@@ -2,16 +2,17 @@ MODEL_TYPE="roberta"
 MODEL_WEIGHTS="roberta-large"
 SEED=10061880
 
-double_experiments=[("physicaliqa-10pc","cn_all_cs_20k"), ("physicaliqa","cn_all_cs_20k")]
-single_experiments=["physicaliqa-10pc", "physicaliqa"]
+double_experiments=[("physicaliqa-10pc","cn_all_cs_10k"), ("physicaliqa","cn_all_cs_10k")]
+# single_experiments=["physicaliqa-10pc", "physicaliqa"]
+single_experiments=[]
 
 all_args = []
 
 # Sweep parameters
-for BS in [3, 4]:
-    for ACB in [2, 8, 16]:
+for BS in [1, 2]:
+    for ACB in [2, 8]:
         for WS in [150, 300]:
-            for DR in ['0', '0.3', '0.5']:
+            for DR in ['0', '0.2', '0.3']:
 
                 # For each parameter setup, prepate arguments file
                 SWEEP_PARAMS=f"--accumulate_grad_batches {ACB} --batch_size {BS} --warmup_steps {WS} --dropout {DR} --random_seed {SEED}"
