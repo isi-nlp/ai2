@@ -1,0 +1,1 @@
+--config_file configs/physicaliqa-10pc-cn_all_cs_10k.yaml --save_path outputs/rs10061880_bs2_acb2_ws300_dr0.2/roberta-large-physicaliqa-10pc-cn_all_cs_10k --accumulate_grad_batches 2 --batch_size 2 --warmup_steps 300 --dropout 0.2 --random_seed 10061880
