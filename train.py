@@ -25,7 +25,7 @@ def train_w_eval(config):
     logger.info(config)
 
     # If the training is deterministic for debugging purposes, we set the random seed
-    if config['random_seed']:
+    if not isinstance(config['random_seed'], bool):
         logger.info(f"Running deterministic model with seed {config['random_seed']}")
         torch.manual_seed(config['random_seed'])
         np.random.seed(config['random_seed'])
@@ -79,7 +79,7 @@ def train_w_eval(config):
     model.eval()
 
     predictions: List[int] = []
-    probabilities: List[List[float]] = []
+    confidence: List[List[float]] = []
     for batch in tqdm(DataLoader(model.dataloader(
             ROOT_PATH / config["val_x"],
             ROOT_PATH / config["val_y"]),
@@ -94,14 +94,14 @@ def train_w_eval(config):
         with torch.no_grad():
             logits = model.forward(batch)
         predictions.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
-        probabilities.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())
+        confidence.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())
     predictions = [p + model.label_offset for p in predictions]
 
     # Save the prediction and the probability
-    with open(f"{save_path}/preds.lst", "w+") as f:
+    with open(f"{save_path}/predictions.lst", "w+") as f:
         f.write("\n".join(map(str, predictions)))
-    with open(f"{save_path}/proba.lst", "w+") as f:
-        f.write("\n".join(map(lambda l: '\t'.join(map(str, l)), probabilities)))
+    with open(f"{save_path}/confidence.lst", "w+") as f:
+        f.write("\n".join(map(lambda l: '\t'.join(map(str, l)), confidence)))
 
 
 if __name__ == "__main__":

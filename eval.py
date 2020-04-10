@@ -5,6 +5,8 @@ import hydra
 import numpy as np
 import pandas as pd
 import torch
+import torch.nn.functional as F
+
 from loguru import logger
 from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
@@ -21,7 +23,7 @@ def evaluate(config):
     logger.info(config)
 
     # If the evaluation is deterministic for debugging purposes, we set the random seed
-    if config['random_seed']:
+    if not isinstance(config['random_seed'], bool):
         logger.info(f"Running deterministic model with seed {config['random_seed']}")
         np.random.seed(config['random_seed'])
         torch.manual_seed(config['random_seed'])
@@ -39,24 +41,29 @@ def evaluate(config):
     model.eval()
 
     predictions: List[int] = []
-    for batch in tqdm(DataLoader(model.dataloader(ROOT_PATH / config['val_x'],
-                                                  (ROOT_PATH / config['val_y'] if config['with_eval'] else None)),
-                                 batch_size=model.hparams["batch_size"] * 2, collate_fn=model.collate, shuffle=False)):
+    confidence: List[List[float]] = []
+    for batch in tqdm(DataLoader(model.dataloader(
+            ROOT_PATH / config['val_x'],
+            (ROOT_PATH / config['val_y'] if config['with_eval'] else None)),
+            batch_size=model.hparams["batch_size"] * 2,
+            collate_fn=model.collate,
+            shuffle=False)):
         for key in batch:
             if isinstance(batch[key], torch.Tensor):
                 batch[key] = batch[key].to(device)
-        
         with torch.no_grad():
             logits = model.forward(batch)
-
         predictions.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
+        confidence.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())
     predictions = [p + model.label_offset for p in predictions]
 
-    with open(f"{config['model']}_{config['task_name']}_predictions", "w") as f:
+    with open(f"{config['model']}_{config['task_name']}_predictions.lst", "w+") as f:
         f.write("\n".join(map(str, predictions)))
+    with open(f"{config['model']}_{config['task_name']}confidence.lst", "w+") as f:
+        f.write("\n".join(map(lambda l: '\t'.join(map(str, l)), confidence)))
 
     if config['with_eval']:
-        labels = pd.read_csv(config['val_y'], sep='\t', header=None).values.tolist()
+        labels = pd.read_csv(ROOT_PATH / config['val_y'], sep='\t', header=None).values.tolist()
         logger.info(f"F1 score: {accuracy_score(labels, predictions):.3f}")
 
         stats = []
