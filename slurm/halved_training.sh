@@ -7,11 +7,11 @@
 #SBATCH --cpus-per-task=4               # CPU Allocated
 #SBATCH --gpus-per-task=1               # GPU Allocated
 #SBATCH --job-name=HALVED_TRAINING        # The name of this job. If removed the job will have name of your shell script.
-#SBATCH --output=%x-%j.out              # The name of the file output. %x-%j means JOB_NAME-JOB_ID. If removed output will be in file slurm-JOB_ID.
+#SBATCH --output=outputs/%x-%j.out              # The name of the file output. %x-%j means JOB_NAME-JOB_ID. If removed output will be in file slurm-JOB_ID.
 #SBATCH --mail-user=dwangli@isi.edu     # Email address for email notifications to be sent to.
 #SBATCH --mail-type=ALL                 # Type of notifications to receive. Other options includes BEGIN, END, FAIL, REQUEUE and more.
 #SBATCH --export=NONE                   # Ensure job gets a fresh login environment
-#SBATCH --array=1-50                  # Submitting an array of (n-m+1) jobs, with $SLURM_ARRAY_TASK_ID ranging from n to m. Add %1 if you only want one jobs running at one time.
+#SBATCH --array=0-49                  # Submitting an array of (n-m+1) jobs, with $SLURM_ARRAY_TASK_ID ranging from n to m. Add %1 if you only want one jobs running at one time.
 
 
 ### Load the conda environment of your choosing

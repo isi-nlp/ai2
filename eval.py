@@ -18,6 +18,7 @@ from model import Classifier
 ROOT_PATH = pathlib.Path(__file__).parent.absolute()
 
 
+# If script is executed by itself, load in the configuration yaml file and desired checkpoint model
 @hydra.main(config_path="config/eval.yaml")
 def main(config):
     logger.info(config)
@@ -51,15 +52,17 @@ def main(config):
 # Function to perform the evaluation (This was separated out to be called in train script)
 def evaluate(a_classifier: Classifier, output_path: Union[str, pathlib.Path], compute_device: str,
              val_x: Union[str, pathlib.Path], val_y: Union[str, pathlib.Path] = None):
+
+    # Move model to device and set to evaluation mode
     a_classifier.to(compute_device)
     a_classifier.eval()
 
+    # Forward propagate the model to get a list of predictions and their respective confidence
     predictions: List[int] = []
     confidence: List[List[float]] = []
     for batch in tqdm(DataLoader(a_classifier.dataloader(val_x, val_y),
                                  batch_size=a_classifier.hparams["batch_size"] * 2,
-                                 collate_fn=a_classifier.collate,
-                                 shuffle=False)):
+                                 collate_fn=a_classifier.collate, shuffle=False)):
         for key in batch:
             if isinstance(batch[key], torch.Tensor):
                 batch[key] = batch[key].to(compute_device)
@@ -69,11 +72,13 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, pathlib.Path], co
         confidence.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())
     predictions = [p + a_classifier.label_offset for p in predictions]
 
+    # Write out the result lists
     with open(f"{output_path}/predictions.lst", "w+") as f:
         f.write("\n".join(map(str, predictions)))
     with open(f"{output_path}/confidence.lst", "w+") as f:
         f.write("\n".join(map(lambda l: '\t'.join(map(str, l)), confidence)))
 
+    # If desired y value is provided, calculate relevant statistics
     if val_y:
         labels = pd.read_csv(val_y, sep='\t', header=None).values.tolist()
         logger.info(f"F1 score: {accuracy_score(labels, predictions):.3f}")
@@ -83,6 +88,7 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, pathlib.Path], co
             indices = [i for i in np.random.random_integers(0, len(predictions) - 1, size=len(predictions))]
             stats.append(accuracy_score([labels[j] for j in indices], [predictions[j] for j in indices]))
 
+        # Calculate the confidence interval and log it to console
         alpha = 0.95
         p = ((1.0 - alpha) / 2.0) * 100
         lower = max(0.0, np.percentile(stats, p))

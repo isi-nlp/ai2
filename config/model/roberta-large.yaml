@@ -1,4 +1,4 @@
-model: "roberta_large"
+model: "roberta-large"
 accumulate_grad_batches: 16
 use_amp: false # Half precision only works best with volta architectures such as V100
 max_epochs: 4

@@ -1,21 +1,17 @@
 import os
 import pathlib
 import random
-from typing import *
 
 import hydra
 import numpy as np
 import torch
-import torch.nn.functional as F
 from loguru import logger
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 from test_tube import Experiment
-from torch.utils.data import DataLoader
-from tqdm import tqdm
 
-from model import Classifier
 from eval import evaluate
+from model import Classifier
 
 # Save root path as hydra will create copies of this code in date specific folder
 ROOT_PATH = pathlib.Path(__file__).parent.absolute()
@@ -74,10 +70,9 @@ def train_w_eval(config):
     )
     trainer.fit(model)
 
-    # Evaluate the model after it was trained
-    device = 'cpu' if not torch.cuda.is_available() else "cuda"
-
-    evaluate(a_classifier=model, output_path=save_path, compute_device=device,
+    # Evaluate the model with evaluate function from eval.py
+    evaluate(a_classifier=model, output_path=save_path,
+             compute_device=('cpu' if not torch.cuda.is_available() else "cuda"),
              val_x=ROOT_PATH / config["val_x"], val_y=ROOT_PATH / config["val_y"])
 
 
