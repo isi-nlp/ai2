@@ -59,7 +59,7 @@ def evaluate(config):
 
     with open(f"{config['model']}_{config['task_name']}_predictions.lst", "w+") as f:
         f.write("\n".join(map(str, predictions)))
-    with open(f"{config['model']}_{config['task_name']}confidence.lst", "w+") as f:
+    with open(f"{config['model']}_{config['task_name']}_confidence.lst", "w+") as f:
         f.write("\n".join(map(lambda l: '\t'.join(map(str, l)), confidence)))
 
     if config['with_eval']:
