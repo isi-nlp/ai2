@@ -19,7 +19,7 @@ ROOT_PATH = pathlib.Path(__file__).parent.absolute()
 
 
 @hydra.main(config_path="config/eval.yaml")
-def evaluate(config):
+def main(config):
     logger.info(config)
 
     # If the evaluation is deterministic for debugging purposes, we set the random seed
@@ -31,54 +31,66 @@ def evaluate(config):
             torch.backends.cuda.deterministic = True
             torch.backends.cuda.benchmark = False
 
-    device = 'cpu' if not torch.cuda.is_available() else "cuda"
-
     # Load in the check pointed model
+    device = 'cpu' if not torch.cuda.is_available() else "cuda"
     checkpoint = torch.load(ROOT_PATH / config['checkpoint_path'], map_location=device)
     model = Classifier(config)
     model.load_state_dict(checkpoint['state_dict'])
-    model.to(device)
-    model.eval()
+
+    save_path = pathlib.Path(f"{config['model']}-{config['task_name']}-s{config['random_seed']}")
+    save_path.mkdir(parents=True, exist_ok=True)
+
+    # Call the main function with appropriate parameters
+    evaluate(a_classifier=model,
+             output_path=save_path,
+             compute_device=device,
+             val_x=ROOT_PATH / config['val_x'],
+             val_y=(ROOT_PATH / config['val_y'] if config['with_eval'] else None))
+
+
+# Function to perform the evaluation (This was separated out to be called in train script)
+def evaluate(a_classifier: Classifier, output_path: Union[str, pathlib.Path], compute_device: str,
+             val_x: Union[str, pathlib.Path], val_y: Union[str, pathlib.Path] = None):
+    a_classifier.to(compute_device)
+    a_classifier.eval()
 
     predictions: List[int] = []
     confidence: List[List[float]] = []
-    for batch in tqdm(DataLoader(model.dataloader(
-            ROOT_PATH / config['val_x'],
-            (ROOT_PATH / config['val_y'] if config['with_eval'] else None)),
-            batch_size=model.hparams["batch_size"] * 2,
-            collate_fn=model.collate,
-            shuffle=False)):
+    for batch in tqdm(DataLoader(a_classifier.dataloader(val_x, val_y),
+                                 batch_size=a_classifier.hparams["batch_size"] * 2,
+                                 collate_fn=a_classifier.collate,
+                                 shuffle=False)):
         for key in batch:
             if isinstance(batch[key], torch.Tensor):
-                batch[key] = batch[key].to(device)
+                batch[key] = batch[key].to(compute_device)
         with torch.no_grad():
-            logits = model.forward(batch)
+            logits = a_classifier.forward(batch)
         predictions.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
         confidence.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())
-    predictions = [p + model.label_offset for p in predictions]
+    predictions = [p + a_classifier.label_offset for p in predictions]
 
-    with open(f"{config['model']}_{config['task_name']}_predictions.lst", "w+") as f:
+    with open(f"{output_path}/predictions.lst", "w+") as f:
         f.write("\n".join(map(str, predictions)))
-    with open(f"{config['model']}_{config['task_name']}_confidence.lst", "w+") as f:
+    with open(f"{output_path}/confidence.lst", "w+") as f:
         f.write("\n".join(map(lambda l: '\t'.join(map(str, l)), confidence)))
 
-    if config['with_eval']:
-        labels = pd.read_csv(ROOT_PATH / config['val_y'], sep='\t', header=None).values.tolist()
+    if val_y:
+        labels = pd.read_csv(val_y, sep='\t', header=None).values.tolist()
         logger.info(f"F1 score: {accuracy_score(labels, predictions):.3f}")
 
         stats = []
         for _ in range(100):
-            indices = [i for i in np.random.random_integers(0, len(predictions)-1, size=len(predictions))]
+            indices = [i for i in np.random.random_integers(0, len(predictions) - 1, size=len(predictions))]
             stats.append(accuracy_score([labels[j] for j in indices], [predictions[j] for j in indices]))
 
         alpha = 0.95
-        p = ((1.0-alpha)/2.0) * 100
+        p = ((1.0 - alpha) / 2.0) * 100
         lower = max(0.0, np.percentile(stats, p))
-        p = (alpha+((1.0-alpha)/2.0)) * 100
+        p = (alpha + ((1.0 - alpha) / 2.0)) * 100
         upper = min(1.0, np.percentile(stats, p))
-        logger.info(f'{alpha*100:.1f} confidence interval {lower*100:.1f} and {upper*100:.1f}, '
-                    f'average: {np.mean(stats)*100:.1f}')
+        logger.info(f'{alpha * 100:.1f} confidence interval {lower * 100:.1f} and {upper * 100:.1f}, '
+                    f'average: {np.mean(stats) * 100:.1f}')
 
 
 if __name__ == "__main__":
-    evaluate()
+    main()

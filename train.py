@@ -15,8 +15,9 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from model import Classifier
+from eval import evaluate
 
-# Save root path as hydra will create copies of this code in a folder
+# Save root path as hydra will create copies of this code in date specific folder
 ROOT_PATH = pathlib.Path(__file__).parent.absolute()
 
 
@@ -36,7 +37,7 @@ def train_w_eval(config):
 
     # Initialize the classifier by arguments specified in config file
     model = Classifier(config)
-    save_path = f"{config['model']}_{config['task_name']}"
+    save_path = f"{config['model']}-{config['task_name']}-s{config['random_seed']}"
 
     # Define the trainer along with its checkpoint and experiment instance
     checkpoint = ModelCheckpoint(
@@ -75,33 +76,9 @@ def train_w_eval(config):
 
     # Evaluate the model after it was trained
     device = 'cpu' if not torch.cuda.is_available() else "cuda"
-    model.to(device)
-    model.eval()
 
-    predictions: List[int] = []
-    confidence: List[List[float]] = []
-    for batch in tqdm(DataLoader(model.dataloader(
-            ROOT_PATH / config["val_x"],
-            ROOT_PATH / config["val_y"]),
-            batch_size=model.hparams["batch_size"] * 2,
-            collate_fn=model.collate,
-            shuffle=False)):
-
-        for key in batch:
-            if isinstance(batch[key], torch.Tensor):
-                batch[key] = batch[key].to(device)
-
-        with torch.no_grad():
-            logits = model.forward(batch)
-        predictions.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
-        confidence.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())
-    predictions = [p + model.label_offset for p in predictions]
-
-    # Save the prediction and the probability
-    with open(f"{save_path}/predictions.lst", "w+") as f:
-        f.write("\n".join(map(str, predictions)))
-    with open(f"{save_path}/confidence.lst", "w+") as f:
-        f.write("\n".join(map(lambda l: '\t'.join(map(str, l)), confidence)))
+    evaluate(a_classifier=model, output_path=save_path, compute_device=device,
+             val_x=ROOT_PATH / config["val_x"], val_y=ROOT_PATH / config["val_y"])
 
 
 if __name__ == "__main__":
