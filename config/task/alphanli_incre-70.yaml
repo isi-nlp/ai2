@@ -1,0 +1,6 @@
+task_name: alphanli_incre-70
+train_x: "task_data/alphanli-train-dev/increment_training/70/train.jsonl"
+train_y: "task_data/alphanli-train-dev/increment_training/70/train-labels.lst"
+val_x: "task_data/alphanli-train-dev/dev.jsonl"
+val_y: "task_data/alphanli-train-dev/dev-labels.lst"
+formula: "obs1 + obs2 -> hyp1|hyp2"

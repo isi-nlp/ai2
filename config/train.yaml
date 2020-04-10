@@ -1,5 +1,5 @@
 defaults:
-  - model: roberta-large
+  - model: roberta_large
   - task: physicaliqa
 random_seed: 42
 save_best_only: False
