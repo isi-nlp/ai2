@@ -515,10 +515,10 @@ outputs/rs10061880_bs2_acb2_ws150_dr0.2/roberta-large-physicaliqa-cn_all_cs_10k
 2020-04-09 17:47:04.415 | INFO     | __main__:<module>:89 - Accuracy score: 0.795
 2020-04-09 17:47:04.416 | INFO     | __main__:<module>:90 - 95.0 confidence interval 77.6 and 81.3, average: 79.5
 outputs/rs10061880_bs2_acb2_ws150_dr0.3/roberta-large-physicaliqa-10pc-cn_all_cs_10k
-outputs/rs10061880_bs2_acb2_ws150_dr0.3/roberta-large-physicaliqa-cn_all_cs_10k
 2020-04-09 17:47:53.168 | INFO     | __main__:<module>:89 - Accuracy score: 0.679
-2020-04-09 17:47:53.225 | INFO     | __main__:<module>:89 - Accuracy score: 0.773
 2020-04-09 17:47:53.169 | INFO     | __main__:<module>:90 - 95.0 confidence interval 65.7 and 69.9, average: 67.9
+outputs/rs10061880_bs2_acb2_ws150_dr0.3/roberta-large-physicaliqa-cn_all_cs_10k
+2020-04-09 17:47:53.225 | INFO     | __main__:<module>:89 - Accuracy score: 0.773
 2020-04-09 17:47:53.225 | INFO     | __main__:<module>:90 - 95.0 confidence interval 75.4 and 79.2, average: 77.3
 outputs/rs10061880_bs2_acb2_ws300_dr0.2/roberta-large-physicaliqa-10pc-cn_all_cs_10k
 2020-04-09 17:48:25.361 | INFO     | __main__:<module>:89 - Accuracy score: 0.700
