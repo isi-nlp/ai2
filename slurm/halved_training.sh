@@ -11,7 +11,7 @@
 #SBATCH --mail-user=dwangli@isi.edu     # Email address for email notifications to be sent to.
 #SBATCH --mail-type=ALL                 # Type of notifications to receive. Other options includes BEGIN, END, FAIL, REQUEUE and more.
 #SBATCH --export=NONE                   # Ensure job gets a fresh login environment
-#SBATCH --array=0-49                  # Submitting an array of (n-m+1) jobs, with $SLURM_ARRAY_TASK_ID ranging from n to m. Add %1 if you only want one jobs running at one time.
+#SBATCH --array=0-49%4                  # Submitting an array of (n-m+1) jobs, with $SLURM_ARRAY_TASK_ID ranging from n to m. Add %1 if you only want one jobs running at one time.
 
 
 ### Load the conda environment of your choosing

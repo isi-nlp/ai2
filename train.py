@@ -18,7 +18,7 @@ ROOT_PATH = pathlib.Path(__file__).parent.absolute()
 
 
 @hydra.main(config_path="config/train.yaml")
-def train_w_eval(config):
+def train(config):
     logger.info(config)
 
     # If the training is deterministic for debugging purposes, we set the random seed
@@ -69,12 +69,15 @@ def train_w_eval(config):
         experiment=exp,
     )
     trainer.fit(model)
+    logger.success('Training Completed')
 
-    # Evaluate the model with evaluate function from eval.py
-    evaluate(a_classifier=model, output_path=save_path,
-             compute_device=('cpu' if not torch.cuda.is_available() else "cuda"),
-             val_x=ROOT_PATH / config["val_x"], val_y=ROOT_PATH / config["val_y"])
+    if config['eval_after_training']:
+        logger.info('Start model evaluation')
+        # Evaluate the model with evaluate function from eval.py
+        evaluate(a_classifier=model, output_path=save_path,
+                 compute_device=('cpu' if not torch.cuda.is_available() else "cuda"),
+                 val_x=ROOT_PATH / config["val_x"], val_y=ROOT_PATH / config["val_y"])
 
 
 if __name__ == "__main__":
-    train_w_eval()
+    train()

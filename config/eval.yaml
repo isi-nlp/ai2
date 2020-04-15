@@ -1,6 +1,6 @@
 defaults:
   - model: roberta-large
   - task: physicaliqa
-checkpoint_path: "outputs/2020-04-07/09-17-55/roberta-large_alphanli-incre-100/checkpoints/_ckpt_epoch_4.ckpt"
+checkpoint_path: "outputs/2020-04-11/23-22-02/roberta-large-alphanli_halved-20_0-s9/checkpoints/_ckpt_epoch_4.ckpt"
 random_seed: 42
 with_eval: True

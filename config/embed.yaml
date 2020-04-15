@@ -1,0 +1,5 @@
+defaults:
+  - model: roberta-large
+  - task: physicaliqa
+checkpoint_path: "outputs/2020-04-11/23-22-02/roberta-large_alphanli_halved-20_0-s9/checkpoints/_ckpt_epoch_4.ckpt"
+embed_formula: TODO
