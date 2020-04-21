@@ -123,12 +123,12 @@ class Classifier(pl.LightningModule):
 
         self.classifier = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
         self.loss = nn.CrossEntropyLoss(ignore_index=-1, reduction="mean")
-        self.classifier.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
+        self.classifier.weight.data.normal_()
         self.classifier.bias.data.zero_()
 
         if "task_name2" in self.hparams:
             self.classifier2 = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
-            self.classifier2.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
+            self.classifier2.weight.data.normal_()
             self.classifier2.bias.data.zero_()
 
     def forward(self, batch):
