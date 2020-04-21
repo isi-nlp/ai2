@@ -146,8 +146,7 @@ class Classifier(pl.LightningModule):
                                           in self.hparams["model"] else batch["token_type_ids"]
 
 
-        results = self.embedder(input_ids=batch["input_ids"],
-                                decoder_input_ids=batch["input_ids"]
+        results = self.embedder(input_ids=batch["input_ids"]
                                 )
 
         token_embeddings, *_ = results
