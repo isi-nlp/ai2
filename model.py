@@ -148,7 +148,8 @@ class Classifier(pl.LightningModule):
 
         results = self.embedder(input_ids=batch["input_ids"],
                                 attention_mask=batch["attention_mask"],
-                                token_type_ids=batch["token_type_ids"])
+                                # token_type_ids=batch["token_type_ids"]
+                                )
 
         token_embeddings, *_ = results
         output = torch.mean(token_embeddings, dim=1).squeeze()
