@@ -1,5 +1,5 @@
 task_name: physicaliqa
-model: t5
+model: t5-small
 batch_size: 4
 accumulate_grad_batches: 2
 use_amp: false
