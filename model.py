@@ -20,6 +20,8 @@ from abc import ABC
 from torch.nn import Module
 from transformers import *
 from inspect import getfullargspec
+from transformers import T5Tokenizer, T5ForConditionalGeneration
+
 random.seed(0)
 
 MODELS = {
@@ -31,6 +33,7 @@ MODELS = {
     'roberta_mlm': RobertaForMaskedLM,
     'gpt': OpenAIGPTModel,
     'gpt2': GPT2Model,
+    't5': T5ForConditionalGeneration,
     #    'libert': LiBertModel
 }
 
