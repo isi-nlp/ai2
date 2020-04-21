@@ -1,5 +1,5 @@
 task_name: physicaliqa
-model: t5-large
+model: t5-base
 batch_size: 4
 accumulate_grad_batches: 2
 use_amp: false
@@ -14,7 +14,7 @@ train_x: "cache/physicaliqa-train-dev/physicaliqa-train-dev/train.jsonl"
 train_y: "cache/physicaliqa-train-dev/physicaliqa-train-dev/train-labels.lst"
 val_x: "cache/physicaliqa-train-dev/physicaliqa-train-dev/dev.jsonl"
 val_y: "cache/physicaliqa-train-dev/physicaliqa-train-dev/dev-labels.lst"
-save_path: "outputs/t5-large-physicaliqa"
+save_path: "outputs/t5-base-physicaliqa"
 save_best_only: true
 random_seed: 10061880
 
