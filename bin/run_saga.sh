@@ -11,7 +11,7 @@
 source ~/.bashrc
 conda activate ai2
 
-. /scratch/spack/share/spack/setup-env.sh
+. opt/scratch/spack/share/spack/setup-env.sh
 # When using `tensorflow-gpu`, paths to CUDA and CUDNN libraries are required
 # by symbol lookup at runtime even if a GPU isn't going to be used.
 spack load cuda@9.0.176
