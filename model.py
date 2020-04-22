@@ -149,20 +149,20 @@ class Classifier(pl.LightningModule):
                                 decoder_input_ids=batch["input_ids"],)
 
         token_embeddings, *_ = results
-        print(token_embeddings)
+        print(token_embeddings.shape)
         output = torch.mean(token_embeddings, dim=1).squeeze()
-        print(output)
+        print(output.shape)
         output = self.dropout(output)
-        print(output)
+        print(output.shape)
         if batch["task_id"] == 2:
             logits = self.classifier2(output).squeeze(dim=1)
         elif batch["task_id"] == 0:
             logits = self.classifier(output).squeeze(dim=1)
         else:
             raise
-        print(logits)
+        print(logits.shape)
         logits = logits.reshape(-1, batch["num_choice"])
-        print(logits)
+        print(logits.shape)
         return logits
 
     def training_step(self, batch, batch_idx, task_id=None):
