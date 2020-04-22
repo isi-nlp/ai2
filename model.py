@@ -117,6 +117,7 @@ class Classifier(pl.LightningModule):
         self.embedder = AutoModel.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache")
         self.tokenizer = AutoTokenizer.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache", use_fast=False)
         self.tokenizer.add_special_tokens({'cls_token': '<CLS>'})
+        self.embedder.resize_token_embeddings(len(self.tokenizer))
 
         self.embedder.train()
         self.dropout = nn.Dropout(config["dropout"])
