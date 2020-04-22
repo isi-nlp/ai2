@@ -149,8 +149,9 @@ class Classifier(pl.LightningModule):
                                 decoder_input_ids=batch["input_ids"],)
 
         print(len(results))
-        token_embeddings, *_ = results
+        token_embeddings, a = results
         print(token_embeddings.shape)
+        print(a.shape)
         output = torch.mean(token_embeddings, dim=1).squeeze()
         print(output.shape)
         output = self.dropout(output)
