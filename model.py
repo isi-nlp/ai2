@@ -142,7 +142,6 @@ class Classifier(pl.LightningModule):
         assert len(batch["attention_mask"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["token_type_ids"].shape) == 2, "LM only take two-dimensional input"
 
-        print(batch["input_ids"])
         batch["token_type_ids"] = None if "roberta" in self.hparams["model"] or "lm_finetuned" \
                                           in self.hparams["model"] else batch["token_type_ids"]
 
@@ -326,6 +325,9 @@ class Classifier(pl.LightningModule):
 
         assert results["input_ids"].shape[0] == batch_size * num_choice, \
             f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
+
+        print(pairs)
+        print(results["input_ids"])
 
         batch = {
             "input_ids": results["input_ids"],
