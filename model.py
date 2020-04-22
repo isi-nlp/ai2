@@ -142,10 +142,13 @@ class Classifier(pl.LightningModule):
         batch["token_type_ids"] = None if "roberta" in self.hparams["model"] or "lm_finetuned" \
                                           in self.hparams["model"] else batch["token_type_ids"]
 
-
-        results = self.embedder(input_ids=batch["input_ids"],
-                                attention_mask=batch["attention_mask"],
-                                token_type_ids=batch["token_type_ids"])
+        if 't5' in self.hparams["model"]:
+            results = self.embedder(input_ids=batch["input_ids"],
+                                    decoder_input_ids=batch["input_ids"], )
+        else:
+            results = self.embedder(input_ids=batch["input_ids"],
+                                    attention_mask=batch["attention_mask"],
+                                    token_type_ids=batch["token_type_ids"])
 
         token_embeddings, *_ = results
         output = torch.mean(token_embeddings, dim=1).squeeze()
