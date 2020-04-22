@@ -330,7 +330,7 @@ class Classifier(pl.LightningModule):
             f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
 
         print(pairs)
-        print(results["input_ids"])
+        print(results)
 
         batch = {
             "input_ids": results["input_ids"],
