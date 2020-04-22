@@ -137,18 +137,13 @@ class Classifier(pl.LightningModule):
 
         assert len(batch["input_ids"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["attention_mask"].shape) == 2, "LM only take two-dimensional input"
-        assert len(batch["token_type_ids"].shape) == 2, "LM only take two-dimensional input"
-
-        batch["token_type_ids"] = None if "roberta" in self.hparams["model"] or "lm_finetuned" \
-                                          in self.hparams["model"] else batch["token_type_ids"]
 
         if 't5' in self.hparams["model"]:
             results = self.embedder(input_ids=batch["input_ids"],
                                     decoder_input_ids=batch["input_ids"], )
         else:
             results = self.embedder(input_ids=batch["input_ids"],
-                                    attention_mask=batch["attention_mask"],
-                                    token_type_ids=batch["token_type_ids"])
+                                    attention_mask=batch["attention_mask"])
 
         token_embeddings, *_ = results
         output = torch.mean(token_embeddings, dim=1).squeeze()
@@ -330,7 +325,6 @@ class Classifier(pl.LightningModule):
         batch = {
             "input_ids": results["input_ids"],
             "attention_mask": results["attention_mask"],
-            "token_type_ids": results["token_type_ids"],
             "labels": torch.LongTensor([e["label"] for e in examples]) if "label" in examples[0] else None,
             "num_choice": num_choice,
             "task_id": task_id
