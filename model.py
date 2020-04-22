@@ -328,6 +328,7 @@ class Classifier(pl.LightningModule):
 
         print(pairs)
         print(results["input_ids"])
+        print(results["token_type_ids"])
 
         batch = {
             "input_ids": results["input_ids"],
