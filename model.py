@@ -12,7 +12,6 @@ from transformers import AutoModel, AutoTokenizer, AdamW
 
 
 # Extending the dataset module provided by the PyTorch module to build the dataset class for AI2 dataset.
-# Only called by dataloader
 class ClassificationDataset(Dataset):
 
     def __init__(self, instances):
@@ -86,7 +85,7 @@ class Classifier(pl.LightningModule):
     def transform(formula):
 
         # Apply to a pandas data frame row
-        def warpper(row):
+        def wrapper(row):
             context, choices = formula.split("->")
             # alphanli:     (obs1 + obs2 -> hyp1|hyp2)
             # hellaswag:    (ctx_a + ctx_b -> ending_options)
@@ -99,7 +98,7 @@ class Classifier(pl.LightningModule):
             choices = [row[a_choice.strip()] for a_choice in choices]
             return list(zip(cycle([context]), choices))
 
-        return warpper
+        return wrapper
 
     # Collate function used by data loader objects
     def collate(self, examples):
