@@ -148,13 +148,14 @@ class Classifier(pl.LightningModule):
         results = self.embedder(input_ids=batch["input_ids"],
                                 decoder_input_ids=batch["input_ids"],)
 
-        print(len(results))
-        token_embeddings, a = results
+        token_embeddings, *_ = results
         print(token_embeddings.shape)
-        print(a)
-        print(a.shape)
-        output = torch.mean(token_embeddings, dim=1).squeeze()
-        print(output.shape)
+
+        cls_embeddings = token_embeddings[:,0,:]
+        print(cls_embeddings.shape)
+        # output = torch.mean(token_embeddings, dim=1).squeeze()
+        # print(output.shape)
+
         output = self.dropout(output)
         print(output.shape)
         if batch["task_id"] == 2:
