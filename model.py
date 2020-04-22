@@ -20,8 +20,6 @@ from abc import ABC
 from torch.nn import Module
 from transformers import *
 from inspect import getfullargspec
-from transformers import T5Tokenizer, T5ForConditionalGeneration
-
 random.seed(0)
 
 MODELS = {
@@ -33,7 +31,6 @@ MODELS = {
     'roberta_mlm': RobertaForMaskedLM,
     'gpt': OpenAIGPTModel,
     'gpt2': GPT2Model,
-    't5': T5ForConditionalGeneration,
     #    'libert': LiBertModel
 }
 
@@ -116,9 +113,6 @@ class Classifier(pl.LightningModule):
         self.root_path = pathlib.Path(__file__).parent.absolute()
         self.embedder = AutoModel.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache")
         self.tokenizer = AutoTokenizer.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache", use_fast=False)
-        # self.tokenizer.add_special_tokens({'cls_token': '<CLS>'})
-        # self.embedder.resize_token_embeddings(len(self.tokenizer))
-
         self.embedder.train()
         self.dropout = nn.Dropout(config["dropout"])
 
@@ -126,12 +120,12 @@ class Classifier(pl.LightningModule):
 
         self.classifier = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
         self.loss = nn.CrossEntropyLoss(ignore_index=-1, reduction="mean")
-        self.classifier.weight.data.normal_()
+        self.classifier.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
         self.classifier.bias.data.zero_()
 
         if "task_name2" in self.hparams:
             self.classifier2 = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
-            self.classifier2.weight.data.normal_()
+            self.classifier2.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
             self.classifier2.bias.data.zero_()
 
     def forward(self, batch):
@@ -148,22 +142,23 @@ class Classifier(pl.LightningModule):
         batch["token_type_ids"] = None if "roberta" in self.hparams["model"] or "lm_finetuned" \
                                           in self.hparams["model"] else batch["token_type_ids"]
 
+
         results = self.embedder(input_ids=batch["input_ids"],
-                                decoder_input_ids=batch["input_ids"],)
+                                attention_mask=batch["attention_mask"],
+                                token_type_ids=batch["token_type_ids"])
 
         token_embeddings, *_ = results
-        # output = torch.mean(token_embeddings, dim=1).squeeze()
-        # output = self.dropout(output)
-        cls_embeddings = token_embeddings[:,0,:]
-        output = self.dropout(cls_embeddings)
-
+        output = torch.mean(token_embeddings, dim=1).squeeze()
+        output = self.dropout(output)
         if batch["task_id"] == 2:
             logits = self.classifier2(output).squeeze(dim=1)
         elif batch["task_id"] == 0:
             logits = self.classifier(output).squeeze(dim=1)
         else:
             raise
+
         logits = logits.reshape(-1, batch["num_choice"])
+
         return logits
 
     def training_step(self, batch, batch_idx, task_id=None):
@@ -328,9 +323,6 @@ class Classifier(pl.LightningModule):
 
         assert results["input_ids"].shape[0] == batch_size * num_choice, \
             f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
-
-        print(pairs)
-        print(results)
 
         batch = {
             "input_ids": results["input_ids"],
