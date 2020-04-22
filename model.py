@@ -329,9 +329,8 @@ class Classifier(pl.LightningModule):
         assert results["input_ids"].shape[0] == batch_size * num_choice, \
             f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
 
-        print(pairs[0])
-        print(results["input_ids"][0])
-        print(results["token_type_ids"][0])
+        print(pairs)
+        print(results["input_ids"])
 
         batch = {
             "input_ids": results["input_ids"],
