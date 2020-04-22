@@ -19,7 +19,8 @@ def embedding(config):
 
     # Load in the check pointed model from check point file
     device = 'cpu' if not torch.cuda.is_available() else "cuda"
-    checkpoint = torch.load(ROOT_PATH / config['checkpoint_path'], map_location=device)
+    checkpoint = torch.load(ROOT_PATH / config['checkpoints_dir'] / f"{config['checkpoint_name']}.ckpt",
+                            map_location=device)
     model = Classifier(config)
     model.load_state_dict(checkpoint['state_dict'])
     model.to(device)
@@ -35,19 +36,20 @@ def embedding(config):
                                           label_path=ROOT_PATH / config['val_y'],
                                           compute_device=device, feature=config['feature'])
 
-    # Write out the output list to the file
-    with open(f"{config['model']}-{config['task_name']}_train-{config['formula']}.jsonl", 'w+') as train_file:
+    # # Write out the output list to the file
+    with open(f"{config['model']}-{config['task_name']}_train-{config['checkpoint_name']}.lst", 'w+') as train_file:
         for an_entry in train_embeddings:
-            train_file.write(','.join(an_entry))
+            train_file.write(','.join([str(float(a_float)) for a_float in an_entry]))
             train_file.write('\n')
-    with open(f"{config['model']}-{config['task_name']}_dev-{config['formula']}.jsonl", 'w+') as dev_file:
+    with open(f"{config['model']}-{config['task_name']}_dev-{config['checkpoint_name']}.lst", 'w+') as dev_file:
         for an_entry in dev_embeddings:
-            dev_file.write(','.join([str(float(a_float) for a_float in an_entry)]))
+            dev_file.write(','.join([str(float(a_float)) for a_float in an_entry]))
             dev_file.write('\n')
 
 
 # Helper function for loading embeddings
 def calculate_embeddings(a_classifier: Classifier, text_path: str, label_path: str, compute_device: str, feature: str):
+
     embedding_list = []
     # Forward propagate the model to get a list of predictions and their respective confidence
     for batch in tqdm(DataLoader(a_classifier.dataloader(text_path, label_path),

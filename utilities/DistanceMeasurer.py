@@ -34,7 +34,7 @@ class DistanceMeasurer:
 
     @staticmethod
     def cosine_dist(embed_1, embed_2):
-        return torch.dot(embed_1, embed_2)/max(torch.norm(embed_1, 2)*torch.norm(embed_2, 2), 1e-08)
+        return torch.tensor(1) - torch.dot(embed_1, embed_2)/max(torch.norm(embed_1, 2)*torch.norm(embed_2, 2), 1e-08)
 
     @staticmethod
     def manhattan_dist(embed_1, embed_2):
