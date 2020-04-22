@@ -151,6 +151,7 @@ class Classifier(pl.LightningModule):
         print(len(results))
         token_embeddings, a = results
         print(token_embeddings.shape)
+        print(a)
         print(a.shape)
         output = torch.mean(token_embeddings, dim=1).squeeze()
         print(output.shape)
