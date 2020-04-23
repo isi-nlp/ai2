@@ -8,7 +8,7 @@
 #SBATCH --gpus-per-task=1
 #SBATCH --mem-per-cpu=4g
 #SBATCH --output=param_search.out
-#SBATCH --array=0-71%18
+#SBATCH --array=0-59%15
 
 source ~/.bashrc
 conda activate ai2
@@ -26,7 +26,7 @@ echo "Running eval ${SLURM_ARRAY_TASK_ID} for ${ARGS}"
 #OUTPUT=outputs/$(ls -d */* | head -$((SLURM_ARRAY_TASK_ID+1)) | tail -1)/checkpoints
 
 EXP_PATH=$(echo $ARGS | awk -F'save_path ' '{print $2}' | cut -d ' ' -f 1)
-FILE=$EXP_PATH/checkpoints/_ckpt_epoch_4.ckpt
+FILE=$EXP_PATH/checkpoints/_ckpt_epoch_6.ckpt
 
 if [ ! -f "$FILE" ]; then
   FILE=$EXP_PATH/checkpoints/_ckpt_epoch_3.ckpt
@@ -34,6 +34,12 @@ if [ ! -f "$FILE" ]; then
     FILE=$EXP_PATH/checkpoints/_ckpt_epoch_2.ckpt
     if [ ! -f "$FILE" ]; then
       FILE=$EXP_PATH/checkpoints/_ckpt_epoch_1.ckpt
+      if [ ! -f "$FILE" ]; then
+        FILE=$EXP_PATH/checkpoints/_ckpt_epoch_4.ckpt
+        if [ ! -f "$FILE" ]; then
+          FILE=$EXP_PATH/checkpoints/_ckpt_epoch_5.ckpt
+        fi
+      fi
     fi
   fi
 fi
