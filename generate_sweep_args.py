@@ -3,7 +3,7 @@ MODEL_WEIGHTS="t5-small"
 SEED=10061880
 
 # double_experiments=[("physicaliqa-10pc","cn_all_cs_10k"), ("physicaliqa","cn_all_cs_10k")]
-single_experiments=["physicaliqa-25pc"]# "physicaliqa"]
+single_experiments=["t5-small-physicaliqa-25pc"]# "physicaliqa"]
 double_experiments=[]
 
 all_args = []
