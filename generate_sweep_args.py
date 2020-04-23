@@ -11,7 +11,7 @@ all_args = []
 # Sweep parameters
 # for BS in [1, 2, 3]:
 for ACB in [2, 4, 8, 16]:
-    for LR in ['5e-7', '1e-7', '5e-6', '1e-5', '5e-5']:
+    for LR in ['5e-7', '1e-6', '5e-6', '1e-5', '5e-5']:
         for SEED in [0, 42, 10061880]:
 
             # For each parameter setup, prepate arguments file
