@@ -16,7 +16,7 @@ for ACB in [2, 4, 8, 16]:
 
             # For each parameter setup, prepate arguments file
             SWEEP_PARAMS=f"--accumulate_grad_batches {ACB} --learning_rate {LR} --random_seed {SEED}"
-            SETUP_NAME=f"rs{SEED}_acb{ACB}_lr{LR}"
+            SETUP_NAME=f"{MODEL_WEIGHTS}_rs{SEED}_acb{ACB}_lr{LR}"
 
             # Train double task experiments
             for TASK1, TASK2 in double_experiments:

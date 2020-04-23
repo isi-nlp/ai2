@@ -1,0 +1,1 @@
+--config_file configs/physicaliqa-25pc.yaml  --save_path outputs/t5-small_rs42_acb4_lr5e-5/t5-small-physicaliqa-25pc --accumulate_grad_batches 4 --learning_rate 5e-5 --random_seed 42
