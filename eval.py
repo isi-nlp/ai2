@@ -46,7 +46,7 @@ def main(config):
              output_path=save_path,
              compute_device=device,
              val_x=ROOT_PATH / config['val_x'],
-             val_y=(ROOT_PATH / config['val_y'] if config['with_eval'] else None))
+             val_y=(ROOT_PATH / config['val_y'] if config['with_true_label'] else None))
 
 
 # Function to perform the evaluation (This was separated out to be called in train script)
@@ -70,6 +70,8 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, pathlib.Path], co
             logits = a_classifier.forward(batch)
         predictions.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
         confidence.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())
+
+    # Offset the predictions with the lowest label
     predictions = [p + a_classifier.label_offset for p in predictions]
 
     # Write out the result lists
