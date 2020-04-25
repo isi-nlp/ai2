@@ -2,8 +2,8 @@ task_name: alphanli-physicaliqa-combined
 train_x: "task_data/alphanli-physicaliqa-combine-training/train.jsonl"
 train_y: "task_data/alphanli-physicaliqa-combine-training/train-labels.lst"
 ## Eval on anli
-#val_x: task_data/alphanli-physicaliqa-combine-training/alphanli-dev.jsonl
-#val_y: task_data/alphanli-physicaliqa-combine-training/alphanli-dev-labels.lst
+#val_x: task_data/alphanli-train-dev/dev.jsonl
+#val_y: task_data/alphanli-train-dev/dev-labels.lst
 # Eval on piqa
 val_x: task_data/alphanli-physicaliqa-combine-training/physicaliqa-dev.jsonl
 val_y: task_data/alphanli-physicaliqa-combine-training/physicaliqa-dev-labels.lst
