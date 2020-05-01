@@ -140,7 +140,6 @@ class Classifier(pl.LightningModule):
                                     attention_mask=batch["attention_mask"])
 
         token_embeddings, *_ = results
-        print('T:', token_embeddings.shape)
 
         if self.hparams['embed_all_sep_mean']:
             # Get the mean of part of the embedding that corresponds to the answer
@@ -157,9 +156,7 @@ class Classifier(pl.LightningModule):
                 mean_embeddings[i, :] = combined_mean
         else:
             mean_embeddings = torch.mean(token_embeddings, dim=1).squeeze()
-        print(mean_embeddings)
         output = self.dropout(mean_embeddings)
-        print(output.shape)
         if batch["task_id"] == 2:
             logits = self.classifier2(output).squeeze(dim=1)
         elif batch["task_id"] == 0:
@@ -167,15 +164,12 @@ class Classifier(pl.LightningModule):
         else:
             raise
         logits = logits.reshape(-1, batch["num_choice"])
-        print(logits.shape)
         return logits
 
     def training_step(self, batch, batch_idx, task_id=None):
 
         logits = self.forward(batch)
-        print('calculating loss:', logits, batch["labels"])
         loss = self.loss(logits, batch["labels"])
-        print(loss.shape, loss)
         if self.trainer and self.trainer.use_dp:
             loss = loss.unsqueeze(0)
 
