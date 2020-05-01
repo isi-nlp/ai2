@@ -285,7 +285,6 @@ class Classifier(pl.LightningModule):
         else:
             task_id_str = str(task_id)
 
-        pd.set_option("display.max_columns", 10)
         df["text"] = df.apply(self.transform(self.hparams["formula{}".format(task_id_str)]), axis=1)
         df["task_id"] = task_id if task_id is not None else 0
         print(df.head())
@@ -302,7 +301,7 @@ class Classifier(pl.LightningModule):
             choices = row[choices[0]] if len(choices) == 0 else [row[x.strip()] for x in choices]
 
             # Include answers in goal
-            if self.hparams['goal_inc_answers']:
+            if self.hparams['goal_inc_answers'] or self.hparams['embed_all_sep_mean']:
                 context = context + ' - ' + ' - '.join(choices)
             return list(zip(cycle([context]), choices))
 
@@ -316,11 +315,18 @@ class Classifier(pl.LightningModule):
 
         print(examples)
 
-        goal_answer_pairs = [pair for example in examples for pair in example["text"]]
+        context_answer_pairs = [pair for example in examples for pair in example["text"]]
         # Reformat Multiple choice parsing
-        # 2) Create single embedding, but takes sub representations later
-        # else:
-        pairs = goal_answer_pairs
+        # 2) We create single embedding, but takes sub representations later/ We need to know i
+        if self.hparams['embed_all_sep_mean']:
+            # We just keep the context, i.e goal and all the answers, remove correct answer
+            pairs = []
+            for pair in context_answer_pairs:
+                pairs.append(pair[0])
+                # But we still need to keep the position of the correct answer.
+
+        else:
+            pairs = context_answer_pairs
         print(pairs)
         results = self.tokenizer.batch_encode_plus(pairs,
                                                    add_special_tokens=True, max_length=self.hparams["max_length"],
