@@ -154,6 +154,7 @@ class Classifier(pl.LightningModule):
                 combined = torch.cat((goal_seq, ans_seq), 0)  # concat goal and answer
                 combined_mean = torch.mean(combined, dim=0).squeeze()  # mean of the question and the correct answer
                 mean_embeddings[i, :] = combined_mean
+                mean_embeddings = mean_embeddings.to(self.device)
         else:
             mean_embeddings = torch.mean(token_embeddings, dim=1).squeeze()
         output = self.dropout(mean_embeddings)
