@@ -146,23 +146,26 @@ class Classifier(pl.LightningModule):
                                     attention_mask=batch["attention_mask"])
 
         token_embeddings, *_ = results
+        print('T:', token_embeddings.shape)
         output = torch.mean(token_embeddings, dim=1).squeeze()
         output = self.dropout(output)
+        print(output.shape)
         if batch["task_id"] == 2:
             logits = self.classifier2(output).squeeze(dim=1)
         elif batch["task_id"] == 0:
             logits = self.classifier(output).squeeze(dim=1)
         else:
             raise
-
         logits = logits.reshape(-1, batch["num_choice"])
-
+        print(logits.shape)
         return logits
 
     def training_step(self, batch, batch_idx, task_id=None):
 
         logits = self.forward(batch)
+        print('calculating loss:', logits, batch["labels"])
         loss = self.loss(logits, batch["labels"])
+        print(loss.shape, loss)
         if self.trainer and self.trainer.use_dp:
             loss = loss.unsqueeze(0)
 
@@ -288,8 +291,11 @@ class Classifier(pl.LightningModule):
         else:
             task_id_str = str(task_id)
 
+        pd.set_option("display.max_columns", 10)
         df["text"] = df.apply(self.transform(self.hparams["formula{}".format(task_id_str)]), axis=1)
         df["task_id"] = task_id if task_id is not None else 0
+        if self.hparams["goal_inc_answers"]:
+            df["goal"] = df[['goal', 'sol1', 'sol2']].agg(' - '.join, axis=1)
         print(df.head())
         return ClassificationDataset(df[["text", "label", "task_id"]].to_dict("records"))
 

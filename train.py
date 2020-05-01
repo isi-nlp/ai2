@@ -83,6 +83,8 @@ def get_parser():
     parser.add_argument('--dropout', type=float, default=None)
     parser.add_argument('--random_seed', type=int, default=None)
     parser.add_argument('--save_path', type=str, default=None)
+    parser.add_argument('--goal_inc_answers', type=bool, default=False)
+    parser.add_argument('--embed_all_sep_mean', type=bool, default=False)
 
     return parser
 
