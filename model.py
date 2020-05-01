@@ -152,11 +152,12 @@ class Classifier(pl.LightningModule):
                 token_embeddings_for_sequence_i = token_embeddings[i, :, :].squeeze()
                 goal_seq = token_embeddings_for_sequence_i[g_i:g_j+1, :]
                 ans_seq = token_embeddings_for_sequence_i[a_i:a_j+1, :]
-                combined = torch.cat((goal_seq, ans_seq), 0)
-                combined_mean = torch.mean(combined, dim=0).squeeze()
+                combined = torch.cat((goal_seq, ans_seq), 0)  # concat goal and answer
+                combined_mean = torch.mean(combined, dim=0).squeeze()  # mean of the question and the correct answer
                 mean_embeddings[i, :] = combined_mean
         else:
             mean_embeddings = torch.mean(token_embeddings, dim=1).squeeze()
+        print(mean_embeddings)
         output = self.dropout(mean_embeddings)
         print(output.shape)
         if batch["task_id"] == 2:
@@ -339,8 +340,6 @@ class Classifier(pl.LightningModule):
             "num_choice": num_choice,
             "task_id": task_id
         }
-
-        print(examples)
 
         # Reformat Multiple choice parsing
         # We create single embedding, but takes sub representations later/ We need to know i
