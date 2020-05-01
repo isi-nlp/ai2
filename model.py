@@ -129,15 +129,10 @@ class Classifier(pl.LightningModule):
             self.classifier2.bias.data.zero_()
 
     def forward(self, batch):
-        if False:
-            print(batch["input_ids"])
-            for i in range(len(batch["input_ids"])):
-                dd = batch["input_ids"][i]
-                print(self.tokenizer.decode(dd))
-
         assert len(batch["input_ids"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["attention_mask"].shape) == 2, "LM only take two-dimensional input"
 
+        print(batch)
         if 't5' in self.hparams["model"]:
             results = self.embedder(input_ids=batch["input_ids"],
                                     decoder_input_ids=batch["input_ids"], )
