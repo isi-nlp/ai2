@@ -132,7 +132,6 @@ class Classifier(pl.LightningModule):
         assert len(batch["input_ids"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["attention_mask"].shape) == 2, "LM only take two-dimensional input"
 
-        print(batch)
         if 't5' in self.hparams["model"]:
             results = self.embedder(input_ids=batch["input_ids"],
                                     decoder_input_ids=batch["input_ids"], )
@@ -289,13 +288,10 @@ class Classifier(pl.LightningModule):
         pd.set_option("display.max_columns", 10)
         df["text"] = df.apply(self.transform(self.hparams["formula{}".format(task_id_str)]), axis=1)
         df["task_id"] = task_id if task_id is not None else 0
-        if self.hparams["goal_inc_answers"]:
-            df["goal"] = df[['goal', 'sol1', 'sol2']].agg(' - '.join, axis=1)
         print(df.head())
         return ClassificationDataset(df[["text", "label", "task_id"]].to_dict("records"))
 
-    @staticmethod
-    def transform(formula):
+    def transform(self, formula):
 
         def warpper(row):
             context, choices = formula.split("->")
@@ -304,6 +300,10 @@ class Classifier(pl.LightningModule):
 
             context = " ".join(row[x.strip()] for x in context)
             choices = row[choices[0]] if len(choices) == 0 else [row[x.strip()] for x in choices]
+
+            # Include answers in goal
+            if self.hparams['goal_inc_answers']:
+                context = context + ' - ' + ' - '.join(choices)
             return list(zip(cycle([context]), choices))
 
         return warpper
@@ -314,7 +314,14 @@ class Classifier(pl.LightningModule):
         num_choice = len(examples[0]["text"])
         task_id = examples[0]["task_id"]
 
-        pairs = [pair for example in examples for pair in example["text"]]
+        print(examples)
+
+        goal_answer_pairs = [pair for example in examples for pair in example["text"]]
+        # Reformat Multiple choice parsing
+        # 2) Create single embedding, but takes sub representations later
+        # else:
+        pairs = goal_answer_pairs
+        print(pairs)
         results = self.tokenizer.batch_encode_plus(pairs,
                                                    add_special_tokens=True, max_length=self.hparams["max_length"],
                                                    return_tensors='pt', return_attention_masks=True,
