@@ -17,5 +17,5 @@ val_y: "cache/physicaliqa-10pc-train-dev/physicaliqa-10pc-train-dev/dev-labels.l
 save_path: "outputs/roberta-large-physicaliqa-10pc"
 save_best_only: true
 random_seed: 10061880
-goal_inc_answers: true
-embed_all_sep_mean: false
+goal_inc_answers: false
+embed_all_sep_mean: true

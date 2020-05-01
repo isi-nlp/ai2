@@ -141,8 +141,23 @@ class Classifier(pl.LightningModule):
 
         token_embeddings, *_ = results
         print('T:', token_embeddings.shape)
-        output = torch.mean(token_embeddings, dim=1).squeeze()
-        output = self.dropout(output)
+
+        if self.hparams['embed_all_sep_mean']:
+            # Get the mean of part of the embedding that corresponds to the answer
+            mean_dims = token_embeddings.shape[0], token_embeddings.shape[2]
+            mean_embeddings = torch.zeros(mean_dims)
+            for i in range(mean_dims[0]):
+                g_i, g_j = batch['goal_positions'][i]
+                a_i, a_j = batch['answer_positions'][i]
+                token_embeddings_for_sequence_i = token_embeddings[i, :, :].squeeze()
+                goal_seq = token_embeddings_for_sequence_i[g_i:g_j+1, :]
+                ans_seq = token_embeddings_for_sequence_i[a_i:a_j+1, :]
+                combined = torch.cat((goal_seq, ans_seq), 0)
+                combined_mean = torch.mean(combined, dim=0).squeeze()
+                mean_embeddings[i, :] = combined_mean
+        else:
+            mean_embeddings = torch.mean(token_embeddings, dim=1).squeeze()
+        output = self.dropout(mean_embeddings)
         print(output.shape)
         if batch["task_id"] == 2:
             logits = self.classifier2(output).squeeze(dim=1)
@@ -288,7 +303,7 @@ class Classifier(pl.LightningModule):
         df["text"] = df.apply(self.transform(self.hparams["formula{}".format(task_id_str)]), axis=1)
         df["task_id"] = task_id if task_id is not None else 0
         print(df.head())
-        return ClassificationDataset(df[["text", "label", "task_id"]].to_dict("records"))
+        return ClassificationDataset(df[["text", "goal", "label", "task_id"]].to_dict("records"))
 
     def transform(self, formula):
 
@@ -307,42 +322,57 @@ class Classifier(pl.LightningModule):
 
         return warpper
 
+    @staticmethod
+    def find_sub_list(sl, l):
+        sll = len(sl)
+        for ind in (i for i, e in enumerate(l) if e == sl[0]):
+            if l[ind:ind + sll] == sl:
+                return ind, ind + sll - 1
+
     def collate(self, examples):
 
         batch_size = len(examples)
         num_choice = len(examples[0]["text"])
         task_id = examples[0]["task_id"]
-
-        print(examples)
-
-        context_answer_pairs = [pair for example in examples for pair in example["text"]]
-        # Reformat Multiple choice parsing
-        # 2) We create single embedding, but takes sub representations later/ We need to know i
-        if self.hparams['embed_all_sep_mean']:
-            # We just keep the context, i.e goal and all the answers, remove correct answer
-            pairs = []
-            for pair in context_answer_pairs:
-                pairs.append(pair[0])
-                # But we still need to keep the position of the correct answer.
-
-        else:
-            pairs = context_answer_pairs
-        print(pairs)
-        results = self.tokenizer.batch_encode_plus(pairs,
-                                                   add_special_tokens=True, max_length=self.hparams["max_length"],
-                                                   return_tensors='pt', return_attention_masks=True,
-                                                   pad_to_max_length=True)
-
-        assert results["input_ids"].shape[0] == batch_size * num_choice, \
-            f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
-
         batch = {
-            "input_ids": results["input_ids"],
-            "attention_mask": results["attention_mask"],
             "labels": torch.LongTensor([e["label"] for e in examples]) if "label" in examples[0] else None,
             "num_choice": num_choice,
             "task_id": task_id
         }
+
+        print(examples)
+
+        # Reformat Multiple choice parsing
+        # We create single embedding, but takes sub representations later/ We need to know i
+        if self.hparams['embed_all_sep_mean']:
+            context_answer_pairs = [(c, example['goal'], a) for example in examples for c,a in example["text"]]
+            # We just keep the context, i.e goal and all the answers, remove correct answer
+            pairs = [pair[0] for pair in context_answer_pairs]
+            goal_positions = []
+            answer_positions = []
+            # We also want to know just the token representation of goal and correct ans, we get the subsequence
+            for pair in context_answer_pairs:
+                context_tokens = self.tokenizer.tokenize(pair[0])
+                goal_tokens = self.tokenizer.tokenize(pair[1])
+                goal_positions.append(self.find_sub_list(goal_tokens, context_tokens))
+                answers_tokens = self.tokenizer.tokenize('Answer ' + pair[2])[1:]
+                answer_positions.append(self.find_sub_list(answers_tokens, context_tokens))
+            batch['answer_positions'] = answer_positions
+            batch['goal_positions'] = goal_positions
+        else:
+            pairs = [pair for example in examples for pair in example["text"]]
+
+        results = self.tokenizer.batch_encode_plus(pairs,
+                                                   add_special_tokens=True, max_length=self.hparams["max_length"],
+                                                   return_tensors='pt', return_attention_masks=True,
+                                                   pad_to_max_length=True)
+        assert results["input_ids"].shape[0] == batch_size * num_choice, \
+            f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
+
+        batch["input_ids"] = results["input_ids"]
+        batch["attention_mask"] = results["attention_mask"]
+
+
 
         # TODO: provide associated tree ids here
         batch['additional_position_ids'] = torch.zeros_like(results["input_ids"])
