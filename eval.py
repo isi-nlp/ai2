@@ -33,9 +33,9 @@ def main(config):
             torch.backends.cuda.benchmark = False
 
     # Load in the check pointed model
+    model = Classifier(config)
     device = 'cpu' if not torch.cuda.is_available() else "cuda"
     checkpoint = torch.load(ROOT_PATH / config['checkpoint_path'], map_location=device)
-    model = Classifier(config)
     model.load_state_dict(checkpoint['state_dict'])
 
     save_path = pathlib.Path(f"{config['model']}-{config['task_name']}-s{config['random_seed']}")

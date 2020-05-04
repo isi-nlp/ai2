@@ -1,6 +1,8 @@
 defaults:
   - model: roberta-large
-  - task: physicaliqa
+  - task: alphanli
 random_seed: 42
+build_on_pretrained_model: False
+#build_on_pretrained_model: "outputs/roberta-large-baselines/"
 save_best_only: True
 eval_after_training: True

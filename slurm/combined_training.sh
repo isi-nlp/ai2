@@ -6,11 +6,12 @@
 #SBATCH --mem-per-cpu=4G                # Memory allocated per cpu
 #SBATCH --cpus-per-task=4               # CPU Allocated
 #SBATCH --gpus-per-task=1               # GPU Allocated
-#SBATCH --job-name=ANLI_SIQA        # The name of this job. If removed the job will have name of your shell script.
+#SBATCH --job-name=ROBERTA-LARGE_BL        # The name of this job. If removed the job will have name of your shell script.
 #SBATCH --output=outputs/%x-%j.out              # The name of the file output. %x-%j means JOB_NAME-JOB_ID. If removed output will be in file slurm-JOB_ID.
 #SBATCH --mail-user=dwangli@isi.edu     # Email address for email notifications to be sent to.
 #SBATCH --mail-type=ALL                 # Type of notifications to receive. Other options includes BEGIN, END, FAIL, REQUEUE and more.
 #SBATCH --export=NONE                   # Ensure job gets a fresh login environment
+#SBATCH --array=0-3                  # Submitting an array of (n-m+1) jobs, with $SLURM_ARRAY_TASK_ID ranging from n to m. Add %1 if you only want one jobs running at one time.
 
 
 ### Load the conda environment of your choosing
@@ -30,10 +31,10 @@ echo "Starting run at: $(date)"
 echo ""
 
 # Create a total array of models and tasks and permute them
-
+allTask=(alphanli hellaswag physicaliqa  socialiqa)
+task=${allTask[${SLURM_ARRAY_TASK_ID}]}
 echo ""
-echo "Training anli + siqa data and evaluate on anli dev set"
-python train.py task=alphanli-socialiqa-combined
+python train.py task="$task"
 echo ""
 
 ### Finishing up the job and copy the output off of staging
