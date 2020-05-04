@@ -120,24 +120,28 @@ class Classifier(pl.LightningModule):
 
         self.classifier = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
         self.loss = nn.CrossEntropyLoss(ignore_index=-1, reduction="mean")
-        self.classifier.weight.data.normal_(mean=0.0)
+        self.classifier.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
         self.classifier.bias.data.zero_()
 
         if "task_name2" in self.hparams:
             self.classifier2 = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
-            self.classifier2.weight.data.normal_(mean=0.0)
+            self.classifier2.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
             self.classifier2.bias.data.zero_()
 
     def forward(self, batch):
         assert len(batch["input_ids"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["attention_mask"].shape) == 2, "LM only take two-dimensional input"
+        assert len(batch["token_type_ids"].shape) == 2, "LM only take two-dimensional input"
+
+        batch["token_type_ids"] = None if "roberta" in self.hparams["model"] or "lm_finetuned" \
+                                          in self.hparams["model"] else batch["token_type_ids"]
+        results = self.embedder(input_ids=batch["input_ids"],
+                                attention_mask=batch["attention_mask"],
+                                token_type_ids=batch["token_type_ids"])
 
         if 't5' in self.hparams["model"]:
             results = self.embedder(input_ids=batch["input_ids"],
-                                    decoder_input_ids=batch["input_ids"], )
-        else:
-            results = self.embedder(input_ids=batch["input_ids"],
-                                    attention_mask=batch["attention_mask"])
+                                    decoder_input_ids=batch["input_ids"],)
 
         token_embeddings, *_ = results
 
@@ -365,7 +369,7 @@ class Classifier(pl.LightningModule):
 
         batch["input_ids"] = results["input_ids"]
         batch["attention_mask"] = results["attention_mask"]
-
+        batch["token_type_ids"] = results["token_type_ids"]
 
 
         # TODO: provide associated tree ids here
