@@ -5,7 +5,7 @@ accumulate_grad_batches = 8
 learning_rate = '5e-6'
 dropout = 0.3
 adam_epsilon = '1e-8'
-epochs = 4
+epochs = 6
 warmup_steps = 300
 random_seed = 10061880
 

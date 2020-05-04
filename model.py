@@ -148,7 +148,7 @@ class Classifier(pl.LightningModule):
         if self.hparams['embed_all_sep_mean']:
             # Get the mean of part of the embedding that corresponds to the answer
             mean_dims = token_embeddings.shape[0], token_embeddings.shape[2]
-            mean_embeddings = torch.zeros(mean_dims)
+            mean_embeddings = torch.zeros(mean_dims, requires_grad=True)
             for i in range(mean_dims[0]):
                 g_i, g_j = batch['goal_positions'][i]
                 a_i, a_j = batch['answer_positions'][i]
