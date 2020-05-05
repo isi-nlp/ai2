@@ -3,7 +3,7 @@ MODEL_WEIGHTS="roberta-large"
 SEED=10061880
 
 # double_experiments=[("physicaliqa-10pc","cn_all_cs_10k"), ("physicaliqa","cn_all_cs_10k")]
-single_experiments=["physicaliqa-arc1"]
+single_experiments=["physicaliqa-arc1", "physicaliqa-arc2"]
 double_experiments=[]
 
 all_args = []
