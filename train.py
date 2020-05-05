@@ -33,11 +33,12 @@ def train(config):
 
     # Initialize the classifier by arguments specified in config file
     model = Classifier(config)
+    save_path = f"{config['model']}-{config['task_name']}-s{config['random_seed']}"
     if config['build_on_pretrained_model']:
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
-        checkpoint = torch.load(ROOT_PATH / config['checkpoint_path'], map_location=device)
+        checkpoint = torch.load(ROOT_PATH / config['build_on_pretrained_model'], map_location=device)
         model.load_state_dict(checkpoint['state_dict'])
-    save_path = f"{config['model']}-{config['task_name']}-s{config['random_seed']}"
+        save_path += f"-pretrained_{config['build_on_pretrained_model'].split('/')[-1].split('.')[0]}"
 
     # Define the trainer along with its checkpoint and experiment instance
     checkpoint = ModelCheckpoint(
