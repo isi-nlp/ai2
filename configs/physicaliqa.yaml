@@ -3,7 +3,7 @@ model: roberta-large
 batch_size: 3
 accumulate_grad_batches: 8
 use_amp: false
-max_epochs: 6
+max_epochs: 4
 learning_rate: 5e-6
 adam_epsilon: 1e-8
 dropout: 0.3

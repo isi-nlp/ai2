@@ -1,16 +1,16 @@
-MODEL_TYPE="t5"
-MODEL_WEIGHTS="t5-small"
+MODEL_TYPE="roberta"
+MODEL_WEIGHTS="roberta-large"
 SEED=10061880
 
 # double_experiments=[("physicaliqa-10pc","cn_all_cs_10k"), ("physicaliqa","cn_all_cs_10k")]
-single_experiments=["t5-small-physicaliqa-25pc"]# "physicaliqa"]
+single_experiments=["physicaliqa-arc1"]
 double_experiments=[]
 
 all_args = []
 
 # Sweep parameters
 # for BS in [1, 2, 3]:
-for ACB in [2, 4, 8, 16]:
+for ACB in [1, 2, 4, 8]:
     for LR in ['5e-7', '1e-6', '5e-6', '1e-5', '5e-5']:
         for SEED in [0, 42, 10061880]:
 
