@@ -1,6 +1,0 @@
-task_name: alphanli_halved-10_0-5_3
-train_x: "task_data/alphanli-train-dev/halved_training/10_0-5_3/train.jsonl"
-train_y: "task_data/alphanli-train-dev/halved_training/10_0-5_3/train-labels.lst"
-val_x: "task_data/alphanli-train-dev/dev.jsonl"
-val_y: "task_data/alphanli-train-dev/dev-labels.lst"
-formula: "obs1 + obs2 -> hyp1|hyp2"
