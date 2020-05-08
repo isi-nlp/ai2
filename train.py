@@ -1,20 +1,20 @@
 import os
-import pathlib
+from pathlib import Path
 import random
 
 import hydra
-import numpy as np
-import torch
 from loguru import logger
+import numpy as np
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 from test_tube import Experiment
+import torch
 
 from eval import evaluate
 from model import Classifier
 
 # Save root path as hydra will create copies of this code in date specific folder
-ROOT_PATH = pathlib.Path(__file__).parent.absolute()
+ROOT_PATH = Path(__file__).parent.absolute()
 
 
 @hydra.main(config_path="config/train.yaml")

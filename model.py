@@ -1,6 +1,6 @@
-import pathlib
 from itertools import cycle
-from typing import *
+from pathlib import Path
+from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -8,7 +8,7 @@ import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
-from transformers import AutoModel, AutoTokenizer, AdamW
+from transformers import AdamW, AutoModel, AutoTokenizer
 
 
 # Extending the dataset module provided by the PyTorch module to build the dataset class for AI2 dataset.
@@ -30,7 +30,7 @@ class Classifier(pl.LightningModule):
     def __init__(self, config):
         super().__init__()
         self.hparams = config
-        self.root_path = pathlib.Path(__file__).parent.absolute()
+        self.root_path = Path(__file__).parent.absolute()
         self.label_offset = 0
 
         # Load Transformer model from cache files (encoder and tokenizer)
@@ -65,7 +65,7 @@ class Classifier(pl.LightningModule):
         return logits
 
     # Custom data loader
-    def dataloader(self, x_path: Union[str, pathlib.Path], y_path: Union[str, pathlib.Path] = None):
+    def dataloader(self, x_path: Union[str, Path], y_path: Union[str, Path] = None):
         df = pd.read_json(x_path, lines=True)
 
         # If given labels are given we will parse it into the dataset

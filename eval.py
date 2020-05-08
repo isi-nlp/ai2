@@ -1,21 +1,20 @@
-import pathlib
-from typing import *
+from pathlib import Path
+from typing import List, Union
 
 import hydra
+from loguru import logger
 import numpy as np
 import pandas as pd
+from sklearn.metrics import accuracy_score
 import torch
 import torch.nn.functional as F
-
-from loguru import logger
-from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
 from model import Classifier
 
 # Save root path as hydra will create copies of this code in a folder
-ROOT_PATH = pathlib.Path(__file__).parent.absolute()
+ROOT_PATH = Path(__file__).parent.absolute()
 
 
 # If script is executed by itself, load in the configuration yaml file and desired checkpoint model
@@ -38,7 +37,7 @@ def main(config):
     checkpoint = torch.load(ROOT_PATH / config['checkpoint_path'], map_location=device)
     model.load_state_dict(checkpoint['state_dict'])
 
-    save_path = pathlib.Path(f"{config['model']}-{config['task_name']}-s{config['random_seed']}")
+    save_path = Path(f"{config['model']}-{config['task_name']}-s{config['random_seed']}")
     save_path.mkdir(parents=True, exist_ok=True)
 
     # Call the main function with appropriate parameters
@@ -50,9 +49,8 @@ def main(config):
 
 
 # Function to perform the evaluation (This was separated out to be called in train script)
-def evaluate(a_classifier: Classifier, output_path: Union[str, pathlib.Path], compute_device: str,
-             val_x: Union[str, pathlib.Path], val_y: Union[str, pathlib.Path] = None):
-
+def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_device: str,
+             val_x: Union[str, Path], val_y: Union[str, Path] = None):
     # Move model to device and set to evaluation mode
     a_classifier.to(compute_device)
     a_classifier.eval()
