@@ -81,7 +81,7 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
     # If desired y value is provided, calculate relevant statistics
     if val_y:
         labels = pd.read_csv(val_y, sep='\t', header=None).values.tolist()
-        logger.info(f"F1 score: {accuracy_score(labels, predictions):.3f}")
+        logger.info(f"Accuracy score: {accuracy_score(labels, predictions):.3f}")
 
         stats = []
         for _ in range(100):

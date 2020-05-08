@@ -83,24 +83,23 @@ class Classifier(pl.LightningModule):
     # Lambda function that parse in the formulas of how to read in training data
     @staticmethod
     def transform(formula):
+        parsed_context, parsed_choices = formula.split("->")
+        # alphanli:     (obs1 + obs2 -> hyp1|hyp2)
+        # hellaswag:    (ctx_a + ctx_b -> ending_options)
+        # physicaliqa:  (goal -> sol1|sol2)
+        # socialiqa:    (context + question -> answerA|answerB|answerC)
+        parsed_context = parsed_context.strip().split("+")
+        parsed_choices = parsed_choices.strip().split("|")
 
         # Apply to a pandas data frame row
         def wrapper(row):
-            context, choices = formula.split("->")
-            # alphanli:     (obs1 + obs2 -> hyp1|hyp2)
-            # hellaswag:    (ctx_a + ctx_b -> ending_options)
-            # physicaliqa:  (goal -> sol1|sol2)
-            # socialiqa:    (context + question -> answerA|answerB|answerC)
-            context = context.strip().split("+")
-            choices = choices.strip().split("|")
-
-            context = " ".join(row[a_context.strip()] for a_context in context)
+            context = " ".join(row[a_context.strip()] for a_context in parsed_context)
 
             # If we are processing hellaswag, the options are encoded in nested list, so we will flatten it
-            if choices == ['ending_options']:
-                choices = row['ending_options']
+            if len(parsed_choices) == 1:
+                choices = row[parsed_choices[0]]
             else:
-                choices = [row[a_choice.strip()] for a_choice in choices]
+                choices = [row[a_choice.strip()] for a_choice in parsed_choices]
 
             return list(zip(cycle([context]), choices))
 
@@ -165,7 +164,6 @@ class Classifier(pl.LightningModule):
         return {'val_loss': val_loss_mean, "val_accuracy": val_accuracy}
 
     def configure_optimizers(self):
-        t_total = len(self.train_dataloader) // self.hparams["accumulate_grad_batches"] * self.hparams["max_epochs"]
         optimizer = AdamW(self.parameters(), lr=float(self.hparams["learning_rate"]),
                           eps=float(self.hparams["adam_epsilon"]))
         return optimizer
