@@ -4,7 +4,7 @@
 
 Create and run a virtual environment with Python 3.7. If you're using conda, make sure to use conda version `>=4.8.2`.
 
-```
+```bash
 conda create --name ai2_stable python=3.7
 conda activate ai2_stable
 ```
@@ -12,22 +12,23 @@ conda activate ai2_stable
 Then run:
 
 ```bash
-pip install -r python_environment/requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Train
 
-The main code to train a model is in `train.py`. It loads the configuration file `config.yaml` and outputs all the logs/checkpoints in `outputs`. 
+The main code to train a model is in `train.py`. It loads the configuration file `config/train.yaml` and outputs all the logs/checkpoints in `outputs`.
 
 To submit it as a job on SAGA cluster, you should be able to simply run:
 
-```
-sbatch hpc_job_script/run_saga.sh
+```bash
+sbatch slurm/run_saga.sh
 ```
 
 ## Eval
 
 ### Get predictions without evaluation
+
 ```bash
 python eval.py \
     --input_x task_data/physicaliqa-train-dev/dev.jsonl \
@@ -50,6 +51,7 @@ python eval.py \
 ## Results
 
 ### PIQA
-|     Model     | Bootstrapped Accuracy Mean | Bootstrapped Accuracy CI | Accuracy |
-|:-------------:|:--------------------------:|:------------------------:|:--------:|
-| Roberta large (SAGA) |            76.0            |        74.0 - 78.0       |   76.0   |
+
+|        Model         | Bootstrapped Accuracy Mean | Bootstrapped Accuracy CI | Accuracy |
+| :------------------: | :------------------------: | :----------------------: | :------: |
+| Roberta large (SAGA) |            76.0            |       74.0 - 78.0        |   76.0   |
