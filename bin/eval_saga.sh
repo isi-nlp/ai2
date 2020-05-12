@@ -28,6 +28,12 @@ if [ ! -f "$FILE" ]; then
     FILE=$OUTPUT/_ckpt_epoch_2.ckpt
     if [ ! -f "$FILE" ]; then
       FILE=$OUTPUT/_ckpt_epoch_1.ckpt
+      if [ ! -f "$FILE" ]; then
+        FILE=$OUTPUT/_ckpt_epoch_5.ckpt
+        if [ ! -f "$FILE" ]; then
+          FILE=$OUTPUT/_ckpt_epoch_6.ckpt
+        fi
+      fi
     fi
   fi
 fi
@@ -37,4 +43,4 @@ python eval.py \
   --config_file "$CONF" \
   --checkpoint "$FILE" \
   --input_y cache/physicaliqa-train-dev/physicaliqa-train-dev/dev-labels.lst \
-  --output pred.lst
+  --output outputs/${EXPERIMENT_NAME}/pred.lst
