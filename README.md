@@ -1,5 +1,23 @@
 # Minimal Code Base For AI2 Commonsense Leaderboard
 
+## Datasets
+
+- αNLI
+  - https://leaderboard.allenai.org/anli/submissions/about
+  - https://arxiv.org/abs/1908.05739
+- HellaSwag
+  - https://leaderboard.allenai.org/hellaswag/submissions/about
+  - https://rowanzellers.com/hellaswag/
+  - https://arxiv.org/abs/1905.07830
+- PIQA
+  - https://leaderboard.allenai.org/physicaliqa/submissions/about
+  - https://yonatanbisk.com/piqa/
+  - https://arxiv.org/abs/1911.11641
+- SIQA
+  - https://leaderboard.allenai.org/socialiqa/submissions/about
+  - https://maartensap.github.io/social-iqa/
+  - https://arxiv.org/abs/1904.09728
+
 ## Dependencies
 
 Create and run a virtual environment with Python 3.7. If you're using conda, make sure to use conda version `>=4.8.2`.
