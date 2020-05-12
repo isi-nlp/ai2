@@ -27,7 +27,7 @@ for id1, id2 in itertools.product(versions_to_predictions.keys(), repeat=2):
     preds1 = pd.read_csv(versions_to_predictions[id1]+'/pred.lst', sep='\t', header=None).values.tolist()
     preds2 = pd.read_csv(versions_to_predictions[id2]+'/pred.lst', sep='\t', header=None).values.tolist()
     similarity = accuracy_score(preds1, preds2)
-    print(preds1, preds2, similarity)
+    print(id1, id2, similarity)
 
 # Check accuracy of each model
 for key in versions_to_predictions.keys():
