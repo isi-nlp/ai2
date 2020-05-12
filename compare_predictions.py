@@ -5,7 +5,7 @@ import pandas as pd
 versions_to_predictions = {
     # 'standard_rs0': "outputs/roberta-large-physicaliqa_rs0/roberta-large-physicaliqa",
     # 'standard_rs42': "outputs/roberta-large-physicaliqa_rs42/roberta-large-physicaliqa",
-    'standard_rs10061880': "outputs/roberta-large-physicaliqa/roberta-large-physicaliqa",
+    'standard_rs10061880': "outputs/roberta-large-physicaliqa",
     'arc1_rs0': 'outputs/roberta-large_rs0_acb2_lr5e-6/roberta-large-physicaliqa-arc1',
     'arc1_rs42': 'outputs/roberta-large_rs42_acb4_lr5e-6/roberta-large-physicaliqa-arc1',
     'arc1_rs10061880': 'outputs/roberta-large_rs10061880_acb2_lr5e-6/roberta-large-physicaliqa-arc1',
@@ -20,6 +20,10 @@ gold_labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.tolist
 # Compare pairs of predictions of each model
 for id1, id2 in itertools.product(versions_to_predictions.keys(), repeat=2):
     if id1 == id2: continue
+    model1, rs1 = tuple(id1.split('_'))
+    model2, rs2 = tuple(id2.split('_'))
+    if model1 != model2 and rs1 != rs2: continue # skip if both the model and rs are different
+
     preds1 = pd.read_csv(versions_to_predictions[id1]+'/pred.lst', sep='\t', header=None).values.tolist()
     preds2 = pd.read_csv(versions_to_predictions[id2]+'/pred.lst', sep='\t', header=None).values.tolist()
     similarity = accuracy_score(preds1, preds2)
