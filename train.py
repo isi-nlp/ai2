@@ -7,7 +7,7 @@ from loguru import logger
 import numpy as np
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
-from test_tube import Experiment
+from pytorch_lightning.logging import TestTubeLogger
 import torch
 
 from eval import evaluate
@@ -46,12 +46,12 @@ def train(config):
         save_best_only=config['save_best_only'],
         verbose=True,
     )
-    exp = Experiment(
+    tt_logger = TestTubeLogger(
         name=config['task_name'],
         version=0,
         save_dir=save_path,
-        autosave=True,
     )
+    tt_logger.experiment.autosave = True
     trainer = Trainer(
         gradient_clip_val=0,
         gpus=None if not torch.cuda.is_available() else [i for i in range(torch.cuda.device_count())],
@@ -71,7 +71,7 @@ def train(config):
         train_percent_check=1.0,
         val_percent_check=1.0,
         test_percent_check=1.0,
-        experiment=exp,
+        logger=tt_logger,
     )
     trainer.fit(model)
     logger.success('Training Completed')
