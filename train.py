@@ -43,7 +43,7 @@ def train(config):
     # Define the trainer along with its checkpoint and experiment instance
     checkpoint = ModelCheckpoint(
         filepath=os.path.join(save_path, 'checkpoints'),
-        save_best_only=config['save_best_only'],
+        save_top_k=1 if config['save_best_only'] else -1,
         verbose=True,
     )
     tt_logger = TestTubeLogger(
@@ -55,11 +55,11 @@ def train(config):
     trainer = Trainer(
         gradient_clip_val=0,
         gpus=None if not torch.cuda.is_available() else [i for i in range(torch.cuda.device_count())],
-        log_gpu_memory=True,
+        log_gpu_memory="all",
         show_progress_bar=True,
         accumulate_grad_batches=config["accumulate_grad_batches"],
-        max_nb_epochs=config["max_epochs"],
-        min_nb_epochs=1,
+        max_epochs=config["max_epochs"],
+        min_epochs=1,
         val_check_interval=0.02,
         log_save_interval=25,
         row_log_interval=25,
@@ -67,7 +67,7 @@ def train(config):
         use_amp=config["use_amp"],
         nb_sanity_val_steps=5,
         checkpoint_callback=checkpoint,
-        check_val_every_n_epoch=1.0,
+        check_val_every_n_epoch=1,
         train_percent_check=1.0,
         val_percent_check=1.0,
         test_percent_check=1.0,
