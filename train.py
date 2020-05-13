@@ -7,7 +7,7 @@ from loguru import logger
 import numpy as np
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.logging import TestTubeLogger
+from pytorch_lightning.loggers import TestTubeLogger
 import torch
 
 from eval import evaluate
@@ -65,7 +65,7 @@ def train(config):
         row_log_interval=25,
         distributed_backend="dp",
         use_amp=config["use_amp"],
-        nb_sanity_val_steps=5,
+        num_sanity_val_steps=5,
         checkpoint_callback=checkpoint,
         check_val_every_n_epoch=1,
         train_percent_check=1.0,

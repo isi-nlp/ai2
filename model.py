@@ -126,13 +126,11 @@ class Classifier(pl.LightningModule):
                 "num_choice": num_choice}
 
     # Data loader methods to return train and validation data sets
-    @pl.data_loader
     def train_dataloader(self):
         return DataLoader(
             self.dataloader(self.root_path / self.hparams["train_x"], self.root_path / self.hparams["train_y"]),
             batch_size=self.hparams["batch_size"], collate_fn=self.collate)
 
-    @pl.data_loader
     def val_dataloader(self):
         return DataLoader(
             self.dataloader(self.root_path / self.hparams["val_x"], self.root_path / self.hparams["val_y"]),
@@ -155,13 +153,13 @@ class Classifier(pl.LightningModule):
                 "val_batch_logits": logits,
                 "val_batch_labels": batch["labels"]}
 
-    def validation_end(self, outputs):
+    def validation_epoch_end(self, outputs):
         val_loss_mean = torch.stack([o['val_loss'] for o in outputs]).mean()
         val_logits = torch.cat([o["val_batch_logits"] for o in outputs])
         val_labels = torch.cat([o["val_batch_labels"] for o in outputs])
         correct = torch.sum(val_labels == torch.argmax(val_logits, dim=1))
         val_accuracy = torch.tensor(float(correct)) / (val_labels.shape[0] * 1.0)
-        return {'val_loss': val_loss_mean, "val_accuracy": val_accuracy}
+        return {'log': {'val_loss': val_loss_mean, "val_accuracy": val_accuracy}}
 
     def configure_optimizers(self):
         optimizer = AdamW(self.parameters(), lr=float(self.hparams["learning_rate"]),
