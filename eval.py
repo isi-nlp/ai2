@@ -57,6 +57,7 @@ if __name__ == "__main__":
     model.eval()
 
     preds: List[int] = []
+    confidences: List[float] = []
     for batch in tqdm(DataLoader(model.dataloader(args.input_x, args.input_y), batch_size=model.hparams["batch_size"] * 2, collate_fn=model.collate, shuffle=False)):
         for key in batch:
             if isinstance(batch[key], torch.Tensor):
@@ -65,6 +66,7 @@ if __name__ == "__main__":
         with torch.no_grad():
             logits = model.forward(batch)
         preds.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
+        confidences.extend(torch.nn.functional.softmax(logits, dim=1).cpu().detach().numpy().tolist())
     preds = [p + model.label_offset for p in preds]
 
     if args.input_y:
@@ -90,7 +92,7 @@ if __name__ == "__main__":
         logger.info(f'{alpha*100:.1f} confidence interval {lower*100:.1f} and {upper*100:.1f}, average: {np.mean(stats)*100:.1f}')
 
     with open(args.output, "w") as f:
-        f.write("\n".join(map(str, preds)))
+        f.write("\n".join([f'{p} {c}' for p,c in zip(map(str, preds), map(str, confidences))]))
 
 
 

@@ -1,1 +1,1 @@
---config_file configs/physicaliqa-arc1.yaml  --save_path outputs/roberta-large_rs10061880_acb2_lr5e-7/roberta-large-physicaliqa-arc1 --accumulate_grad_batches 2 --learning_rate 5e-7 --random_seed 10061880
+--config_file configs/physicaliqa-arc2.yaml  --save_path outputs/roberta-large_rs10061880_acb1_lr5e-6/roberta-large-physicaliqa-arc2 --accumulate_grad_batches 1 --learning_rate 5e-6 --random_seed 10061880
