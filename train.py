@@ -42,36 +42,36 @@ def train(config):
 
     # Define the trainer along with its checkpoint and experiment instance
     checkpoint = ModelCheckpoint(
-        filepath=os.path.join(save_path, 'checkpoints'),
-        save_top_k=1 if config['save_best_only'] else -1,
+        filepath=os.path.join(save_path, 'checkpoints', 'foo'),  # Last part needed due to parsing logic
         verbose=True,
+        save_top_k=1 if config['save_best_only'] else -1,
     )
     tt_logger = TestTubeLogger(
+        save_dir=save_path,
         name=config['task_name'],
         version=0,
-        save_dir=save_path,
     )
     tt_logger.experiment.autosave = True
     trainer = Trainer(
+        logger=tt_logger,
+        checkpoint_callback=checkpoint,
         gradient_clip_val=0,
-        gpus=None if not torch.cuda.is_available() else [i for i in range(torch.cuda.device_count())],
+        gpus=list(range(torch.cuda.device_count())) if torch.cuda.is_available() else None,
         log_gpu_memory="all",
         progress_bar_refresh_rate=1,
+        check_val_every_n_epoch=1,
         accumulate_grad_batches=config["accumulate_grad_batches"],
         max_epochs=config["max_epochs"],
         min_epochs=1,
-        val_check_interval=0.02,
+        train_percent_check=1.0,
+        val_percent_check=1.0,
+        test_percent_check=1.0,
         log_save_interval=25,
         row_log_interval=25,
         distributed_backend="dp",
         precision=16 if config["use_amp"] else 32,
+        weights_summary='top',
         num_sanity_val_steps=5,
-        checkpoint_callback=checkpoint,
-        check_val_every_n_epoch=1,
-        train_percent_check=1.0,
-        val_percent_check=1.0,
-        test_percent_check=1.0,
-        logger=tt_logger,
     )
     trainer.fit(model)
     logger.success('Training Completed')

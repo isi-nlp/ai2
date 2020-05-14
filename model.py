@@ -27,16 +27,16 @@ class ClassificationDataset(Dataset):
 # Classifier class, with methods support training itself and use it's model to classify
 class Classifier(pl.LightningModule):
 
-    def __init__(self, config):
+    def __init__(self, hparams):
         super().__init__()
-        self.hparams = config
+        self.hparams = hparams
         self.root_path = Path(__file__).parent.absolute()
         self.label_offset = 0
 
         # Load Transformer model from cache files (encoder and tokenizer)
-        self.embedder = AutoModel.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache")
+        self.embedder = AutoModel.from_pretrained(hparams["model"], cache_dir=self.root_path / "model_cache")
         self.tokenizer = \
-            AutoTokenizer.from_pretrained(config["model"], cache_dir=self.root_path / "model_cache", use_fast=False)
+            AutoTokenizer.from_pretrained(hparams["model"], cache_dir=self.root_path / "model_cache", use_fast=False)
         self.embedder.train()
 
         # Create the one layer feed forward neural net for classification purpose after the encoder
@@ -142,7 +142,8 @@ class Classifier(pl.LightningModule):
         loss = self.loss(logits, batch["labels"])
         if self.trainer and self.trainer.use_dp:
             loss = loss.unsqueeze(0)
-        return {"loss": loss}
+        return {"loss": loss,
+                "log": {"train_loss": loss}}
 
     def validation_step(self, batch, batch_idx):
         logits = self.forward(batch)
