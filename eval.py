@@ -70,6 +70,7 @@ if __name__ == "__main__":
         preds.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
         softmax = torch.nn.functional.softmax(logits, dim=1)
         confidences.extend((torch.max(softmax, dim=1)[0].cpu().detach().numpy().tolist()))
+    confidences = [(c-0.5)*2 for c in confidences]
     preds = [p + model.label_offset for p in preds]
 
     if args.input_y:
@@ -85,7 +86,6 @@ if __name__ == "__main__":
 
         # Check correlation between confidence and correctness
         correctness = [int(p == labels[i]) for i, p in enumerate(preds)]
-        print(len(correctness), len(confidences))
         print(pearsonr(correctness, confidences))
 
         stats = []
