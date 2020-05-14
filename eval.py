@@ -83,6 +83,7 @@ if __name__ == "__main__":
         np.random.seed(42)
 
         labels = pd.read_csv(args.input_y, sep='\t', header=None).values.tolist()
+        labels = [l[0] for l in labels]
 
         # Check correlation between confidence and correctness
         correctness = [int(p == labels[i]) for i, p in enumerate(preds)]
