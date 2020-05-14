@@ -86,7 +86,7 @@ if __name__ == "__main__":
 
         # Check correlation between confidence and correctness
         correctness = [int(p == labels[i]) for i, p in enumerate(preds)]
-        print(labels, correctness, confidences)
+        print(preds, labels, correctness, confidences)
         print(pearsonr(correctness, confidences))
 
         stats = []
@@ -109,6 +109,6 @@ if __name__ == "__main__":
         f.write("\n".join(map(str, confidences)))
 
     with open('preds-confidences.csv', 'w') as f:
-        print("prediction,confidence,gold_label", file=f)
+        print("prediction,labels,correctness,confidence", file=f)
         for i in range(len(labels)):
-            print(f'{preds[i]},{confidences[i]},{labels[i]}', file=f)
+            print(f'{preds[i]},{labels[i]},{correctness[i]},{confidences[i]}', file=f)
