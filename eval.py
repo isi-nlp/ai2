@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     torch.manual_seed(42)
     import argparse
-    
+
     parser = argparse.ArgumentParser("evaluate script")
     parser.add_argument("--input_x", type=str, required=True)
     parser.add_argument("--config_file", type=str, required=True)
@@ -58,11 +58,13 @@ if __name__ == "__main__":
 
     preds: List[int] = []
     confidences: List[float] = []
-    for batch in tqdm(DataLoader(model.dataloader(args.input_x, args.input_y), batch_size=model.hparams["batch_size"] * 2, collate_fn=model.collate, shuffle=False)):
+    for batch in tqdm(
+            DataLoader(model.dataloader(args.input_x, args.input_y), batch_size=model.hparams["batch_size"] * 2,
+                       collate_fn=model.collate, shuffle=False)):
         for key in batch:
             if isinstance(batch[key], torch.Tensor):
                 batch[key] = batch[key].to(device)
-        
+
         with torch.no_grad():
             logits = model.forward(batch)
         preds.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
@@ -74,29 +76,32 @@ if __name__ == "__main__":
         from sklearn.metrics import accuracy_score
         import pandas as pd
         import numpy as np
+        from scipy.stats.stats import pearsonr
+
         np.random.seed(42)
 
         labels = pd.read_csv(args.input_y, sep='\t', header=None).values.tolist()
 
+        # Check correlation between confidence and correctness
+        correctness = [int(p == labels[i]) for i, p in enumerate(preds)]
+        print(correctness)
+        print(pearsonr(correctness, confidences))
+
         stats = []
         for _ in range(1000):
-            indices = [i for i in np.random.random_integers(0, len(preds)-1, size=len(preds))]
+            indices = [i for i in np.random.random_integers(0, len(preds) - 1, size=len(preds))]
             stats.append(accuracy_score([labels[j] for j in indices], [preds[j] for j in indices]))
 
         alpha = 0.95
-        p = ((1.0-alpha)/2.0) * 100
+        p = ((1.0 - alpha) / 2.0) * 100
         lower = max(0.0, np.percentile(stats, p))
-        p = (alpha+((1.0-alpha)/2.0)) * 100
+        p = (alpha + ((1.0 - alpha) / 2.0)) * 100
         upper = min(1.0, np.percentile(stats, p))
         logger.info(f"Accuracy score: {accuracy_score(labels, preds):.3f}")
-        logger.info(f'{alpha*100:.1f} confidence interval {lower*100:.1f} and {upper*100:.1f}, average: {np.mean(stats)*100:.1f}')
+        logger.info(
+            f'{alpha * 100:.1f} confidence interval {lower * 100:.1f} and {upper * 100:.1f}, average: {np.mean(stats) * 100:.1f}')
 
     with open(args.output, "w") as f:
-        f.write("\n".join([f'{p} {c}' for p,c in zip(map(str, preds), map(str, confidences))]))
-
-
-
-
-
-
-
+        f.write("\n".join(map(str, preds)))
+    with open(args.output + '.cnf', "w") as f:
+        f.write("\n".join(map(str, confidences)))
