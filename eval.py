@@ -107,7 +107,7 @@ if __name__ == "__main__":
     with open(args.output + '.cnf', "w") as f:
         f.write("\n".join(map(str, confidences)))
 
-    with open('preds-confidences.csv') as f:
+    with open('preds-confidences.csv', 'w') as f:
         print("prediction,confidence,gold_label", file=f)
         for i in range(len(labels)):
             print(f'{preds[i]},{confidences[i]},{labels[i]}', file=f)
