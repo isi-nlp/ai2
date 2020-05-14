@@ -69,7 +69,7 @@ if __name__ == "__main__":
             logits = model.forward(batch)
         preds.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
         softmax = torch.nn.functional.softmax(logits, dim=1)
-        confidences.extend((torch.max(softmax, dim=1).cpu().detach().numpy().tolist()))
+        confidences.extend((torch.max(softmax, dim=1)[0].cpu().detach().numpy().tolist()))
     preds = [p + model.label_offset for p in preds]
 
     if args.input_y:
