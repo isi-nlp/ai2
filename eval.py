@@ -86,6 +86,7 @@ if __name__ == "__main__":
 
         # Check correlation between confidence and correctness
         correctness = [int(p == labels[i]) for i, p in enumerate(preds)]
+        print(labels, correctness, confidences)
         print(pearsonr(correctness, confidences))
 
         stats = []
