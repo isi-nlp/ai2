@@ -31,7 +31,7 @@ for key, path in model_to_path.items():
     print(f'{key},{accuracy}')
 
 # Compare pairs of predictions of each model
-print('ID1,ID22,Prediction Sim,Prediction Cor,Correctness Sim,Correctness Cor,Confidence Cor')
+print('ID1,ID22,Pred Sim,Pred Cor,Correctness Cor,Confidence Cor,ConfCor Both Correct,ConfCor One Correct,ConfCor Both Wrong')
 for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
     model1, rs1 = tuple(id1.split('_'))
     model2, rs2 = tuple(id2.split('_'))
@@ -42,4 +42,11 @@ for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
     preds2, conf2 = model_to_predictions[id2], model_to_confidences[id2]
     correctness2 = [int(p == labels[i]) for i, p in enumerate(preds2)]
 
-    print(f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]},{accuracy_score(correctness1, correctness2)},{pearsonr(correctness1, correctness2)[0]},{pearsonr(conf1, conf2)[0]}')
+    # ConfCor Both Correct
+    ccbc = [pearsonr(conf1[i], conf2[i])[0] for i in range(len(preds1)) if correctness1[i] and correctness2[i]]
+    # ConfCor Only One Correct
+    ccoc = [pearsonr(conf1[i], conf2[i])[0] for i in range(len(preds1)) if correctness1[i] != correctness2[i]]
+    # ConfCor Both Wrong
+    ccbw = [pearsonr(conf1[i], conf2[i])[0] for i in range(len(preds1)) if correctness1[i] == correctness2[i] == 0]
+
+    print(f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]},{pearsonr(correctness1, correctness2)[0]},{pearsonr(conf1, conf2)[0]},{ccbc},{ccoc},{ccbw}')
