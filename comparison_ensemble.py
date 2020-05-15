@@ -49,3 +49,10 @@ for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
     ccbw = pearsonr(*zip(*[(conf1[i], conf2[i]) for i in range(len(preds1)) if correctness1[i] == correctness2[i] == 0]))[0]
 
     print(f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]},{pearsonr(correctness1, correctness2)[0]},{pearsonr(conf1, conf2)[0]},{ccbc},{ccoc},{ccbw}')
+
+# Run ensemble
+predictions_df = pd.DataFrame.from_dict(model_to_predictions)
+confidences_df = pd.DataFrame.from_dict(model_to_confidences)
+mean = predictions_df.mean(axis = 1)
+final = mean > 0
+print(accuracy_score(labels, final.values.squeeze().tolist()))
