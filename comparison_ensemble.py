@@ -42,7 +42,4 @@ for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
     preds2, conf2 = model_to_predictions[id2], model_to_confidences[id2]
     correctness2 = [int(p == labels[i]) for i, p in enumerate(preds2)]
 
-    print(conf1, conf2)
-    print(f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]}\
-            ,{accuracy_score(correctness1, correctness2)},{pearsonr(correctness1, correctness2)[0]}\
-            ,{pearsonr(conf1, conf2)[0]}')
+    print(f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]},{accuracy_score(correctness1, correctness2)},{pearsonr(correctness1, correctness2)[0]},{pearsonr(conf1, conf2)[0]}')
