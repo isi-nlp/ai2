@@ -57,8 +57,8 @@ for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
 # subset = ['standard_rs0', 'standard_rs10061880']
 predictions_df = (pd.DataFrame.from_dict(model_to_predictions) - 0.5) * 2  # Project to predictions to [-1, 1]
 confidences_df = pd.DataFrame.from_dict(model_to_confidences)
-confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
-confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)
+# confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
+confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)
 
 scaled_df = predictions_df.mul(confidences_df, fill_value=1)  # Scale the predictions by multiplying with confidence
 print('Predictions', predictions_df)
