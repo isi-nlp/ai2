@@ -33,7 +33,6 @@ for key, path in model_to_path.items():
 # Compare pairs of predictions of each model
 print('ID1,ID22,Prediction Sim,Prediction Cor,Correctness Sim,Correctness Cor,Confidence Cor')
 for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
-    print(f'Pairwise comparison of {id1} and {id2}')
     model1, rs1 = tuple(id1.split('_'))
     model2, rs2 = tuple(id2.split('_'))
     if model1 != model2 and rs1 != rs2: continue # skip if both the model and rs are different
@@ -43,6 +42,7 @@ for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
     preds2, conf2 = model_to_predictions[id2], model_to_confidences[id2]
     correctness2 = [int(p == labels[i]) for i, p in enumerate(preds2)]
 
+    print(conf1, conf2)
     print(f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]}\
             ,{accuracy_score(correctness1, correctness2)},{pearsonr(correctness1, correctness2)[0]}\
             ,{pearsonr(conf1, conf2)[0]}')
