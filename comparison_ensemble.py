@@ -41,12 +41,11 @@ for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
     preds2, conf2 = model_to_predictions[id2], model_to_confidences[id2]
     correctness2 = [int(p == labels[i]) for i, p in enumerate(preds2)]
 
-    print(preds1)
     # ConfCor Both Correct
-    ccbc = [pearsonr(conf1[i], conf2[i])[0] for i in range(len(preds1)) if correctness1[i] and correctness2[i]]
+    ccbc = pearsonr(zip(*[(conf1[i], conf2[i]) for i in range(len(preds1)) if correctness1[i] and correctness2[i]]))[0]
     # ConfCor Only One Correct
-    ccoc = [pearsonr(conf1[i], conf2[i])[0] for i in range(len(preds1)) if correctness1[i] != correctness2[i]]
+    ccoc = pearsonr(zip(*[(conf1[i], conf2[i]) for i in range(len(preds1)) if correctness1[i] != correctness2[i]]))[0]
     # ConfCor Both Wrong
-    ccbw = [pearsonr(conf1[i], conf2[i])[0] for i in range(len(preds1)) if correctness1[i] == correctness2[i] == 0]
+    ccbw = pearsonr(zip(*[(conf1[i], conf2[i]) for i in range(len(preds1)) if correctness1[i] == correctness2[i] == 0]))[0]
 
     print(f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]},{pearsonr(correctness1, correctness2)[0]},{pearsonr(conf1, conf2)[0]},{ccbc},{ccoc},{ccbw}')
