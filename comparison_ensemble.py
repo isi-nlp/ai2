@@ -62,5 +62,5 @@ scaled_df = predictions_df.mul(confidences_df, fill_value=1)  # Scale the predic
 print('Predictions', predictions_df)
 print('Confidences', confidences_df)
 print('Scaled', scaled_df)
-final_predictions = scaled_df.mean(axis=1) > 0  # Take the average of each row for ensembled predictions
+final_predictions = predictions_df.mean(axis=1) > 0  # Take the average of each row for ensembled predictions
 print(accuracy_score(labels, final_predictions.values.squeeze().tolist()))
