@@ -52,7 +52,7 @@ for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
 
 subset = ['standard_rs0', 'standard_rs10061880']
 # Run ensemble
-predictions_df = pd.DataFrame.from_dict(model_to_predictions)
+predictions_df = (pd.DataFrame.from_dict(model_to_predictions)-0.5)*2
 confidences_df = pd.DataFrame.from_dict(model_to_confidences)
 scaled_df = predictions_df.mul(confidences_df, fill_value=1)
 print(predictions_df)
