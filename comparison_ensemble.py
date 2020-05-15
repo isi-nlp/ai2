@@ -36,12 +36,12 @@ for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
     model1, rs1 = tuple(id1.split('_'))
     model2, rs2 = tuple(id2.split('_'))
     if model1 != model2 and rs1 != rs2: continue # skip if both the model and rs are different
-
     preds1, conf1 = model_to_predictions[id1], model_to_confidences[id1]
     correctness1 = [int(p == labels[i]) for i, p in enumerate(preds1)]
     preds2, conf2 = model_to_predictions[id2], model_to_confidences[id2]
     correctness2 = [int(p == labels[i]) for i, p in enumerate(preds2)]
 
+    print(preds1)
     # ConfCor Both Correct
     ccbc = [pearsonr(conf1[i], conf2[i])[0] for i in range(len(preds1)) if correctness1[i] and correctness2[i]]
     # ConfCor Only One Correct
