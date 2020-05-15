@@ -54,7 +54,7 @@ subset = ['standard_rs0', 'standard_rs10061880']
 # Run ensemble
 predictions_df = pd.DataFrame.from_dict(model_to_predictions)
 confidences_df = pd.DataFrame.from_dict(model_to_confidences)
-scaled_df = predictions_df.mul[confidences_df]
+scaled_df = predictions_df.mul(confidences_df, fill_value=1)
 print(predictions_df)
 print(confidences_df)
 print(scaled_df)
