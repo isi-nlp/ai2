@@ -53,15 +53,14 @@ for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
     print(
         f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]},{pearsonr(correctness1, correctness2)[0]},{pearsonr(conf1, conf2)[0]},{ccbc},{ccoc},{ccbw}')
 
-subset = ['standard_rs0', 'standard_rs10061880']
 # Run ensemble
-predictions_df = (pd.DataFrame.from_dict(model_to_predictions) - 0.5) * 2
+# subset = ['standard_rs0', 'standard_rs10061880']
+predictions_df = (pd.DataFrame.from_dict(model_to_predictions) - 0.5) * 2  # Project to predictions to -1, 1
 confidences_df = pd.DataFrame.from_dict(model_to_confidences)
-confidences_df[confidences_df < 0.2] = 0
-scaled_df = predictions_df.mul(confidences_df, fill_value=1)
+confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
+scaled_df = predictions_df.mul(confidences_df, fill_value=1)  # Scale the predictions by multiplying with confidence
 print('Predictions', predictions_df)
 print('Confidences', confidences_df)
 print('Scaled', scaled_df)
-mean = scaled_df.mean(axis=1)
-final = mean > 0
-print(accuracy_score(labels, final.values.squeeze().tolist()))
+final_predictions = scaled_df.mean(axis=1) > 0  # Take the average of each row for ensembled predictions
+print(accuracy_score(labels, final_predictions.values.squeeze().tolist()))
