@@ -87,8 +87,7 @@ if __name__ == "__main__":
 
         # Check correlation between confidence and correctness
         correctness = [int(p == labels[i]) for i, p in enumerate(preds)]
-        print(preds, labels, correctness, confidences)
-        print(pearsonr(correctness, confidences))
+        # print(preds, labels, correctness, confidences)
 
         stats = []
         for _ in range(1000):
@@ -103,13 +102,15 @@ if __name__ == "__main__":
         logger.info(f"Accuracy score: {accuracy_score(labels, preds):.3f}")
         logger.info(
             f'{alpha * 100:.1f} confidence interval {lower * 100:.1f} and {upper * 100:.1f}, average: {np.mean(stats) * 100:.1f}')
+        logger.info(f'Correlation between confidence and correctness: {pearsonr(correctness, confidences)}')
 
     with open(args.output, "w") as f:
         f.write("\n".join(map(str, preds)))
     with open(args.output + '.cnf', "w") as f:
         f.write("\n".join(map(str, confidences)))
 
-    with open('preds-confidences.csv', 'w') as f:
-        print("prediction,labels,correctness,confidence", file=f)
-        for i in range(len(labels)):
-            print(f'{preds[i]},{labels[i]},{correctness[i]},{confidences[i]}', file=f)
+    # Get csv with all the values
+    # with open('preds-confidences.csv', 'w') as f:
+    #     print("prediction,labels,correctness,confidence", file=f)
+    #     for i in range(len(labels)):
+    #         print(f'{preds[i]},{labels[i]},{correctness[i]},{confidences[i]}', file=f)

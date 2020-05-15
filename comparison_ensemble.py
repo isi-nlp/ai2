@@ -1,6 +1,7 @@
 import itertools
 from sklearn.metrics import accuracy_score
 import pandas as pd
+from scipy.stats.stats import pearsonr
 
 versions_to_predictions = {
     'standard_rs0': "outputs/roberta-large-physicaliqa_rs0/roberta-large-physicaliqa",
@@ -15,22 +16,30 @@ versions_to_predictions = {
 }
 
 gold_labels_path = 'cache/physicaliqa-train-dev/physicaliqa-train-dev/dev-labels.lst'
-gold_labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.tolist()
+labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.tolist()
+
+# Check accuracy of each model
+for key in versions_to_predictions.keys():
+    print('Accuracy of each model:')
+    preds = pd.read_csv(versions_to_predictions[key]+'/pred.lst', sep='\t', header=None).values.tolist()
+    accuracy = accuracy_score(labels, preds)
+    print(f'{key},{accuracy}')
 
 # Compare pairs of predictions of each model
-for id1, id2 in itertools.product(versions_to_predictions.keys(), repeat=2):
-    if id1 == id2: continue
+print('ID1,ID22,Prediction Sim,Prediction Cor,Correctness Sim,Correctness Cor,Confidence Cor')
+for id1, id2 in itertools.combinations(versions_to_predictions.keys(), 2):
+    print(f'Pairwise comparison of {id1} and {id2}')
     model1, rs1 = tuple(id1.split('_'))
     model2, rs2 = tuple(id2.split('_'))
     if model1 != model2 and rs1 != rs2: continue # skip if both the model and rs are different
 
     preds1 = pd.read_csv(versions_to_predictions[id1]+'/pred.lst', sep='\t', header=None).values.tolist()
+    conf1 = pd.read_csv(versions_to_predictions[id1]+'/pred.lst.cnf', sep='\t', header=None).values.tolist()
+    correctness1 = [int(p == labels[i]) for i, p in enumerate(preds1)]
     preds2 = pd.read_csv(versions_to_predictions[id2]+'/pred.lst', sep='\t', header=None).values.tolist()
-    similarity = accuracy_score(preds1, preds2)
-    print(f'{id1},{id2},{similarity}')
+    conf2 = pd.read_csv(versions_to_predictions[id2]+'/pred.lst.cnf', sep='\t', header=None).values.tolist()
+    correctness2 = [int(p == labels[i]) for i, p in enumerate(preds2)]
 
-# Check accuracy of each model
-for key in versions_to_predictions.keys():
-    preds = pd.read_csv(versions_to_predictions[key]+'/pred.lst', sep='\t', header=None).values.tolist()
-    accuracy = accuracy_score(gold_labels, preds)
-    print(f'{key},{accuracy}')
+    print(f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]}\
+            ,{accuracy_score(correctness1, correctness2)},{pearsonr(correctness1, correctness2)[0]}\
+            ,{pearsonr(conf1, conf2)[0]}')
