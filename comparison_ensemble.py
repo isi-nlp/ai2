@@ -18,13 +18,13 @@ model_to_predictions = {}
 model_to_confidences = {}
 
 gold_labels_path = 'cache/physicaliqa-train-dev/physicaliqa-train-dev/dev-labels.lst'
-labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.tolist()
+labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
 
 # Check accuracy of each model
 for key, path in model_to_path.items():
     print('Accuracy of each model:')
-    preds = pd.read_csv(path+'/pred.lst', sep='\t', header=None).values.tolist()
-    confs = pd.read_csv(path+'/pred.lst.cnf', sep='\t', header=None).values.tolist()
+    preds = pd.read_csv(path+'/pred.lst', sep='\t', header=None).values.squeeze().tolist()
+    confs = pd.read_csv(path+'/pred.lst.cnf', sep='\t', header=None).values.squeeze().tolist()
     accuracy = accuracy_score(labels, preds)
     model_to_predictions[key] = preds
     model_to_confidences[key] = confs
