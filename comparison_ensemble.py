@@ -54,7 +54,8 @@ for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
 
     print(
         f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]},{pearsonr(correctness1, correctness2)[0]},{pearsonr(conf1, conf2)[0]},{ccbc},{ccoc},{ccbw}')
-    print()
+
+print('\n')
 
 # Run ensemble
 # subset = ['standard_rs0', 'standard_rs10061880', 'arc1_rs10061880', 'arc2_rs10061880'] # 81.28
