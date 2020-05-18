@@ -54,9 +54,10 @@ for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
 
     print(
         f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]},{pearsonr(correctness1, correctness2)[0]},{pearsonr(conf1, conf2)[0]},{ccbc},{ccoc},{ccbw}')
+    print()
 
 # Run ensemble
-# subset = ['standard_rs0', 'standard_rs10061880']
+# subset = ['standard_rs0', 'standard_rs10061880', 'arc1_rs10061880', 'arc2_rs10061880'] # 81.28
 for subset in powerset(model_to_path.keys()):
     if len(subset) <= 1: continue
     subset = list(subset)
@@ -70,6 +71,6 @@ for subset in powerset(model_to_path.keys()):
     # print('Confidences', confidences_df)
     # print('Scaled', scaled_df)
     final_predictions = scaled_df.mean(axis=1) > 0  # Take the average of each row for ensembled predictions
-    if accuracy_score(labels, final_predictions.values.squeeze().tolist()) > 0.81:
-        print(subset)
-        print(accuracy_score(labels, final_predictions.values.squeeze().tolist()))
+    accuracy = accuracy_score(labels, final_predictions.values.squeeze().tolist())
+    if accuracy > 0.81:
+        print(accuracy, subset)
