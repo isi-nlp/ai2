@@ -61,7 +61,6 @@ class Classifier(pl.LightningModule):
 
         # Feed through the feed forward network to get the final logits of each classification label
         logits = self.classifier(token_embeddings.mean(dim=1)).squeeze(dim=1)
-        logits = logits.reshape(-1, batch["num_choice"])
         return logits
 
     # Custom data loader
@@ -123,7 +122,7 @@ class Classifier(pl.LightningModule):
                 "attention_mask": results["attention_mask"],
                 "token_type_ids": results["token_type_ids"],
                 "labels": torch.LongTensor([e["label"] for e in examples]) if "label" in examples[0] else None,
-                "num_choice": num_choice}
+                "num_choice": torch.LongTensor([num_choice] * batch_size)}
 
     # Data loader methods to return train and validation data sets
     def train_dataloader(self):
@@ -139,20 +138,32 @@ class Classifier(pl.LightningModule):
     # Extend PyTorch Lightning methods
     def training_step(self, batch, batch_idx):
         logits = self.forward(batch)
-        loss = self.loss(logits, batch["labels"])
-        if self.trainer and self.trainer.use_dp:
-            loss = loss.unsqueeze(0)
+        return {"out": logits,
+                "labels": batch["labels"],
+                "num_choice": batch["num_choice"]}
+
+    def training_step_end(self, batch_parts_outputs):
+        logits = batch_parts_outputs["out"]
+        num_choice = batch_parts_outputs["num_choice"].flatten()[0].item()
+        logits = logits.reshape(-1, num_choice)
+        loss = self.loss(logits, batch_parts_outputs["labels"])
         return {"loss": loss,
                 "log": {"train_loss": loss}}
 
     def validation_step(self, batch, batch_idx):
         logits = self.forward(batch)
-        loss = self.loss(logits, batch["labels"])
-        if self.trainer and self.trainer.use_dp:
-            loss = loss.unsqueeze(0)
-        return {'val_loss': loss,
+        return {"out": logits,
+                "labels": batch["labels"],
+                "num_choice": batch["num_choice"]}
+
+    def validation_step_end(self, batch_parts_outputs):
+        logits = batch_parts_outputs["out"]
+        num_choice = batch_parts_outputs["num_choice"].flatten()[0].item()
+        logits = logits.reshape(-1, num_choice)
+        loss = self.loss(logits, batch_parts_outputs["labels"])
+        return {"val_loss": loss,
                 "val_batch_logits": logits,
-                "val_batch_labels": batch["labels"]}
+                "val_batch_labels": batch_parts_outputs["labels"]}
 
     def validation_epoch_end(self, outputs):
         val_loss_mean = torch.stack([o['val_loss'] for o in outputs]).mean()
