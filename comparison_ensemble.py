@@ -64,7 +64,7 @@ for subset in powerset(model_to_path.keys()):
     subset = list(subset)
     predictions_df = (pd.DataFrame.from_dict(model_to_predictions) - 0.5) * 2  # Project to predictions to [-1, 1]
     confidences_df = pd.DataFrame.from_dict(model_to_confidences)
-    # confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
+    confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
     # confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)  # Get the most confident
 
     scaled_df = predictions_df.mul(confidences_df, fill_value=1)[subset]  # Scale the predictions by multiplying with confidence
