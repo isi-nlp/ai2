@@ -70,5 +70,6 @@ for subset in powerset(model_to_path.keys()):
     # print('Confidences', confidences_df)
     # print('Scaled', scaled_df)
     final_predictions = scaled_df.mean(axis=1) > 0  # Take the average of each row for ensembled predictions
-    print(subset)
-    print(accuracy_score(labels, final_predictions.values.squeeze().tolist()))
+    if accuracy_score(labels, final_predictions.values.squeeze().tolist()) > 0.81:
+        print(subset)
+        print(accuracy_score(labels, final_predictions.values.squeeze().tolist()))
