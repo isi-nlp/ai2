@@ -70,10 +70,13 @@ for subset in powerset(model_to_path.keys()):
     # confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)  # Get the most confident
 
     scaled_df = predictions_df.mul(confidences_df, fill_value=1)[subset]  # Scale the predictions by multiplying with confidence
-    # print('Predictions', predictions_df)
-    # print('Confidences', confidences_df)
-    # print('Scaled', scaled_df)
     final_predictions = scaled_df.mean(axis=1) > 0  # Take the average of each row for ensembled predictions
     accuracy = accuracy_score(labels, final_predictions.values.squeeze().tolist())
-    # print(f'{accuracy},{subset}')
+
+    # print('Predictions', predictions_df)
+    # print('Confidences', confidences_df)
+    # print('Scaled', scaled_df)s
+
+    # if accuracy > 0.81:
+    #     print(f'{accuracy},{subset}')s
     print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
