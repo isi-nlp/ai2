@@ -5,6 +5,7 @@ import random
 import hydra
 from loguru import logger
 import numpy as np
+import omegaconf
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import TestTubeLogger
@@ -18,7 +19,8 @@ ROOT_PATH = Path(__file__).parent.absolute()
 
 
 @hydra.main(config_path="config/train.yaml")
-def train(config):
+def train(config: omegaconf.Config):
+    config = omegaconf.OmegaConf.to_container(config)
     logger.info(config)
 
     # If the training is deterministic for debugging purposes, we set the random seed

@@ -4,6 +4,7 @@ from typing import List, Union
 import hydra
 from loguru import logger
 import numpy as np
+import omegaconf
 import pandas as pd
 from sklearn.metrics import accuracy_score
 import torch
@@ -19,7 +20,8 @@ ROOT_PATH = Path(__file__).parent.absolute()
 
 # If script is executed by itself, load in the configuration yaml file and desired checkpoint model
 @hydra.main(config_path="config/eval.yaml")
-def main(config):
+def main(config: omegaconf.Config):
+    config = omegaconf.OmegaConf.to_container(config)
     logger.info(config)
 
     # If the evaluation is deterministic for debugging purposes, we set the random seed
