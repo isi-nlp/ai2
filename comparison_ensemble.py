@@ -59,6 +59,8 @@ print('\n')
 
 # Run ensemble
 # subset = ['standard_rs0', 'standard_rs10061880', 'arc1_rs10061880', 'arc2_rs10061880'] # 81.28
+
+print(f'accuracy,{model_to_path.keys()}'.replace(' ','').replace('[','').replace(']',''))
 for subset in powerset(model_to_path.keys()):
     if len(subset) <= 1: continue
     subset = list(subset)
@@ -73,4 +75,4 @@ for subset in powerset(model_to_path.keys()):
     # print('Scaled', scaled_df)
     final_predictions = scaled_df.mean(axis=1) > 0  # Take the average of each row for ensembled predictions
     accuracy = accuracy_score(labels, final_predictions.values.squeeze().tolist())
-    print(f'{accuracy},{subset}')
+    print(f'{accuracy},{[i in subset for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']',''))
