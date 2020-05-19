@@ -303,7 +303,10 @@ class Classifier(pl.LightningModule):
         df["text"] = df.apply(self.transform(self.hparams["formula{}".format(task_id_str)]), axis=1)
         df["task_id"] = task_id if task_id is not None else 0
         print(df.head())
-        return ClassificationDataset(df[["text", "goal", "label", "task_id"]].to_dict("records"))
+        if 'goal' in df.columns:
+            return ClassificationDataset(df[["text", "goal", "label", "task_id"]].to_dict("records"))
+        else:
+            return ClassificationDataset(df[["text", "label", "task_id"]].to_dict("records"))
 
     def transform(self, formula):
 
