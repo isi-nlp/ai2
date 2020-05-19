@@ -60,7 +60,7 @@ print('\n')
 # Run ensemble
 # subset = ['standard_rs0', 'standard_rs10061880', 'arc1_rs10061880', 'arc2_rs10061880'] # 81.28
 
-print(f'accuracy,{list(model_to_path.keys())}'.replace(' ','').replace('[','').replace(']','')) # print for csv
+print(f'accuracy,{list(model_to_path.keys())}'.replace(' ','').replace('\'','').replace('[','').replace(']','')) # print for csv
 for subset in powerset(model_to_path.keys()):
     if len(subset) <= 1: continue
     subset = list(subset)
