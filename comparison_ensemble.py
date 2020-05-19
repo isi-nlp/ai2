@@ -7,14 +7,13 @@ from scipy.stats.stats import pearsonr
 
 model_to_path = {
     'standard_rs0': "outputs/roberta-large-physicaliqa_rs0/roberta-large-physicaliqa",
-    # 'standard_rs42': "outputs/roberta-large-physicaliqa_rs42/roberta-large-physicaliqa",
     'standard_rs10061880': "outputs/roberta-large-physicaliqa",
     'arc1_rs0': 'outputs/roberta-large_rs0_acb2_lr5e-6/roberta-large-physicaliqa-arc1',
-    # 'arc1_rs42': 'outputs/roberta-large_rs42_acb4_lr5e-6/roberta-large-physicaliqa-arc1',
     'arc1_rs10061880': 'outputs/roberta-large_rs10061880_acb2_lr5e-6/roberta-large-physicaliqa-arc1',
     'arc2_rs0': 'outputs/roberta-large_rs0_acb1_lr1e-6/roberta-large-physicaliqa-arc2',
-    # 'arc2_rs42': 'outputs/roberta-large_rs42_acb8_lr5e-6/roberta-large-physicaliqa-arc2',
     'arc2_rs10061880': 'outputs/roberta-large_rs10061880_acb1_lr5e-6/roberta-large-physicaliqa-arc2',
+    'cn_rs0': "outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs0/roberta-large-physicaliqa",
+    'cn_rs10061880': "outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs10061880/roberta-large-physicaliqa",
 }
 model_to_predictions = {}
 model_to_confidences = {}
@@ -60,7 +59,7 @@ print('\n')
 # Run ensemble
 # subset = ['standard_rs0', 'standard_rs10061880', 'arc1_rs10061880', 'arc2_rs10061880'] # 81.28
 
-print(f'accuracy,{list(model_to_path.keys())}'.replace(' ','').replace('\'','').replace('[','').replace(']','')) # print for csv
+# print(f'accuracy,{list(model_to_path.keys())}'.replace(' ','').replace('\'','').replace('[','').replace(']','')) # print for csv
 for subset in powerset(model_to_path.keys()):
     if len(subset) <= 1: continue
     subset = list(subset)
@@ -75,8 +74,8 @@ for subset in powerset(model_to_path.keys()):
 
     # print('Predictions', predictions_df)
     # print('Confidences', confidences_df)
-    # print('Scaled', scaled_df)s
+    # print('Scaled', scaled_df)
+    # print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
 
-    # if accuracy > 0.81:
-    #     print(f'{accuracy},{subset}')s
-    print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
+    if accuracy > 0.81:
+        print(f'{accuracy},{subset}')

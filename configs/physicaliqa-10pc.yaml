@@ -3,7 +3,7 @@ model: roberta-large
 batch_size: 3
 accumulate_grad_batches: 8
 use_amp: false
-max_epochs: 6
+max_epochs: 4
 learning_rate: 5e-6
 adam_epsilon: 1e-8
 dropout: 0.3
@@ -17,4 +17,6 @@ val_y: "cache/physicaliqa-10pc-train-dev/physicaliqa-10pc-train-dev/dev-labels.l
 save_path: "outputs/roberta-large-physicaliqa-10pc"
 save_best_only: true
 random_seed: 10061880
+goal_inc_answers: false
+embed_all_sep_mean: false
 
