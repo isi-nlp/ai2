@@ -113,6 +113,12 @@ if __name__ == "__main__":
         config['random_seed'] = args.random_seed
     if args.save_path is not None:
         config['save_path'] = args.save_path
+    if args.goal_inc_answers is not None:
+        config['goal_inc_answers'] = args.goal_inc_answers
+    if args.embed_all_sep_mean is not None:
+        config['embed_all_sep_mean'] = args.embed_all_sep_mean
+
+
 
     print('Running train for config:', config)
     train(config)

@@ -1,8 +1,8 @@
 import os
 
 commands = [
-    'sbatch bin/run_saga.sh \"--config_file configs/roberta-large-physicaliqa-cn_all_cs_20k.yaml --random_seed 0 --save_path outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs0\"',
-    'sbatch bin/run_saga.sh \"--config_file configs/roberta-large-physicaliqa-cn_all_cs_20k.yaml --random_seed 10061880 --save_path outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs10061880\"',
+    'sbatch bin/run_saga.sh \"--config_file configs/physicaliqa-cn_all_cs_20k.yaml --random_seed 0 --save_path outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs0\"',
+    'sbatch bin/run_saga.sh \"--config_file configs/physicaliqa-cn_all_cs_20k.yaml --random_seed 10061880 --save_path outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs10061880\"',
     'sbatch bin/run_saga.sh \"--config_file configs/physicaliqa-10pc.yaml --random_seed 0 --save_path outputs/roberta-large-physicaliqa-10pc_rs0\"',
     'sbatch bin/run_saga.sh \"--config_file configs/physicaliqa-10pc.yaml --random_seed 10061880 --save_path outputs/roberta-large-physicaliqa-10pc_rs10061880\"',
     'sbatch bin/run_saga.sh \"--config_file configs/physicaliqa-10pc.yaml --random_seed 0 --save_path outputs/roberta-large-physicaliqa-10pc-arc1_rs0 --goal_inc_answers true\"',
