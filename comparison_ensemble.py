@@ -25,6 +25,7 @@ model_to_path = {
     '10pc-rs10061880': "outputs/roberta-large-physicaliqa-10pc_rs10061880",
 }
 
+model_to_predictions = {}
 model_to_confidences = {}
 
 gold_labels_path = 'cache/physicaliqa-train-dev/physicaliqa-train-dev/dev-labels.lst'
