@@ -87,5 +87,5 @@ for subset in powerset(model_to_path.keys()):
     # print('Scaled', scaled_df)
     # print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
 
-    if accuracy > 0.65:
+    if accuracy > 0.67:
         print(f'{accuracy},{subset}')
