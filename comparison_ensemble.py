@@ -12,8 +12,8 @@ model_to_path = {
     'arc1_rs10061880': 'outputs/roberta-large_rs10061880_acb2_lr5e-6/roberta-large-physicaliqa-arc1',
     'arc2_rs0': 'outputs/roberta-large_rs0_acb1_lr1e-6/roberta-large-physicaliqa-arc2',
     'arc2_rs10061880': 'outputs/roberta-large_rs10061880_acb1_lr5e-6/roberta-large-physicaliqa-arc2',
-    'cn_rs0': "outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs0/roberta-large-physicaliqa",
-    'cn_rs10061880': "outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs10061880/roberta-large-physicaliqa",
+    'cn_rs0': "outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs0",
+    'cn_rs10061880': "outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs10061880",
 }
 model_to_predictions = {}
 model_to_confidences = {}
