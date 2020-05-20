@@ -6,23 +6,22 @@ import pandas as pd
 from scipy.stats.stats import pearsonr
 
 model_to_path = {
-    # 'standard_rs0': "outputs/roberta-large-physicaliqa_rs0/roberta-large-physicaliqa",
-    # 'standard_rs10061880': "outputs/roberta-large-physicaliqa",
-    # 'arc1_rs0': 'outputs/roberta-large_rs0_acb2_lr5e-6/roberta-large-physicaliqa-arc1',
-    # 'arc1_rs10061880': 'outputs/roberta-large_rs10061880_acb2_lr5e-6/roberta-large-physicaliqa-arc1',
-    # 'arc2_rs0': 'outputs/roberta-large_rs0_acb1_lr1e-6/roberta-large-physicaliqa-arc2',
-    # 'arc2_rs10061880': 'outputs/roberta-large_rs10061880_acb1_lr5e-6/roberta-large-physicaliqa-arc2',
-    # 'cn_rs0': "outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs0",
-    # 'cn_rs10061880': "outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs10061880",
-
-    '10pc-arc1_rs0': "outputs/roberta-large-physicaliqa-10pc-arc1_rs0",
-    '10pc-arc1_rs10061880': "outputs/roberta-large-physicaliqa-10pc-arc1_rs10061880",
-    '10pc-arc2_rs0': "outputs/roberta-large-physicaliqa-10pc-arc2_rs0",
-    '10pc-arc2_rs10061880': "outputs/roberta-large-physicaliqa-10pc-arc2_rs10061880",
-    '10pc-cn_rs0': "outputs/roberta-large-physicaliqa-10pc-cn_all_cs_20k_rs0",
-    '10pc-cn_rs10061880': "outputs/roberta-large-physicaliqa-10pc-cn_all_cs_20k_rs10061880",
-    '10pc_rs0': "outputs/roberta-large-physicaliqa-10pc_rs0",
-    '10pc_rs10061880': "outputs/roberta-large-physicaliqa-10pc_rs10061880",
+    'standard_rs0': "outputs/roberta-large-physicaliqa_rs0/roberta-large-physicaliqa",
+    'standard_rs10061880': "outputs/roberta-large-physicaliqa",
+    'arc1_rs0': 'outputs/roberta-large_rs0_acb2_lr5e-6/roberta-large-physicaliqa-arc1',
+    'arc1_rs10061880': 'outputs/roberta-large_rs10061880_acb2_lr5e-6/roberta-large-physicaliqa-arc1',
+    'arc2_rs0': 'outputs/roberta-large_rs0_acb1_lr1e-6/roberta-large-physicaliqa-arc2',
+    'arc2_rs10061880': 'outputs/roberta-large_rs10061880_acb1_lr5e-6/roberta-large-physicaliqa-arc2',
+    'cn_rs0': "outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs0",
+    'cn_rs10061880': "outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs10061880",
+    # '10pc-arc1_rs0': "outputs/roberta-large-physicaliqa-10pc-arc1_rs0",
+    # '10pc-arc1_rs10061880': "outputs/roberta-large-physicaliqa-10pc-arc1_rs10061880",
+    # '10pc-arc2_rs0': "outputs/roberta-large-physicaliqa-10pc-arc2_rs0",
+    # '10pc-arc2_rs10061880': "outputs/roberta-large-physicaliqa-10pc-arc2_rs10061880",
+    # '10pc-cn_rs0': "outputs/roberta-large-physicaliqa-10pc-cn_all_cs_20k_rs0",
+    # '10pc-cn_rs10061880': "outputs/roberta-large-physicaliqa-10pc-cn_all_cs_20k_rs10061880",
+    # '10pc_rs0': "outputs/roberta-large-physicaliqa-10pc_rs0",
+    # '10pc_rs10061880': "outputs/roberta-large-physicaliqa-10pc_rs10061880",
 }
 
 model_to_predictions = {}
@@ -87,5 +86,5 @@ for subset in powerset(model_to_path.keys()):
     # print('Scaled', scaled_df)
     # print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
 
-    if accuracy > 0.67:
+    if accuracy > 0.815:
         print(f'{accuracy},{subset}')
