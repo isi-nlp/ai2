@@ -17,14 +17,14 @@ model_to_path = {
 
     '10pc-arc1-rs0': "outputs/roberta-large-physicaliqa-10pc-arc1_rs0",
     '10pc-arc1-rs10061880': "outputs/roberta-large-physicaliqa-10pc-arc1_rs10061880",
-    '10pc-arc1-rs0': "outputs/roberta-large-physicaliqa-10pc-arc2_rs0",
+    '10pc-arc2-rs0': "outputs/roberta-large-physicaliqa-10pc-arc2_rs0",
     '10pc-arc2-rs10061880': "outputs/roberta-large-physicaliqa-10pc-arc2_rs10061880",
     '10pc-cn-rs0': "outputs/roberta-large-physicaliqa-10pc-cn_all_cs_20k_rs0",
     '10pc-cn-rs10061880': "outputs/roberta-large-physicaliqa-10pc-cn_all_cs_20k_rs10061880",
     '10pc-rs0': "outputs/roberta-large-physicaliqa-10pc_rs0",
     '10pc-rs10061880': "outputs/roberta-large-physicaliqa-10pc_rs10061880",
 }
-model_to_predictions = {}
+
 model_to_confidences = {}
 
 gold_labels_path = 'cache/physicaliqa-train-dev/physicaliqa-train-dev/dev-labels.lst'
