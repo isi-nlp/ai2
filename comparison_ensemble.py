@@ -15,14 +15,14 @@ model_to_path = {
     # 'cn_rs0': "outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs0",
     # 'cn_rs10061880': "outputs/roberta-large-physicaliqa-cn_all_cs_20k_rs10061880",
 
-    '10pc-arc1-rs0': "outputs/roberta-large-physicaliqa-10pc-arc1_rs0",
-    '10pc-arc1-rs10061880': "outputs/roberta-large-physicaliqa-10pc-arc1_rs10061880",
-    '10pc-arc2-rs0': "outputs/roberta-large-physicaliqa-10pc-arc2_rs0",
-    '10pc-arc2-rs10061880': "outputs/roberta-large-physicaliqa-10pc-arc2_rs10061880",
-    '10pc-cn-rs0': "outputs/roberta-large-physicaliqa-10pc-cn_all_cs_20k_rs0",
-    '10pc-cn-rs10061880': "outputs/roberta-large-physicaliqa-10pc-cn_all_cs_20k_rs10061880",
-    '10pc-rs0': "outputs/roberta-large-physicaliqa-10pc_rs0",
-    '10pc-rs10061880': "outputs/roberta-large-physicaliqa-10pc_rs10061880",
+    '10pc-arc1_rs0': "outputs/roberta-large-physicaliqa-10pc-arc1_rs0",
+    '10pc-arc1_rs10061880': "outputs/roberta-large-physicaliqa-10pc-arc1_rs10061880",
+    '10pc-arc2_rs0': "outputs/roberta-large-physicaliqa-10pc-arc2_rs0",
+    '10pc-arc2_rs10061880': "outputs/roberta-large-physicaliqa-10pc-arc2_rs10061880",
+    '10pc-cn_rs0': "outputs/roberta-large-physicaliqa-10pc-cn_all_cs_20k_rs0",
+    '10pc-cn_rs10061880': "outputs/roberta-large-physicaliqa-10pc-cn_all_cs_20k_rs10061880",
+    '10pc_rs0': "outputs/roberta-large-physicaliqa-10pc_rs0",
+    '10pc_rs10061880': "outputs/roberta-large-physicaliqa-10pc_rs10061880",
 }
 
 model_to_predictions = {}
@@ -41,8 +41,7 @@ for key, path in model_to_path.items():
     print(f'{key},{accuracy}')
 
 print('Compare pairs of predictions of each model')
-print(
-    'ID1,ID22,Pred Sim,Pred Cor,Correctness Cor,Confidence Cor,ConfCor Both Correct,ConfCor One Correct,ConfCor Both Wrong')
+print('ID1,ID22,Pred Sim,Pred Cor,Correctness Cor,Confidence Cor,ConfCor Both Correct,ConfCor One Correct,ConfCor Both Wrong')
 for id1, id2 in itertools.combinations(model_to_predictions.keys(), 2):
     model1, rs1 = tuple(id1.split('_'))
     model2, rs2 = tuple(id2.split('_'))
