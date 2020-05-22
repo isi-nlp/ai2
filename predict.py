@@ -72,7 +72,7 @@ def main(input_file, output_file):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description='A random baseline.')
+        description='AI2 Submission.')
     parser.add_argument('--input-file', type=str, required=True, help='Location of test records', default=None)
     parser.add_argument('--output-file', type=str, required=True, help='Location of predictions', default=None)
 
