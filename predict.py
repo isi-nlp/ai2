@@ -65,7 +65,7 @@ def main(input_file, output_file):
     # Write the predictions to the output file.
     with open(output_file, "w") as f:
         for p in predicted_answers:
-            f.write(p)
+            f.write(str(p))
             f.write("\n")
         f.close()
 
