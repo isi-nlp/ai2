@@ -1,0 +1,4 @@
+# Files to ignore.
+.git
+.cache
+.outputs

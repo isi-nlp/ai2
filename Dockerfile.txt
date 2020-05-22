@@ -1,0 +1,14 @@
+FROM continuumio/miniconda3
+WORKDIR /source
+
+# Additional commands.
+conda create --name ai2 python=3.7
+conda activate ai2
+
+
+# Install dependencies.
+COPY ./requirements.txt .
+RUN pip install -r requirements.txt
+
+# Copy remaining code.
+COPY . .
