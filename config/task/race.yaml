@@ -1,0 +1,6 @@
+task_name: race
+train_x: "task_data/race-train-dev-test/train.jsonl"
+train_y: "task_data/race-train-dev-test/train-labels.lst"
+val_x: "task_data/race-train-dev-test/dev.jsonl"
+val_y: "task_data/race-train-dev-test/dev-labels.lst"
+formula: "paragraph -> qa_list"
