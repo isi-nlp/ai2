@@ -646,3 +646,712 @@ outputs/rs10061880_bs3_acb8_ws300_dr0.3/roberta-large-physicaliqa-10pc-cn_all_cs
 outputs/rs10061880_bs3_acb8_ws300_dr0.3/roberta-large-physicaliqa-cn_all_cs_10k
 2020-04-09 17:56:37.451 | INFO     | __main__:<module>:89 - Accuracy score: 0.729
 2020-04-09 17:56:37.452 | INFO     | __main__:<module>:90 - 95.0 confidence interval 70.8 and 74.7, average: 72.9
+outputs/t5-small_rs0_acb2_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:00:57.981 | INFO     | __main__:<module>:89 - Accuracy score: 0.496
+2020-04-27 06:00:57.981 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.3 and 51.8, average: 49.5
+outputs/t5-small_rs10061880_acb2_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:00:57.958 | INFO     | __main__:<module>:89 - Accuracy score: 0.478
+2020-04-27 06:00:57.959 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.6 and 49.9, average: 47.8
+outputs/t5-small_rs42_acb2_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:00:59.271 | INFO     | __main__:<module>:89 - Accuracy score: 0.528
+2020-04-27 06:00:59.272 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.6 and 55.1, average: 52.8
+outputs/t5-small_rs42_acb2_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:00:59.567 | INFO     | __main__:<module>:89 - Accuracy score: 0.519
+2020-04-27 06:00:59.568 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.7 and 54.2, average: 51.9
+outputs/t5-small_rs0_acb2_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:00:59.739 | INFO     | __main__:<module>:89 - Accuracy score: 0.501
+2020-04-27 06:00:59.740 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.8 and 52.3, average: 50.0
+outputs/t5-small_rs10061880_acb2_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:01:58.075 | INFO     | __main__:<module>:89 - Accuracy score: 0.478
+2020-04-27 06:01:58.075 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.7 and 50.3, average: 47.9
+outputs/t5-small_rs0_acb2_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:01:59.292 | INFO     | __main__:<module>:89 - Accuracy score: 0.497
+2020-04-27 06:01:59.292 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.4 and 52.0, average: 49.7
+outputs/t5-small_rs42_acb2_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:01:59.691 | INFO     | __main__:<module>:89 - Accuracy score: 0.531
+2020-04-27 06:01:59.691 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.0 and 55.3, average: 53.1
+outputs/t5-small_rs10061880_acb2_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:02:00.083 | INFO     | __main__:<module>:89 - Accuracy score: 0.479
+2020-04-27 06:02:00.084 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.6 and 50.0, average: 47.9
+outputs/t5-small_rs0_acb2_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:02:00.220 | INFO     | __main__:<module>:89 - Accuracy score: 0.500
+2020-04-27 06:02:00.220 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.8 and 52.3, average: 50.0
+outputs/t5-small_rs42_acb2_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:02:45.774 | INFO     | __main__:<module>:89 - Accuracy score: 0.524
+2020-04-27 06:02:45.774 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.2 and 54.7, average: 52.4
+outputs/t5-small_rs10061880_acb2_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:02:47.202 | INFO     | __main__:<module>:89 - Accuracy score: 0.507
+2020-04-27 06:02:47.203 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.6 and 53.0, average: 50.8
+outputs/t5-small_rs0_acb2_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:03:12.732 | INFO     | __main__:<module>:89 - Accuracy score: 0.520
+2020-04-27 06:03:12.732 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.5 and 54.2, average: 52.0
+outputs/t5-small_rs42_acb2_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:03:14.699 | INFO     | __main__:<module>:89 - Accuracy score: 0.559
+2020-04-27 06:03:14.699 | INFO     | __main__:<module>:90 - 95.0 confidence interval 53.7 and 58.3, average: 55.9
+outputs/t5-small_rs10061880_acb2_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:03:15.444 | INFO     | __main__:<module>:89 - Accuracy score: 0.523
+2020-04-27 06:03:15.445 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.2 and 54.7, average: 52.4
+outputs/t5-small_rs42_acb4_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:03:30.959 | INFO     | __main__:<module>:89 - Accuracy score: 0.535
+2020-04-27 06:03:30.959 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.2 and 55.8, average: 53.5
+outputs/t5-small_rs0_acb4_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:03:31.787 | INFO     | __main__:<module>:89 - Accuracy score: 0.495
+2020-04-27 06:03:31.788 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.3 and 51.5, average: 49.5
+outputs/t5-small_rs10061880_acb4_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:04:14.762 | INFO     | __main__:<module>:89 - Accuracy score: 0.480
+2020-04-27 06:04:14.762 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.6 and 50.2, average: 48.0
+outputs/t5-small_rs0_acb4_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:04:19.445 | INFO     | __main__:<module>:89 - Accuracy score: 0.496
+2020-04-27 06:04:19.446 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.4 and 51.8, average: 49.5
+outputs/t5-small_rs42_acb4_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:04:20.596 | INFO     | __main__:<module>:89 - Accuracy score: 0.528
+2020-04-27 06:04:20.597 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.7 and 55.2, average: 52.8
+outputs/t5-small_rs0_acb4_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:04:25.910 | INFO     | __main__:<module>:89 - Accuracy score: 0.505
+2020-04-27 06:04:25.910 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.2 and 52.8, average: 50.5
+outputs/t5-small_rs10061880_acb4_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:04:27.945 | INFO     | __main__:<module>:89 - Accuracy score: 0.490
+2020-04-27 06:04:27.946 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.6 and 51.3, average: 49.0
+outputs/t5-small_rs42_acb4_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:04:28.021 | INFO     | __main__:<module>:89 - Accuracy score: 0.534
+2020-04-27 06:04:28.022 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.2 and 55.8, average: 53.4
+outputs/t5-small_rs10061880_acb4_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:04:59.519 | INFO     | __main__:<module>:89 - Accuracy score: 0.486
+2020-04-27 06:04:59.520 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.4 and 51.1, average: 48.7
+outputs/t5-small_rs42_acb4_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:05:06.957 | INFO     | __main__:<module>:89 - Accuracy score: 0.514
+2020-04-27 06:05:06.958 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.1 and 53.8, average: 51.4
+outputs/t5-small_rs0_acb4_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:05:07.556 | INFO     | __main__:<module>:89 - Accuracy score: 0.483
+2020-04-27 06:05:07.556 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.1 and 50.5, average: 48.3
+outputs/t5-small_rs10061880_acb4_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:05:25.961 | INFO     | __main__:<module>:89 - Accuracy score: 0.473
+2020-04-27 06:05:25.961 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.1 and 49.6, average: 47.4
+outputs/t5-small_rs42_acb4_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:05:26.184 | INFO     | __main__:<module>:89 - Accuracy score: 0.536
+2020-04-27 06:05:26.185 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.1 and 55.9, average: 53.6
+outputs/t5-small_rs0_acb4_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:05:28.458 | INFO     | __main__:<module>:89 - Accuracy score: 0.505
+2020-04-27 06:05:28.459 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.2 and 52.8, average: 50.5
+outputs/t5-small_rs42_acb8_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:06:11.379 | INFO     | __main__:<module>:89 - Accuracy score: 0.533
+2020-04-27 06:06:11.380 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.7 and 55.6, average: 53.2
+outputs/t5-small_rs0_acb8_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:06:12.239 | INFO     | __main__:<module>:89 - Accuracy score: 0.495
+2020-04-27 06:06:12.240 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.2 and 51.7, average: 49.5
+outputs/t5-small_rs10061880_acb4_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:06:12.247 | INFO     | __main__:<module>:89 - Accuracy score: 0.493
+2020-04-27 06:06:12.248 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.2 and 51.5, average: 49.4
+outputs/t5-small_rs0_acb8_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:06:22.614 | INFO     | __main__:<module>:89 - Accuracy score: 0.494
+2020-04-27 06:06:22.615 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.2 and 51.6, average: 49.4
+outputs/t5-small_rs10061880_acb8_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:06:22.946 | INFO     | __main__:<module>:89 - Accuracy score: 0.483
+2020-04-27 06:06:22.947 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.9 and 50.4, average: 48.3
+outputs/t5-small_rs42_acb8_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:06:25.474 | INFO     | __main__:<module>:89 - Accuracy score: 0.525
+2020-04-27 06:06:25.476 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.3 and 54.7, average: 52.5
+outputs/t5-small_rs10061880_acb8_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:06:53.791 | INFO     | __main__:<module>:89 - Accuracy score: 0.481
+2020-04-27 06:06:53.792 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.9 and 50.3, average: 48.1
+outputs/t5-small_rs42_acb8_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:07:21.978 | INFO     | __main__:<module>:89 - Accuracy score: 0.517
+2020-04-27 06:07:21.978 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.6 and 54.1, average: 51.7
+outputs/t5-small_rs0_acb8_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:07:23.028 | INFO     | __main__:<module>:89 - Accuracy score: 0.508
+2020-04-27 06:07:23.028 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.5 and 53.0, average: 50.8
+outputs/t5-small_rs42_acb8_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:07:25.559 | INFO     | __main__:<module>:89 - Accuracy score: 0.534
+2020-04-27 06:07:25.560 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.3 and 55.8, average: 53.5
+outputs/t5-small_rs10061880_acb8_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:07:26.408 | INFO     | __main__:<module>:89 - Accuracy score: 0.485
+2020-04-27 06:07:26.409 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.2 and 50.9, average: 48.5
+outputs/t5-small_rs0_acb8_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:07:27.117 | INFO     | __main__:<module>:89 - Accuracy score: 0.501
+2020-04-27 06:07:27.118 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.9 and 52.2, average: 50.1
+outputs/t5-small_rs10061880_acb8_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:07:29.389 | INFO     | __main__:<module>:89 - Accuracy score: 0.478
+2020-04-27 06:07:29.390 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.5 and 50.0, average: 47.8
+outputs/t5-small_rs0_acb8_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:07:47.519 | INFO     | __main__:<module>:89 - Accuracy score: 0.505
+2020-04-27 06:07:47.519 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.2 and 52.9, average: 50.6
+outputs/t5-small_rs10061880_acb8_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:08:06.480 | INFO     | __main__:<module>:89 - Accuracy score: 0.501
+2020-04-27 06:08:06.499 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.0 and 52.6, average: 50.2
+outputs/t5-small_rs42_acb8_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:08:06.759 | INFO     | __main__:<module>:89 - Accuracy score: 0.537
+2020-04-27 06:08:06.764 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.5 and 55.9, average: 53.7
+outputs/t5-small_rs0_acb16_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:08:25.049 | INFO     | __main__:<module>:89 - Accuracy score: 0.501
+2020-04-27 06:08:25.050 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.8 and 52.4, average: 50.1
+outputs/t5-small_rs10061880_acb16_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:08:27.715 | INFO     | __main__:<module>:89 - Accuracy score: 0.492
+2020-04-27 06:08:27.716 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.9 and 51.5, average: 49.2
+outputs/t5-small_rs42_acb16_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:08:30.947 | INFO     | __main__:<module>:89 - Accuracy score: 0.536
+2020-04-27 06:08:30.948 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.4 and 56.0, average: 53.6
+outputs/t5-small_rs0_acb16_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:08:32.126 | INFO     | __main__:<module>:89 - Accuracy score: 0.496
+2020-04-27 06:08:32.126 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.3 and 51.8, average: 49.6
+outputs/t5-small_rs42_acb16_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:08:34.964 | INFO     | __main__:<module>:89 - Accuracy score: 0.533
+2020-04-27 06:08:34.964 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.0 and 55.7, average: 53.3
+outputs/t5-small_rs10061880_acb16_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:09:17.215 | INFO     | __main__:<module>:89 - Accuracy score: 0.490
+2020-04-27 06:09:17.215 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.5 and 51.3, average: 49.0
+outputs/t5-small_rs0_acb16_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:09:18.008 | INFO     | __main__:<module>:89 - Accuracy score: 0.503
+2020-04-27 06:09:18.008 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.1 and 52.4, average: 50.2
+outputs/t5-small_rs42_acb16_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:09:21.591 | INFO     | __main__:<module>:89 - Accuracy score: 0.523
+2020-04-27 06:09:21.591 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.1 and 54.6, average: 52.3
+outputs/t5-small_rs0_acb16_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:09:24.186 | INFO     | __main__:<module>:89 - Accuracy score: 0.503
+2020-04-27 06:09:24.187 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.0 and 52.5, average: 50.3
+outputs/t5-small_rs42_acb16_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:09:25.474 | INFO     | __main__:<module>:89 - Accuracy score: 0.535
+2020-04-27 06:09:25.475 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.1 and 55.7, average: 53.5
+outputs/t5-small_rs10061880_acb16_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:09:26.155 | INFO     | __main__:<module>:89 - Accuracy score: 0.487
+2020-04-27 06:09:26.156 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.5 and 50.9, average: 48.7
+outputs/t5-small_rs10061880_acb16_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:09:34.653 | INFO     | __main__:<module>:89 - Accuracy score: 0.484
+2020-04-27 06:09:34.654 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.2 and 50.8, average: 48.4
+outputs/t5-small_rs42_acb16_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:10:13.171 | INFO     | __main__:<module>:89 - Accuracy score: 0.532
+2020-04-27 06:10:13.172 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.1 and 55.7, average: 53.2
+outputs/t5-small_rs10061880_acb16_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:10:14.617 | INFO     | __main__:<module>:89 - Accuracy score: 0.481
+2020-04-27 06:10:14.618 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.9 and 50.5, average: 48.1
+outputs/t5-small_rs0_acb16_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 06:10:15.573 | INFO     | __main__:<module>:89 - Accuracy score: 0.478
+2020-04-27 06:10:15.574 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.3 and 50.1, average: 47.8
+outputs/t5-small_rs0_acb2_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:31:13.526 | INFO     | __main__:<module>:89 - Accuracy score: 0.482
+2020-04-27 14:31:13.526 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.6 and 49.8, average: 48.2
+outputs/t5-small_rs0_acb2_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:31:13.338 | INFO     | __main__:<module>:89 - Accuracy score: 0.490
+2020-04-27 14:31:13.339 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.4 and 50.6, average: 49.0
+outputs/t5-small_rs42_acb2_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:31:13.415 | INFO     | __main__:<module>:89 - Accuracy score: 0.522
+2020-04-27 14:31:13.416 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.7 and 53.6, average: 52.2
+outputs/t5-small_rs42_acb2_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:31:13.676 | INFO     | __main__:<module>:89 - Accuracy score: 0.517
+2020-04-27 14:31:13.677 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.2 and 53.2, average: 51.7
+outputs/t5-small_rs10061880_acb2_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:31:13.854 | INFO     | __main__:<module>:89 - Accuracy score: 0.464
+2020-04-27 14:31:13.855 | INFO     | __main__:<module>:90 - 95.0 confidence interval 44.8 and 47.8, average: 46.3
+outputs/t5-small_rs10061880_acb2_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:31:16.689 | INFO     | __main__:<module>:89 - Accuracy score: 0.466
+2020-04-27 14:31:16.689 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.1 and 48.1, average: 46.6
+outputs/t5-small_rs0_acb2_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:32:14.431 | INFO     | __main__:<module>:89 - Accuracy score: 0.500
+2020-04-27 14:32:14.431 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.4 and 51.5, average: 50.0
+outputs/t5-small_rs42_acb2_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:32:18.639 | INFO     | __main__:<module>:89 - Accuracy score: 0.517
+2020-04-27 14:32:18.640 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.1 and 53.1, average: 51.6
+outputs/t5-small_rs10061880_acb2_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:32:19.441 | INFO     | __main__:<module>:89 - Accuracy score: 0.483
+2020-04-27 14:32:19.441 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.7 and 49.8, average: 48.3
+outputs/t5-small_rs42_acb2_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:32:22.889 | INFO     | __main__:<module>:89 - Accuracy score: 0.515
+2020-04-27 14:32:22.890 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.9 and 52.9, average: 51.5
+outputs/t5-small_rs10061880_acb2_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:32:24.379 | INFO     | __main__:<module>:89 - Accuracy score: 0.503
+2020-04-27 14:32:24.380 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.7 and 51.8, average: 50.3
+outputs/t5-small_rs0_acb2_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:32:26.274 | INFO     | __main__:<module>:89 - Accuracy score: 0.510
+2020-04-27 14:32:26.275 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.4 and 52.6, average: 51.0
+outputs/t5-small_rs42_acb2_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:33:23.457 | INFO     | __main__:<module>:89 - Accuracy score: 0.582
+2020-04-27 14:33:23.458 | INFO     | __main__:<module>:90 - 95.0 confidence interval 56.6 and 59.8, average: 58.2
+outputs/t5-small_rs0_acb2_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:33:23.516 | INFO     | __main__:<module>:89 - Accuracy score: 0.545
+2020-04-27 14:33:23.517 | INFO     | __main__:<module>:90 - 95.0 confidence interval 53.0 and 56.0, average: 54.5
+outputs/t5-small_rs10061880_acb2_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:33:24.045 | INFO     | __main__:<module>:89 - Accuracy score: 0.544
+2020-04-27 14:33:24.047 | INFO     | __main__:<module>:90 - 95.0 confidence interval 53.0 and 55.9, average: 54.4
+outputs/t5-small_rs0_acb4_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:33:38.934 | INFO     | __main__:<module>:89 - Accuracy score: 0.487
+2020-04-27 14:33:38.935 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.1 and 50.3, average: 48.7
+outputs/t5-small_rs10061880_acb4_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:33:39.441 | INFO     | __main__:<module>:89 - Accuracy score: 0.467
+2020-04-27 14:33:39.443 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.1 and 48.0, average: 46.6
+outputs/t5-small_rs42_acb4_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:33:43.298 | INFO     | __main__:<module>:89 - Accuracy score: 0.517
+2020-04-27 14:33:43.299 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.2 and 53.2, average: 51.7
+outputs/t5-small_rs0_acb4_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:34:38.665 | INFO     | __main__:<module>:89 - Accuracy score: 0.487
+2020-04-27 14:34:38.666 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.1 and 50.2, average: 48.7
+outputs/t5-small_rs10061880_acb4_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:34:38.790 | INFO     | __main__:<module>:89 - Accuracy score: 0.474
+2020-04-27 14:34:38.791 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.9 and 48.8, average: 47.3
+outputs/t5-small_rs42_acb4_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:34:41.874 | INFO     | __main__:<module>:89 - Accuracy score: 0.512
+2020-04-27 14:34:41.876 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.8 and 52.8, average: 51.2
+outputs/t5-small_rs0_acb4_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:34:54.000 | INFO     | __main__:<module>:89 - Accuracy score: 0.501
+2020-04-27 14:34:54.001 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.5 and 51.6, average: 50.1
+outputs/t5-small_rs42_acb4_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:34:54.018 | INFO     | __main__:<module>:89 - Accuracy score: 0.516
+2020-04-27 14:34:54.019 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.0 and 53.1, average: 51.6
+outputs/t5-small_rs10061880_acb4_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:34:54.581 | INFO     | __main__:<module>:89 - Accuracy score: 0.479
+2020-04-27 14:34:54.582 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.4 and 49.5, average: 47.9
+outputs/t5-small_rs42_acb4_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:35:56.037 | INFO     | __main__:<module>:89 - Accuracy score: 0.511
+2020-04-27 14:35:56.038 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.6 and 52.6, average: 51.1
+outputs/t5-small_rs0_acb4_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:35:56.140 | INFO     | __main__:<module>:89 - Accuracy score: 0.495
+2020-04-27 14:35:56.141 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.8 and 50.9, average: 49.4
+outputs/t5-small_rs10061880_acb4_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:35:56.168 | INFO     | __main__:<module>:89 - Accuracy score: 0.484
+2020-04-27 14:35:56.169 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.9 and 50.0, average: 48.4
+outputs/t5-small_rs0_acb4_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:35:58.201 | INFO     | __main__:<module>:89 - Accuracy score: 0.528
+2020-04-27 14:35:58.202 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.1 and 54.3, average: 52.8
+outputs/t5-small_rs42_acb4_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:35:58.253 | INFO     | __main__:<module>:89 - Accuracy score: 0.548
+2020-04-27 14:35:58.254 | INFO     | __main__:<module>:90 - 95.0 confidence interval 53.2 and 56.3, average: 54.8
+outputs/t5-small_rs10061880_acb4_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:35:58.517 | INFO     | __main__:<module>:89 - Accuracy score: 0.522
+2020-04-27 14:35:58.518 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.6 and 53.7, average: 52.1
+outputs/t5-small_rs0_acb8_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:36:58.144 | INFO     | __main__:<module>:89 - Accuracy score: 0.493
+2020-04-27 14:36:58.145 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.7 and 50.6, average: 49.2
+outputs/t5-small_rs42_acb8_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:36:58.149 | INFO     | __main__:<module>:89 - Accuracy score: 0.518
+2020-04-27 14:36:58.150 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.3 and 53.4, average: 51.8
+outputs/t5-small_rs10061880_acb8_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:36:58.460 | INFO     | __main__:<module>:89 - Accuracy score: 0.470
+2020-04-27 14:36:58.461 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.5 and 48.5, average: 47.0
+outputs/t5-small_rs42_acb8_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:37:24.567 | INFO     | __main__:<module>:89 - Accuracy score: 0.516
+2020-04-27 14:37:24.568 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.0 and 53.0, average: 51.6
+outputs/t5-small_rs0_acb8_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:37:24.985 | INFO     | __main__:<module>:89 - Accuracy score: 0.488
+2020-04-27 14:37:24.986 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.2 and 50.2, average: 48.8
+outputs/t5-small_rs10061880_acb8_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:37:25.641 | INFO     | __main__:<module>:89 - Accuracy score: 0.462
+2020-04-27 14:37:25.642 | INFO     | __main__:<module>:90 - 95.0 confidence interval 44.6 and 47.6, average: 46.1
+outputs/t5-small_rs0_acb8_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:37:57.774 | INFO     | __main__:<module>:89 - Accuracy score: 0.493
+2020-04-27 14:37:57.778 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.7 and 50.9, average: 49.4
+outputs/t5-small_rs10061880_acb8_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:38:20.982 | INFO     | __main__:<module>:89 - Accuracy score: 0.470
+2020-04-27 14:38:20.982 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.5 and 48.5, average: 47.0
+outputs/t5-small_rs42_acb8_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:38:23.842 | INFO     | __main__:<module>:89 - Accuracy score: 0.514
+2020-04-27 14:38:23.843 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.7 and 53.0, average: 51.4
+outputs/t5-small_rs0_acb8_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:38:38.813 | INFO     | __main__:<module>:89 - Accuracy score: 0.486
+2020-04-27 14:38:38.814 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.1 and 50.1, average: 48.6
+outputs/t5-small_rs10061880_acb8_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:38:38.902 | INFO     | __main__:<module>:89 - Accuracy score: 0.470
+2020-04-27 14:38:38.903 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.5 and 48.5, average: 47.0
+outputs/t5-small_rs42_acb8_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:38:42.462 | INFO     | __main__:<module>:89 - Accuracy score: 0.514
+2020-04-27 14:38:42.462 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.9 and 52.9, average: 51.4
+outputs/t5-small_rs42_acb8_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:39:10.655 | INFO     | __main__:<module>:89 - Accuracy score: 0.552
+2020-04-27 14:39:10.656 | INFO     | __main__:<module>:90 - 95.0 confidence interval 53.7 and 56.7, average: 55.2
+outputs/t5-small_rs0_acb16_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:39:21.039 | INFO     | __main__:<module>:89 - Accuracy score: 0.491
+2020-04-27 14:39:21.041 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.4 and 50.5, average: 49.0
+outputs/t5-small_rs10061880_acb8_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:39:22.781 | INFO     | __main__:<module>:89 - Accuracy score: 0.522
+2020-04-27 14:39:22.782 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.6 and 53.8, average: 52.2
+outputs/t5-small_rs0_acb8_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:39:30.297 | INFO     | __main__:<module>:89 - Accuracy score: 0.513
+2020-04-27 14:39:30.298 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.8 and 52.9, average: 51.3
+outputs/t5-small_rs42_acb16_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:39:38.913 | INFO     | __main__:<module>:89 - Accuracy score: 0.520
+2020-04-27 14:39:38.913 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.4 and 53.5, average: 52.0
+outputs/t5-small_rs0_acb16_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:39:50.604 | INFO     | __main__:<module>:89 - Accuracy score: 0.491
+2020-04-27 14:39:50.605 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.5 and 50.6, average: 49.1
+outputs/t5-small_rs10061880_acb16_lr5e-7/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:39:50.753 | INFO     | __main__:<module>:89 - Accuracy score: 0.471
+2020-04-27 14:39:50.753 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.6 and 48.6, average: 47.1
+outputs/t5-small_rs10061880_acb16_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:40:25.152 | INFO     | __main__:<module>:89 - Accuracy score: 0.466
+2020-04-27 14:40:25.153 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.0 and 48.1, average: 46.5
+outputs/t5-small_rs42_acb16_lr1e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:40:25.418 | INFO     | __main__:<module>:89 - Accuracy score: 0.516
+2020-04-27 14:40:25.420 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.1 and 53.1, average: 51.6
+outputs/t5-small_rs0_acb16_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:40:25.662 | INFO     | __main__:<module>:89 - Accuracy score: 0.493
+2020-04-27 14:40:25.663 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.7 and 50.9, average: 49.3
+outputs/t5-small_rs42_acb16_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:40:33.096 | INFO     | __main__:<module>:89 - Accuracy score: 0.517
+2020-04-27 14:40:33.096 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.2 and 53.2, average: 51.7
+outputs/t5-small_rs10061880_acb16_lr5e-6/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:40:41.304 | INFO     | __main__:<module>:89 - Accuracy score: 0.464
+2020-04-27 14:40:41.305 | INFO     | __main__:<module>:90 - 95.0 confidence interval 44.8 and 47.9, average: 46.4
+outputs/t5-small_rs0_acb16_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:40:56.447 | INFO     | __main__:<module>:89 - Accuracy score: 0.497
+2020-04-27 14:40:56.448 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.2 and 51.1, average: 49.7
+outputs/t5-small_rs10061880_acb16_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:40:56.869 | INFO     | __main__:<module>:89 - Accuracy score: 0.465
+2020-04-27 14:40:56.870 | INFO     | __main__:<module>:90 - 95.0 confidence interval 44.9 and 47.9, average: 46.5
+outputs/t5-small_rs42_acb16_lr1e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:40:59.756 | INFO     | __main__:<module>:89 - Accuracy score: 0.522
+2020-04-27 14:40:59.757 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.7 and 53.7, average: 52.2
+outputs/t5-small_rs0_acb16_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:41:34.947 | INFO     | __main__:<module>:89 - Accuracy score: 0.502
+2020-04-27 14:41:34.948 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.6 and 51.7, average: 50.2
+outputs/t5-small_rs42_acb16_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:41:36.442 | INFO     | __main__:<module>:89 - Accuracy score: 0.536
+2020-04-27 14:41:36.443 | INFO     | __main__:<module>:90 - 95.0 confidence interval 52.2 and 55.1, average: 53.6
+outputs/t5-small_rs10061880_acb16_lr5e-5/t5-small-t5-small-physicaliqa-25pc
+2020-04-27 14:41:36.452 | INFO     | __main__:<module>:89 - Accuracy score: 0.477
+2020-04-27 14:41:36.453 | INFO     | __main__:<module>:90 - 95.0 confidence interval 45.9 and 49.1, average: 47.6
+outputs/roberta-large_rs42_acb1_lr5e-7/roberta-large-physicaliqa-arc1
+2020-05-06 09:08:13.181 | INFO     | __main__:<module>:89 - Accuracy score: 0.705
+2020-05-06 09:08:13.182 | INFO     | __main__:<module>:90 - 95.0 confidence interval 68.4 and 72.5, average: 70.5
+outputs/roberta-large_rs0_acb1_lr1e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:08:23.023 | INFO     | __main__:<module>:89 - Accuracy score: 0.754
+2020-05-06 09:08:23.025 | INFO     | __main__:<module>:90 - 95.0 confidence interval 73.4 and 77.5, average: 75.4
+outputs/roberta-large_rs10061880_acb1_lr1e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:08:25.757 | INFO     | __main__:<module>:89 - Accuracy score: 0.764
+2020-05-06 09:08:25.758 | INFO     | __main__:<module>:90 - 95.0 confidence interval 74.4 and 78.3, average: 76.4
+outputs/roberta-large_rs0_acb1_lr5e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:08:34.449 | INFO     | __main__:<module>:89 - Accuracy score: 0.527
+2020-05-06 09:08:34.450 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.7 and 55.1, average: 52.7
+outputs/roberta-large_rs42_acb1_lr1e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:08:40.485 | INFO     | __main__:<module>:89 - Accuracy score: 0.752
+2020-05-06 09:08:40.486 | INFO     | __main__:<module>:90 - 95.0 confidence interval 73.2 and 77.3, average: 75.2
+outputs/roberta-large_rs10061880_acb1_lr5e-7/roberta-large-physicaliqa-arc1
+2020-05-06 09:08:40.927 | INFO     | __main__:<module>:89 - Accuracy score: 0.722
+2020-05-06 09:08:40.928 | INFO     | __main__:<module>:90 - 95.0 confidence interval 70.2 and 74.4, average: 72.2
+outputs/roberta-large_rs0_acb1_lr5e-7/roberta-large-physicaliqa-arc1
+2020-05-06 09:08:41.178 | INFO     | __main__:<module>:89 - Accuracy score: 0.716
+2020-05-06 09:08:41.179 | INFO     | __main__:<module>:90 - 95.0 confidence interval 69.5 and 73.5, average: 71.6
+outputs/roberta-large_rs42_acb1_lr5e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:10:07.372 | INFO     | __main__:<module>:89 - Accuracy score: 0.563
+2020-05-06 09:10:07.373 | INFO     | __main__:<module>:90 - 95.0 confidence interval 53.9 and 58.5, average: 56.3
+outputs/roberta-large_rs42_acb1_lr1e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:10:20.642 | INFO     | __main__:<module>:89 - Accuracy score: 0.502
+2020-05-06 09:10:20.644 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.8 and 52.3, average: 50.2
+outputs/roberta-large_rs0_acb1_lr1e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:10:28.868 | INFO     | __main__:<module>:89 - Accuracy score: 0.551
+2020-05-06 09:10:28.869 | INFO     | __main__:<module>:90 - 95.0 confidence interval 52.9 and 57.3, average: 55.1
+outputs/roberta-large_rs10061880_acb1_lr5e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:10:30.129 | INFO     | __main__:<module>:89 - Accuracy score: 0.754
+2020-05-06 09:10:30.129 | INFO     | __main__:<module>:90 - 95.0 confidence interval 73.4 and 77.2, average: 75.3
+outputs/roberta-large_rs42_acb1_lr5e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:10:51.031 | INFO     | __main__:<module>:89 - Accuracy score: 0.510
+2020-05-06 09:10:51.033 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.6 and 53.4, average: 50.9
+outputs/roberta-large_rs0_acb1_lr5e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:10:52.215 | INFO     | __main__:<module>:89 - Accuracy score: 0.501
+2020-05-06 09:10:52.218 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.7 and 52.5, average: 50.1
+outputs/roberta-large_rs10061880_acb1_lr1e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:10:53.167 | INFO     | __main__:<module>:89 - Accuracy score: 0.540
+2020-05-06 09:10:53.167 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.7 and 56.2, average: 54.0
+outputs/roberta-large_rs10061880_acb1_lr5e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:11:52.654 | INFO     | __main__:<module>:89 - Accuracy score: 0.510
+2020-05-06 09:11:52.656 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.7 and 53.2, average: 50.9
+outputs/roberta-large_rs0_acb2_lr5e-7/roberta-large-physicaliqa-arc1
+2020-05-06 09:12:14.320 | INFO     | __main__:<module>:89 - Accuracy score: 0.684
+2020-05-06 09:12:14.322 | INFO     | __main__:<module>:90 - 95.0 confidence interval 66.3 and 70.4, average: 68.4
+outputs/roberta-large_rs42_acb2_lr5e-7/roberta-large-physicaliqa-arc1
+2020-05-06 09:12:18.258 | INFO     | __main__:<module>:89 - Accuracy score: 0.660
+2020-05-06 09:12:18.259 | INFO     | __main__:<module>:90 - 95.0 confidence interval 63.8 and 68.1, average: 66.0
+outputs/roberta-large_rs10061880_acb2_lr5e-7/roberta-large-physicaliqa-arc1
+2020-05-06 09:12:22.109 | INFO     | __main__:<module>:89 - Accuracy score: 0.689
+2020-05-06 09:12:22.110 | INFO     | __main__:<module>:90 - 95.0 confidence interval 66.8 and 70.9, average: 68.9
+outputs/roberta-large_rs0_acb2_lr1e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:12:30.945 | INFO     | __main__:<module>:89 - Accuracy score: 0.742
+2020-05-06 09:12:30.947 | INFO     | __main__:<module>:90 - 95.0 confidence interval 72.1 and 76.1, average: 74.1
+outputs/roberta-large_rs10061880_acb2_lr1e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:12:31.175 | INFO     | __main__:<module>:89 - Accuracy score: 0.743
+2020-05-06 09:12:31.176 | INFO     | __main__:<module>:90 - 95.0 confidence interval 72.4 and 76.3, average: 74.3
+outputs/roberta-large_rs42_acb2_lr1e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:12:33.073 | INFO     | __main__:<module>:89 - Accuracy score: 0.737
+2020-05-06 09:12:33.074 | INFO     | __main__:<module>:90 - 95.0 confidence interval 71.8 and 75.6, average: 73.7
+outputs/roberta-large_rs0_acb2_lr5e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:13:34.314 | INFO     | __main__:<module>:89 - Accuracy score: 0.760
+2020-05-06 09:13:34.316 | INFO     | __main__:<module>:90 - 95.0 confidence interval 74.0 and 77.9, average: 75.9
+outputs/roberta-large_rs42_acb2_lr5e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:14:11.593 | INFO     | __main__:<module>:89 - Accuracy score: 0.749
+2020-05-06 09:14:11.595 | INFO     | __main__:<module>:90 - 95.0 confidence interval 73.0 and 76.7, average: 74.9
+outputs/roberta-large_rs0_acb2_lr1e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:14:18.225 | INFO     | __main__:<module>:89 - Accuracy score: 0.582
+2020-05-06 09:14:18.234 | INFO     | __main__:<module>:90 - 95.0 confidence interval 55.9 and 60.3, average: 58.2
+outputs/roberta-large_rs10061880_acb2_lr5e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:14:23.049 | INFO     | __main__:<module>:89 - Accuracy score: 0.768
+2020-05-06 09:14:23.051 | INFO     | __main__:<module>:90 - 95.0 confidence interval 74.8 and 78.6, average: 76.8
+outputs/roberta-large_rs10061880_acb2_lr1e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:14:25.154 | INFO     | __main__:<module>:89 - Accuracy score: 0.550
+2020-05-06 09:14:25.155 | INFO     | __main__:<module>:90 - 95.0 confidence interval 52.7 and 57.2, average: 55.0
+outputs/roberta-large_rs0_acb2_lr5e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:14:32.231 | INFO     | __main__:<module>:89 - Accuracy score: 0.504
+2020-05-06 09:14:32.232 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.3 and 52.6, average: 50.4
+outputs/roberta-large_rs42_acb2_lr1e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:14:35.049 | INFO     | __main__:<module>:89 - Accuracy score: 0.541
+2020-05-06 09:14:35.049 | INFO     | __main__:<module>:90 - 95.0 confidence interval 51.8 and 56.1, average: 54.0
+outputs/roberta-large_rs42_acb2_lr5e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:15:23.975 | INFO     | __main__:<module>:89 - Accuracy score: 0.523
+2020-05-06 09:15:23.990 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.1 and 54.6, average: 52.3
+outputs/roberta-large_rs10061880_acb2_lr5e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:16:08.656 | INFO     | __main__:<module>:89 - Accuracy score: 0.523
+2020-05-06 09:16:08.657 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.9 and 54.6, average: 52.3
+outputs/roberta-large_rs0_acb4_lr5e-6/roberta-large-physicaliqa-arc1
+outputs/roberta-large_rs0_acb4_lr5e-7/roberta-large-physicaliqa-arc1
+2020-05-06 09:16:32.515 | INFO     | __main__:<module>:89 - Accuracy score: 0.650
+2020-05-06 09:16:32.516 | INFO     | __main__:<module>:90 - 95.0 confidence interval 62.8 and 67.0, average: 64.9
+outputs/roberta-large_rs42_acb4_lr5e-7/roberta-large-physicaliqa-arc1
+2020-05-06 09:16:32.661 | INFO     | __main__:<module>:89 - Accuracy score: 0.628
+2020-05-06 09:16:32.663 | INFO     | __main__:<module>:90 - 95.0 confidence interval 60.6 and 65.0, average: 62.8
+outputs/roberta-large_rs10061880_acb4_lr5e-7/roberta-large-physicaliqa-arc1
+2020-05-06 09:16:33.766 | INFO     | __main__:<module>:89 - Accuracy score: 0.665
+2020-05-06 09:16:33.767 | INFO     | __main__:<module>:90 - 95.0 confidence interval 64.4 and 68.6, average: 66.5
+outputs/roberta-large_rs0_acb4_lr1e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:16:35.776 | INFO     | __main__:<module>:89 - Accuracy score: 0.692
+2020-05-06 09:16:35.778 | INFO     | __main__:<module>:90 - 95.0 confidence interval 67.2 and 71.2, average: 69.2
+outputs/roberta-large_rs42_acb4_lr1e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:16:39.032 | INFO     | __main__:<module>:89 - Accuracy score: 0.693
+2020-05-06 09:16:39.033 | INFO     | __main__:<module>:90 - 95.0 confidence interval 67.2 and 71.3, average: 69.3
+outputs/roberta-large_rs10061880_acb4_lr1e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:16:58.540 | INFO     | __main__:<module>:89 - Accuracy score: 0.740
+2020-05-06 09:16:58.540 | INFO     | __main__:<module>:90 - 95.0 confidence interval 72.0 and 75.9, average: 74.0
+outputs/roberta-large_rs42_acb4_lr5e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:17:51.839 | INFO     | __main__:<module>:89 - Accuracy score: 0.756
+2020-05-06 09:17:51.840 | INFO     | __main__:<module>:90 - 95.0 confidence interval 73.4 and 77.5, average: 75.6
+outputs/roberta-large_rs42_acb4_lr1e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:19:29.192 | INFO     | __main__:<module>:89 - Accuracy score: 0.555
+2020-05-06 09:19:29.193 | INFO     | __main__:<module>:90 - 95.0 confidence interval 53.3 and 57.5, average: 55.5
+outputs/roberta-large_rs10061880_acb4_lr1e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:19:32.676 | INFO     | __main__:<module>:89 - Accuracy score: 0.725
+2020-05-06 09:19:32.677 | INFO     | __main__:<module>:90 - 95.0 confidence interval 70.5 and 74.6, average: 72.5
+outputs/roberta-large_rs0_acb4_lr1e-5/roberta-large-physicaliqa-arc1
+a-arc1
+2020-05-06 09:19:45.594 | INFO     | __main__:<module>:89 - Accuracy score: 0.498
+2020-05-06 09:19:45.595 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.4 and 52.1, average: 49.8
+2020-05-06 09:19:45.622 | INFO     | __main__:<module>:90 - 95.0 confidence interval 73.9 and 77.8, average: 75.9
+outputs/roberta-large_rs0_acb4_lr5e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:19:45.762 | INFO     | __main__:<module>:89 - Accuracy score: 0.511
+2020-05-06 09:19:45.763 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.0 and 53.5, average: 51.2
+outputs/roberta-large_rs42_acb4_lr5e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:19:48.561 | INFO     | __main__:<module>:89 - Accuracy score: 0.553
+2020-05-06 09:19:48.562 | INFO     | __main__:<module>:90 - 95.0 confidence interval 53.2 and 57.7, average: 55.3
+outputs/roberta-large_rs10061880_acb4_lr5e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:19:49.454 | INFO     | __main__:<module>:89 - Accuracy score: 0.510
+2020-05-06 09:19:49.455 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.7 and 53.3, average: 51.0
+outputs/roberta-large_rs0_acb8_lr5e-7/roberta-large-physicaliqa-arc1
+2020-05-06 09:19:56.947 | INFO     | __main__:<module>:89 - Accuracy score: 0.632
+2020-05-06 09:19:56.947 | INFO     | __main__:<module>:90 - 95.0 confidence interval 60.9 and 65.2, average: 63.2
+outputs/roberta-large_rs42_acb8_lr5e-7/roberta-large-physicaliqa-arc1
+2020-05-06 09:21:09.040 | INFO     | __main__:<module>:89 - Accuracy score: 0.599
+2020-05-06 09:21:09.041 | INFO     | __main__:<module>:90 - 95.0 confidence interval 57.7 and 62.0, average: 59.9
+outputs/roberta-large_rs10061880_acb8_lr5e-7/roberta-large-physicaliqa-arc1
+2020-05-06 09:21:23.799 | INFO     | __main__:<module>:89 - Accuracy score: 0.610
+2020-05-06 09:21:23.800 | INFO     | __main__:<module>:90 - 95.0 confidence interval 58.9 and 63.3, average: 61.1
+outputs/roberta-large_rs42_acb8_lr5e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:21:30.299 | INFO     | __main__:<module>:89 - Accuracy score: 0.722
+2020-05-06 09:21:30.300 | INFO     | __main__:<module>:90 - 95.0 confidence interval 70.1 and 74.2, average: 72.2
+outputs/roberta-large_rs10061880_acb8_lr1e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:21:33.237 | INFO     | __main__:<module>:89 - Accuracy score: 0.717
+2020-05-06 09:21:33.237 | INFO     | __main__:<module>:90 - 95.0 confidence interval 69.6 and 73.7, average: 71.7
+outputs/roberta-large_rs42_acb8_lr1e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:21:37.176 | INFO     | __main__:<module>:89 - Accuracy score: 0.662
+2020-05-06 09:21:37.176 | INFO     | __main__:<module>:90 - 95.0 confidence interval 63.8 and 68.2, average: 66.2
+outputs/roberta-large_rs0_acb8_lr5e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:21:41.538 | INFO     | __main__:<module>:89 - Accuracy score: 0.578
+2020-05-06 09:21:41.540 | INFO     | __main__:<module>:90 - 95.0 confidence interval 55.6 and 60.1, average: 57.8
+outputs/roberta-large_rs0_acb8_lr1e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:21:41.622 | INFO     | __main__:<module>:89 - Accuracy score: 0.693
+2020-05-06 09:21:41.624 | INFO     | __main__:<module>:90 - 95.0 confidence interval 67.2 and 71.3, average: 69.3
+outputs/roberta-large_rs10061880_acb8_lr5e-6/roberta-large-physicaliqa-arc1
+2020-05-06 09:21:43.263 | INFO     | __main__:<module>:89 - Accuracy score: 0.755
+2020-05-06 09:21:43.264 | INFO     | __main__:<module>:90 - 95.0 confidence interval 73.4 and 77.5, average: 75.4
+outputs/roberta-large_rs0_acb8_lr1e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:23:42.692 | INFO     | __main__:<module>:89 - Accuracy score: 0.612
+2020-05-06 09:23:42.694 | INFO     | __main__:<module>:90 - 95.0 confidence interval 59.1 and 63.5, average: 61.3
+outputs/roberta-large_rs42_acb8_lr1e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:24:08.810 | INFO     | __main__:<module>:89 - Accuracy score: 0.719
+2020-05-06 09:24:08.811 | INFO     | __main__:<module>:90 - 95.0 confidence interval 69.7 and 73.9, average: 71.9
+outputs/roberta-large_rs10061880_acb8_lr1e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:24:10.642 | INFO     | __main__:<module>:89 - Accuracy score: 0.769
+2020-05-06 09:24:10.643 | INFO     | __main__:<module>:90 - 95.0 confidence interval 74.9 and 78.7, average: 76.8
+outputs/roberta-large_rs10061880_acb8_lr5e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:24:13.088 | INFO     | __main__:<module>:89 - Accuracy score: 0.510
+2020-05-06 09:24:13.090 | INFO     | __main__:<module>:90 - 95.0 confidence interval 48.7 and 53.4, average: 51.0
+outputs/roberta-large_rs0_acb1_lr5e-7/roberta-large-physicaliqa-arc2
+2020-05-06 09:24:16.170 | INFO     | __main__:<module>:89 - Accuracy score: 0.709
+2020-05-06 09:24:16.170 | INFO     | __main__:<module>:90 - 95.0 confidence interval 68.8 and 73.0, average: 70.9
+outputs/roberta-large_rs0_acb8_lr5e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:24:17.856 | INFO     | __main__:<module>:89 - Accuracy score: 0.524
+2020-05-06 09:24:17.857 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.1 and 54.8, average: 52.4
+outputs/roberta-large_rs42_acb8_lr5e-5/roberta-large-physicaliqa-arc1
+2020-05-06 09:24:20.526 | INFO     | __main__:<module>:89 - Accuracy score: 0.516
+2020-05-06 09:24:20.527 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.3 and 54.2, average: 51.7
+outputs/roberta-large_rs42_acb1_lr5e-7/roberta-large-physicaliqa-arc2
+2020-05-06 09:24:21.266 | INFO     | __main__:<module>:89 - Accuracy score: 0.705
+2020-05-06 09:24:21.268 | INFO     | __main__:<module>:90 - 95.0 confidence interval 68.4 and 72.6, average: 70.5
+outputs/roberta-large_rs10061880_acb1_lr5e-7/roberta-large-physicaliqa-arc2
+2020-05-06 09:25:24.541 | INFO     | __main__:<module>:89 - Accuracy score: 0.713
+2020-05-06 09:25:24.590 | INFO     | __main__:<module>:90 - 95.0 confidence interval 69.1 and 73.2, average: 71.3
+outputs/roberta-large_rs0_acb1_lr5e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:26:44.158 | INFO     | __main__:<module>:89 - Accuracy score: 0.624
+2020-05-06 09:26:44.160 | INFO     | __main__:<module>:90 - 95.0 confidence interval 60.2 and 64.5, average: 62.3
+outputs/roberta-large_rs0_acb1_lr1e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:26:49.817 | INFO     | __main__:<module>:89 - Accuracy score: 0.518
+2020-05-06 09:26:49.818 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.5 and 54.0, average: 51.8
+outputs/roberta-large_rs0_acb1_lr1e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:26:55.252 | INFO     | __main__:<module>:89 - Accuracy score: 0.725
+2020-05-06 09:26:55.253 | INFO     | __main__:<module>:90 - 95.0 confidence interval 70.2 and 74.6, average: 72.4
+outputs/roberta-large_rs10061880_acb1_lr1e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:26:55.533 | INFO     | __main__:<module>:89 - Accuracy score: 0.724
+2020-05-06 09:26:55.534 | INFO     | __main__:<module>:90 - 95.0 confidence interval 70.3 and 74.4, average: 72.4
+outputs/roberta-large_rs42_acb1_lr1e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:26:58.161 | INFO     | __main__:<module>:89 - Accuracy score: 0.708
+2020-05-06 09:26:58.163 | INFO     | __main__:<module>:90 - 95.0 confidence interval 68.8 and 72.8, average: 70.8
+outputs/roberta-large_rs10061880_acb1_lr5e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:27:08.489 | INFO     | __main__:<module>:89 - Accuracy score: 0.758
+2020-05-06 09:27:08.490 | INFO     | __main__:<module>:90 - 95.0 confidence interval 73.9 and 77.7, average: 75.8
+outputs/roberta-large_rs42_acb1_lr5e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:27:09.890 | INFO     | __main__:<module>:89 - Accuracy score: 0.656
+2020-05-06 09:27:09.890 | INFO     | __main__:<module>:90 - 95.0 confidence interval 63.5 and 67.7, average: 65.6
+outputs/roberta-large_rs42_acb1_lr1e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:27:30.298 | INFO     | __main__:<module>:89 - Accuracy score: 0.612
+2020-05-06 09:27:30.748 | INFO     | __main__:<module>:90 - 95.0 confidence interval 59.0 and 63.4, average: 61.2
+outputs/roberta-large_rs42_acb1_lr5e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:29:12.002 | INFO     | __main__:<module>:89 - Accuracy score: 0.501
+2020-05-06 09:29:12.003 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.8 and 52.4, average: 50.0
+outputs/roberta-large_rs0_acb1_lr5e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:29:12.735 | INFO     | __main__:<module>:89 - Accuracy score: 0.495
+2020-05-06 09:29:12.736 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.1 and 51.7, average: 49.5
+outputs/roberta-large_rs10061880_acb1_lr5e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:29:13.267 | INFO     | __main__:<module>:89 - Accuracy score: 0.501
+2020-05-06 09:29:13.267 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.9 and 52.4, average: 50.1
+outputs/roberta-large_rs42_acb2_lr5e-7/roberta-large-physicaliqa-arc2
+2020-05-06 09:29:13.329 | INFO     | __main__:<module>:89 - Accuracy score: 0.693
+2020-05-06 09:29:13.330 | INFO     | __main__:<module>:90 - 95.0 confidence interval 67.1 and 71.4, average: 69.3
+outputs/roberta-large_rs10061880_acb1_lr1e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:29:13.688 | INFO     | __main__:<module>:89 - Accuracy score: 0.550
+2020-05-06 09:29:13.689 | INFO     | __main__:<module>:90 - 95.0 confidence interval 52.8 and 57.3, average: 55.0
+outputs/roberta-large_rs0_acb2_lr5e-7/roberta-large-physicaliqa-arc2
+2020-05-06 09:29:17.008 | INFO     | __main__:<module>:89 - Accuracy score: 0.692
+2020-05-06 09:29:17.009 | INFO     | __main__:<module>:90 - 95.0 confidence interval 67.0 and 71.1, average: 69.1
+outputs/roberta-large_rs10061880_acb2_lr5e-7/roberta-large-physicaliqa-arc2
+2020-05-06 09:29:19.361 | INFO     | __main__:<module>:89 - Accuracy score: 0.706
+2020-05-06 09:29:19.362 | INFO     | __main__:<module>:90 - 95.0 confidence interval 68.5 and 72.9, average: 70.6
+outputs/roberta-large_rs0_acb2_lr1e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:29:20.549 | INFO     | __main__:<module>:89 - Accuracy score: 0.721
+2020-05-06 09:29:20.550 | INFO     | __main__:<module>:90 - 95.0 confidence interval 70.1 and 74.3, average: 72.1
+outputs/roberta-large_rs42_acb2_lr1e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:31:12.826 | INFO     | __main__:<module>:89 - Accuracy score: 0.706
+2020-05-06 09:31:14.168 | INFO     | __main__:<module>:90 - 95.0 confidence interval 68.6 and 72.5, average: 70.6
+outputs/roberta-large_rs0_acb2_lr5e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:32:37.635 | INFO     | __main__:<module>:89 - Accuracy score: 0.664
+2020-05-06 09:32:37.636 | INFO     | __main__:<module>:90 - 95.0 confidence interval 64.1 and 68.4, average: 66.3
+outputs/roberta-large_rs10061880_acb2_lr5e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:32:37.497 | INFO     | __main__:<module>:89 - Accuracy score: 0.746
+2020-05-06 09:32:37.499 | INFO     | __main__:<module>:90 - 95.0 confidence interval 72.6 and 76.6, average: 74.6
+outputs/roberta-large_rs0_acb2_lr1e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:32:37.421 | INFO     | __main__:<module>:89 - Accuracy score: 0.533
+2020-05-06 09:32:37.422 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.9 and 55.5, average: 53.2
+outputs/roberta-large_rs10061880_acb2_lr1e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:32:38.687 | INFO     | __main__:<module>:89 - Accuracy score: 0.747
+2020-05-06 09:32:38.687 | INFO     | __main__:<module>:90 - 95.0 confidence interval 72.6 and 76.7, average: 74.7
+outputs/roberta-large_rs10061880_acb2_lr1e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:32:40.708 | INFO     | __main__:<module>:89 - Accuracy score: 0.565
+2020-05-06 09:32:40.709 | INFO     | __main__:<module>:90 - 95.0 confidence interval 54.1 and 58.7, average: 56.5
+outputs/roberta-large_rs42_acb2_lr1e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:32:42.072 | INFO     | __main__:<module>:89 - Accuracy score: 0.614
+2020-05-06 09:32:42.073 | INFO     | __main__:<module>:90 - 95.0 confidence interval 59.1 and 63.5, average: 61.4
+outputs/roberta-large_rs42_acb2_lr5e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:32:47.412 | INFO     | __main__:<module>:89 - Accuracy score: 0.687
+2020-05-06 09:32:47.414 | INFO     | __main__:<module>:90 - 95.0 confidence interval 66.5 and 70.8, average: 68.6
+outputs/roberta-large_rs0_acb4_lr5e-7/roberta-large-physicaliqa-arc2
+outputs/roberta-large_rs10061880_acb4_lr5e-7/roberta-large-physicaliqa-arc2
+outputs/roberta-large_rs0_acb2_lr5e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:33:06.330 | INFO     | __main__:<module>:89 - Accuracy score: 0.496
+2020-05-06 09:33:06.330 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.3 and 51.8, average: 49.6
+outputs/roberta-large_rs42_acb2_lr5e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:35:50.619 | INFO     | __main__:<module>:89 - Accuracy score: 0.515
+2020-05-06 09:35:50.620 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.2 and 53.7, average: 51.4
+outputs/roberta-large_rs10061880_acb4_lr1e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:35:55.945 | INFO     | __main__:<module>:89 - Accuracy score: 0.710
+2020-05-06 09:35:55.946 | INFO     | __main__:<module>:90 - 95.0 confidence interval 68.9 and 73.1, average: 71.0
+outputs/roberta-large_rs10061880_acb2_lr5e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:36:04.825 | INFO     | __main__:<module>:89 - Accuracy score: 0.522
+2020-05-06 09:36:04.827 | INFO     | __main__:<module>:90 - 95.0 confidence interval 49.9 and 54.6, average: 52.3
+outputs/roberta-large_rs42_acb4_lr5e-7/roberta-large-physicaliqa-arc2
+2020-05-06 09:36:08.024 | INFO     | __main__:<module>:89 - Accuracy score: 0.661
+2020-05-06 09:36:08.024 | INFO     | __main__:<module>:90 - 95.0 confidence interval 64.1 and 68.2, average: 66.1
+outputs/roberta-large_rs0_acb4_lr1e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:36:08.344 | INFO     | __main__:<module>:89 - Accuracy score: 0.710
+2020-05-06 09:36:08.346 | INFO     | __main__:<module>:90 - 95.0 confidence interval 69.0 and 73.1, average: 71.0
+outputs/roberta-large_rs0_acb4_lr5e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:36:10.235 | INFO     | __main__:<module>:89 - Accuracy score: 0.565
+2020-05-06 09:36:10.236 | INFO     | __main__:<module>:90 - 95.0 confidence interval 54.3 and 58.7, average: 56.6
+outputs/roberta-large_rs42_acb4_lr1e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:36:12.607 | INFO     | __main__:<module>:89 - Accuracy score: 0.712
+2020-05-06 09:36:12.609 | INFO     | __main__:<module>:90 - 95.0 confidence interval 69.0 and 73.2, average: 71.2
+outputs/roberta-large_rs42_acb4_lr5e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:36:13.161 | INFO     | __main__:<module>:89 - Accuracy score: 0.757
+2020-05-06 09:36:13.162 | INFO     | __main__:<module>:90 - 95.0 confidence interval 73.7 and 77.6, average: 75.6
+outputs/roberta-large_rs10061880_acb4_lr5e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:38:00.004 | INFO     | __main__:<module>:89 - Accuracy score: 0.747
+2020-05-06 09:38:00.004 | INFO     | __main__:<module>:90 - 95.0 confidence interval 72.9 and 76.7, average: 74.7
+outputs/roberta-large_rs0_acb4_lr1e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:38:02.640 | INFO     | __main__:<module>:89 - Accuracy score: 0.528
+2020-05-06 09:38:02.641 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.3 and 55.1, average: 52.8
+outputs/roberta-large_rs42_acb4_lr5e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:38:06.975 | INFO     | __main__:<module>:89 - Accuracy score: 0.526
+2020-05-06 09:38:06.976 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.4 and 54.9, average: 52.6
+outputs/roberta-large_rs10061880_acb4_lr5e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:38:07.139 | INFO     | __main__:<module>:89 - Accuracy score: 0.527
+2020-05-06 09:38:07.141 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.4 and 55.0, average: 52.7
+outputs/roberta-large_rs42_acb4_lr1e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:38:07.843 | INFO     | __main__:<module>:89 - Accuracy score: 0.596
+2020-05-06 09:38:07.843 | INFO     | __main__:<module>:90 - 95.0 confidence interval 57.4 and 62.0, average: 59.6
+outputs/roberta-large_rs10061880_acb4_lr1e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:38:09.124 | INFO     | __main__:<module>:89 - Accuracy score: 0.545
+2020-05-06 09:38:09.125 | INFO     | __main__:<module>:90 - 95.0 confidence interval 52.4 and 56.6, average: 54.5
+outputs/roberta-large_rs42_acb8_lr5e-7/roberta-large-physicaliqa-arc2
+outputs/roberta-large_rs0_acb8_lr5e-7/roberta-large-physicaliqa-arc2
+2020-05-06 09:38:14.996 | INFO     | __main__:<module>:89 - Accuracy score: 0.629
+2020-05-06 09:38:14.997 | INFO     | __main__:<module>:90 - 95.0 confidence interval 60.9 and 65.1, average: 62.9
+outputs/roberta-large_rs0_acb8_lr1e-6/roberta-large-physicaliqa-arc2
+outputs/roberta-large_rs0_acb4_lr5e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:38:19.355 | INFO     | __main__:<module>:89 - Accuracy score: 0.489
+2020-05-06 09:38:19.357 | INFO     | __main__:<module>:90 - 95.0 confidence interval 46.6 and 51.3, average: 48.9
+outputs/roberta-large_rs42_acb8_lr1e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:40:45.906 | INFO     | __main__:<module>:89 - Accuracy score: 0.672
+2020-05-06 09:40:45.907 | INFO     | __main__:<module>:90 - 95.0 confidence interval 65.2 and 69.4, average: 67.2
+outputs/roberta-large_rs10061880_acb8_lr5e-7/roberta-large-physicaliqa-arc2
+2020-05-06 09:41:00.578 | INFO     | __main__:<module>:89 - Accuracy score: 0.674
+2020-05-06 09:41:00.579 | INFO     | __main__:<module>:90 - 95.0 confidence interval 65.3 and 69.5, average: 67.4
+outputs/roberta-large_rs0_acb8_lr5e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:41:45.954 | INFO     | __main__:<module>:89 - Accuracy score: 0.723
+2020-05-06 09:41:45.956 | INFO     | __main__:<module>:90 - 95.0 confidence interval 70.3 and 74.4, average: 72.3
+outputs/roberta-large_rs10061880_acb8_lr1e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:41:49.804 | INFO     | __main__:<module>:89 - Accuracy score: 0.695
+2020-05-06 09:41:49.805 | INFO     | __main__:<module>:90 - 95.0 confidence interval 67.3 and 71.7, average: 69.5
+outputs/roberta-large_rs42_acb8_lr1e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:41:50.670 | INFO     | __main__:<module>:89 - Accuracy score: 0.746
+2020-05-06 09:41:50.671 | INFO     | __main__:<module>:90 - 95.0 confidence interval 72.7 and 76.7, average: 74.6
+outputs/roberta-large_rs42_acb8_lr5e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:41:57.214 | INFO     | __main__:<module>:89 - Accuracy score: 0.758
+2020-05-06 09:41:57.215 | INFO     | __main__:<module>:90 - 95.0 confidence interval 73.7 and 77.7, average: 75.7
+outputs/roberta-large_rs0_acb8_lr1e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:41:59.524 | INFO     | __main__:<module>:89 - Accuracy score: 0.542
+2020-05-06 09:41:59.525 | INFO     | __main__:<module>:90 - 95.0 confidence interval 52.0 and 56.3, average: 54.2
+outputs/roberta-large_rs10061880_acb8_lr5e-6/roberta-large-physicaliqa-arc2
+2020-05-06 09:42:04.166 | INFO     | __main__:<module>:89 - Accuracy score: 0.749
+2020-05-06 09:42:04.167 | INFO     | __main__:<module>:90 - 95.0 confidence interval 72.9 and 76.8, average: 74.8
+outputs/roberta-large_rs10061880_acb8_lr1e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:42:35.858 | INFO     | __main__:<module>:89 - Accuracy score: 0.737
+2020-05-06 09:42:35.859 | INFO     | __main__:<module>:90 - 95.0 confidence interval 71.7 and 75.8, average: 73.7
+outputs/roberta-large_rs0_acb8_lr5e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:42:42.234 | INFO     | __main__:<module>:89 - Accuracy score: 0.498
+2020-05-06 09:42:42.235 | INFO     | __main__:<module>:90 - 95.0 confidence interval 47.4 and 52.2, average: 49.9
+outputs/roberta-large_rs10061880_acb8_lr5e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:43:37.389 | INFO     | __main__:<module>:89 - Accuracy score: 0.542
+2020-05-06 09:43:37.390 | INFO     | __main__:<module>:90 - 95.0 confidence interval 52.1 and 56.4, average: 54.2
+outputs/roberta-large_rs42_acb8_lr5e-5/roberta-large-physicaliqa-arc2
+2020-05-06 09:43:38.568 | INFO     | __main__:<module>:89 - Accuracy score: 0.528
+2020-05-06 09:43:38.569 | INFO     | __main__:<module>:90 - 95.0 confidence interval 50.5 and 55.2, average: 52.8
