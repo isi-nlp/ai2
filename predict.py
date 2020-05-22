@@ -60,7 +60,7 @@ def main(input_file, output_file):
     confidences_df = pd.DataFrame.from_dict(model_to_confidences)
     scaled_df = predictions_df.mul(confidences_df, fill_value=1)  # Scale the predictions by multiplying with confidence
 
-    predicted_answers = (scaled_df.mean(axis=1) > 0).values.squeeze().tolist()  # Take the average of each row for ensembled predictions
+    predicted_answers = (scaled_df.mean(axis=1) > 0).astype(int).values.squeeze().tolist()  # Take the average of each row for ensembled predictions
 
     # Write the predictions to the output file.
     with open(output_file, "w") as f:
