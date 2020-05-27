@@ -7,6 +7,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --gpus-per-task=1
 #SBATCH --mem-per-cpu=4g
+#SBATCH --output=outputs/quickrun-%j.out
 
 source ~/.bashrc
 conda activate ai2_stable
@@ -17,4 +18,5 @@ conda activate ai2_stable
 spack load cuda@9.0.176
 spack load cudnn@7.6.5.32-9.0-linux-x64
 
-python train.py
+#python train.py task=physicaliqa build_on_pretrained_model=outputs/roberta-large-baselines/socialiqa-s42.ckpt
+python eval.py

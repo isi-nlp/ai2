@@ -1,6 +1,6 @@
 defaults:
   - model: roberta-large
   - task: alphanli-retrieve_embed
-checkpoints_dir: outputs/roberta-10_5_3-checkpoints/
+checkpoints_dir: outputs/roberta-20-checkpoints/
 checkpoint_name: s0
 feature: TODO

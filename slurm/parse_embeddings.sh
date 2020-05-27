@@ -32,7 +32,7 @@ echo ""
 # Create a total array of models and tasks and permute them
 
 echo ""
-echo "Parsing embedding for the 5_3 training set along with the 6 story id"
+echo "Parsing embedding for the 20 training set along with the 1 story id"
 python embedding.py checkpoint_name=s0,s1,s2,s3,s4,s5,s6,s7,s8,s9 -m
 echo ""
 

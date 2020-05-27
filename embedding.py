@@ -2,6 +2,7 @@ import json
 import pathlib
 
 import hydra
+import numpy as np
 import torch
 from loguru import logger
 from torch.utils.data import DataLoader
@@ -50,7 +51,8 @@ def embedding(config):
 # Helper function for loading embeddings
 def calculate_embeddings(a_classifier: Classifier, text_path: str, label_path: str, compute_device: str, feature: str):
 
-    embedding_list = []
+    embeddings = np.array([], dtype=np.float64).reshape(0, 1024)
+
     # Forward propagate the model to get a list of predictions and their respective confidence
     for batch in tqdm(DataLoader(a_classifier.dataloader(text_path, label_path),
                                  batch_size=a_classifier.hparams["batch_size"] * 2,
@@ -68,10 +70,8 @@ def calculate_embeddings(a_classifier: Classifier, text_path: str, label_path: s
                                             attention_mask=batch["attention_mask"],
                                             token_type_ids=batch["token_type_ids"])
             token_embeddings, *_ = results
-            token_embeddings = token_embeddings.mean(dim=1).reshape(a_classifier.hparams["batch_size"] * 2, 2, -1)
-            for i, a_label in enumerate(batch['labels']):
-                embedding_list.append(token_embeddings[i][a_label])
-    return embedding_list
+            embeddings = np.concatenate((embeddings, token_embeddings.mean(dim=1).cpu().detach().numpy()), axis=0)
+    return embeddings
 
 
 if __name__ == "__main__":

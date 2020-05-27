@@ -1,6 +1,6 @@
 task_name: alphanli-retrieve_embed
-train_x: "task_data/alphanli-train-dev/retrieve_embedding/train_5_3.jsonl"
-train_y: "task_data/alphanli-train-dev/retrieve_embedding/train-labels_5_3.lst"
-val_x: "task_data/alphanli-train-dev/retrieve_embedding/dev_6_id.jsonl"
-val_y: "task_data/alphanli-train-dev/retrieve_embedding/dev_6_id_labels.lst"
+train_x: "task_data/alphanli-train-dev/mingwei-embedding-replication/train_20_0.jsonl"
+train_y: "task_data/alphanli-train-dev/mingwei-embedding-replication/train-labels_20_0.lst"
+val_x: "task_data/alphanli-train-dev/mingwei-embedding-replication/dev_1_id.jsonl"
+val_y: "task_data/alphanli-train-dev/mingwei-embedding-replication/dev_1_id_labels.lst"
 formula: "obs1 + obs2 -> hyp1|hyp2"

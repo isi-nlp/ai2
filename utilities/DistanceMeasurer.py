@@ -4,7 +4,7 @@ Distance measurer class - need to initialize with the desired distance name
 
 import torch
 
-distance_supported = {'cosine', 'manhattan', 'euclidean'}
+distance_supported = {'cosine', 'manhattan', 'euclidean', 'l-0_1'}
 
 
 class DistanceMeasurer:
@@ -24,13 +24,18 @@ class DistanceMeasurer:
         assert embedding_1.size() == embedding_2.size(), 'Embedding size does not equal to each other'
 
         if self.distance_name == 'cosine':
-            return self.cosine_dist(embedding_1, embedding_2)
+            distance = self.cosine_dist(embedding_1, embedding_2)
         elif self.distance_name == 'manhattan':
-            return self.manhattan_dist(embedding_1, embedding_2)
+            distance = self.manhattan_dist(embedding_1, embedding_2)
         elif self.distance_name == 'euclidean':
-            return self.euclidean_dist(embedding_1, embedding_2)
+            distance = self.euclidean_dist(embedding_1, embedding_2)
+        elif self.distance_name == 'l-0_1':
+            distance = self.l_0_1_dist(embedding_1, embedding_2)
         else:
             raise NotImplementedError("You really shouldn't have reached this line.")
+
+        # Return the result but not in tensor format
+        return distance.item()
 
     @staticmethod
     def cosine_dist(embed_1, embed_2):
@@ -43,4 +48,8 @@ class DistanceMeasurer:
     @staticmethod
     def euclidean_dist(embed_1, embed_2):
         return torch.norm(embed_1 - embed_2, 2)
+
+    @staticmethod
+    def l_0_1_dist(embed_1, embed_2):
+        return torch.norm(embed_1 - embed_2, 0.1)
 
