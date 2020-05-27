@@ -1,0 +1,6 @@
+task_name: cycic_tf
+train_x: "task_data/cycic-tf-train-dev/train.jsonl"
+train_y: "task_data/cycic-tf-train-dev/train-labels.lst"
+val_x: "task_data/cycic-tf-train-dev/dev.jsonl"
+val_y: "task_data/cycic-tf-train-dev/dev-labels.lst"
+formula: "question -> answer_option0|answer_option1"
