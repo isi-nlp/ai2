@@ -1,0 +1,6 @@
+task_name2: cn_all_cs_40k
+train2_x: "cache/cn_all_cs_40k-train-dev/cn_all_cs_40k-train-dev/train.jsonl"
+train2_y: "cache/cn_all_cs_40k-train-dev/cn_all_cs_40k-train-dev/train-labels.lst"
+val2_x: "cache/cn_all_cs_40k-train-dev/cn_all_cs_40k-train-dev/dev.jsonl"
+val2_y: "cache/cn_all_cs_40k-train-dev/cn_all_cs_40k-train-dev/dev-labels.lst"
+formula2: "e1 + e2 -> sol1|sol2|sol3|sol4|sol5|sol6|sol7"

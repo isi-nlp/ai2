@@ -36,6 +36,11 @@ def train(config: omegaconf.Config):
     # Initialize the classifier by arguments specified in config file
     model = Classifier(config)
     save_path = f"{config['model']}-{config['task_name']}-s{config['random_seed']}"
+    if 'task_name2' in config:
+        save_path = save_path + f"-{config['task_name2']}"
+    if 'experiment_id' in config:  # If provided, overwrite save path with an experiment identifier
+        save_path = config['experiment_id']
+
     if config['build_on_pretrained_model']:
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
         checkpoint = torch.load(ROOT_PATH / config['build_on_pretrained_model'], map_location=device)
