@@ -1,3 +1,4 @@
+import random
 from itertools import cycle
 from pathlib import Path
 from typing import Union
@@ -24,6 +25,22 @@ class ClassificationDataset(Dataset):
         return self.instances[idx]
 
 
+class MultiTaskDataset(torch.utils.data.Dataset):
+    def __init__(self, dataloaders, shuffle: bool = True):
+        self.data: List = []
+        for loader in dataloaders:
+            for batch in loader:
+                self.data.append(batch)
+        if shuffle:
+            random.shuffle(self.data)
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, index):
+        return self.data[index]
+
+
 # Classifier class, with methods support training itself and use it's model to classify
 class Classifier(pl.LightningModule):
 
@@ -45,26 +62,58 @@ class Classifier(pl.LightningModule):
         self.classifier.bias.data.zero_()
         self.loss = nn.CrossEntropyLoss(ignore_index=-1, reduction="mean")
 
+        if "task_name2" in self.hparams:
+            self.classifier2 = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
+            self.classifier2.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
+            self.classifier2.bias.data.zero_()
+
     # Given a batch output the it's forward result
     def forward(self, batch):
         assert len(batch["input_ids"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["attention_mask"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["token_type_ids"].shape) == 2, "LM only take two-dimensional input"
 
-        batch["token_type_ids"] = None if "roberta" in self.hparams["model"] else batch["token_type_ids"]
-
-        # Embed the given batch
+        batch["token_type_ids"] = None if "roberta" in self.hparams["model"] or "lm_finetuned" \
+                                          in self.hparams["model"] else batch["token_type_ids"]
         results = self.embedder(input_ids=batch["input_ids"],
                                 attention_mask=batch["attention_mask"],
                                 token_type_ids=batch["token_type_ids"])
+
+        if 't5' in self.hparams["model"]:
+            results = self.embedder(input_ids=batch["input_ids"],
+                                    decoder_input_ids=batch["input_ids"],)
+
         token_embeddings, *_ = results
 
-        # Feed through the feed forward network to get the final logits of each classification label
-        logits = self.classifier(token_embeddings.mean(dim=1)).squeeze(dim=1)
+        if self.hparams['embed_all_sep_mean']:
+            # Get the mean of part of the embedding that corresponds to the answer
+            mean_dims = token_embeddings.shape[0], token_embeddings.shape[2]
+            mean_embeddings = torch.zeros(mean_dims)
+            for i in range(mean_dims[0]):
+                g_i, g_j = batch['goal_positions'][i]
+                a_i, a_j = batch['answer_positions'][i]
+                token_embeddings_for_sequence_i = token_embeddings[i, :, :].squeeze()
+                goal_seq = token_embeddings_for_sequence_i[g_i:g_j+1, :]
+                ans_seq = token_embeddings_for_sequence_i[a_i:a_j+1, :]
+                combined = torch.cat((goal_seq, ans_seq), 0)  # concat goal and answer
+                combined_mean = torch.mean(combined, dim=0).squeeze()  # mean of the question and the correct answer
+                mean_embeddings[i, :] = combined_mean
+                mean_embeddings = mean_embeddings.to(torch.device('cuda'))
+        else:
+            mean_embeddings = torch.mean(token_embeddings, dim=1).squeeze()
+        output = self.dropout(mean_embeddings)
+        if batch["task_id"] == 2:
+            logits = self.classifier2(output).squeeze(dim=1)
+        elif batch["task_id"] == 0:
+            logits = self.classifier(output).squeeze(dim=1)
+        else:
+            raise
+        logits = logits.reshape(-1, batch["num_choice"])
         return logits
 
+
     # Custom data loader
-    def dataloader(self, x_path: Union[str, Path], y_path: Union[str, Path] = None):
+    def dataloader(self, x_path: Union[str, Path], y_path: Union[str, Path] = None, task_id=None):
         df = pd.read_json(x_path, lines=True)
 
         # If given labels are given we will parse it into the dataset
@@ -73,15 +122,23 @@ class Classifier(pl.LightningModule):
             self.label_offset = np.asarray(labels).min()
             df["label"] = np.asarray(labels) - self.label_offset
 
-        # Transform the text based on the formula
-        df["text"] = df.apply(self.transform(self.hparams["formula"]), axis=1)
+        task_id_str = "" if task_id is None else task_id_str = str(task_id)
 
+        # Transform the text based on the formula
+        df["text"] = df.apply(self.transform(self.hparams["formula{}".format(task_id_str)]), axis=1)
+        df["task_id"] = task_id if task_id is not None else 0
         print(df.head())
-        return ClassificationDataset(df[["text", "label"]].to_dict("records"))
+        col_list = ["text", "task_id"]
+        if 'goal' in df.columns:  # We use the goal in embed_all_sep_mean architecture
+            col_list.append('goal')
+        if 'label' in df.columns:
+            col_list.append('label')
+
+        return ClassificationDataset(df[col_list].to_dict("records"))
+
 
     # Lambda function that parse in the formulas of how to read in training data
-    @staticmethod
-    def transform(formula):
+    def transform(self, formula):
         parsed_context, parsed_choices = formula.split("->")
         # alphanli:     (obs1 + obs2 -> hyp1|hyp2)
         # hellaswag:    (ctx_a + ctx_b -> ending_options)
@@ -100,47 +157,121 @@ class Classifier(pl.LightningModule):
             else:
                 choices = [row[a_choice.strip()] for a_choice in parsed_choices]
 
+            # Include answers in goal
+            if self.hparams['goal_inc_answers'] or self.hparams['embed_all_sep_mean']:
+                context = context + ' - ' + ' - '.join(choices)
             return list(zip(cycle([context]), choices))
 
         return wrapper
+
+    @staticmethod
+    def find_sub_list(sl, l):
+        sll = len(sl)
+        for ind in (i for i, e in enumerate(l) if e == sl[0]):
+            if l[ind:ind + sll] == sl:
+                return ind, ind + sll - 1
 
     # Collate function used by data loader objects
     def collate(self, examples):
 
         batch_size = len(examples)
         num_choice = len(examples[0]["text"])
+        task_id = examples[0]["task_id"]
+        batch = {
+            "labels": torch.LongTensor([e["label"] for e in examples]) if "label" in examples[0] else None,
+            "num_choice": num_choice,
+            "task_id": task_id
+        }
 
-        pairs = [pair for example in examples for pair in example["text"]]
-        results = self.tokenizer.batch_encode_plus(pairs, add_special_tokens=True,
-                                                   max_length=self.hparams["max_length"], return_tensors='pt',
-                                                   return_attention_masks=True, pad_to_max_length=True)
+        # Reformat Multiple choice parsing
+        # We create single embedding, but takes sub representations later/ We need to know i
+        if self.hparams['embed_all_sep_mean']:
+            context_answer_pairs = [(c, example['goal'], a) for example in examples for c,a in example["text"]]
+            # We just keep the context, i.e goal and all the answers, remove correct answer
+            pairs = [pair[0] for pair in context_answer_pairs]
+            goal_positions = []
+            answer_positions = []
+            # We also want to know just the token representation of goal and correct ans, we get the subsequence
+            for pair in context_answer_pairs:
+                context_tokens = self.tokenizer.tokenize(pair[0])
+                goal_tokens = self.tokenizer.tokenize(pair[1])
+                goal_positions.append(self.find_sub_list(goal_tokens, context_tokens))
+                answers_tokens = self.tokenizer.tokenize('Answer ' + pair[2])[1:]
+                answer_positions.append(self.find_sub_list(answers_tokens, context_tokens))
+            batch['answer_positions'] = answer_positions
+            batch['goal_positions'] = goal_positions
+        else:
+            pairs = [pair for example in examples for pair in example["text"]]
 
+        results = self.tokenizer.batch_encode_plus(pairs,
+                                                   add_special_tokens=True, max_length=self.hparams["max_length"],
+                                                   return_tensors='pt', return_attention_masks=True,
+                                                   pad_to_max_length=True)
         assert results["input_ids"].shape[0] == batch_size * num_choice, \
             f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
 
-        return {"input_ids": results["input_ids"],
-                "attention_mask": results["attention_mask"],
-                "token_type_ids": results["token_type_ids"],
-                "labels": torch.LongTensor([e["label"] for e in examples]) if "label" in examples[0] else None,
-                "num_choice": torch.LongTensor([num_choice] * batch_size)}
+        batch["input_ids"] = results["input_ids"]
+        batch["attention_mask"] = results["attention_mask"]
+        batch["token_type_ids"] = results["token_type_ids"]
+
+        # TODO: provide associated tree ids here
+        batch['additional_position_ids'] = torch.zeros_like(results["input_ids"])
+
+        return batch
 
     # Data loader methods to return train and validation data sets
     def train_dataloader(self):
-        return DataLoader(
-            self.dataloader(self.root_path / self.hparams["train_x"], self.root_path / self.hparams["train_y"]),
-            batch_size=self.hparams["batch_size"], collate_fn=self.collate)
+        dataloader = DataLoader(self.dataloader(self.root_path / self.hparams["train_x"],
+                                                self.root_path / self.hparams["train_y"]),
+                                batch_size=self.hparams["batch_size"],
+                                collate_fn=self.collate, shuffle=True)
+
+        if "train2_x" in self.hparams:
+            dataloader2 = DataLoader(self.dataloader(self.root_path / self.hparams["train2_x"],
+                                                     self.root_path / self.hparams["train2_y"], task_id=2),
+                                     batch_size=self.hparams["batch_size"],
+                                     collate_fn=self.collate, shuffle=True)
+
+            dataloaders = [dataloader, dataloader2]
+            multidatasets = MultiTaskDataset(dataloaders)
+            multi_dataloader = DataLoader(multidatasets,
+                                          collate_fn=lambda examples: examples[0],
+                                          shuffle=True, batch_size=1)
+            return multi_dataloader
+
+        return dataloader
 
     def val_dataloader(self):
-        return DataLoader(
-            self.dataloader(self.root_path / self.hparams["val_x"], self.root_path / self.hparams["val_y"]),
-            batch_size=self.hparams["batch_size"], collate_fn=self.collate)
+        dataloader = DataLoader(self.dataloader(self.root_path / self.hparams["val_x"],
+                                                self.root_path / self.hparams["val_y"]),
+                                batch_size=self.hparams["batch_size"],
+                                collate_fn=self.collate)
+        if "val2_x" in self.hparams:
+            dataloader2 = DataLoader(self.dataloader(self.root_path / self.hparams["val2_x"],
+                                                     self.root_path / self.hparams["val2_y"], task_id=2),
+                                     batch_size=self.hparams["batch_size"],
+                                     collate_fn=self.collate, shuffle=False)
+            dataloaders = [dataloader, dataloader2]
+            return dataloaders
+
+        return dataloader
 
     # Extend PyTorch Lightning methods
-    def training_step(self, batch, batch_idx):
+    def training_step(self, batch, batch_idx, task_id=None):
         logits = self.forward(batch)
-        return {"out": logits,
-                "labels": batch["labels"],
-                "num_choice": batch["num_choice"]}
+        loss = self.loss(logits, batch["labels"])
+        if self.trainer and self.trainer.use_dp:
+            loss = loss.unsqueeze(0)
+        if batch["task_id"] == 2:
+            return {
+                "loss": loss,
+                "progress": {
+                    "loss2": loss
+                },
+            }
+        return {
+            "loss": loss,
+        }
 
     def training_step_end(self, batch_parts_outputs):
         logits = batch_parts_outputs["out"]
@@ -150,11 +281,16 @@ class Classifier(pl.LightningModule):
         return {"loss": loss,
                 "log": {"train_loss": loss}}
 
-    def validation_step(self, batch, batch_idx):
+    def validation_step(self, batch, batch_idx, task_id=None):
         logits = self.forward(batch)
-        return {"out": logits,
-                "labels": batch["labels"],
-                "num_choice": batch["num_choice"]}
+        loss = self.loss(logits, batch["labels"])
+        if self.trainer and self.trainer.use_dp:
+            loss = loss.unsqueeze(0)
+        return {
+            'val_loss': loss,
+            "val_batch_logits": logits,
+            "val_batch_labels": batch["labels"],
+        }
 
     def validation_step_end(self, batch_parts_outputs):
         logits = batch_parts_outputs["out"]
@@ -166,12 +302,36 @@ class Classifier(pl.LightningModule):
                 "val_batch_labels": batch_parts_outputs["labels"]}
 
     def validation_epoch_end(self, outputs):
-        val_loss_mean = torch.stack([o['val_loss'] for o in outputs]).mean()
-        val_logits = torch.cat([o["val_batch_logits"] for o in outputs])
-        val_labels = torch.cat([o["val_batch_labels"] for o in outputs])
-        correct = torch.sum(val_labels == torch.argmax(val_logits, dim=1))
-        val_accuracy = torch.tensor(float(correct)) / (val_labels.shape[0] * 1.0)
-        return {'log': {'val_loss': val_loss_mean, "val_accuracy": val_accuracy}}
+        if "task_name2" in self.hparams:
+            val_loss_mean = torch.stack([o['val_loss'] for o in outputs[0]]).mean()
+            val_logits = torch.cat([o["val_batch_logits"] for o in outputs[0]])
+            val_labels = torch.cat([o["val_batch_labels"] for o in outputs[0]])
+            correct = torch.sum(val_labels == torch.argmax(val_logits, dim=1))
+            val_accuracy = torch.tensor(float(correct)) / (val_labels.shape[0] * 1.0)
+
+            val_loss_mean2 = torch.stack([o['val_loss'] for o in outputs[1]]).mean()
+            val_logits2 = torch.cat([o["val_batch_logits"] for o in outputs[1]])
+            val_labels2 = torch.cat([o["val_batch_labels"] for o in outputs[1]])
+            correct2 = torch.sum(val_labels2 == torch.argmax(val_logits2, dim=1))
+            val_accuracy2 = torch.tensor(float(correct2)) / (val_labels2.shape[0] * 1.0)
+
+            return {
+                'val_loss': val_loss_mean,
+                "val_accuracy": val_accuracy,
+                'val_loss2': val_loss_mean2,
+                "val_accuracy2": val_accuracy2,
+            }
+
+        else:
+            val_loss_mean = torch.stack([o['val_loss'] for o in outputs]).mean()
+            val_logits = torch.cat([o["val_batch_logits"] for o in outputs])
+            val_labels = torch.cat([o["val_batch_labels"] for o in outputs])
+            correct = torch.sum(val_labels == torch.argmax(val_logits, dim=1))
+            val_accuracy = torch.tensor(float(correct)) / (val_labels.shape[0] * 1.0)
+            return {
+                'val_loss': val_loss_mean,
+                "val_accuracy": val_accuracy,
+            }
 
     def configure_optimizers(self):
         optimizer = AdamW(self.parameters(), lr=float(self.hparams["learning_rate"]),

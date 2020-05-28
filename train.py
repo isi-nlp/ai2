@@ -49,7 +49,7 @@ def train(config: omegaconf.Config):
 
     # Define the trainer along with its checkpoint and experiment instance
     checkpoint = ModelCheckpoint(
-        filepath=os.path.join(save_path, 'checkpoints'),  # Last part needed due to parsing logic
+        filepath=os.path.join(save_path, 'checkpoints', 'foo'),  # Last part needed due to parsing logic
         verbose=True,
         save_top_k=1 if config['save_best_only'] else -1,
     )
