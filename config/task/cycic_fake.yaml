@@ -1,0 +1,7 @@
+task_name: cycic_fake
+train_x: "task_data/cycic-fake-train-dev/train.jsonl"
+train_y: "task_data/cycic-fake-train-dev/train-labels.lst"
+val_x: "task_data/cycic-fake-train-dev/dev.jsonl"
+val_y: "task_data/cycic-fake-train-dev/dev-labels.lst"
+formula: "question -> answer_option0|answer_option1|answer_option2|answer_option3|answer_option4"
+max_epochs: 8
