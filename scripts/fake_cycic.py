@@ -39,6 +39,7 @@ def main() -> None:
                 new_question['answer_option2'] = 'INVALID ANSWER'
                 new_question['answer_option3'] = 'INVALID ANSWER'
                 new_question['answer_option4'] = 'INVALID ANSWER'
+                assert len([k for k in new_question if k.startswith('answer_option')]) == 5
                 fake_questions.append(new_question)
                 fake_labels.append(label['correct_answer'])
             else:
