@@ -39,8 +39,11 @@ def main(config: omegaconf.Config):
     checkpoint = torch.load(ROOT_PATH / config['checkpoint_path'], map_location=device)
     model.load_state_dict(checkpoint['state_dict'])
 
-    save_path = Path(f"{config['model']}-{config['task_name']}-s{config['random_seed']}")
-    save_path.mkdir(parents=True, exist_ok=True)
+    if config['out_path']:
+        save_path = ROOT_PATH / config['out_path']
+    else:
+        save_path = Path(f"{config['model']}-{config['task_name']}-s{config['random_seed']}")
+        save_path.mkdir(parents=True, exist_ok=True)
 
     # Call the main function with appropriate parameters
     evaluate(a_classifier=model,

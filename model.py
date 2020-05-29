@@ -67,17 +67,20 @@ class Classifier(pl.LightningModule):
     def dataloader(self, x_path: Union[str, Path], y_path: Union[str, Path] = None):
         df = pd.read_json(x_path, lines=True)
 
+        fields = ["text"]
+
         # If given labels are given we will parse it into the dataset
         if y_path:
             labels = pd.read_csv(y_path, sep='\t', header=None).values.tolist()
             self.label_offset = np.asarray(labels).min()
             df["label"] = np.asarray(labels) - self.label_offset
+            fields.append("label")
 
         # Transform the text based on the formula
         df["text"] = df.apply(self.transform(self.hparams["formula"]), axis=1)
 
         print(df.head())
-        return ClassificationDataset(df[["text", "label"]].to_dict("records"))
+        return ClassificationDataset(df[fields].to_dict("records"))
 
     # Lambda function that parse in the formulas of how to read in training data
     @staticmethod
