@@ -2,9 +2,9 @@
 
 set -euo pipefail
 
-INPUT_PATH=data/cycic.jsonl # TODO: Make absolute
+INPUT_PATH=/data/cycic.jsonl
 TEMP_PATH=temp.jsonl
-OUTPUT_PATH=results # TODO: Make absolute
+OUTPUT_PATH=/results
 MODEL_PATH=joint_large_8.ckpt
 
 python sub_cycic.py --input-file $INPUT_PATH --output-file $TEMP_PATH
