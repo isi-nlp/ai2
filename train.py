@@ -18,7 +18,7 @@ from model import Classifier
 ROOT_PATH = Path(__file__).parent.absolute()
 
 
-@hydra.main(config_path="config/train.yaml")
+@hydra.main(config_path="config/train.yaml", strict=False)
 def train(config: omegaconf.Config):
     config = omegaconf.OmegaConf.to_container(config)
     logger.info(config)
