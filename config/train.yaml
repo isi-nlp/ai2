@@ -7,6 +7,7 @@ save_best_only: False
 eval_after_training: True
 goal_inc_answers: False
 embed_all_sep_mean: False
+train_data_slice: 100
 hydra:
   run:
     dir: outputs

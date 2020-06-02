@@ -114,7 +114,7 @@ class Classifier(pl.LightningModule):
 
 
     # Custom data loader
-    def dataloader(self, x_path: Union[str, Path], y_path: Union[str, Path] = None, task_id=None):
+    def dataloader(self, x_path: Union[str, Path], y_path: Union[str, Path] = None, task_id=None, data_slice=100):
         df = pd.read_json(x_path, lines=True)
 
         # If given labels are given we will parse it into the dataset
@@ -129,6 +129,9 @@ class Classifier(pl.LightningModule):
         df["text"] = df.apply(self.transform(self.hparams["formula{}".format(task_id_str)]), axis=1)
         df["task_id"] = task_id if task_id is not None else 0
         print(df.head())
+        # Get the first n elements, if data set slicing is specified
+        df = df[:int(len(df.index)*(data_slice/100))]
+        print(len(df.index))
         col_list = ["text", "task_id"]
         if 'goal' in df.columns:  # We use the goal in embed_all_sep_mean architecture
             col_list.append('goal')
@@ -223,7 +226,8 @@ class Classifier(pl.LightningModule):
     # Data loader methods to return train and validation data sets
     def train_dataloader(self):
         dataloader = DataLoader(self.dataloader(self.root_path / self.hparams["train_x"],
-                                                self.root_path / self.hparams["train_y"]),
+                                                self.root_path / self.hparams["train_y"],
+                                                data_slice=self.hparams["train_data_slice"]),
                                 batch_size=self.hparams["batch_size"],
                                 collate_fn=self.collate, shuffle=True)
 
