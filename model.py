@@ -55,6 +55,7 @@ class Classifier(pl.LightningModule):
         self.tokenizer = \
             AutoTokenizer.from_pretrained(hparams["model"], cache_dir=self.root_path / "model_cache", use_fast=False)
         self.embedder.train()
+        self.dropout = nn.Dropout(hparams["dropout"])
 
         # Create the one layer feed forward neural net for classification purpose after the encoder
         self.classifier = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
@@ -122,7 +123,7 @@ class Classifier(pl.LightningModule):
             self.label_offset = np.asarray(labels).min()
             df["label"] = np.asarray(labels) - self.label_offset
 
-        task_id_str = "" if task_id is None else task_id_str = str(task_id)
+        task_id_str = "" if task_id is None else str(task_id)
 
         # Transform the text based on the formula
         df["text"] = df.apply(self.transform(self.hparams["formula{}".format(task_id_str)]), axis=1)
@@ -259,23 +260,13 @@ class Classifier(pl.LightningModule):
     # Extend PyTorch Lightning methods
     def training_step(self, batch, batch_idx, task_id=None):
         logits = self.forward(batch)
-        loss = self.loss(logits, batch["labels"])
-        if self.trainer and self.trainer.use_dp:
-            loss = loss.unsqueeze(0)
-        if batch["task_id"] == 2:
-            return {
-                "loss": loss,
-                "progress": {
-                    "loss2": loss
-                },
-            }
-        return {
-            "loss": loss,
-        }
+        return {"out": logits,
+                "labels": batch["labels"],
+                "num_choice": batch["num_choice"]}
 
     def training_step_end(self, batch_parts_outputs):
         logits = batch_parts_outputs["out"]
-        num_choice = batch_parts_outputs["num_choice"].flatten()[0].item()
+        num_choice = batch_parts_outputs["num_choice"]
         logits = logits.reshape(-1, num_choice)
         loss = self.loss(logits, batch_parts_outputs["labels"])
         return {"loss": loss,
@@ -283,18 +274,13 @@ class Classifier(pl.LightningModule):
 
     def validation_step(self, batch, batch_idx, task_id=None):
         logits = self.forward(batch)
-        loss = self.loss(logits, batch["labels"])
-        if self.trainer and self.trainer.use_dp:
-            loss = loss.unsqueeze(0)
-        return {
-            'val_loss': loss,
-            "val_batch_logits": logits,
-            "val_batch_labels": batch["labels"],
-        }
+        return {"out": logits,
+                "labels": batch["labels"],
+                "num_choice": batch["num_choice"]}
 
     def validation_step_end(self, batch_parts_outputs):
         logits = batch_parts_outputs["out"]
-        num_choice = batch_parts_outputs["num_choice"].flatten()[0].item()
+        num_choice = batch_parts_outputs["num_choice"]
         logits = logits.reshape(-1, num_choice)
         loss = self.loss(logits, batch_parts_outputs["labels"])
         return {"val_loss": loss,

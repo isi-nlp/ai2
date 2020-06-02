@@ -68,7 +68,7 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
                 batch[key] = batch[key].to(compute_device)
         with torch.no_grad():
             logits = a_classifier.forward(batch)
-        num_choice = batch["num_choice"][0].item()
+        num_choice = batch["num_choice"]
         logits = logits.reshape(-1, num_choice)
         predictions.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
         confidence.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())

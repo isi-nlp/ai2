@@ -6,4 +6,5 @@ learning_rate: 2e-6
 adam_epsilon: 10e-8
 warmup_steps: 150
 batch_size: 4
+dropout: 0.3
 max_length: 128
