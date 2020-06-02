@@ -18,7 +18,7 @@ from model import Classifier
 ROOT_PATH = Path(__file__).parent.absolute()
 
 
-@hydra.main(config_path="config/train.yaml", strict=False)
+@hydra.main(config_path="config/train.yaml")
 def train(config: omegaconf.Config):
     config = omegaconf.OmegaConf.to_container(config)
     logger.info(config)
@@ -46,7 +46,7 @@ def train(config: omegaconf.Config):
         checkpoint = torch.load(ROOT_PATH / config['build_on_pretrained_model'], map_location=device)
         model.load_state_dict(checkpoint['state_dict'])
         save_path += f"_pretrained_{config['build_on_pretrained_model'].split('/')[-1].split('.')[0]}"
-
+    print(save_path)
     # Define the trainer along with its checkpoint and experiment instance
     checkpoint = ModelCheckpoint(
         filepath=os.path.join(save_path, 'checkpoints', 'foo'),  # Last part needed due to parsing logic
