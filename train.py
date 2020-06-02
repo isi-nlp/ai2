@@ -35,6 +35,7 @@ def train(config: omegaconf.Config):
 
     # Initialize the classifier by arguments specified in config file
     model = Classifier(config)
+    logger.info('Initialized classifier.')
     save_path = f"{config['model']}_{config['task_name']}-{config['train_data_slice']}_s{config['random_seed']}"
     if 'task_name2' in config:
         save_path = save_path + f"_{config['task_name2']}"
@@ -42,11 +43,13 @@ def train(config: omegaconf.Config):
         save_path = config['experiment_id']
 
     if config['build_on_pretrained_model']:
+        logger.info('Loading pretrained checkpoint...')
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
         checkpoint = torch.load(ROOT_PATH / config['build_on_pretrained_model'], map_location=device)
         model.load_state_dict(checkpoint['state_dict'])
         save_path += f"_pretrained_{config['build_on_pretrained_model'].split('/')[-1].split('.')[0]}"
-    print(save_path)
+    logger.info('Output directory: ' + save_path)
+
     # Define the trainer along with its checkpoint and experiment instance
     checkpoint = ModelCheckpoint(
         filepath=os.path.join(save_path, 'checkpoints', 'foo'),  # Last part needed due to parsing logic

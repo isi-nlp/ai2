@@ -82,7 +82,7 @@ class Classifier(pl.LightningModule):
 
         if 't5' in self.hparams["model"]:
             results = self.embedder(input_ids=batch["input_ids"],
-                                    decoder_input_ids=batch["input_ids"],)
+                                    decoder_input_ids=batch["input_ids"], )
 
         token_embeddings, *_ = results
 
@@ -94,8 +94,8 @@ class Classifier(pl.LightningModule):
                 g_i, g_j = batch['goal_positions'][i]
                 a_i, a_j = batch['answer_positions'][i]
                 token_embeddings_for_sequence_i = token_embeddings[i, :, :].squeeze()
-                goal_seq = token_embeddings_for_sequence_i[g_i:g_j+1, :]
-                ans_seq = token_embeddings_for_sequence_i[a_i:a_j+1, :]
+                goal_seq = token_embeddings_for_sequence_i[g_i:g_j + 1, :]
+                ans_seq = token_embeddings_for_sequence_i[a_i:a_j + 1, :]
                 combined = torch.cat((goal_seq, ans_seq), 0)  # concat goal and answer
                 combined_mean = torch.mean(combined, dim=0).squeeze()  # mean of the question and the correct answer
                 mean_embeddings[i, :] = combined_mean
@@ -112,7 +112,6 @@ class Classifier(pl.LightningModule):
         logits = logits.reshape(-1, batch["num_choice"])
         return logits
 
-
     # Custom data loader
     def dataloader(self, x_path: Union[str, Path], y_path: Union[str, Path] = None, task_id=None, data_slice=100):
         df = pd.read_json(x_path, lines=True)
@@ -128,10 +127,10 @@ class Classifier(pl.LightningModule):
         # Transform the text based on the formula
         df["text"] = df.apply(self.transform(self.hparams["formula{}".format(task_id_str)]), axis=1)
         df["task_id"] = task_id if task_id is not None else 0
-        print(df.head())
         # Get the first n elements, if data set slicing is specified
-        df = df[:int(len(df.index)*(data_slice/100))]
-        print(len(df.index))
+        df = df[:int(len(df.index) * (data_slice / 100))]
+        # print(df.head())
+        # print(len(df.index))
         col_list = ["text", "task_id"]
         if 'goal' in df.columns:  # We use the goal in embed_all_sep_mean architecture
             col_list.append('goal')
@@ -139,7 +138,6 @@ class Classifier(pl.LightningModule):
             col_list.append('label')
 
         return ClassificationDataset(df[col_list].to_dict("records"))
-
 
     # Lambda function that parse in the formulas of how to read in training data
     def transform(self, formula):
@@ -190,7 +188,7 @@ class Classifier(pl.LightningModule):
         # Reformat Multiple choice parsing
         # We create single embedding, but takes sub representations later/ We need to know i
         if self.hparams['embed_all_sep_mean']:
-            context_answer_pairs = [(c, example['goal'], a) for example in examples for c,a in example["text"]]
+            context_answer_pairs = [(c, example['goal'], a) for example in examples for c, a in example["text"]]
             # We just keep the context, i.e goal and all the answers, remove correct answer
             pairs = [pair[0] for pair in context_answer_pairs]
             goal_positions = []
@@ -229,19 +227,19 @@ class Classifier(pl.LightningModule):
                                                 self.root_path / self.hparams["train_y"],
                                                 data_slice=self.hparams["train_data_slice"]),
                                 batch_size=self.hparams["batch_size"],
-                                collate_fn=self.collate, shuffle=True)
+                                collate_fn=self.collate, shuffle=True, num_workers=10)
 
         if "train2_x" in self.hparams:
             dataloader2 = DataLoader(self.dataloader(self.root_path / self.hparams["train2_x"],
                                                      self.root_path / self.hparams["train2_y"], task_id=2),
                                      batch_size=self.hparams["batch_size"],
-                                     collate_fn=self.collate, shuffle=True)
+                                     collate_fn=self.collate, shuffle=True, num_workers=10)
 
             dataloaders = [dataloader, dataloader2]
             multidatasets = MultiTaskDataset(dataloaders)
             multi_dataloader = DataLoader(multidatasets,
                                           collate_fn=lambda examples: examples[0],
-                                          shuffle=True, batch_size=1)
+                                          shuffle=True, batch_size=1, num_workers=10)
             return multi_dataloader
 
         return dataloader
@@ -250,12 +248,12 @@ class Classifier(pl.LightningModule):
         dataloader = DataLoader(self.dataloader(self.root_path / self.hparams["val_x"],
                                                 self.root_path / self.hparams["val_y"]),
                                 batch_size=self.hparams["batch_size"],
-                                collate_fn=self.collate)
+                                collate_fn=self.collate, num_workers=10)
         if "val2_x" in self.hparams:
             dataloader2 = DataLoader(self.dataloader(self.root_path / self.hparams["val2_x"],
                                                      self.root_path / self.hparams["val2_y"], task_id=2),
                                      batch_size=self.hparams["batch_size"],
-                                     collate_fn=self.collate, shuffle=False)
+                                     collate_fn=self.collate, shuffle=False, num_workers=10)
             dataloaders = [dataloader, dataloader2]
             return dataloaders
 
