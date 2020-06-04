@@ -109,7 +109,6 @@ class Classifier(pl.LightningModule):
             logits = self.classifier(output).squeeze(dim=1)
         else:
             raise
-        # logits = logits.reshape(-1, batch["num_choice"])
         return logits
 
     # Custom data loader
