@@ -86,7 +86,7 @@ class Classifier(pl.LightningModule):
 
         token_embeddings, *_ = results
 
-        if self.hparams['embed_all_sep_mean']:
+        if self.hparams['architecture'] == 'embed_all_sep_mean':
             # Get the mean of part of the embedding that corresponds to the answer
             mean_dims = token_embeddings.shape[0], token_embeddings.shape[2]
             mean_embeddings = torch.zeros(mean_dims)
@@ -161,8 +161,8 @@ class Classifier(pl.LightningModule):
             else:
                 choices = [row[a_choice.strip()] for a_choice in parsed_choices]
 
-            # Include answers in context
-            if self.hparams['include_answers_in_context'] or self.hparams['embed_all_sep_mean']: # Same for all QA
+            # Include answers in context - The approach is same for all QA
+            if self.hparams['architecture'] in ['include_answers_in_context', 'embed_all_sep_mean']:
                 context = context + ' - ' + ' - '.join(choices)
             return list(zip(cycle([context]), choices))
 
@@ -189,7 +189,7 @@ class Classifier(pl.LightningModule):
 
         # Reformat Multiple choice parsing
         # We create single embedding, but takes sub representations later/ We need to know i
-        if self.hparams['embed_all_sep_mean']:
+        if self.hparams['architecture'] == 'embed_all_sep_mean':
             #E.g: Piqa: Goal + Answers , Goal, Answer
             context_answer_pairs = [(c, example['question_context'], a) for example in examples for c, a in example["text"]]
             # We just keep the context, i.e question and all the answers (goal+answers), and not the correct answer

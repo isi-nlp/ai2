@@ -36,16 +36,12 @@ def train(config: omegaconf.Config):
     # Initialize the classifier by arguments specified in config file
     model = Classifier(config)
     logger.info('Initialized classifier.')
-    save_path = f"{config['model']}_{config['task_name']}-{config['train_data_slice']}_s{config['random_seed']}"
-    if 'task_name2' in config:
-        save_path = save_path + f"_{config['task_name2']}"
-    if config["include_answers_in_context"]:
-        save_path = save_path + f"_include_answers_in_context"
-    elif config["embed_all_sep_mean"]:
-        save_path = save_path + f"_embed_all_sep_mean"
-
-    if 'experiment_id' in config:  # If provided, overwrite save path with an experiment identifier
-        save_path = config['experiment_id']
+    if 'save_path' in config:
+        save_path = config['save_path']
+    else:
+        save_path = f"{config['model']}_{config['task_name']}-{config['train_data_slice']}_{config['architecture']}_s{config['random_seed']}"
+        if 'task_name2' in config:
+            save_path = save_path + f"_{config['task_name2']}"
 
     if config['build_on_pretrained_model']:
         logger.info('Loading pretrained checkpoint...')

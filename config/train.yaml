@@ -5,8 +5,7 @@ random_seed: 10061880
 build_on_pretrained_model: False
 save_best_only: True
 eval_after_training: True
-include_answers_in_context: False
-embed_all_sep_mean: False
+architecture: standard
 train_data_slice: 100
 hydra:
   run:
