@@ -91,12 +91,12 @@ class Classifier(pl.LightningModule):
             mean_dims = token_embeddings.shape[0], token_embeddings.shape[2]
             mean_embeddings = torch.zeros(mean_dims)
             for i in range(mean_dims[0]):
-                g_i, g_j = batch['goal_positions'][i]
+                q_i, q_j = batch['question_positions'][i]
                 a_i, a_j = batch['answer_positions'][i]
                 token_embeddings_for_sequence_i = token_embeddings[i, :, :].squeeze()
-                goal_seq = token_embeddings_for_sequence_i[g_i:g_j + 1, :]
+                question_seq = token_embeddings_for_sequence_i[q_i:q_j + 1, :]
                 ans_seq = token_embeddings_for_sequence_i[a_i:a_j + 1, :]
-                combined = torch.cat((goal_seq, ans_seq), 0)  # concat goal and answer
+                combined = torch.cat((question_seq, ans_seq), 0)  # concat context and answer
                 combined_mean = torch.mean(combined, dim=0).squeeze()  # mean of the question and the correct answer
                 mean_embeddings[i, :] = combined_mean
                 mean_embeddings = mean_embeddings.to(torch.device('cuda'))
@@ -129,13 +129,15 @@ class Classifier(pl.LightningModule):
         df["task_id"] = task_id if task_id is not None else 0
         # Get the first n elements, if data set slicing is specified
         df = df[:int(len(df.index) * (data_slice / 100))]
-        # print(df.head())
-        # print(len(df.index))
-        col_list = ["text", "task_id"]
-        if 'goal' in df.columns:  # We use the goal in embed_all_sep_mean architecture
-            col_list.append('goal')
+        col_list = ["text", "task_id", "question_context"]
+        # We use the context in embed_all_sep_mean architecture
+        df["question_context"] = df["text"].apply(lambda x: x[0][0].split(' - ')[0])
         if 'label' in df.columns:
             col_list.append('label')
+        # pd.set_option('display.max_columns', None)
+        # pd.options.display.max_colwidth = 1000
+        print(df.head())
+        print(len(df.index))
 
         return ClassificationDataset(df[col_list].to_dict("records"))
 
@@ -159,8 +161,8 @@ class Classifier(pl.LightningModule):
             else:
                 choices = [row[a_choice.strip()] for a_choice in parsed_choices]
 
-            # Include answers in goal
-            if self.hparams['goal_inc_answers'] or self.hparams['embed_all_sep_mean']:
+            # Include answers in context
+            if self.hparams['include_answers_in_context'] or self.hparams['embed_all_sep_mean']: # Same for all QA
                 context = context + ' - ' + ' - '.join(choices)
             return list(zip(cycle([context]), choices))
 
@@ -188,20 +190,21 @@ class Classifier(pl.LightningModule):
         # Reformat Multiple choice parsing
         # We create single embedding, but takes sub representations later/ We need to know i
         if self.hparams['embed_all_sep_mean']:
-            context_answer_pairs = [(c, example['goal'], a) for example in examples for c, a in example["text"]]
-            # We just keep the context, i.e goal and all the answers, remove correct answer
+            #E.g: Piqa: Goal + Answers , Goal, Answer
+            context_answer_pairs = [(c, example['question_context'], a) for example in examples for c, a in example["text"]]
+            # We just keep the context, i.e question and all the answers (goal+answers), and not the correct answer
             pairs = [pair[0] for pair in context_answer_pairs]
-            goal_positions = []
-            answer_positions = []
-            # We also want to know just the token representation of goal and correct ans, we get the subsequence
+            question_positions = []
+            answer_positions = [] # Positions of the answer within the entire context
+            # We also want to know just the token representation of context and correct ans, we get the subsequence
             for pair in context_answer_pairs:
-                context_tokens = self.tokenizer.tokenize(pair[0])
-                goal_tokens = self.tokenizer.tokenize(pair[1])
-                goal_positions.append(self.find_sub_list(goal_tokens, context_tokens))
+                entire_qa_tokens = self.tokenizer.tokenize(pair[0]) # This is the entire QA tokenized
+                question_tokens = self.tokenizer.tokenize(pair[1]) # This is just the Q tokenixed
+                question_positions.append(self.find_sub_list(question_tokens, entire_qa_tokens))
                 answers_tokens = self.tokenizer.tokenize('Answer ' + pair[2])[1:]
-                answer_positions.append(self.find_sub_list(answers_tokens, context_tokens))
+                answer_positions.append(self.find_sub_list(answers_tokens, entire_qa_tokens))
+            batch['question_positions'] = question_positions
             batch['answer_positions'] = answer_positions
-            batch['goal_positions'] = goal_positions
         else:
             pairs = [pair for example in examples for pair in example["text"]]
 
