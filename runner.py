@@ -22,9 +22,11 @@ for parameter_name, options in parameter_options.items():
 for i, combination in enumerate(parameter_combinations):
     experiment_id = '_'.join(option for _, option in combination if option != '')
     os.system(f"sbatch "
-          # Additional sbatch specifications
+          # Additional SLURM specifications
           f"-J {experiment_id} "
           f"-o outputs/slurm/{experiment_id}.out "
+          f"--partition=ephemeral" # For ephemeral
+          f"---qos=ephemeral " # For ephemeral
           f"slurm/run_saga.sh "
           # Python script commands
           f"\""
