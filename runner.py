@@ -22,7 +22,7 @@ for parameter_name, options in parameter_options.items():
 
 for i, combination in enumerate(parameter_combinations):
     experiment_id = '_'.join(option for _, option in combination)
-    os.system(f"sbatch slurm/run_saga "
+    os.system(f"sbatch slurm/run_saga.sh "
           # Python script commands
           f"\""
               f"{' '.join([f'{name}={option}' for name,option in combination])}"
