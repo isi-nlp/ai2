@@ -39,6 +39,11 @@ def train(config: omegaconf.Config):
     save_path = f"{config['model']}_{config['task_name']}-{config['train_data_slice']}_s{config['random_seed']}"
     if 'task_name2' in config:
         save_path = save_path + f"_{config['task_name2']}"
+    if config["include_answers_in_context"]:
+        save_path = save_path + f"_include_answers_in_context"
+    elif config["embed_all_sep_mean"]:
+        save_path = save_path + f"_embed_all_sep_mean"
+
     if 'experiment_id' in config:  # If provided, overwrite save path with an experiment identifier
         save_path = config['experiment_id']
 
