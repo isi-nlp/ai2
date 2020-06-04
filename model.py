@@ -179,7 +179,7 @@ class Classifier(pl.LightningModule):
     def collate(self, examples):
 
         batch_size = len(examples)
-        num_choice = len(examples[0]["text"])
+        num_choice = torch.LongTensor([len(examples[0]["text"])] * batch_size)
         task_id = examples[0]["task_id"]
         batch = {
             "labels": torch.LongTensor([e["label"] for e in examples]) if "label" in examples[0] else None,
@@ -271,7 +271,7 @@ class Classifier(pl.LightningModule):
 
     def training_step_end(self, batch_parts_outputs):
         logits = batch_parts_outputs["out"]
-        num_choice = batch_parts_outputs["num_choice"]
+        num_choice = batch_parts_outputs["num_choice"].flatten()[0].item()
         logits = logits.reshape(-1, num_choice)
         loss = self.loss(logits, batch_parts_outputs["labels"])
         return {"loss": loss,
@@ -285,7 +285,7 @@ class Classifier(pl.LightningModule):
 
     def validation_step_end(self, batch_parts_outputs):
         logits = batch_parts_outputs["out"]
-        num_choice = batch_parts_outputs["num_choice"]
+        num_choice = batch_parts_outputs["num_choice"].flatten()[0].item()
         logits = logits.reshape(-1, num_choice)
         loss = self.loss(logits, batch_parts_outputs["labels"])
         return {"val_loss": loss,
