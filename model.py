@@ -179,11 +179,11 @@ class Classifier(pl.LightningModule):
     def collate(self, examples):
 
         batch_size = len(examples)
-        num_choice = torch.LongTensor([len(examples[0]["text"])] * batch_size)
+        num_choice = len(examples[0]["text"])
         task_id = examples[0]["task_id"]
         batch = {
             "labels": torch.LongTensor([e["label"] for e in examples]) if "label" in examples[0] else None,
-            "num_choice": num_choice,
+            "num_choice": torch.LongTensor([num_choice] * batch_size),
             "task_id": task_id
         }
 
