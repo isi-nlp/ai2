@@ -25,7 +25,7 @@ for i, combination in enumerate(parameter_combinations):
           # Additional SLURM specifications
           f"-J {experiment_id} "
           f"-o outputs/slurm/{experiment_id}.out "
-          # Ephemeral specifications 
+          # Ephemeral specifications - sudo sacctmgr modify user beser set MaxJobs=25
           f"--partition=ephemeral "
           f"--qos=ephemeral "
           f"--time=12:00:00 "
