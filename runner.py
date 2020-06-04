@@ -25,8 +25,8 @@ for i, combination in enumerate(parameter_combinations):
           # Additional SLURM specifications
           f"-J {experiment_id} "
           f"-o outputs/slurm/{experiment_id}.out "
-          f"--partition=ephemeral" # For ephemeral
-          f"---qos=ephemeral " # For ephemeral
+          f"--partition=ephemeral " # For ephemeral
+          f"--qos=ephemeral " # For ephemeral
           f"slurm/run_saga.sh "
           # Python script commands
           f"\""
