@@ -2,22 +2,12 @@ import os
 
 parameter_options = {
                 'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
-                # 'train_data_slice': ['10', '25', '100'],
+                'train_data_slice': ['25', '90'],
                 # 'task2': ['cn_10k', 'cn_20k', 'cn_40k', 'cn_physical_10k'],
-                # 'task2': ['cn_10k'],
-                # 'architecture': ['standard', 'include_answers_in_context', 'embed_all_sep_mean'],
-                'architecture': ['include_answers_in_context', 'embed_all_sep_mean'],
-                # 'random_seed': ['0', '42', '10061880'],
-                'random_seed': ['10061880'],
+                'task2': ['','cn_10k'],
+                'architecture': ['standard', 'include_answers_in_context', 'embed_all_sep_mean'],
+                'random_seed': ['0', '42', '10061880'],
               }
-
-# TODO:
-# 90-10-10 split
-# all tasks
-# 10k conceptnet and none
-# data 25 90
-# 3 different architectures we have
-# 3 different random seeds
 
 # Create all possible combinations of parameters
 parameter_combinations = [[]]
@@ -30,7 +20,7 @@ for parameter_name, options in parameter_options.items():
     parameter_combinations = new_combinations
 
 for i, combination in enumerate(parameter_combinations):
-    experiment_id = '_'.join(option for _, option in combination)
+    experiment_id = '_'.join(option for _, option in combination if option != '')
     os.system(f"sbatch "
           # Additional sbatch specifications
           f"-J {experiment_id} "
@@ -38,6 +28,7 @@ for i, combination in enumerate(parameter_combinations):
           f"slurm/run_saga.sh "
           # Python script commands
           f"\""
-              f"{' '.join([f'{name}={option}' for name,option in combination])}"
+              f"{' '.join([f'{name}={option}' for name,option in combination  if option != ''])}"
               f" save_path={experiment_id}"
+              f"{' batch_size=2' if 'hellaswag' in experiment_id else ''}"
               f"\"")
