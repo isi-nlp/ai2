@@ -24,8 +24,8 @@ for i, combination in enumerate(parameter_combinations):
     experiment_id = '_'.join(option for _, option in combination)
     os.system(f"sbatch "
           # Additional sbatch specifications
-          f"-J={experiment_id} "
-          f"-o=outputs/slurm/{experiment_id}.out "
+          f"-J {experiment_id} "
+          f"-o outputs/slurm/{experiment_id}.out "
           f"slurm/run_saga.sh "
           # Python script commands
           f"\""
