@@ -81,7 +81,6 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
         f.write("\n".join(map(str, predictions)))
     with open(f"{output_path}/confidence.lst", "w+") as f:
         f.write("\n".join(map(lambda l: '\t'.join(map(str, l)), confidence)))
-
     # If desired y value is provided, calculate relevant statistics
     if val_y:
         labels = pd.read_csv(val_y, sep='\t', header=None).values.tolist()
@@ -100,6 +99,11 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
         upper = min(1.0, np.percentile(stats, p))
         logger.info(f'{alpha * 100:.1f} confidence interval {lower * 100:.1f} and {upper * 100:.1f}, '
                     f'average: {np.mean(stats) * 100:.1f}')
+
+        # Log eval result
+        with open(f"results.txt", "w+") as resultf:
+            resultf.write(f'{output_path}: Accuracy: {accuracy_score(labels, predictions):.3f} - '
+                    f'{alpha * 100:.1f} confidence interval {lower * 100:.1f} and {upper * 100:.1f}, average: {np.mean(stats) * 100:.1f}')
 
 
 if __name__ == "__main__":
