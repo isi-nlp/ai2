@@ -4,11 +4,20 @@ parameter_options = {
                 'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
                 # 'train_data_slice': ['10', '25', '100'],
                 # 'task2': ['cn_10k', 'cn_20k', 'cn_40k', 'cn_physical_10k'],
+                # 'task2': ['cn_10k'],
                 # 'architecture': ['standard', 'include_answers_in_context', 'embed_all_sep_mean'],
                 'architecture': ['include_answers_in_context', 'embed_all_sep_mean'],
                 # 'random_seed': ['0', '42', '10061880'],
                 'random_seed': ['10061880'],
               }
+
+# TODO:
+# 90-10-10 split
+# all tasks
+# 10k conceptnet and none
+# data 25 90
+# 3 different architectures we have
+# 3 different random seeds
 
 # Create all possible combinations of parameters
 parameter_combinations = [[]]
