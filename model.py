@@ -133,7 +133,7 @@ class Classifier(pl.LightningModule):
         df["question_context"] = df["text"].apply(lambda x: x[0][0].split(' - ')[0])
         if 'label' in df.columns:
             col_list.append('label')
-        pd.set_option('display.max_columns', None)
+        # pd.set_option('display.max_columns', None)
         # pd.options.display.max_colwidth = 1000
         print(df.head())
         print(len(df.index))
@@ -241,7 +241,7 @@ class Classifier(pl.LightningModule):
             multidatasets = MultiTaskDataset(dataloaders)
             multi_dataloader = DataLoader(multidatasets,
                                           collate_fn=lambda examples: examples[0],
-                                          shuffle=True, batch_size=1)
+                                          shuffle=True, batch_size=1, num_workers=10)
             return multi_dataloader
 
         return dataloader
