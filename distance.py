@@ -14,7 +14,7 @@ TOP_N = 5
 TOTAL_SEED = 10
 correct_range = range(16965, 33931)
 dm = DistanceMeasurer('cosine')
-EMBED_DIR = r"/nas/home/dwangli/colleagues/mzhang/ai2/embeddings/final/"
+EMBED_DIR = r"/nas/home/dwangli/mics/dwangli/ai2_stable/multirun/2020-05-29/22-06-49/"
 
 # Init accumulator array
 over_all_accuracies = torch.zeros(TOTAL_SEED, dtype=torch.float)
@@ -24,10 +24,10 @@ for a_seed in range(TOTAL_SEED):
     print(f"\nSeed {a_seed}")
 
     # Load in the embedding arrays
-    train_embed = np.load(EMBED_DIR + f"roberta-large-alphanli_embed_20_ooa_train-s{a_seed}.npy")
-    dev_embed = np.load(EMBED_DIR + f"roberta-large-alphanli_embed_20_ooa_dev-s{a_seed}.npy")
+    train_embed = np.load(EMBED_DIR + f"{a_seed}/roberta-large-alphanli-retrieve_embed_train-s{a_seed}-AVG_BOTH.npy")
+    dev_embed = np.load(EMBED_DIR + f"{a_seed}/roberta-large-alphanli-retrieve_embed_dev-s{a_seed}-AVG_BOTH.npy")
 
-    # Loop through the train embeddings to get distances for each embedding
+    # Loop through the train embeddings to get average distances for each train story embedding
     train_distances = []
     for idx_train, a_train_embed in tqdm.tqdm(enumerate(train_embed), total=len(train_embed)):
         distances = torch.tensor([dm.get_distance(a_train_embed, a_dev_embed) for a_dev_embed in dev_embed])
@@ -47,5 +47,5 @@ for a_seed in range(TOTAL_SEED):
 
     over_all_accuracies[a_seed] = num_correct/TOP_N
 
-print("Mean Accuracy with 2 Standard Deviation")
+print("\nMean Accuracy with 2 Standard Deviation:")
 print(f"{over_all_accuracies.mean():.3f} +/- {2 * over_all_accuracies.std():.3f}")

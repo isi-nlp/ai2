@@ -28,50 +28,37 @@ def embedding(config):
     model.eval()
 
     # Store output lists
-    train_embeddings = calculate_embeddings(a_classifier=model,
-                                            text_path=ROOT_PATH / config['train_x'],
-                                            label_path=ROOT_PATH / config['train_y'],
-                                            compute_device=device, feature=config['feature'])
-    dev_embeddings = calculate_embeddings(a_classifier=model,
-                                          text_path=ROOT_PATH / config['val_x'],
-                                          label_path=ROOT_PATH / config['val_y'],
-                                          compute_device=device, feature=config['feature'])
-
-    # # Write out the output list to the file
-    with open(f"{config['model']}-{config['task_name']}_train-{config['checkpoint_name']}.lst", 'w+') as train_file:
-        for an_entry in train_embeddings:
-            train_file.write(','.join([str(float(a_float)) for a_float in an_entry]))
-            train_file.write('\n')
-    with open(f"{config['model']}-{config['task_name']}_dev-{config['checkpoint_name']}.lst", 'w+') as dev_file:
-        for an_entry in dev_embeddings:
-            dev_file.write(','.join([str(float(a_float)) for a_float in an_entry]))
-            dev_file.write('\n')
+    np.save(f"{config['model']}-{config['task_name']}_train-{config['checkpoint_name']}-{config['feature']}.npy",
+            calculate_embeddings(a_classifier=model,
+                                 text_path=ROOT_PATH / config['train_x'],
+                                 label_path=ROOT_PATH / config['train_y'],
+                                 compute_device=device, feature=config['feature']))
+    np.save(f"{config['model']}-{config['task_name']}_dev-{config['checkpoint_name']}-{config['feature']}.npy",
+            calculate_embeddings(a_classifier=model,
+                                 text_path=ROOT_PATH / config['val_x'],
+                                 label_path=ROOT_PATH / config['val_y'],
+                                 compute_device=device, feature=config['feature']))
 
 
-# Helper function for loading embeddings
+# Helper function for parsing embeddings and return a 2D numpy array
 def calculate_embeddings(a_classifier: Classifier, text_path: str, label_path: str, compute_device: str, feature: str):
 
-    embeddings = np.array([], dtype=np.float64).reshape(0, 1024)
+    embedding_list = []
 
     # Forward propagate the model to get a list of predictions and their respective confidence
     for batch in tqdm(DataLoader(a_classifier.dataloader(text_path, label_path),
                                  batch_size=a_classifier.hparams["batch_size"] * 2,
                                  collate_fn=a_classifier.collate, shuffle=False)):
+
         # Move component to computing device if possible
         for key in batch:
             if isinstance(batch[key], torch.Tensor):
                 batch[key] = batch[key].to(compute_device)
 
-        with torch.no_grad():
-            batch["token_type_ids"] = None if "roberta" in a_classifier.hparams["model"] else batch["token_type_ids"]
+        # Extend the embedding list so far with newly embeded batch
+        embedding_list.extend(a_classifier.retrieve_embedding(batch, feature))
 
-            # Embed the given batch
-            results = a_classifier.embedder(input_ids=batch["input_ids"],
-                                            attention_mask=batch["attention_mask"],
-                                            token_type_ids=batch["token_type_ids"])
-            token_embeddings, *_ = results
-            embeddings = np.concatenate((embeddings, token_embeddings.mean(dim=1).cpu().detach().numpy()), axis=0)
-    return embeddings
+    return np.stack(embedding_list)
 
 
 if __name__ == "__main__":

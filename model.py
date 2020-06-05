@@ -64,6 +64,31 @@ class Classifier(pl.LightningModule):
         logits = logits.reshape(-1, batch["num_choice"])
         return logits
 
+    # Given a batch and the desired feature, this function embeds the batch and return the embedding representation
+    def retrieve_embedding(self, batch, feature):
+
+        batch_size = len(batch['labels'])
+        num_choices = batch['num_choice']
+        batch["token_type_ids"] = None if "roberta" in self.hparams["model"] else batch["token_type_ids"]
+
+        with torch.no_grad():
+            # Embed the given batch
+            results = self.embedder(input_ids=batch["input_ids"],
+                                    attention_mask=batch["attention_mask"],
+                                    token_type_ids=batch["token_type_ids"])
+            token_embeddings, *_ = results
+
+            if feature.split('_')[0] == 'AVG':
+                per_story_per_choice_embed = token_embeddings.mean(dim=1).reshape(batch_size, num_choices, -1)
+                if feature == 'AVG_MEAN':
+                    per_story_avg_embed = per_story_per_choice_embed.mean(dim=1)
+                    return per_story_avg_embed.cpu().detach().numpy()
+                # TODO: Implement AVG_CORRECT
+                # TODO: Implement AVG_NULL
+            # TODO: Implement CLS_*
+            else:
+                raise NotImplementedError("Feature for embedding calculation is not yet implemented")
+
     # Custom data loader
     def dataloader(self, x_path: Union[str, pathlib.Path], y_path: Union[str, pathlib.Path] = None):
         df = pd.read_json(x_path, lines=True)
@@ -102,6 +127,7 @@ class Classifier(pl.LightningModule):
             else:
                 choices = [row[a_choice.strip()] for a_choice in choices]
 
+            # return list(zip(cycle([context]), ["", ""]))
             return list(zip(cycle([context]), choices))
 
         return wrapper
