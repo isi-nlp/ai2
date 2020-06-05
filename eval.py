@@ -101,7 +101,7 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
                     f'average: {np.mean(stats) * 100:.1f}')
 
         # Log eval result
-        with open(f"results.txt", "w+") as resultf:
+        with open(ROOT_PATH / f"results.txt", "w+") as resultf:
             resultf.write(f'{output_path}: Accuracy: {accuracy_score(labels, predictions):.3f} - '
                     f'{alpha * 100:.1f} confidence interval {lower * 100:.1f} and {upper * 100:.1f}, average: {np.mean(stats) * 100:.1f}\n')
 

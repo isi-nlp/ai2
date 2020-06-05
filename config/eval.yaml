@@ -5,3 +5,6 @@ checkpoint_path: "outputs/2020-03-20/16-37-40/outputs/checkpoints/_ckpt_epoch_4.
 random_seed: 42
 architecture: standard
 with_true_label: True
+hydra:
+  run:
+    dir: outputs
