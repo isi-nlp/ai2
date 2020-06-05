@@ -11,7 +11,6 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 from transformers import AdamW, AutoModel, AutoTokenizer
 
-
 # Extending the dataset module provided by the PyTorch module to build the dataset class for AI2 dataset.
 class ClassificationDataset(Dataset):
 
@@ -229,19 +228,19 @@ class Classifier(pl.LightningModule):
                                                 self.root_path / self.hparams["train_y"],
                                                 data_slice=self.hparams["train_data_slice"]),
                                 batch_size=self.hparams["batch_size"],
-                                collate_fn=self.collate, shuffle=True, num_workers=10)
+                                collate_fn=self.collate, shuffle=True)
 
         if "train2_x" in self.hparams:
             dataloader2 = DataLoader(self.dataloader(self.root_path / self.hparams["train2_x"],
                                                      self.root_path / self.hparams["train2_y"], task_id=2),
                                      batch_size=self.hparams["batch_size"],
-                                     collate_fn=self.collate, shuffle=True, num_workers=10)
+                                     collate_fn=self.collate, shuffle=True)
 
             dataloaders = [dataloader, dataloader2]
             multidatasets = MultiTaskDataset(dataloaders)
             multi_dataloader = DataLoader(multidatasets,
                                           collate_fn=lambda examples: examples[0],
-                                          shuffle=True, batch_size=1, num_workers=10)
+                                          shuffle=True, batch_size=1)
             return multi_dataloader
 
         return dataloader
@@ -250,12 +249,12 @@ class Classifier(pl.LightningModule):
         dataloader = DataLoader(self.dataloader(self.root_path / self.hparams["val_x"],
                                                 self.root_path / self.hparams["val_y"]),
                                 batch_size=self.hparams["batch_size"],
-                                collate_fn=self.collate, num_workers=10)
+                                collate_fn=self.collate)
         if "val2_x" in self.hparams:
             dataloader2 = DataLoader(self.dataloader(self.root_path / self.hparams["val2_x"],
                                                      self.root_path / self.hparams["val2_y"], task_id=2),
                                      batch_size=self.hparams["batch_size"],
-                                     collate_fn=self.collate, shuffle=False, num_workers=10)
+                                     collate_fn=self.collate, shuffle=False)
             dataloaders = [dataloader, dataloader2]
             return dataloaders
 
