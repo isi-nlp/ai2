@@ -1,7 +1,7 @@
 import random
 from itertools import cycle
 from pathlib import Path
-from typing import Union
+from typing import Union, List
 
 import numpy as np
 import pandas as pd
@@ -241,7 +241,7 @@ class Classifier(pl.LightningModule):
             multidatasets = MultiTaskDataset(dataloaders)
             multi_dataloader = DataLoader(multidatasets,
                                           collate_fn=lambda examples: examples[0],
-                                          shuffle=True, batch_size=1, num_workers=10)
+                                          shuffle=True, batch_size=1)
             return multi_dataloader
 
         return dataloader
