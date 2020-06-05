@@ -128,12 +128,9 @@ class Classifier(pl.LightningModule):
         df["task_id"] = task_id if task_id is not None else 0
         # Get the first n elements, if data set slicing is specified
         df = df[:int(len(df.index) * (data_slice / 100))]
-
-        col_list = ["text", "task_id"]
-        if 'cn' not in str(x_path):
-            col_list += ["question_context"]
-            # We use the context in embed_all_sep_mean architecture
-            df["question_context"] = df["text"].apply(lambda x: x[0][0].split(' - ')[0])
+        col_list = ["text", "task_id", "question_context"]
+        # We use the context in embed_all_sep_mean architecture
+        df["question_context"] = df["text"].apply(lambda x: x[0][0].split(' - ')[0])
         if 'label' in df.columns:
             col_list.append('label')
         # pd.set_option('display.max_columns', None)
@@ -238,13 +235,13 @@ class Classifier(pl.LightningModule):
             dataloader2 = DataLoader(self.dataloader(self.root_path / self.hparams["train2_x"],
                                                      self.root_path / self.hparams["train2_y"], task_id=2),
                                      batch_size=self.hparams["batch_size"],
-                                     collate_fn=self.collate, shuffle=True)
+                                     collate_fn=self.collate, shuffle=True, num_workers=10)
 
             dataloaders = [dataloader, dataloader2]
             multidatasets = MultiTaskDataset(dataloaders)
             multi_dataloader = DataLoader(multidatasets,
                                           collate_fn=lambda examples: examples[0],
-                                          shuffle=True, batch_size=1)
+                                          shuffle=True, batch_size=1, num_workers=10)
             return multi_dataloader
 
         return dataloader
@@ -258,7 +255,7 @@ class Classifier(pl.LightningModule):
             dataloader2 = DataLoader(self.dataloader(self.root_path / self.hparams["val2_x"],
                                                      self.root_path / self.hparams["val2_y"], task_id=2),
                                      batch_size=self.hparams["batch_size"],
-                                     collate_fn=self.collate, shuffle=False)
+                                     collate_fn=self.collate, shuffle=False, num_workers=10)
             dataloaders = [dataloader, dataloader2]
             return dataloaders
 
