@@ -128,7 +128,10 @@ class Classifier(pl.LightningModule):
         df["task_id"] = task_id if task_id is not None else 0
         # Get the first n elements, if data set slicing is specified
         df = df[:int(len(df.index) * (data_slice / 100))]
-        col_list = ["text", "task_id", "question_context"]
+
+        col_list = ["text", "task_id"]
+        if 'cn' not in x_path:
+            col_list += ["question_context"]
         # We use the context in embed_all_sep_mean architecture
         df["question_context"] = df["text"].apply(lambda x: x[0][0].split(' - ')[0])
         if 'label' in df.columns:
