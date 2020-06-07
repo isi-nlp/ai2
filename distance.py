@@ -39,11 +39,13 @@ for a_seed in range(TOTAL_SEED):
     # Print out results and get the number of correct ones for this seed
     num_correct = 0
     print("On Average Closest Train Stories are:")
-    print('StoryID\tCosineDist')
+    print('Story ID\tCosine Distance\tIn Influential Set')
     for idx, cosine_distance in train_distances[:TOP_N]:
-        print(f'{idx}\t{cosine_distance}')
+        in_correct_range = False
         if idx in correct_range:
             num_correct += 1
+            in_correct_range = True
+        print(f'{idx}\t{cosine_distance}\t{in_correct_range}')
 
     over_all_accuracies[a_seed] = num_correct/TOP_N
 

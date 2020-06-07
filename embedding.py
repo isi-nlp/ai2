@@ -1,4 +1,3 @@
-import json
 import pathlib
 
 import hydra
@@ -20,10 +19,11 @@ def embedding(config):
 
     # Load in the check pointed model from check point file
     device = 'cpu' if not torch.cuda.is_available() else "cuda"
-    checkpoint = torch.load(ROOT_PATH / config['checkpoints_dir'] / f"{config['checkpoint_name']}.ckpt",
-                            map_location=device)
     model = Classifier(config)
-    model.load_state_dict(checkpoint['state_dict'])
+    if config['checkpoints_dir'] and config['checkpoint_name']:
+        checkpoint = torch.load(ROOT_PATH / config['checkpoints_dir'] / f"{config['checkpoint_name']}.ckpt",
+                                map_location=device)
+        model.load_state_dict(checkpoint['state_dict'])
     model.to(device)
     model.eval()
 

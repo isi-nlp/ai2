@@ -2,7 +2,7 @@ defaults:
   - model: roberta-large
   - task: alphanli-retrieve_embed
 checkpoints_dir: outputs/roberta-20-checkpoints/
-checkpoint_name: s0
+checkpoint_name: False
 feature: AVG_MEAN
 # Possible Feature Types:
 # AVG_MEAN: Average embedding of all tokens, and average of all possible answers
