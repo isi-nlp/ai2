@@ -1,8 +1,8 @@
 import os
 
 parameter_options = {
-                'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
-                # 'task': ['alphanli'],
+                # 'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
+                'task': ['hellaswag'],
                 'train_data_slice': ['25', '90'],
                 # 'task2': ['cn_10k', 'cn_20k', 'cn_40k', 'cn_physical_10k'],
                 'task2': ['','cn_10k'],
@@ -30,11 +30,11 @@ for i, combination in enumerate(parameter_combinations):
           f"--partition=ephemeral "
           f"--qos=ephemeral "
           f"--time=12:00:00 "
-          f"{'--gpus-per-task=2 ' if 'hellaswag' in experiment_id else ''}"
+          # f"{'--gpus-per-task=2 ' if 'hellaswag' in experiment_id else ''}"
           f"slurm/run_saga.sh "
           # Python script commands
           f"\""
               f"{' '.join([f'{name}={option}' for name,option in combination  if option != ''])}"
               f" save_path={experiment_id}"
-              # f"{' batch_size=2' if 'hellaswag' in experiment_id else ''}"
+              f"{' batch_size=2' if 'hellaswag' in experiment_id else ''}"
               f"\"")
