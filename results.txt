@@ -1,0 +1,428 @@
+==> outputs/slurm/alphanli_25_cn_10k_embed_all_sep_mean_0.out <==
+2020-06-05 14:42:19.153 | INFO     | eval:evaluate:87 - Accuracy score: 0.948
+2020-06-05 14:42:22.977 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.4 and 95.0, average: 94.8
+==> outputs/slurm/alphanli_25_cn_10k_embed_all_sep_mean_10061880.out <==
+2020-06-05 15:04:34.940 | INFO     | eval:evaluate:87 - Accuracy score: 0.945
+2020-06-05 15:04:38.669 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.2 and 94.8, average: 94.6
+==> outputs/slurm/alphanli_25_cn_10k_embed_all_sep_mean_42.out <==
+2020-06-05 14:46:39.845 | INFO     | eval:evaluate:87 - Accuracy score: 0.947
+2020-06-05 14:46:43.545 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.4 and 95.1, average: 94.7
+==> outputs/slurm/alphanli_25_cn_10k_include_answers_in_context_0.out <==
+2020-06-05 14:47:14.290 | INFO     | eval:evaluate:87 - Accuracy score: 0.949
+2020-06-05 14:47:18.061 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.5 and 95.2, average: 94.9
+==> outputs/slurm/alphanli_25_cn_10k_include_answers_in_context_10061880.out <==
+2020-06-05 15:08:56.167 | INFO     | eval:evaluate:87 - Accuracy score: 0.946
+2020-06-05 15:08:59.904 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.3 and 94.9, average: 94.6
+==> outputs/slurm/alphanli_25_cn_10k_include_answers_in_context_42.out <==
+2020-06-05 15:03:37.818 | INFO     | eval:evaluate:87 - Accuracy score: 0.945
+2020-06-05 15:03:41.556 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.2 and 94.8, average: 94.5
+==> outputs/slurm/alphanli_25_cn_10k_standard_0.out <==
+2020-06-05 14:39:39.899 | INFO     | eval:evaluate:87 - Accuracy score: 0.949
+2020-06-05 14:39:43.643 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.7 and 95.2, average: 94.9
+==> outputs/slurm/alphanli_25_cn_10k_standard_10061880.out <==
+2020-06-05 14:01:05.307 | INFO     | eval:evaluate:87 - Accuracy score: 0.952
+2020-06-05 14:01:08.089 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.9 and 95.5, average: 95.3
+==> outputs/slurm/alphanli_25_cn_10k_standard_42.out <==
+2020-06-05 14:18:21.915 | INFO     | eval:evaluate:87 - Accuracy score: 0.952
+2020-06-05 14:18:25.611 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.9 and 95.4, average: 95.2
+==> outputs/slurm/alphanli_25_embed_all_sep_mean_0.out <==
+2020-06-05 13:57:38.073 | INFO     | eval:evaluate:87 - Accuracy score: 0.941
+2020-06-05 13:57:41.859 | INFO     | eval:evaluate:100 - 95.0 confidence interval 93.8 and 94.5, average: 94.2
+==> outputs/slurm/alphanli_25_embed_all_sep_mean_10061880.out <==
+2020-06-05 14:03:18.936 | INFO     | eval:evaluate:87 - Accuracy score: 0.944
+2020-06-05 14:03:22.611 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.0 and 94.8, average: 94.4
+==> outputs/slurm/alphanli_25_embed_all_sep_mean_42.out <==
+2020-06-05 14:06:52.858 | INFO     | eval:evaluate:87 - Accuracy score: 0.945
+2020-06-05 14:06:56.571 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.2 and 94.8, average: 94.5
+==> outputs/slurm/alphanli_25_include_answers_in_context_0.out <==
+2020-06-05 14:39:17.199 | INFO     | eval:evaluate:87 - Accuracy score: 0.947
+2020-06-05 14:39:20.907 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.3 and 95.1, average: 94.7
+==> outputs/slurm/alphanli_25_include_answers_in_context_10061880.out <==
+2020-06-05 14:08:44.667 | INFO     | eval:evaluate:87 - Accuracy score: 0.946
+2020-06-05 14:08:48.418 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.4 and 95.0, average: 94.6
+==> outputs/slurm/alphanli_25_include_answers_in_context_42.out <==
+2020-06-05 14:04:20.846 | INFO     | eval:evaluate:87 - Accuracy score: 0.951
+2020-06-05 14:04:23.550 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.8 and 95.4, average: 95.1
+==> outputs/slurm/alphanli_25_standard_0.out <==
+2020-06-05 13:24:38.709 | INFO     | eval:evaluate:87 - Accuracy score: 0.953
+2020-06-05 13:24:41.756 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.0 and 95.6, average: 95.3
+==> outputs/slurm/alphanli_25_standard_10061880.out <==
+2020-06-05 13:59:15.245 | INFO     | eval:evaluate:87 - Accuracy score: 0.952
+2020-06-05 13:59:18.920 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.8 and 95.5, average: 95.2
+==> outputs/slurm/alphanli_25_standard_42.out <==
+2020-06-05 13:25:57.622 | INFO     | eval:evaluate:87 - Accuracy score: 0.952
+2020-06-05 13:26:00.606 | INFO     | eval:evaluate:100 - 95.0 confidence interval 94.9 and 95.5, average: 95.2
+==> outputs/slurm/alphanli_90_cn_10k_embed_all_sep_mean_0.out <==
+2020-06-06 02:02:43.347 | INFO     | eval:evaluate:87 - Accuracy score: 0.955
+2020-06-06 02:02:47.122 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.2 and 95.8, average: 95.5
+==> outputs/slurm/alphanli_90_cn_10k_embed_all_sep_mean_10061880.out <==
+==> outputs/slurm/alphanli_90_cn_10k_embed_all_sep_mean_42.out <==
+2020-06-06 01:19:42.486 | INFO     | eval:evaluate:87 - Accuracy score: 0.957
+2020-06-06 01:19:46.155 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.3 and 95.9, average: 95.6
+==> outputs/slurm/alphanli_90_cn_10k_include_answers_in_context_0.out <==
+2020-06-06 01:44:16.879 | INFO     | eval:evaluate:87 - Accuracy score: 0.957
+2020-06-06 01:44:20.553 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.4 and 96.0, average: 95.7
+==> outputs/slurm/alphanli_90_cn_10k_include_answers_in_context_10061880.out <==
+2020-06-06 01:32:52.529 | INFO     | eval:evaluate:87 - Accuracy score: 0.955
+2020-06-06 01:32:55.461 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.3 and 95.9, average: 95.6
+==> outputs/slurm/alphanli_90_cn_10k_include_answers_in_context_42.out <==
+2020-06-06 01:28:40.727 | INFO     | eval:evaluate:87 - Accuracy score: 0.960
+2020-06-06 01:28:43.633 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.7 and 96.3, average: 96.0
+==> outputs/slurm/alphanli_90_cn_10k_standard_0.out <==
+2020-06-06 00:53:40.379 | INFO     | eval:evaluate:87 - Accuracy score: 0.957
+2020-06-06 00:53:44.169 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.5 and 96.0, average: 95.7
+==> outputs/slurm/alphanli_90_cn_10k_standard_10061880.out <==
+2020-06-06 01:47:53.754 | INFO     | eval:evaluate:87 - Accuracy score: 0.960
+2020-06-06 01:47:57.877 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.6 and 96.3, average: 96.0
+==> outputs/slurm/alphanli_90_cn_10k_standard_42.out <==
+2020-06-06 01:41:07.109 | INFO     | eval:evaluate:87 - Accuracy score: 0.958
+2020-06-06 01:41:10.845 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.5 and 96.1, average: 95.8
+==> outputs/slurm/alphanli_90_embed_all_sep_mean_0.out <==
+2020-06-05 21:38:26.323 | INFO     | eval:evaluate:87 - Accuracy score: 0.955
+2020-06-05 21:38:30.018 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.3 and 95.8, average: 95.5
+==> outputs/slurm/alphanli_90_embed_all_sep_mean_10061880.out <==
+2020-06-06 00:01:24.973 | INFO     | eval:evaluate:87 - Accuracy score: 0.954
+2020-06-06 00:01:29.018 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.2 and 95.8, average: 95.4
+==> outputs/slurm/alphanli_90_embed_all_sep_mean_42.out <==
+2020-06-05 23:44:19.916 | INFO     | eval:evaluate:87 - Accuracy score: 0.957
+2020-06-05 23:44:23.578 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.4 and 96.0, average: 95.7
+==> outputs/slurm/alphanli_90_include_answers_in_context_0.out <==
+2020-06-05 21:26:19.746 | INFO     | eval:evaluate:87 - Accuracy score: 0.958
+2020-06-05 21:26:23.434 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.5 and 96.1, average: 95.8
+==> outputs/slurm/alphanli_90_include_answers_in_context_10061880.out <==
+==> outputs/slurm/alphanli_90_include_answers_in_context_42.out <==
+2020-06-05 22:04:44.481 | INFO     | eval:evaluate:87 - Accuracy score: 0.958
+2020-06-05 22:04:48.221 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.5 and 96.1, average: 95.8
+==> outputs/slurm/alphanli_90_standard_0.out <==
+2020-06-06 03:22:47.393 | INFO     | eval:evaluate:87 - Accuracy score: 0.959
+2020-06-06 03:22:51.109 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.6 and 96.1, average: 95.9
+==> outputs/slurm/alphanli_90_standard_10061880.out <==
+2020-06-05 19:28:05.750 | INFO     | eval:evaluate:87 - Accuracy score: 0.960
+2020-06-05 19:28:08.212 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.6 and 96.3, average: 96.0
+==> outputs/slurm/alphanli_90_standard_42.out <==
+2020-06-05 19:22:47.966 | INFO     | eval:evaluate:87 - Accuracy score: 0.960
+2020-06-05 19:22:50.765 | INFO     | eval:evaluate:100 - 95.0 confidence interval 95.7 and 96.3, average: 96.0
+==> outputs/slurm/hellaswag_25_cn_10k_embed_all_sep_mean_0.out <==
+2020-06-10 12:28:00.747 | INFO     | eval:evaluate:87 - Accuracy score: 0.447
+2020-06-10 12:28:01.600 | INFO     | eval:evaluate:100 - 95.0 confidence interval 43.4 and 46.3, average: 44.7
+==> outputs/slurm/hellaswag_25_cn_10k_embed_all_sep_mean_10061880.out <==
+2020-06-10 10:46:53.873 | INFO     | eval:evaluate:87 - Accuracy score: 0.435
+2020-06-10 10:46:54.723 | INFO     | eval:evaluate:100 - 95.0 confidence interval 41.9 and 45.0, average: 43.5
+==> outputs/slurm/hellaswag_25_cn_10k_embed_all_sep_mean_42.out <==
+2020-06-10 10:44:22.057 | INFO     | eval:evaluate:87 - Accuracy score: 0.390
+2020-06-10 10:44:22.907 | INFO     | eval:evaluate:100 - 95.0 confidence interval 37.6 and 40.2, average: 39.0
+==> outputs/slurm/hellaswag_25_cn_10k_include_answers_in_context_0.out <==
+2020-06-10 10:58:49.077 | INFO     | eval:evaluate:87 - Accuracy score: 0.642
+2020-06-10 10:58:49.933 | INFO     | eval:evaluate:100 - 95.0 confidence interval 63.0 and 65.5, average: 64.2
+==> outputs/slurm/hellaswag_25_cn_10k_include_answers_in_context_10061880.out <==
+2020-06-10 11:19:42.021 | INFO     | eval:evaluate:87 - Accuracy score: 0.702
+2020-06-10 11:19:42.699 | INFO     | eval:evaluate:100 - 95.0 confidence interval 68.9 and 71.4, average: 70.2
+==> outputs/slurm/hellaswag_25_cn_10k_include_answers_in_context_42.out <==
+2020-06-10 10:49:28.597 | INFO     | eval:evaluate:87 - Accuracy score: 0.635
+2020-06-10 10:49:29.457 | INFO     | eval:evaluate:100 - 95.0 confidence interval 61.9 and 64.8, average: 63.4
+==> outputs/slurm/hellaswag_25_cn_10k_standard_0.out <==
+2020-06-10 10:15:04.503 | INFO     | eval:evaluate:87 - Accuracy score: 0.690
+2020-06-10 10:15:05.455 | INFO     | eval:evaluate:100 - 95.0 confidence interval 67.6 and 70.5, average: 69.1
+==> outputs/slurm/hellaswag_25_cn_10k_standard_10061880.out <==
+2020-06-10 10:08:20.213 | INFO     | eval:evaluate:87 - Accuracy score: 0.718
+2020-06-10 10:08:21.070 | INFO     | eval:evaluate:100 - 95.0 confidence interval 70.7 and 72.9, average: 71.8
+==> outputs/slurm/hellaswag_25_cn_10k_standard_42.out <==
+2020-06-10 10:10:08.349 | INFO     | eval:evaluate:87 - Accuracy score: 0.698
+2020-06-10 10:10:08.936 | INFO     | eval:evaluate:100 - 95.0 confidence interval 68.2 and 71.0, average: 69.7
+==> outputs/slurm/hellaswag_25_embed_all_sep_mean_0.out <==
+2020-06-10 10:24:35.533 | INFO     | eval:evaluate:87 - Accuracy score: 0.449
+2020-06-10 10:24:36.385 | INFO     | eval:evaluate:100 - 95.0 confidence interval 43.3 and 46.7, average: 44.8
+==> outputs/slurm/hellaswag_25_embed_all_sep_mean_10061880.out <==
+2020-06-10 09:59:08.104 | INFO     | eval:evaluate:87 - Accuracy score: 0.457
+2020-06-10 09:59:08.729 | INFO     | eval:evaluate:100 - 95.0 confidence interval 43.8 and 46.9, average: 45.6
+==> outputs/slurm/hellaswag_25_embed_all_sep_mean_42.out <==
+2020-06-10 10:30:49.922 | INFO     | eval:evaluate:87 - Accuracy score: 0.436
+2020-06-10 10:30:50.773 | INFO     | eval:evaluate:100 - 95.0 confidence interval 42.2 and 45.0, average: 43.5
+==> outputs/slurm/hellaswag_25_include_answers_in_context_0.out <==
+2020-06-10 10:09:06.030 | INFO     | eval:evaluate:87 - Accuracy score: 0.624
+2020-06-10 10:09:06.885 | INFO     | eval:evaluate:100 - 95.0 confidence interval 61.0 and 63.8, average: 62.3
+==> outputs/slurm/hellaswag_25_include_answers_in_context_10061880.out <==
+2020-06-10 10:04:25.162 | INFO     | eval:evaluate:87 - Accuracy score: 0.696
+2020-06-10 10:04:26.012 | INFO     | eval:evaluate:100 - 95.0 confidence interval 68.3 and 71.0, average: 69.6
+==> outputs/slurm/hellaswag_25_include_answers_in_context_42.out <==
+2020-06-10 10:08:39.550 | INFO     | eval:evaluate:87 - Accuracy score: 0.699
+2020-06-10 10:08:40.450 | INFO     | eval:evaluate:100 - 95.0 confidence interval 68.3 and 71.3, average: 69.8
+==> outputs/slurm/hellaswag_25_standard_0.out <==
+2020-06-10 09:21:55.802 | INFO     | eval:evaluate:87 - Accuracy score: 0.729
+2020-06-10 09:21:56.486 | INFO     | eval:evaluate:100 - 95.0 confidence interval 71.5 and 74.2, average: 72.9
+==> outputs/slurm/hellaswag_25_standard_10061880.out <==
+2020-06-10 09:20:20.320 | INFO     | eval:evaluate:87 - Accuracy score: 0.725
+2020-06-10 09:20:21.187 | INFO     | eval:evaluate:100 - 95.0 confidence interval 71.3 and 73.8, average: 72.5
+==> outputs/slurm/hellaswag_25_standard_42.out <==
+2020-06-10 09:22:34.735 | INFO     | eval:evaluate:87 - Accuracy score: 0.741
+2020-06-10 09:22:35.388 | INFO     | eval:evaluate:100 - 95.0 confidence interval 73.0 and 75.2, average: 74.0
+==> outputs/slurm/hellaswag_90_cn_10k_embed_all_sep_mean_0.out <==
+2020-06-10 18:33:02.273 | INFO     | eval:evaluate:87 - Accuracy score: 0.534
+2020-06-10 18:33:02.910 | INFO     | eval:evaluate:100 - 95.0 confidence interval 52.0 and 55.2, average: 53.4
+==> outputs/slurm/hellaswag_90_cn_10k_embed_all_sep_mean_10061880.out <==
+2020-06-10 19:06:35.300 | INFO     | eval:evaluate:87 - Accuracy score: 0.537
+2020-06-10 19:06:36.164 | INFO     | eval:evaluate:100 - 95.0 confidence interval 52.1 and 55.2, average: 53.7
+==> outputs/slurm/hellaswag_90_cn_10k_embed_all_sep_mean_42.out <==
+2020-06-10 18:06:07.728 | INFO     | eval:evaluate:87 - Accuracy score: 0.514
+2020-06-10 18:06:08.699 | INFO     | eval:evaluate:100 - 95.0 confidence interval 50.0 and 52.6, average: 51.3
+==> outputs/slurm/hellaswag_90_cn_10k_include_answers_in_context_0.out <==
+2020-06-10 18:18:09.182 | INFO     | eval:evaluate:87 - Accuracy score: 0.883
+2020-06-10 18:18:10.054 | INFO     | eval:evaluate:100 - 95.0 confidence interval 87.4 and 89.3, average: 88.2
+==> outputs/slurm/hellaswag_90_cn_10k_include_answers_in_context_10061880.out <==
+2020-06-10 18:26:29.129 | INFO     | eval:evaluate:87 - Accuracy score: 0.883
+2020-06-10 18:26:30.014 | INFO     | eval:evaluate:100 - 95.0 confidence interval 87.3 and 89.1, average: 88.3
+==> outputs/slurm/hellaswag_90_cn_10k_include_answers_in_context_42.out <==
+2020-06-10 18:21:55.530 | INFO     | eval:evaluate:87 - Accuracy score: 0.878
+2020-06-10 18:21:56.405 | INFO     | eval:evaluate:100 - 95.0 confidence interval 87.0 and 88.8, average: 87.8
+==> outputs/slurm/hellaswag_90_cn_10k_standard_0.out <==
+2020-06-10 15:57:47.123 | INFO     | eval:evaluate:87 - Accuracy score: 0.895
+2020-06-10 15:57:47.986 | INFO     | eval:evaluate:100 - 95.0 confidence interval 88.6 and 90.4, average: 89.5
+==> outputs/slurm/hellaswag_90_cn_10k_standard_10061880.out <==
+2020-06-10 16:52:06.419 | INFO     | eval:evaluate:87 - Accuracy score: 0.894
+2020-06-10 16:52:07.385 | INFO     | eval:evaluate:100 - 95.0 confidence interval 88.5 and 90.4, average: 89.4
+==> outputs/slurm/hellaswag_90_cn_10k_standard_42.out <==
+2020-06-10 17:15:41.671 | INFO     | eval:evaluate:87 - Accuracy score: 0.886
+2020-06-10 17:15:42.314 | INFO     | eval:evaluate:100 - 95.0 confidence interval 87.6 and 89.4, average: 88.6
+==> outputs/slurm/hellaswag_90_embed_all_sep_mean_0.out <==
+2020-06-10 14:27:38.012 | INFO     | eval:evaluate:87 - Accuracy score: 0.534
+2020-06-10 14:27:38.876 | INFO     | eval:evaluate:100 - 95.0 confidence interval 52.1 and 55.1, average: 53.5
+==> outputs/slurm/hellaswag_90_embed_all_sep_mean_10061880.out <==
+2020-06-10 16:04:19.658 | INFO     | eval:evaluate:87 - Accuracy score: 0.516
+2020-06-10 16:04:20.515 | INFO     | eval:evaluate:100 - 95.0 confidence interval 49.9 and 53.2, average: 51.6
+==> outputs/slurm/hellaswag_90_embed_all_sep_mean_42.out <==
+2020-06-10 17:58:48.762 | INFO     | eval:evaluate:87 - Accuracy score: 0.528
+2020-06-10 17:58:49.612 | INFO     | eval:evaluate:100 - 95.0 confidence interval 50.9 and 54.0, average: 52.6
+==> outputs/slurm/hellaswag_90_include_answers_in_context_0.out <==
+2020-06-10 14:16:53.958 | INFO     | eval:evaluate:87 - Accuracy score: 0.886
+2020-06-10 14:16:54.812 | INFO     | eval:evaluate:100 - 95.0 confidence interval 87.6 and 89.4, average: 88.5
+==> outputs/slurm/hellaswag_90_include_answers_in_context_10061880.out <==
+2020-06-10 14:41:15.530 | INFO     | eval:evaluate:87 - Accuracy score: 0.885
+2020-06-10 14:41:16.395 | INFO     | eval:evaluate:100 - 95.0 confidence interval 87.5 and 89.5, average: 88.5
+==> outputs/slurm/hellaswag_90_include_answers_in_context_42.out <==
+2020-06-10 14:24:01.554 | INFO     | eval:evaluate:87 - Accuracy score: 0.886
+2020-06-10 14:24:02.421 | INFO     | eval:evaluate:100 - 95.0 confidence interval 87.7 and 89.5, average: 88.6
+==> outputs/slurm/hellaswag_90_standard_0.out <==
+2020-06-10 14:32:06.539 | INFO     | eval:evaluate:87 - Accuracy score: 0.892
+2020-06-10 14:32:07.450 | INFO     | eval:evaluate:100 - 95.0 confidence interval 88.2 and 89.9, average: 89.1
+==> outputs/slurm/hellaswag_90_standard_10061880.out <==
+2020-06-10 13:30:17.145 | INFO     | eval:evaluate:87 - Accuracy score: 0.888
+2020-06-10 13:30:18.040 | INFO     | eval:evaluate:100 - 95.0 confidence interval 87.6 and 89.7, average: 88.8
+==> outputs/slurm/hellaswag_90_standard_42.out <==
+2020-06-10 14:40:14.170 | INFO     | eval:evaluate:87 - Accuracy score: 0.900
+2020-06-10 14:40:14.731 | INFO     | eval:evaluate:100 - 95.0 confidence interval 89.1 and 91.0, average: 90.0
+==> outputs/slurm/physicaliqa_25_cn_10k_embed_all_sep_mean_0.out <==
+2020-06-05 21:38:32.243 | INFO     | eval:evaluate:87 - Accuracy score: 0.636
+2020-06-05 21:38:32.614 | INFO     | eval:evaluate:100 - 95.0 confidence interval 62.1 and 65.6, average: 63.7
+==> outputs/slurm/physicaliqa_25_cn_10k_embed_all_sep_mean_10061880.out <==
+2020-06-05 23:14:20.754 | INFO     | eval:evaluate:87 - Accuracy score: 0.646
+2020-06-05 23:14:21.125 | INFO     | eval:evaluate:100 - 95.0 confidence interval 62.1 and 67.0, average: 64.6
+==> outputs/slurm/physicaliqa_25_cn_10k_embed_all_sep_mean_42.out <==
+2020-06-05 21:41:59.348 | INFO     | eval:evaluate:87 - Accuracy score: 0.684
+2020-06-05 21:41:59.745 | INFO     | eval:evaluate:100 - 95.0 confidence interval 66.4 and 70.2, average: 68.4
+==> outputs/slurm/physicaliqa_25_cn_10k_include_answers_in_context_0.out <==
+2020-06-05 21:32:24.663 | INFO     | eval:evaluate:87 - Accuracy score: 0.650
+2020-06-05 21:32:24.949 | INFO     | eval:evaluate:100 - 95.0 confidence interval 62.7 and 67.3, average: 65.1
+==> outputs/slurm/physicaliqa_25_cn_10k_include_answers_in_context_10061880.out <==
+2020-06-05 21:22:58.125 | INFO     | eval:evaluate:87 - Accuracy score: 0.661
+2020-06-05 21:22:58.554 | INFO     | eval:evaluate:100 - 95.0 confidence interval 63.5 and 67.9, average: 65.9
+==> outputs/slurm/physicaliqa_25_cn_10k_include_answers_in_context_42.out <==
+2020-06-05 21:23:45.154 | INFO     | eval:evaluate:87 - Accuracy score: 0.654
+2020-06-05 21:23:45.525 | INFO     | eval:evaluate:100 - 95.0 confidence interval 62.5 and 67.0, average: 65.2
+==> outputs/slurm/physicaliqa_25_cn_10k_standard_0.out <==
+2020-06-05 20:50:54.645 | INFO     | eval:evaluate:87 - Accuracy score: 0.724
+2020-06-05 20:50:55.013 | INFO     | eval:evaluate:100 - 95.0 confidence interval 70.6 and 74.5, average: 72.4
+==> outputs/slurm/physicaliqa_25_cn_10k_standard_10061880.out <==
+2020-06-05 20:56:31.284 | INFO     | eval:evaluate:87 - Accuracy score: 0.707
+2020-06-05 20:56:31.698 | INFO     | eval:evaluate:100 - 95.0 confidence interval 68.3 and 72.6, average: 70.5
+==> outputs/slurm/physicaliqa_25_cn_10k_standard_42.out <==
+2020-06-05 20:51:58.991 | INFO     | eval:evaluate:87 - Accuracy score: 0.704
+2020-06-05 20:51:59.283 | INFO     | eval:evaluate:100 - 95.0 confidence interval 68.1 and 72.6, average: 70.3
+==> outputs/slurm/physicaliqa_25_embed_all_sep_mean_0.out <==
+2020-06-05 20:02:33.262 | INFO     | eval:evaluate:87 - Accuracy score: 0.707
+2020-06-05 20:02:33.557 | INFO     | eval:evaluate:100 - 95.0 confidence interval 68.7 and 72.7, average: 70.6
+==> outputs/slurm/physicaliqa_25_embed_all_sep_mean_10061880.out <==
+2020-06-05 20:09:28.232 | INFO     | eval:evaluate:87 - Accuracy score: 0.671
+2020-06-05 20:09:28.604 | INFO     | eval:evaluate:100 - 95.0 confidence interval 64.3 and 69.4, average: 66.9
+==> outputs/slurm/physicaliqa_25_embed_all_sep_mean_42.out <==
+2020-06-05 20:05:06.585 | INFO     | eval:evaluate:87 - Accuracy score: 0.689
+2020-06-05 20:05:06.953 | INFO     | eval:evaluate:100 - 95.0 confidence interval 67.1 and 71.1, average: 68.8
+==> outputs/slurm/physicaliqa_25_include_answers_in_context_0.out <==
+2020-06-05 19:54:09.881 | INFO     | eval:evaluate:87 - Accuracy score: 0.661
+2020-06-05 19:54:10.248 | INFO     | eval:evaluate:100 - 95.0 confidence interval 63.4 and 68.4, average: 65.9
+==> outputs/slurm/physicaliqa_25_include_answers_in_context_10061880.out <==
+2020-06-05 19:59:25.390 | INFO     | eval:evaluate:87 - Accuracy score: 0.542
+2020-06-05 19:59:25.799 | INFO     | eval:evaluate:100 - 95.0 confidence interval 51.8 and 56.6, average: 54.2
+==> outputs/slurm/physicaliqa_25_include_answers_in_context_42.out <==
+2020-06-05 19:59:24.280 | INFO     | eval:evaluate:87 - Accuracy score: 0.572
+2020-06-05 19:59:24.569 | INFO     | eval:evaluate:100 - 95.0 confidence interval 54.6 and 58.8, average: 57.0
+==> outputs/slurm/physicaliqa_25_standard_0.out <==
+2020-06-05 19:40:11.860 | INFO     | eval:evaluate:87 - Accuracy score: 0.737
+2020-06-05 19:40:12.146 | INFO     | eval:evaluate:100 - 95.0 confidence interval 71.5 and 75.6, average: 73.8
+==> outputs/slurm/physicaliqa_25_standard_10061880.out <==
+2020-06-05 19:44:15.502 | INFO     | eval:evaluate:87 - Accuracy score: 0.496
+2020-06-05 19:44:15.923 | INFO     | eval:evaluate:100 - 95.0 confidence interval 46.7 and 52.0, average: 49.6
+==> outputs/slurm/physicaliqa_25_standard_42.out <==
+2020-06-05 19:48:14.690 | INFO     | eval:evaluate:87 - Accuracy score: 0.710
+2020-06-05 19:48:15.060 | INFO     | eval:evaluate:100 - 95.0 confidence interval 69.0 and 72.7, average: 70.9
+==> outputs/slurm/physicaliqa_90_cn_10k_embed_all_sep_mean_0.out <==
+2020-06-06 00:37:14.110 | INFO     | eval:evaluate:87 - Accuracy score: 0.759
+2020-06-06 00:37:14.526 | INFO     | eval:evaluate:100 - 95.0 confidence interval 74.0 and 77.6, average: 75.9
+==> outputs/slurm/physicaliqa_90_cn_10k_embed_all_sep_mean_10061880.out <==
+2020-06-06 00:55:59.627 | INFO     | eval:evaluate:87 - Accuracy score: 0.767
+2020-06-06 00:55:59.997 | INFO     | eval:evaluate:100 - 95.0 confidence interval 75.2 and 78.9, average: 76.8
+==> outputs/slurm/physicaliqa_90_cn_10k_embed_all_sep_mean_42.out <==
+2020-06-06 01:09:35.470 | INFO     | eval:evaluate:87 - Accuracy score: 0.749
+2020-06-06 01:09:35.839 | INFO     | eval:evaluate:100 - 95.0 confidence interval 72.9 and 76.9, average: 75.0
+==> outputs/slurm/physicaliqa_90_cn_10k_include_answers_in_context_0.out <==
+2020-06-06 00:50:44.022 | INFO     | eval:evaluate:87 - Accuracy score: 0.766
+2020-06-06 00:50:44.394 | INFO     | eval:evaluate:100 - 95.0 confidence interval 74.9 and 78.5, average: 76.7
+==> outputs/slurm/physicaliqa_90_cn_10k_include_answers_in_context_10061880.out <==
+2020-06-06 00:32:01.075 | INFO     | eval:evaluate:87 - Accuracy score: 0.766
+2020-06-06 00:32:01.451 | INFO     | eval:evaluate:100 - 95.0 confidence interval 74.4 and 78.4, average: 76.5
+==> outputs/slurm/physicaliqa_90_cn_10k_include_answers_in_context_42.out <==
+2020-06-06 00:17:46.164 | INFO     | eval:evaluate:87 - Accuracy score: 0.751
+2020-06-06 00:17:46.536 | INFO     | eval:evaluate:100 - 95.0 confidence interval 72.8 and 77.0, average: 75.0
+==> outputs/slurm/physicaliqa_90_cn_10k_standard_0.out <==
+2020-06-05 23:23:54.893 | INFO     | eval:evaluate:87 - Accuracy score: 0.775
+2020-06-05 23:23:55.262 | INFO     | eval:evaluate:100 - 95.0 confidence interval 75.4 and 79.3, average: 77.5
+==> outputs/slurm/physicaliqa_90_cn_10k_standard_10061880.out <==
+2020-06-05 23:21:28.426 | INFO     | eval:evaluate:87 - Accuracy score: 0.767
+2020-06-05 23:21:28.720 | INFO     | eval:evaluate:100 - 95.0 confidence interval 74.3 and 78.4, average: 76.6
+==> outputs/slurm/physicaliqa_90_cn_10k_standard_42.out <==
+2020-06-05 23:16:49.380 | INFO     | eval:evaluate:87 - Accuracy score: 0.770
+2020-06-05 23:16:49.673 | INFO     | eval:evaluate:100 - 95.0 confidence interval 75.0 and 78.8, average: 76.9
+==> outputs/slurm/physicaliqa_90_embed_all_sep_mean_0.out <==
+2020-06-05 22:44:00.563 | INFO     | eval:evaluate:87 - Accuracy score: 0.486
+2020-06-05 22:44:00.928 | INFO     | eval:evaluate:100 - 95.0 confidence interval 46.6 and 50.7, average: 48.7
+==> outputs/slurm/physicaliqa_90_embed_all_sep_mean_10061880.out <==
+2020-06-05 22:57:59.855 | INFO     | eval:evaluate:87 - Accuracy score: 0.761
+2020-06-05 22:58:00.222 | INFO     | eval:evaluate:100 - 95.0 confidence interval 74.3 and 78.0, average: 76.1
+==> outputs/slurm/physicaliqa_90_embed_all_sep_mean_42.out <==
+2020-06-05 22:44:11.491 | INFO     | eval:evaluate:87 - Accuracy score: 0.731
+2020-06-05 22:44:11.856 | INFO     | eval:evaluate:100 - 95.0 confidence interval 71.4 and 75.5, average: 73.2
+==> outputs/slurm/physicaliqa_90_include_answers_in_context_0.out <==
+2020-06-05 22:34:46.599 | INFO     | eval:evaluate:87 - Accuracy score: 0.763
+2020-06-05 22:34:47.008 | INFO     | eval:evaluate:100 - 95.0 confidence interval 74.1 and 78.2, average: 76.3
+==> outputs/slurm/physicaliqa_90_include_answers_in_context_10061880.out <==
+2020-06-05 22:44:08.847 | INFO     | eval:evaluate:87 - Accuracy score: 0.770
+2020-06-05 22:44:09.235 | INFO     | eval:evaluate:100 - 95.0 confidence interval 75.0 and 78.6, average: 77.0
+==> outputs/slurm/physicaliqa_90_include_answers_in_context_42.out <==
+2020-06-05 22:31:19.902 | INFO     | eval:evaluate:87 - Accuracy score: 0.769
+2020-06-05 22:31:20.269 | INFO     | eval:evaluate:100 - 95.0 confidence interval 75.0 and 78.7, average: 76.9
+==> outputs/slurm/physicaliqa_90_standard_0.out <==
+2020-06-05 21:45:21.201 | INFO     | eval:evaluate:87 - Accuracy score: 0.734
+2020-06-05 21:45:21.482 | INFO     | eval:evaluate:100 - 95.0 confidence interval 71.5 and 75.0, average: 73.4
+==> outputs/slurm/physicaliqa_90_standard_10061880.out <==
+2020-06-05 22:13:03.435 | INFO     | eval:evaluate:87 - Accuracy score: 0.772
+2020-06-05 22:13:03.806 | INFO     | eval:evaluate:100 - 95.0 confidence interval 75.2 and 79.1, average: 77.2
+==> outputs/slurm/physicaliqa_90_standard_42.out <==
+2020-06-05 21:54:33.894 | INFO     | eval:evaluate:87 - Accuracy score: 0.769
+2020-06-05 21:54:34.261 | INFO     | eval:evaluate:100 - 95.0 confidence interval 75.0 and 78.6, average: 76.9
+==> outputs/slurm/socialiqa_25_cn_10k_embed_all_sep_mean_0.out <==
+2020-06-06 01:40:48.403 | INFO     | eval:evaluate:87 - Accuracy score: 0.758
+2020-06-06 01:40:48.967 | INFO     | eval:evaluate:100 - 95.0 confidence interval 74.0 and 77.0, average: 75.7
+==> outputs/slurm/socialiqa_25_cn_10k_embed_all_sep_mean_10061880.out <==
+2020-06-06 01:55:54.431 | INFO     | eval:evaluate:87 - Accuracy score: 0.797
+2020-06-06 01:55:54.985 | INFO     | eval:evaluate:100 - 95.0 confidence interval 78.6 and 81.2, average: 79.8
+==> outputs/slurm/socialiqa_25_cn_10k_embed_all_sep_mean_42.out <==
+2020-06-06 01:36:09.578 | INFO     | eval:evaluate:87 - Accuracy score: 0.774
+2020-06-06 01:36:10.280 | INFO     | eval:evaluate:100 - 95.0 confidence interval 76.0 and 78.8, average: 77.3
+==> outputs/slurm/socialiqa_25_cn_10k_include_answers_in_context_0.out <==
+2020-06-06 01:32:56.994 | INFO     | eval:evaluate:87 - Accuracy score: 0.797
+2020-06-06 01:32:57.700 | INFO     | eval:evaluate:100 - 95.0 confidence interval 78.0 and 80.8, average: 79.5
+==> outputs/slurm/socialiqa_25_cn_10k_include_answers_in_context_10061880.out <==
+2020-06-06 01:58:50.117 | INFO     | eval:evaluate:87 - Accuracy score: 0.801
+2020-06-06 01:58:50.901 | INFO     | eval:evaluate:100 - 95.0 confidence interval 79.0 and 81.4, average: 80.1
+==> outputs/slurm/socialiqa_25_cn_10k_include_answers_in_context_42.out <==
+2020-06-06 01:46:30.939 | INFO     | eval:evaluate:87 - Accuracy score: 0.790
+2020-06-06 01:46:31.647 | INFO     | eval:evaluate:100 - 95.0 confidence interval 77.7 and 80.2, average: 79.0
+==> outputs/slurm/socialiqa_25_cn_10k_standard_0.out <==
+2020-06-06 00:56:21.583 | INFO     | eval:evaluate:87 - Accuracy score: 0.805
+2020-06-06 00:56:22.284 | INFO     | eval:evaluate:100 - 95.0 confidence interval 79.2 and 81.6, average: 80.5
+==> outputs/slurm/socialiqa_25_cn_10k_standard_10061880.out <==
+2020-06-06 01:10:21.104 | INFO     | eval:evaluate:87 - Accuracy score: 0.805
+2020-06-06 01:10:21.830 | INFO     | eval:evaluate:100 - 95.0 confidence interval 79.4 and 81.9, average: 80.6
+==> outputs/slurm/socialiqa_25_cn_10k_standard_42.out <==
+2020-06-06 00:59:02.018 | INFO     | eval:evaluate:87 - Accuracy score: 0.813
+2020-06-06 00:59:02.739 | INFO     | eval:evaluate:100 - 95.0 confidence interval 79.9 and 82.7, average: 81.3
+==> outputs/slurm/socialiqa_25_embed_all_sep_mean_0.out <==
+2020-06-06 00:01:58.261 | INFO     | eval:evaluate:87 - Accuracy score: 0.785
+2020-06-06 00:01:58.816 | INFO     | eval:evaluate:100 - 95.0 confidence interval 77.2 and 79.8, average: 78.4
+==> outputs/slurm/socialiqa_25_embed_all_sep_mean_10061880.out <==
+2020-06-06 00:17:08.971 | INFO     | eval:evaluate:87 - Accuracy score: 0.798
+2020-06-06 00:17:09.752 | INFO     | eval:evaluate:100 - 95.0 confidence interval 78.3 and 81.0, average: 79.8
+==> outputs/slurm/socialiqa_25_embed_all_sep_mean_42.out <==
+2020-06-06 00:04:33.967 | INFO     | eval:evaluate:87 - Accuracy score: 0.784
+2020-06-06 00:04:34.665 | INFO     | eval:evaluate:100 - 95.0 confidence interval 77.0 and 79.9, average: 78.5
+==> outputs/slurm/socialiqa_25_include_answers_in_context_0.out <==
+2020-06-05 23:56:37.923 | INFO     | eval:evaluate:87 - Accuracy score: 0.796
+2020-06-05 23:56:38.629 | INFO     | eval:evaluate:100 - 95.0 confidence interval 78.4 and 81.0, average: 79.5
+==> outputs/slurm/socialiqa_25_include_answers_in_context_10061880.out <==
+2020-06-05 23:58:43.276 | INFO     | eval:evaluate:87 - Accuracy score: 0.801
+2020-06-05 23:58:43.979 | INFO     | eval:evaluate:100 - 95.0 confidence interval 78.9 and 81.3, average: 80.1
+==> outputs/slurm/socialiqa_25_include_answers_in_context_42.out <==
+2020-06-06 00:00:44.377 | INFO     | eval:evaluate:87 - Accuracy score: 0.791
+2020-06-06 00:00:44.945 | INFO     | eval:evaluate:100 - 95.0 confidence interval 77.9 and 80.5, average: 79.1
+==> outputs/slurm/socialiqa_25_standard_0.out <==
+2020-06-05 23:19:19.576 | INFO     | eval:evaluate:87 - Accuracy score: 0.807
+2020-06-05 23:19:20.279 | INFO     | eval:evaluate:100 - 95.0 confidence interval 79.4 and 81.8, average: 80.7
+==> outputs/slurm/socialiqa_25_standard_10061880.out <==
+2020-06-05 23:35:47.356 | INFO     | eval:evaluate:87 - Accuracy score: 0.801
+2020-06-05 23:35:48.142 | INFO     | eval:evaluate:100 - 95.0 confidence interval 78.9 and 81.8, average: 80.2
+==> outputs/slurm/socialiqa_25_standard_42.out <==
+2020-06-05 23:37:45.239 | INFO     | eval:evaluate:87 - Accuracy score: 0.802
+2020-06-05 23:37:45.941 | INFO     | eval:evaluate:100 - 95.0 confidence interval 79.0 and 81.4, average: 80.2
+==> outputs/slurm/socialiqa_90_cn_10k_embed_all_sep_mean_0.out <==
+2020-06-06 04:47:21.788 | INFO     | eval:evaluate:87 - Accuracy score: 0.814
+2020-06-06 04:47:22.304 | INFO     | eval:evaluate:100 - 95.0 confidence interval 80.2 and 82.5, average: 81.4
+==> outputs/slurm/socialiqa_90_cn_10k_embed_all_sep_mean_10061880.out <==
+2020-06-06 05:06:48.453 | INFO     | eval:evaluate:87 - Accuracy score: 0.817
+2020-06-06 05:06:49.148 | INFO     | eval:evaluate:100 - 95.0 confidence interval 80.4 and 82.9, average: 81.7
+==> outputs/slurm/socialiqa_90_cn_10k_embed_all_sep_mean_42.out <==
+2020-06-06 04:52:46.075 | INFO     | eval:evaluate:87 - Accuracy score: 0.814
+2020-06-06 04:52:46.801 | INFO     | eval:evaluate:100 - 95.0 confidence interval 80.2 and 82.7, average: 81.4
+==> outputs/slurm/socialiqa_90_cn_10k_include_answers_in_context_0.out <==
+2020-06-06 04:58:04.741 | INFO     | eval:evaluate:87 - Accuracy score: 0.819
+2020-06-06 04:58:05.226 | INFO     | eval:evaluate:100 - 95.0 confidence interval 80.7 and 83.0, average: 81.8
+==> outputs/slurm/socialiqa_90_cn_10k_include_answers_in_context_10061880.out <==
+2020-06-06 04:39:27.217 | INFO     | eval:evaluate:87 - Accuracy score: 0.820
+2020-06-06 04:39:27.914 | INFO     | eval:evaluate:100 - 95.0 confidence interval 81.2 and 83.4, average: 82.1
+==> outputs/slurm/socialiqa_90_cn_10k_include_answers_in_context_42.out <==
+2020-06-06 04:36:00.088 | INFO     | eval:evaluate:87 - Accuracy score: 0.817
+2020-06-06 04:36:00.790 | INFO     | eval:evaluate:100 - 95.0 confidence interval 80.5 and 82.9, average: 81.7
+==> outputs/slurm/socialiqa_90_cn_10k_standard_0.out <==
+2020-06-06 03:55:13.607 | INFO     | eval:evaluate:87 - Accuracy score: 0.826
+2020-06-06 03:55:14.309 | INFO     | eval:evaluate:100 - 95.0 confidence interval 81.2 and 83.6, average: 82.5
+==> outputs/slurm/socialiqa_90_cn_10k_standard_10061880.out <==
+2020-06-06 03:55:12.450 | INFO     | eval:evaluate:87 - Accuracy score: 0.828
+2020-06-06 03:55:12.990 | INFO     | eval:evaluate:100 - 95.0 confidence interval 81.8 and 84.3, average: 83.0
+==> outputs/slurm/socialiqa_90_cn_10k_standard_42.out <==
+2020-06-06 04:05:39.432 | INFO     | eval:evaluate:87 - Accuracy score: 0.823
+2020-06-06 04:05:40.133 | INFO     | eval:evaluate:100 - 95.0 confidence interval 81.2 and 83.6, average: 82.3
+==> outputs/slurm/socialiqa_90_embed_all_sep_mean_0.out <==
+2020-06-06 03:15:19.994 | INFO     | eval:evaluate:87 - Accuracy score: 0.321
+2020-06-06 03:15:20.697 | INFO     | eval:evaluate:100 - 95.0 confidence interval 30.2 and 33.6, average: 32.0
+==> outputs/slurm/socialiqa_90_embed_all_sep_mean_10061880.out <==
+2020-06-06 03:26:19.293 | INFO     | eval:evaluate:87 - Accuracy score: 0.822
+2020-06-06 03:26:20.084 | INFO     | eval:evaluate:100 - 95.0 confidence interval 81.0 and 83.4, average: 82.3
+==> outputs/slurm/socialiqa_90_embed_all_sep_mean_42.out <==
+2020-06-06 03:11:46.278 | INFO     | eval:evaluate:87 - Accuracy score: 0.817
+2020-06-06 03:11:46.981 | INFO     | eval:evaluate:100 - 95.0 confidence interval 80.6 and 83.0, average: 81.7
+==> outputs/slurm/socialiqa_90_include_answers_in_context_0.out <==
+2020-06-06 03:27:09.450 | INFO     | eval:evaluate:87 - Accuracy score: 0.823
+2020-06-06 03:27:10.154 | INFO     | eval:evaluate:100 - 95.0 confidence interval 81.1 and 83.2, average: 82.2
+==> outputs/slurm/socialiqa_90_include_answers_in_context_10061880.out <==
+2020-06-06 03:19:01.884 | INFO     | eval:evaluate:87 - Accuracy score: 0.830
+2020-06-06 03:19:02.585 | INFO     | eval:evaluate:100 - 95.0 confidence interval 81.6 and 84.3, average: 83.1
+==> outputs/slurm/socialiqa_90_include_answers_in_context_42.out <==
+2020-06-06 02:56:42.907 | INFO     | eval:evaluate:87 - Accuracy score: 0.823
+2020-06-06 02:56:43.609 | INFO     | eval:evaluate:100 - 95.0 confidence interval 81.0 and 83.4, average: 82.3
+==> outputs/slurm/socialiqa_90_standard_0.out <==
+2020-06-06 02:18:20.190 | INFO     | eval:evaluate:87 - Accuracy score: 0.827
+2020-06-06 02:18:20.890 | INFO     | eval:evaluate:100 - 95.0 confidence interval 81.4 and 83.9, average: 82.7
+==> outputs/slurm/socialiqa_90_standard_10061880.out <==
+2020-06-06 02:32:50.001 | INFO     | eval:evaluate:87 - Accuracy score: 0.824
+2020-06-06 02:32:50.786 | INFO     | eval:evaluate:100 - 95.0 confidence interval 81.4 and 83.7, average: 82.5
+==> outputs/slurm/socialiqa_90_standard_42.out <==
+2020-06-06 02:34:04.059 | INFO     | eval:evaluate:87 - Accuracy score: 0.827
+2020-06-06 02:34:04.845 | INFO     | eval:evaluate:100 - 95.0 confidence interval 81.3 and 84.0, average: 82.8
