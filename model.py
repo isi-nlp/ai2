@@ -124,8 +124,8 @@ class Classifier(pl.LightningModule):
         return {"input_ids": results["input_ids"],
                 "attention_mask": results["attention_mask"],
                 "token_type_ids": results["token_type_ids"],
-                "labels": torch.LongTensor([e["label"] for e in examples]) if "label" in examples[0] else None,
-                "num_choice": torch.LongTensor([num_choice] * batch_size)}
+                "labels": torch.LongTensor([[e["label"] for e in examples]] * num_choice) if "label" in examples[0] else None,
+                "num_choice": torch.LongTensor([[num_choice] * batch_size] * num_choice)}
 
     # Data loader methods to return train and validation data sets
     def train_dataloader(self):
@@ -149,7 +149,7 @@ class Classifier(pl.LightningModule):
         logits = batch_parts_outputs["out"]
         num_choice = batch_parts_outputs["num_choice"].flatten()[0].item()
         logits = logits.reshape(-1, num_choice)
-        loss = self.loss(logits, batch_parts_outputs["labels"])
+        loss = self.loss(logits, batch_parts_outputs["labels"][0])
         return {"loss": loss,
                 "log": {"train_loss": loss}}
 
@@ -163,7 +163,7 @@ class Classifier(pl.LightningModule):
         logits = batch_parts_outputs["out"]
         num_choice = batch_parts_outputs["num_choice"].flatten()[0].item()
         logits = logits.reshape(-1, num_choice)
-        loss = self.loss(logits, batch_parts_outputs["labels"])
+        loss = self.loss(logits, batch_parts_outputs["labels"][0])
         return {"val_loss": loss,
                 "val_batch_logits": logits,
                 "val_batch_labels": batch_parts_outputs["labels"]}
