@@ -1,4 +1,3 @@
-import csv
 with open('results.txt', 'r') as r:
     lines = r.readlines()
 
