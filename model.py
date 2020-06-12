@@ -1,3 +1,4 @@
+import itertools
 from itertools import cycle
 from pathlib import Path
 from typing import Union
@@ -43,7 +44,7 @@ class Classifier(pl.LightningModule):
         self.classifier = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
         self.classifier.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
         self.classifier.bias.data.zero_()
-        self.loss = nn.CrossEntropyLoss(ignore_index=-1, reduction="mean")
+        self.loss = nn.CrossEntropyLoss(ignore_index=-1, reduction="none")
 
     # Given a batch output the it's forward result
     def forward(self, batch):
@@ -110,22 +111,26 @@ class Classifier(pl.LightningModule):
     # Collate function used by data loader objects
     def collate(self, examples):
 
-        batch_size = len(examples)
-        num_choice = len(examples[0]["text"])
+        num_choices = [len(example["text"]) for example in examples]
 
         pairs = [pair for example in examples for pair in example["text"]]
         results = self.tokenizer.batch_encode_plus(pairs, add_special_tokens=True,
                                                    max_length=self.hparams["max_length"], return_tensors='pt',
                                                    return_attention_masks=True, pad_to_max_length=True)
 
-        assert results["input_ids"].shape[0] == batch_size * num_choice, \
-            f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
+        assert results["input_ids"].shape[0] == sum(num_choices), \
+            f"Invalid shapes {results['input_ids'].shape} {sum(num_choices)}"
 
-        return {"input_ids": results["input_ids"],
-                "attention_mask": results["attention_mask"],
-                "token_type_ids": results["token_type_ids"],
-                "labels": torch.LongTensor([[e["label"] for e in examples]] * num_choice) if "label" in examples[0] else None,
-                "num_choice": torch.LongTensor([[num_choice] * batch_size] * num_choice)}
+        return {
+            "input_ids": results["input_ids"],
+            "attention_mask": results["attention_mask"],
+            "token_type_ids": results["token_type_ids"],
+            "labels": torch.LongTensor(list(itertools.chain.from_iterable(
+                [[label] + [-1] * (num_choice - 1) for label, num_choice in
+                 zip([e["label"] for e in examples], num_choices)]))) if "label" in examples[0] else None,
+            "num_choice": torch.LongTensor(
+                list(itertools.chain.from_iterable([[i] + [-1] * (i - 1) for i in num_choices])))
+        }
 
     # Data loader methods to return train and validation data sets
     def train_dataloader(self):
@@ -147,9 +152,11 @@ class Classifier(pl.LightningModule):
 
     def training_step_end(self, batch_parts_outputs):
         logits = batch_parts_outputs["out"]
-        num_choice = batch_parts_outputs["num_choice"].flatten()[0].item()
-        logits = logits.reshape(-1, num_choice)
-        loss = self.loss(logits, batch_parts_outputs["labels"][0])
+        num_choices = batch_parts_outputs["num_choice"].masked_select(batch_parts_outputs["num_choice"].ne(-1))
+        labels = batch_parts_outputs["labels"].masked_select(batch_parts_outputs["labels"].ne(-1))
+        logits = logits.split(num_choices.tolist())
+        labels = labels.split(1)
+        loss = torch.stack(list(self.loss(l1.reshape(1, -1), l2) for l1, l2 in zip(logits, labels))).mean()
         return {"loss": loss,
                 "log": {"train_loss": loss}}
 
@@ -161,18 +168,21 @@ class Classifier(pl.LightningModule):
 
     def validation_step_end(self, batch_parts_outputs):
         logits = batch_parts_outputs["out"]
-        num_choice = batch_parts_outputs["num_choice"].flatten()[0].item()
-        logits = logits.reshape(-1, num_choice)
-        loss = self.loss(logits, batch_parts_outputs["labels"][0])
+        num_choices = batch_parts_outputs["num_choice"].masked_select(batch_parts_outputs["num_choice"].ne(-1))
+        labels = batch_parts_outputs["labels"].masked_select(batch_parts_outputs["labels"].ne(-1))
+        logits = logits.split(num_choices.tolist())
+        labels = labels.split(1)
+        loss = torch.stack(list(self.loss(l1.reshape(1, -1), l2) for l1, l2 in zip(logits, labels))).mean()
         return {"val_loss": loss,
                 "val_batch_logits": logits,
-                "val_batch_labels": batch_parts_outputs["labels"]}
+                "val_batch_labels": labels}
 
     def validation_epoch_end(self, outputs):
         val_loss_mean = torch.stack([o['val_loss'] for o in outputs]).mean()
-        val_logits = torch.cat([o["val_batch_logits"] for o in outputs])
-        val_labels = torch.cat([o["val_batch_labels"] for o in outputs])
-        correct = torch.sum(val_labels == torch.argmax(val_logits, dim=1))
+        val_logits = tuple(itertools.chain.from_iterable(o["val_batch_logits"] for o in outputs))
+        val_answers = torch.stack([torch.argmax(logits) for logits in val_logits])
+        val_labels = torch.cat(tuple(itertools.chain.from_iterable(o["val_batch_labels"] for o in outputs)))
+        correct = torch.sum(val_labels == val_answers)
         val_accuracy = torch.tensor(float(correct)) / (val_labels.shape[0] * 1.0)
         return {'log': {'val_loss': val_loss_mean, "val_accuracy": val_accuracy}}
 
