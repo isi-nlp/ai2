@@ -58,7 +58,7 @@ def train(config: omegaconf.Config):
         logger=tt_logger,
         checkpoint_callback=checkpoint,
         gradient_clip_val=0,
-        gpus=list(range(torch.cuda.device_count())) if torch.cuda.is_available() else None,
+        gpus=-1 if torch.cuda.is_available() else None,
         log_gpu_memory="all",
         progress_bar_refresh_rate=1,
         check_val_every_n_epoch=1,
