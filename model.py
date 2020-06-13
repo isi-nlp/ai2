@@ -184,7 +184,8 @@ class Classifier(pl.LightningModule):
         val_labels = torch.cat(tuple(itertools.chain.from_iterable(o["val_batch_labels"] for o in outputs)))
         correct = torch.sum(val_labels == val_answers)
         val_accuracy = torch.tensor(float(correct)) / (val_labels.shape[0] * 1.0)
-        return {'log': {'val_loss': val_loss_mean, "val_accuracy": val_accuracy}}
+        return {'val_loss': val_loss_mean,
+                'log': {'val_loss': val_loss_mean, "val_accuracy": val_accuracy}}
 
     def configure_optimizers(self):
         optimizer = AdamW(self.parameters(), lr=float(self.hparams["learning_rate"]),
