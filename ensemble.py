@@ -15,7 +15,7 @@ model_to_confidences = {}
 for task in tasks:
     print(f'Running ensemble for {task}')
     relevant_models = [model for model in models if task in model]
-    gold_labels_path = f'task_data/{task}-train-dev/dev-labels.lst'
+    gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
     labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
 
     # Get Accuracies
@@ -74,5 +74,5 @@ for task in tasks:
         # print('Scaled', scaled_df)
         # print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
 
-        if accuracy > 0.815:
-            print(f'{accuracy},{subset}')
+        # if accuracy > 0.815:
+        print(f'{accuracy},{subset}')
