@@ -22,7 +22,7 @@ model_to_confidences = {}
 
 for task in tasks_to_threshold.keys():
     for rs in ['10061880']:
-        print(f'Running ensemble for {task}')
+        print(f'Running ensemble for {task}, {rs}')
         relevant_models = [model for model in models if task in model and '90' in model and rs in model.split('_')[-1]]
         gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
         labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
@@ -97,6 +97,7 @@ for task in tasks_to_threshold.keys():
 
             ensemble_results[tuple(subset)]=accuracy
         best = heapq.nlargest(10, ensemble_results, key=ensemble_results.get)
+        print(ensemble_results[best[0]])
         best_performers = [m for ms in best for m in ms]
         counts = Counter(best_performers)
         print(counts.most_common())
