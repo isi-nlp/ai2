@@ -92,5 +92,5 @@ for task in tasks_to_threshold.keys():
         # print('Confidences', confidences_df)
         # print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
 
-        # if accuracy > 0.815:
-        print(f'{accuracy},{subset}')
+        if accuracy > 0.8:
+            print(f'{accuracy},{subset}')
