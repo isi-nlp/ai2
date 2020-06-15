@@ -21,7 +21,7 @@ model_to_confidences = {}
 
 for task in tasks_to_threshold.keys():
     print(f'Running ensemble for {task}')
-    relevant_models = [model for model in models if task in model and '90' in model and 'standard' in model]
+    relevant_models = [model for model in models if task in model and '90' in model]
     gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
     labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
 
@@ -94,7 +94,7 @@ for task in tasks_to_threshold.keys():
         #     print(f'{accuracy},{subset}')
 
         ensemble_results[tuple(subset)]=accuracy
-    best = sorted(ensemble_results, key=ensemble_results.get, reverse=True)[:10]
+    best = sorted(ensemble_results, key=ensemble_results.get, reverse=True)[:20]
     best_performers = [m for ms in best for m in ms]
     counts = Counter(best_performers)
     print(counts.most_common())
