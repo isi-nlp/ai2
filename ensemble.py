@@ -80,7 +80,6 @@ for task in tasks_to_threshold.keys():
 
         final_predictions = [max(d, key=lambda x: d[x]) for d in voting_list]
         accuracy = accuracy_score(labels, final_predictions)
-        print(final_predictions)
 
         # print('Predictions', predictions_df)
         # print('Confidences', confidences_df)
