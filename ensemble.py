@@ -1,5 +1,6 @@
 import itertools
 import os
+from collections import defaultdict
 
 from more_itertools import powerset
 from sklearn.metrics import accuracy_score
@@ -62,8 +63,9 @@ for task in tasks_to_threshold.keys():
 
 
     # Run ensemble
-    predictions_df = (pd.DataFrame.from_dict(model_to_predictions) - 0.5) * 2  # Project to predictions to [-1, 1]
+    predictions_df = pd.DataFrame.from_dict(model_to_predictions)
     confidences_df = pd.DataFrame.from_dict(model_to_confidences).applymap(max)
+
     # subset = ['standard_rs0', 'standard_rs10061880', 'arc1_rs10061880', 'arc2_rs10061880'] # 81.28
     # print(f'accuracy,{list(model_to_path.keys())}'.replace(' ','').replace('\'','').replace('[','').replace(']','')) # print for csv
     for subset in powerset(successful_models):
@@ -71,11 +73,13 @@ for task in tasks_to_threshold.keys():
         subset = list(subset)
         # confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
         # confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)  # Get the most confident
+        voting_list = [defaultdict(float) for i in range(len(predictions_df))]
+        for model in subset:
+            for i, dic in enumerate(voting_list):
+                dict[predictions_df[model].iloc[i]] += confidences_df[model].iloc[i]
 
-        scaled_df = predictions_df.mul(confidences_df, fill_value=1)[subset]  # Scale the predictions by multiplying with confidence
-        final_predictions = scaled_df.mean(axis=1) > 0  # Take the average of each row for ensembled predictions
-        accuracy = accuracy_score(labels, final_predictions.values.squeeze().tolist())
-        print(scaled_df)
+        final_predictions = [max(d, key=lambda x: d[x]) for d in voting_list]
+        accuracy = accuracy_score(labels, final_predictions)
         print(final_predictions)
 
         # print('Predictions', predictions_df)
