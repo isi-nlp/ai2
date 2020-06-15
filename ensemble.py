@@ -21,7 +21,7 @@ for task in tasks:
     # Get Accuracies
     print('Accuracy of each model:')
     for model in relevant_models:
-        path = 'outputs/'+path
+        path = 'outputs/'+model
         preds = pd.read_csv(path + '/pred.lst', sep='\t', header=None).values.squeeze().tolist()
         confs = pd.read_csv(path + '/pred.lst.cnf', sep='\t', header=None).values.squeeze().tolist()
         accuracy = accuracy_score(labels, preds)
