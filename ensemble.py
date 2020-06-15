@@ -22,12 +22,16 @@ for task in tasks:
     print('Accuracy of each model:')
     for model in relevant_models:
         path = 'outputs/'+model
-        preds = pd.read_csv(path + '/predictions.lst', sep='\t', header=None).values.squeeze().tolist()
-        confs = pd.read_csv(path + '/confidence.lst', sep='\t', header=None).values.squeeze().tolist()
-        accuracy = accuracy_score(labels, preds)
-        model_to_predictions[model] = preds
-        model_to_confidences[model] = confs
-        print(f'{model},{accuracy}')
+        try:
+            preds = pd.read_csv(path + '/predictions.lst', sep='\t', header=None).values.squeeze().tolist()
+            confs = pd.read_csv(path + '/confidence.lst', sep='\t', header=None).values.squeeze().tolist()
+            accuracy = accuracy_score(labels, preds)
+            model_to_predictions[model] = preds
+            model_to_confidences[model] = confs
+            print(f'{model},{accuracy}')
+        except:
+            print(f'Faield to find preds for {model},{accuracy}')
+            continue
 
 
     # Compare Models
