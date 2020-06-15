@@ -95,6 +95,6 @@ for task in tasks_to_threshold.keys():
         #     print(f'{accuracy},{subset}')
 
         ensemble_results[tuple(subset)]=accuracy
-    best = heapq.nlargest(20, ensemble_results, key=ensemble_results.get)
+    best = sorted(ensemble_results, key=ensemble_results.get, reverse=True)[:10]
     print(best)
 
