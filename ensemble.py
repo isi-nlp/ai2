@@ -1,6 +1,7 @@
 import itertools
 import os
 from collections import defaultdict
+import heapq
 
 import numpy
 from more_itertools import powerset
@@ -21,7 +22,7 @@ model_to_confidences = {}
 
 for task in tasks_to_threshold.keys():
     print(f'Running ensemble for {task}')
-    relevant_models = [model for model in models if task in model and '90' in model]
+    relevant_models = [model for model in models if task in model and '90' in model and 'standard' in model]
     gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
     labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
 
@@ -67,12 +68,11 @@ for task in tasks_to_threshold.keys():
     #         f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]},{pearsonr(correctness1, correctness2)[0]},{pearsonr(conf1, conf2)[0]},{ccbc},{ccoc},{ccbw}')
     # print('\n')
 
+    ensemble_results = {}
 
     # Run ensemble
     predictions_df = pd.DataFrame.from_dict(model_to_predictions)
     confidences_df = pd.DataFrame.from_dict(model_to_confidences).applymap(numpy.asarray)
-
-    # subset = ['standard_rs0', 'standard_rs10061880', 'arc1_rs10061880', 'arc2_rs10061880'] # 81.28
     # print(f'accuracy,{list(model_to_path.keys())}'.replace(' ','').replace('\'','').replace('[','').replace(']','')) # print for csv
     for subset in powerset(successful_models):
         if len(subset) <= 1: continue
@@ -81,7 +81,6 @@ for task in tasks_to_threshold.keys():
         # confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)  # Get the most confident
 
         # unweighted_votes = predictions_df[subset].mode(axis=1).too_nutolist()
-
         relevant_confidences = confidences_df[subset]
         weighted_votes = relevant_confidences.sum(axis=1).apply(numpy.argmax).to_numpy()
         if task in ['socialiqa', 'alphanli']: weighted_votes+=1
@@ -92,5 +91,10 @@ for task in tasks_to_threshold.keys():
         # print('Confidences', confidences_df)
         # print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
 
-        if accuracy > 0.8:
-            print(f'{accuracy},{subset}')
+        # if accuracy > 0.8:
+        #     print(f'{accuracy},{subset}')
+
+        ensemble_results[tuple(subset)]=accuracy
+    best = heapq.nlargest(20, ensemble_results, key=ensemble_results.get)
+    print(best)
+
