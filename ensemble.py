@@ -1,9 +1,8 @@
 import itertools
 import os
-from collections import defaultdict
-import heapq
+import numpy as np
+from collections import Counter
 
-import numpy
 from more_itertools import powerset
 from sklearn.metrics import accuracy_score
 import pandas as pd
@@ -72,7 +71,7 @@ for task in tasks_to_threshold.keys():
 
     # Run ensemble
     predictions_df = pd.DataFrame.from_dict(model_to_predictions)
-    confidences_df = pd.DataFrame.from_dict(model_to_confidences).applymap(numpy.asarray)
+    confidences_df = pd.DataFrame.from_dict(model_to_confidences).applymap(np.asarray)
     # print(f'accuracy,{list(model_to_path.keys())}'.replace(' ','').replace('\'','').replace('[','').replace(']','')) # print for csv
     for subset in powerset(successful_models):
         if len(subset) <= 1: continue
@@ -82,7 +81,7 @@ for task in tasks_to_threshold.keys():
 
         # unweighted_votes = predictions_df[subset].mode(axis=1).too_nutolist()
         relevant_confidences = confidences_df[subset]
-        weighted_votes = relevant_confidences.sum(axis=1).apply(numpy.argmax).to_numpy()
+        weighted_votes = relevant_confidences.sum(axis=1).apply(np.argmax).to_numpy()
         if task in ['socialiqa', 'alphanli']: weighted_votes+=1
         final_predictions = weighted_votes.tolist()
         accuracy = accuracy_score(labels, final_predictions)
@@ -96,5 +95,7 @@ for task in tasks_to_threshold.keys():
 
         ensemble_results[tuple(subset)]=accuracy
     best = sorted(ensemble_results, key=ensemble_results.get, reverse=True)[:10]
-    print(best)
+    best_performers = [m for ms in best for m in ms]
+    counts = Counter(best_performers)
+    print(counts.most_common())
 
