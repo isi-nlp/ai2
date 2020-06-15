@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score
 import pandas as pd
 from scipy.stats.stats import pearsonr
 
-tasks = ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
+tasks = ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa']
 models = [name for name in os.listdir("outputs/.") if name != 'slurm']
 
 model_to_predictions = {}
