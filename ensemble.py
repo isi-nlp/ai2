@@ -14,7 +14,7 @@ model_to_confidences = {}
 
 for task in tasks_to_threshold.keys():
     print(f'Running ensemble for {task}')
-    relevant_models = [model for model in models if task in model]
+    relevant_models = [model for model in models if task in model and '90' in model]
     gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
     labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
 
