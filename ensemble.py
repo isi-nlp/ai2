@@ -8,7 +8,12 @@ from sklearn.metrics import accuracy_score
 import pandas as pd
 from scipy.stats.stats import pearsonr
 
-tasks_to_threshold = {'alphanli':0.7, 'hellaswag':0.7, 'physicaliqa':0.7, 'socialiqa':0.7}
+tasks_to_threshold = {
+    # 'alphanli':0.7,
+    # 'hellaswag':0.7,
+    'physicaliqa':0.7,
+    # 'socialiqa':0.7
+}
 models = [name for name in os.listdir("outputs/.") if name != 'slurm']
 
 model_to_predictions = {}
@@ -76,11 +81,10 @@ for task in tasks_to_threshold.keys():
         # confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)  # Get the most confident
 
         relevant_confidences = confidences_df[subset]
-        print(relevant_confidences)
         weighted_votes = relevant_confidences.sum(axis=1).apply(numpy.argmax).to_numpy()
         if task in ['socialiqa', 'alphanli']: weighted_votes+=1
         final_predictions = weighted_votes.tolist()
-        print(final_predictions)
+        accuracy = accuracy_score(labels, final_predictions)
 
         # Non parallel
         # voting_list = [defaultdict(float) for i in range(len(predictions_df))]
@@ -89,7 +93,6 @@ for task in tasks_to_threshold.keys():
         #         dic[predictions_df.iloc[i][model]] += confidences_df.iloc[i][model]
         #
         # final_predictions = [max(d, key=lambda x: d[x]) for d in voting_list]
-        # accuracy = accuracy_score(labels, final_predictions)
 
         # print('Predictions', predictions_df)
         # print('Confidences', confidences_df)
