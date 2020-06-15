@@ -17,9 +17,6 @@ tasks_to_threshold = {
 }
 models = [name for name in os.listdir("outputs/.") if name != 'slurm']
 
-model_to_predictions = {}
-model_to_confidences = {}
-
 def run_ensemble(predictions_df, confidences_df, subset):
     # confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
     # confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)  # Get the most confident
@@ -40,6 +37,8 @@ for task in tasks_to_threshold.keys():
     labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
 
     successful_models = []
+    model_to_predictions = {}
+    model_to_confidences = {}
     # Get Accuracies
     print('Accuracy of each model:')
     for model in relevant_models:
