@@ -79,7 +79,8 @@ for task in tasks_to_threshold.keys():
     #     print(
     #         f'{id1},{id2},{accuracy_score(preds1, preds2)},{pearsonr(preds1, preds2)[0]},{pearsonr(correctness1, correctness2)[0]},{pearsonr(conf1, conf2)[0]},{ccbc},{ccoc},{ccbw}')
     # print('\n')
-
+    for m, p in model_to_predictions.items():
+        print(m, len(p))
     predictions_df = pd.DataFrame.from_dict(model_to_predictions)
     confidences_df = pd.DataFrame.from_dict(model_to_confidences).applymap(np.asarray)
     # print(f'accuracy,{list(model_to_path.keys())}'.replace(' ','').replace('\'','').replace('[','').replace(']','')) # print for csv
