@@ -2,6 +2,7 @@ import itertools
 import os
 import numpy as np
 from collections import Counter
+import heapq
 
 from more_itertools import powerset
 from sklearn.metrics import accuracy_score
@@ -91,10 +92,10 @@ for task in tasks_to_threshold.keys():
         # print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
 
         # if accuracy > 0.8:
-        #     print(f'{accuracy},{subset}')
+        print(f'{accuracy},{subset}')
 
         ensemble_results[tuple(subset)]=accuracy
-    best = sorted(ensemble_results, key=ensemble_results.get, reverse=True)[:20]
+    best = heapq.nlargest(10, ensemble_results, key=ensemble_results.get)
     best_performers = [m for ms in best for m in ms]
     counts = Counter(best_performers)
     print(counts.most_common())
