@@ -28,9 +28,9 @@ for task in tasks:
             accuracy = accuracy_score(labels, preds)
             model_to_predictions[model] = preds
             model_to_confidences[model] = confs
-            print(f'{model},{accuracy}')
+            # print(f'{model},{accuracy}')
         except:
-            print(f'Faield to find preds for {model},{accuracy}')
+            print(f'Couldn\'t find preds for {model},{accuracy}')
             continue
 
 
@@ -68,7 +68,8 @@ for task in tasks:
         confidences_df = pd.DataFrame.from_dict(model_to_confidences)
         # confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
         # confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)  # Get the most confident
-
+        print(predictions_df)
+        print(confidences_df)
         scaled_df = predictions_df.mul(confidences_df, fill_value=1)[subset]  # Scale the predictions by multiplying with confidence
         final_predictions = scaled_df.mean(axis=1) > 0  # Take the average of each row for ensembled predictions
         accuracy = accuracy_score(labels, final_predictions.values.squeeze().tolist())
