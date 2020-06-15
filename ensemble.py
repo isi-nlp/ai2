@@ -76,7 +76,7 @@ for task in tasks_to_threshold.keys():
         voting_list = [defaultdict(float) for i in range(len(predictions_df))]
         for model in subset:
             for i, dic in enumerate(voting_list):
-                dict[predictions_df.iloc[i][model]] += confidences_df.iloc[i][model]
+                dic[predictions_df.iloc[i][model]] += confidences_df.iloc[i][model]
 
         final_predictions = [max(d, key=lambda x: d[x]) for d in voting_list]
         accuracy = accuracy_score(labels, final_predictions)
