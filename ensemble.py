@@ -6,18 +6,19 @@ from sklearn.metrics import accuracy_score
 import pandas as pd
 from scipy.stats.stats import pearsonr
 
-tasks = ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa']
+tasks_to_threshold = {'alphanli':0.7, 'hellaswag':0.7, 'physicaliqa':0.7, 'socialiqa':0.7}
 models = [name for name in os.listdir("outputs/.") if name != 'slurm']
 
 model_to_predictions = {}
 model_to_confidences = {}
 
-for task in tasks:
+for task in tasks_to_threshold.keys():
     print(f'Running ensemble for {task}')
     relevant_models = [model for model in models if task in model]
     gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
     labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
 
+    successful_models = []
     # Get Accuracies
     print('Accuracy of each model:')
     for model in relevant_models:
@@ -26,9 +27,11 @@ for task in tasks:
             preds = pd.read_csv(path + '/predictions.lst', sep='\t', header=None).values.squeeze().tolist()
             confs = pd.read_csv(path + '/confidence.lst', sep='\t', header=None).values.squeeze().tolist()
             accuracy = accuracy_score(labels, preds)
-            model_to_predictions[model] = preds
-            model_to_confidences[model] = confs
-            # print(f'{model},{accuracy}')
+            if accuracy > tasks_to_threshold[task]:
+                successful_models.append(model)
+                model_to_predictions[model] = preds
+                model_to_confidences[model] = confs
+                # print(f'{model},{accuracy}')
         except:
             print(f'Couldn\'t find preds for {model},{accuracy}')
             continue
@@ -59,17 +62,15 @@ for task in tasks:
 
 
     # Run ensemble
+    predictions_df = (pd.DataFrame.from_dict(model_to_predictions) - 0.5) * 2  # Project to predictions to [-1, 1]
+    confidences_df = pd.DataFrame.from_dict(model_to_confidences).applymap(max)
     # subset = ['standard_rs0', 'standard_rs10061880', 'arc1_rs10061880', 'arc2_rs10061880'] # 81.28
     # print(f'accuracy,{list(model_to_path.keys())}'.replace(' ','').replace('\'','').replace('[','').replace(']','')) # print for csv
-    for subset in powerset(relevant_models):
+    for subset in powerset(successful_models):
         if len(subset) <= 1: continue
         subset = list(subset)
-        predictions_df = (pd.DataFrame.from_dict(model_to_predictions) - 0.5) * 2  # Project to predictions to [-1, 1]
-        confidences_df = pd.DataFrame.from_dict(model_to_confidences).applymap(max)
         # confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
         # confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)  # Get the most confident
-        print(predictions_df)
-        print(confidences_df)
         scaled_df = predictions_df.mul(confidences_df, fill_value=1)[subset]  # Scale the predictions by multiplying with confidence
         final_predictions = scaled_df.mean(axis=1) > 0  # Take the average of each row for ensembled predictions
         accuracy = accuracy_score(labels, final_predictions.values.squeeze().tolist())
