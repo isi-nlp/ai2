@@ -93,7 +93,7 @@ for task in tasks_to_threshold.keys():
             # print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
 
             # if accuracy > 0.8:
-            print(f'{accuracy},{subset}')
+            # print(f'{accuracy},{subset}')
 
             ensemble_results[tuple(subset)]=accuracy
         best = heapq.nlargest(10, ensemble_results, key=ensemble_results.get)
