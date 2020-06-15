@@ -10,7 +10,7 @@ import pandas as pd
 from scipy.stats.stats import pearsonr
 
 tasks_to_threshold = {
-    'alphanli':0.7,
+    # 'alphanli':0.7,
     'hellaswag':0.7,
     'physicaliqa':0.7,
     'socialiqa':0.7
