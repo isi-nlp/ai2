@@ -75,7 +75,7 @@ for task in tasks_to_threshold.keys():
         # confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
         # confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)  # Get the most confident
 
-        final_predictions = confidences_df.sum(axis=1, skipna=True).applymap(numpy.argmax)
+        final_predictions = confidences_df.sum(axis=1, skipna=True)
         print(final_predictions)
 
         # Non parallel
