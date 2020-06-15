@@ -21,7 +21,7 @@ model_to_predictions = {}
 model_to_confidences = {}
 
 for task in tasks_to_threshold.keys():
-    for rs in ['10061880']:
+    for rs in ['0','42','10061880']:
         print(f'Running ensemble for {task}, {rs}')
         relevant_models = [model for model in models if task in model and '90' in model and rs in model.split('_')[-1]]
         gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
