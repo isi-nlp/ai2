@@ -2,6 +2,7 @@ import itertools
 import os
 from collections import defaultdict
 
+import numpy
 from more_itertools import powerset
 from sklearn.metrics import accuracy_score
 import pandas as pd
@@ -34,7 +35,7 @@ for task in tasks_to_threshold.keys():
                 model_to_confidences[model] = confs
                 # print(f'{model},{accuracy}')
         except:
-            print(f'Couldn\'t find preds for {model},{accuracy}')
+            print(f'Couldn\'t find preds for {model}')
             continue
 
 
@@ -64,7 +65,7 @@ for task in tasks_to_threshold.keys():
 
     # Run ensemble
     predictions_df = pd.DataFrame.from_dict(model_to_predictions)
-    confidences_df = pd.DataFrame.from_dict(model_to_confidences).applymap(max)
+    confidences_df = pd.DataFrame.from_dict(model_to_confidences).applymap(numpy.asarray)
 
     # subset = ['standard_rs0', 'standard_rs10061880', 'arc1_rs10061880', 'arc2_rs10061880'] # 81.28
     # print(f'accuracy,{list(model_to_path.keys())}'.replace(' ','').replace('\'','').replace('[','').replace(']','')) # print for csv
@@ -73,13 +74,18 @@ for task in tasks_to_threshold.keys():
         subset = list(subset)
         # confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
         # confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)  # Get the most confident
-        voting_list = [defaultdict(float) for i in range(len(predictions_df))]
-        for model in subset:
-            for i, dic in enumerate(voting_list):
-                dic[predictions_df.iloc[i][model]] += confidences_df.iloc[i][model]
 
-        final_predictions = [max(d, key=lambda x: d[x]) for d in voting_list]
-        accuracy = accuracy_score(labels, final_predictions)
+        confidences_df.sum(axis=1, skipna=True)
+        print(confidences_df)
+
+        # Non parallel
+        # voting_list = [defaultdict(float) for i in range(len(predictions_df))]
+        # for model in subset:
+        #     for i, dic in enumerate(voting_list):
+        #         dic[predictions_df.iloc[i][model]] += confidences_df.iloc[i][model]
+        #
+        # final_predictions = [max(d, key=lambda x: d[x]) for d in voting_list]
+        # accuracy = accuracy_score(labels, final_predictions)
 
         # print('Predictions', predictions_df)
         # print('Confidences', confidences_df)
