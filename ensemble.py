@@ -52,7 +52,7 @@ for task in tasks_to_threshold.keys():
                     successful_models.append(model)
                     model_to_predictions[model] = preds
                     model_to_confidences[model] = confs
-                    print(f'{model},{round(accuracy,3)}')
+                    print(f'{model},{round(accuracy,4)}')
             except:
                 print(f'Couldn\'t find preds for {model}')
                 continue
@@ -95,10 +95,10 @@ for task in tasks_to_threshold.keys():
         # counts = Counter(best_performers)
         # print(counts.most_common())
 
-        print('All', round(run_ensemble(predictions_df, confidences_df, successful_models),3))
+        print('All', round(run_ensemble(predictions_df, confidences_df, successful_models),4))
         for factor in ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']:
             without_factor = [m for m in successful_models if factor not in m]
-            print(f'Without {factor}:', round(run_ensemble(predictions_df, confidences_df, without_factor),3))
+            print(f'Without {factor}:', round(run_ensemble(predictions_df, confidences_df, without_factor),4))
 
 
 
