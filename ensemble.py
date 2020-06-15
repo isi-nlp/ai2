@@ -80,7 +80,7 @@ for task in tasks_to_threshold.keys():
         # confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
         # confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)  # Get the most confident
 
-        unweighted_votes = predictions_df[subset].mode(axis=1).tolist()
+        # unweighted_votes = predictions_df[subset].mode(axis=1).too_nutolist()
 
         relevant_confidences = confidences_df[subset]
         weighted_votes = relevant_confidences.sum(axis=1).apply(numpy.argmax).to_numpy()
