@@ -23,7 +23,7 @@ for task in tasks:
     for model in relevant_models:
         path = 'outputs/'+model
         preds = pd.read_csv(path + '/predictions.lst', sep='\t', header=None).values.squeeze().tolist()
-        confs = pd.read_csv(path + '/confidences.lst', sep='\t', header=None).values.squeeze().tolist()
+        confs = pd.read_csv(path + '/confidence.lst', sep='\t', header=None).values.squeeze().tolist()
         accuracy = accuracy_score(labels, preds)
         model_to_predictions[model] = preds
         model_to_confidences[model] = confs
