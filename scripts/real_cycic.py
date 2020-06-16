@@ -11,8 +11,8 @@ def main() -> None:
     args = p.parse_args()
 
     for in_split, out_split in (('training', 'train'), ('dev', 'dev')):
-        question_path = args.input_dir / f'CycIC_{in_split}_questions.jsonl'
-        label_path = args.input_dir / f'CycIC_{in_split}_labels.jsonl'
+        question_path = args.input_dir / f'cycic_{in_split}_questions.jsonl'
+        label_path = args.input_dir / f'cycic_{in_split}_labels.jsonl'
 
         with question_path.open() as file:
             questions = [json.loads(line) for line in file]
