@@ -116,8 +116,11 @@ for task in tasks_to_threshold.keys():
         all_results[task + '_' + data_size] = results
 
 print(all_results)
-with open("test_output.csv", "w") as f:
-    w = csv.writer(f)
-    confs = list(all_results.values())[0].keys()
-    for key in all_results.keys():
-        w.writerow([key] + [all_results[key][conf] for conf in confs])
+df = pd.DataFrame.from_dict(all_results)
+print(df)
+
+# with open("test_output.csv", "w") as f:
+#     w = csv.writer(f)
+#     confs = list(all_results.values())[0].keys()
+#     for key in all_results.keys():
+#         w.writerow([key] + [all_results[key][conf] for conf in confs])
