@@ -106,21 +106,16 @@ for task in tasks_to_threshold.keys():
 
         all_accuracy = round(run_ensemble(predictions_df, confidences_df, successful_models)*100,2)
         print('Ensemble of all models:', all_accuracy)
-        results['All'] = all_accuracy
+        results['Ensemble - All'] = all_accuracy
         # print('Ensemble of best per seed-group:', round(run_ensemble(predictions_df, confidences_df, best_per_seed_group.keys()),4))
         for factor in ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']:
             without_factor = [m for m in successful_models if factor not in m]
             wf_accuracy = round(run_ensemble(predictions_df, confidences_df, without_factor) * 100, 2)
             print(f'Without {factor}:', wf_accuracy)
-            results[f'Without {factor}'] = wf_accuracy
+            results[f'Ensemble - Without {factor}'] = wf_accuracy
         all_results[task + '_' + data_size] = results
 
 print(all_results)
 df = pd.DataFrame.from_dict(all_results)
-print(df)
-
-# with open("test_output.csv", "w") as f:
-#     w = csv.writer(f)
-#     confs = list(all_results.values())[0].keys()
-#     for key in all_results.keys():
-#         w.writerow([key] + [all_results[key][conf] for conf in confs])
+df.sort_index()
+df.to_csv('ensemble_results')
