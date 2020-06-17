@@ -55,9 +55,9 @@ for task in tasks_to_threshold.keys():
                     model_to_confidences[model] = confs
                     print(f'{model},{round(accuracy,4)}')
 
-                    model_without_seed = model.strip('_'+model.split('_')[-1])
-                    if accuracy > best_per_seed_group[model_without_seed]:
-                        best_per_seed_group[model_without_seed] = accuracy
+                    # model_without_seed = model.strip('_'+model.split('_')[-1])
+                    # if accuracy > best_per_seed_group[model_without_seed]:
+                    #     best_per_seed_group[model_without_seed] = accuracy
             except:
                 print(f'Couldn\'t find preds for {model}')
                 continue
@@ -100,8 +100,8 @@ for task in tasks_to_threshold.keys():
         # counts = Counter(best_performers)
         # print(counts.most_common())
 
-        print('All', round(run_ensemble(predictions_df, confidences_df, successful_models),4))
-        print('Best per seed-group', round(run_ensemble(predictions_df, confidences_df, best_per_seed_group.keys()),4))
+        print('Ensemble of all models:', round(run_ensemble(predictions_df, confidences_df, successful_models),4))
+        # print('Ensemble of best per seed-group:', round(run_ensemble(predictions_df, confidences_df, best_per_seed_group.keys()),4))
         for factor in ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']:
             without_factor = [m for m in successful_models if factor not in m]
             print(f'Without {factor}:', round(run_ensemble(predictions_df, confidences_df, without_factor),4))
