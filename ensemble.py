@@ -118,6 +118,6 @@ for task in tasks_to_threshold.keys():
 print(all_results)
 with open("test_output.csv", "wb") as f:
     w = csv.writer(f)
-    types = all_results.values()[0].keys()
+    confs = list(all_results.values())[0].keys()
     for key in all_results.keys():
-        w.writerow([key, [all_results[key][type] for type in types]])
+        w.writerow([key] + [all_results[key][conf] for conf in confs])
