@@ -113,4 +113,4 @@ for task in tasks_to_threshold.keys():
             print(f'Without {factor}:', wf_accuracy)
             results[f'Without {factor}'] = wf_accuracy
     all_results[task + '_' + data_size] = results
-
+print(all_results)
