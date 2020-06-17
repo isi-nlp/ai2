@@ -1,3 +1,4 @@
+import csv
 import itertools
 import os
 import numpy as np
@@ -56,7 +57,7 @@ for task in tasks_to_threshold.keys():
                     model_to_predictions[model] = preds
                     model_to_confidences[model] = confs
                     print(f'{model},{round(accuracy*100,2)}')
-                    results[model.replace(task + '_' + data_size,'')] = round(accuracy*100,2)
+                    results[model.replace(task+'_'+data_size+'_','')] = round(accuracy*100,2)
 
                     # model_without_seed = model.strip('_'+model.split('_')[-1])
                     # if accuracy > best_per_seed_group[model_without_seed]:
@@ -113,4 +114,10 @@ for task in tasks_to_threshold.keys():
             print(f'Without {factor}:', wf_accuracy)
             results[f'Without {factor}'] = wf_accuracy
     all_results[task + '_' + data_size] = results
+
 print(all_results)
+with open("test_output.csv", "wb") as f:
+    w = csv.writer(f)
+    types = all_results.values()[0].keys()
+    for key in all_results.keys():
+        w.writerow([key, [all_results[key][type] for type in types]])
