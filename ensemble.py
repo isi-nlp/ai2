@@ -116,7 +116,7 @@ for task in tasks_to_threshold.keys():
     all_results[task + '_' + data_size] = results
 
 print(all_results)
-with open("test_output.csv", "wb") as f:
+with open("test_output.csv", "w") as f:
     w = csv.writer(f)
     confs = list(all_results.values())[0].keys()
     for key in all_results.keys():
