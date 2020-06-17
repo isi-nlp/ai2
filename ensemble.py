@@ -113,7 +113,7 @@ for task in tasks_to_threshold.keys():
             wf_accuracy = round(run_ensemble(predictions_df, confidences_df, without_factor) * 100, 2)
             print(f'Without {factor}:', wf_accuracy)
             results[f'Without {factor}'] = wf_accuracy
-    all_results[task + '_' + data_size] = results
+        all_results[task + '_' + data_size] = results
 
 print(all_results)
 with open("test_output.csv", "w") as f:
