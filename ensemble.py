@@ -29,9 +29,11 @@ def run_ensemble(predictions_df, confidences_df, subset):
     # unweighted_votes = predictions_df[subset].mode(axis=1).too_nutolist()
     return accuracy_score(labels, final_predictions)
 
+all_results = {}
 
 for task in tasks_to_threshold.keys():
     for data_size in ['10','25','90']:
+        results = {}
         print(f'\nRunning ensemble for {task.upper()}, {data_size}')
         relevant_models = [model for model in models if task in model and data_size == model.split('_')[1]]
         gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
@@ -53,7 +55,8 @@ for task in tasks_to_threshold.keys():
                     successful_models.append(model)
                     model_to_predictions[model] = preds
                     model_to_confidences[model] = confs
-                    print(f'{model},{round(accuracy,4)}')
+                    print(f'{model},{round(accuracy*100,2)}')
+                    results[model.replace(task + '_' + data_size,'')] = round(accuracy*100,2)
 
                     # model_without_seed = model.strip('_'+model.split('_')[-1])
                     # if accuracy > best_per_seed_group[model_without_seed]:
@@ -100,11 +103,14 @@ for task in tasks_to_threshold.keys():
         # counts = Counter(best_performers)
         # print(counts.most_common())
 
-        print('Ensemble of all models:', round(run_ensemble(predictions_df, confidences_df, successful_models),4))
+        all_accuracy = round(run_ensemble(predictions_df, confidences_df, successful_models)*100,2)
+        print('Ensemble of all models:', all_accuracy)
+        results['All'] = all_accuracy
         # print('Ensemble of best per seed-group:', round(run_ensemble(predictions_df, confidences_df, best_per_seed_group.keys()),4))
         for factor in ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']:
             without_factor = [m for m in successful_models if factor not in m]
-            print(f'Without {factor}:', round(run_ensemble(predictions_df, confidences_df, without_factor),4))
-
-
+            wf_accuracy = round(run_ensemble(predictions_df, confidences_df, without_factor) * 100, 2)
+            print(f'Without {factor}:', wf_accuracy)
+            results[f'Without {factor}'] = wf_accuracy
+    all_results[task + '_' + data_size] = results
 
