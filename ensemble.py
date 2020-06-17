@@ -117,5 +117,4 @@ for task in tasks_to_threshold.keys():
 
 print(all_results)
 df = pd.DataFrame.from_dict(all_results)
-df.sort_index()
-df.to_csv('ensemble_results')
+df.to_csv('ensemble_results.csv',na_rep= '-')
