@@ -6,6 +6,7 @@ from loguru import logger
 import numpy as np
 import omegaconf
 import pandas as pd
+from pytorch_lightning import seed_everything
 from sklearn.metrics import accuracy_score
 import torch
 import torch.nn.functional as F
@@ -24,14 +25,12 @@ def main(config: omegaconf.Config):
     config = omegaconf.OmegaConf.to_container(config)
     logger.info(config)
 
-    # If the evaluation is deterministic for debugging purposes, we set the random seed
-    if not isinstance(config['random_seed'], bool):
-        logger.info(f"Running deterministic model with seed {config['random_seed']}")
-        np.random.seed(config['random_seed'])
-        torch.manual_seed(config['random_seed'])
-        if torch.cuda.is_available():
-            torch.backends.cuda.deterministic = True
-            torch.backends.cuda.benchmark = False
+    # Automatically generates random seed if none given
+    config['random_seed'] = seed_everything(config['random_seed'])
+    logger.info(f"Running deterministic model with seed {config['random_seed']}")
+    if torch.cuda.is_available():
+        torch.backends.cuda.deterministic = True
+        torch.backends.cuda.benchmark = False
 
     # Load in the check pointed model
     model = Classifier(config)
