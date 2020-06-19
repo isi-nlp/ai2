@@ -34,13 +34,14 @@ def train(config: omegaconf.Config):
             torch.backends.cuda.benchmark = False
 
     # Initialize the classifier by arguments specified in config file
-    model = Classifier(config)
     save_path = f"{config['model']}-{config['task_name']}-s{config['random_seed']}"
     if config['build_on_pretrained_model']:
+        logger.info(f"Loading model from {config['build_on_pretrained_model']}")
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
-        checkpoint = torch.load(ROOT_PATH / config['build_on_pretrained_model'], map_location=device)
-        model.load_state_dict(checkpoint['state_dict'])
-        save_path += f"-pretrained_{config['build_on_pretrained_model'].split('/')[-1].split('.')[0]}"
+        model = Classifier.load_from_checkpoint(ROOT_PATH / config['build_on_pretrained_model'], map_location=device)
+        save_path += f"-pretrained_{Path(config['build_on_pretrained_model']).stem}"
+    else:
+        model = Classifier(config)
 
     if config['resume_from_checkpoint']:
         checkpoint_path = ROOT_PATH / config['resume_from_checkpoint']

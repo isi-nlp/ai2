@@ -34,10 +34,9 @@ def main(config: omegaconf.Config):
             torch.backends.cuda.benchmark = False
 
     # Load in the check pointed model
-    model = Classifier(config)
+    logger.info(f"Loading model from {config['checkpoint_path']}")
     device = 'cpu' if not torch.cuda.is_available() else "cuda"
-    checkpoint = torch.load(ROOT_PATH / config['checkpoint_path'], map_location=device)
-    model.load_state_dict(checkpoint['state_dict'])
+    model = Classifier.load_from_checkpoint(ROOT_PATH / config['checkpoint_path'], map_location=device)
 
     save_path = Path(f"{config['model']}-{config['task_name']}-s{config['random_seed']}")
     save_path.mkdir(parents=True, exist_ok=True)
