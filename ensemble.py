@@ -26,9 +26,24 @@ def run_ensemble(predictions_df, confidences_df, subset):
     weighted_votes = relevant_confidences.sum(axis=1).apply(np.argmax).to_numpy()
     if task in ['socialiqa', 'alphanli']: weighted_votes += 1
     final_predictions = weighted_votes.tolist()
+    stats = []
+    for _ in range(100):
+        indices = [i for i in np.random.random_integers(0, len(final_predictions) - 1, size=len(final_predictions))]
+        stats.append(accuracy_score([labels[j] for j in indices], [final_predictions[j] for j in indices]))
+
+    # Calculate the confidence interval and log it to console
+    alpha = 0.95
+    p = ((1.0 - alpha) / 2.0) * 100
+    lower = max(0.0, np.percentile(stats, p))
+    p = (alpha + ((1.0 - alpha) / 2.0)) * 100
+    upper = min(1.0, np.percentile(stats, p))
+    accuracy = accuracy_score(labels, final_predictions)
+    print(f'Accuracy: {accuracy}, {alpha * 100:.1f} confidence interval {lower * 100:.1f} and {upper * 100:.1f}, '
+                f'average: {np.mean(stats) * 100:.1f}')
+
     # print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
     # unweighted_votes = predictions_df[subset].mode(axis=1).too_nutolist()
-    return accuracy_score(labels, final_predictions)
+    return accuracy
 
 all_results = {}
 
@@ -104,8 +119,8 @@ for task in tasks_to_threshold.keys():
         # counts = Counter(best_performers)
         # print(counts.most_common())
 
+        print('Ensemble of all models:')
         all_accuracy = round(run_ensemble(predictions_df, confidences_df, successful_models)*100,2)
-        print('Ensemble of all models:', all_accuracy)
         results['Ensemble - All'] = all_accuracy
         # print('Ensemble of best per seed-group:', round(run_ensemble(predictions_df, confidences_df, best_per_seed_group.keys()),4))
         for factor in ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']:
@@ -115,6 +130,5 @@ for task in tasks_to_threshold.keys():
             results[f'Ensemble - Without {factor}'] = wf_accuracy
         all_results[task + '_' + data_size] = results
 
-print(all_results)
 df = pd.DataFrame.from_dict(all_results)
 df.to_csv('ensemble_results.csv',na_rep= '-')
