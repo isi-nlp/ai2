@@ -42,6 +42,11 @@ def train(config: omegaconf.Config):
         model.load_state_dict(checkpoint['state_dict'])
         save_path += f"-pretrained_{config['build_on_pretrained_model'].split('/')[-1].split('.')[0]}"
 
+    if config['resume_from_checkpoint']:
+        checkpoint_path = ROOT_PATH / config['resume_from_checkpoint']
+    else:
+        checkpoint_path = None
+
     # Define the trainer along with its checkpoint and experiment instance
     checkpoint = ModelCheckpoint(
         filepath=os.path.join(save_path, 'checkpoints', 'foo'),  # Last part needed due to parsing logic
@@ -74,6 +79,7 @@ def train(config: omegaconf.Config):
         precision=16 if config["use_amp"] else 32,
         weights_summary='top',
         num_sanity_val_steps=5,
+        resume_from_checkpoint=checkpoint_path,
     )
     trainer.fit(model)
     logger.success('Training Completed')

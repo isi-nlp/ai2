@@ -5,3 +5,4 @@ random_seed: 42
 build_on_pretrained_model: False
 save_best_only: False
 eval_after_training: True
+resume_from_checkpoint: False
