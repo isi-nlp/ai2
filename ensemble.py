@@ -125,8 +125,8 @@ for task in tasks_to_threshold.keys():
         # print('Ensemble of best per seed-group:', round(run_ensemble(predictions_df, confidences_df, best_per_seed_group.keys()),4))
         for factor in ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']:
             without_factor = [m for m in successful_models if factor not in m]
+            print(f'Without {factor}:')
             wf_accuracy = round(run_ensemble(predictions_df, confidences_df, without_factor) * 100, 2)
-            print(f'Without {factor}:', wf_accuracy)
             results[f'Ensemble - Without {factor}'] = wf_accuracy
         all_results[task + '_' + data_size] = results
 
