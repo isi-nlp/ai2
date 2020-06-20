@@ -66,6 +66,13 @@ python eval.py \
     --output pred.lst
 ```
 
+## Dockerize
+
+```bash
+time DOCKER_BUILDKIT=1 docker build -t cycic-test .
+time docker run -it -v ${PWD}/data:/data -v ${PWD}/results:/results cycic-test bash run_model.sh`
+```
+
 ## Results
 
 ### PIQA
