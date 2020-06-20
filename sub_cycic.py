@@ -15,19 +15,15 @@ def main() -> None:
     fake_questions = []
 
     for question in questions:
-        if question['questionType'] == 'multiple choice':
-            assert len([k for k in question if k.startswith('answer_option')]) == 5
-            fake_questions.append(question)
-        elif question['questionType'] == 'true/false':
-            assert len([k for k in question if k.startswith('answer_option')]) == 2
-            new_question = question.copy()
-            new_question['answer_option2'] = 'INVALID ANSWER'
-            new_question['answer_option3'] = 'INVALID ANSWER'
-            new_question['answer_option4'] = 'INVALID ANSWER'
-            assert len([k for k in new_question if k.startswith('answer_option')]) == 5
-            fake_questions.append(new_question)
+        new_question = {k: v for k, v in question.items() if not k.startswith('answer_option')}
+        new_question['answer_options'] = [question[k] for k in question if k.startswith('answer_option')]
+        if new_question['questionType'] == 'multiple choice':
+            assert len(new_question['answer_options']) == 5
+        elif new_question['questionType'] == 'true/false':
+            assert len(new_question['answer_options']) == 2
         else:
             raise ValueError(f'Invalid "questionType" {question["questionType"]}')
+        fake_questions.append(new_question)
 
     with args.output_file.open('w') as file:
         for question in fake_questions:

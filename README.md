@@ -66,6 +66,19 @@ python eval.py \
     --output pred.lst
 ```
 
+## Dockerize
+
+```bash
+time DOCKER_BUILDKIT=1 docker build -t cycic-20200622 .
+time docker run -it -v ${PWD}/data:/data -v ${PWD}/results:/results cycic-20200622 bash run_model.sh`
+```
+
+If submitting:
+
+```bash
+beaker image create --name cycic-20200622 cycic-20200622
+```
+
 ## Results
 
 ### PIQA
