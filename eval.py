@@ -68,10 +68,12 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
                 batch[key] = batch[key].to(compute_device)
         with torch.no_grad():
             logits = a_classifier.forward(batch)
-        num_choice = batch["num_choice"][0].item()
-        logits = logits.reshape(-1, num_choice)
-        predictions.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
-        confidence.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())
+        num_choices = batch["num_choice"].masked_select(batch["num_choice"].ne(-1))
+        logits = logits.split(num_choices.tolist())
+        new_predictions = torch.stack([torch.argmax(log) for log in logits]).cpu().detach().numpy().tolist()
+        new_confidences = [F.softmax(log, dim=0).cpu().detach().numpy().tolist() for log in logits]
+        predictions.extend(new_predictions)
+        confidence.extend(new_confidences)
 
     # Offset the predictions with the lowest label
     predictions = [p + a_classifier.label_offset for p in predictions]
