@@ -7,7 +7,7 @@ RUN pip install -r requirements.txt
 
 # Copy model
 COPY model_cache/ ./model_cache/
-COPY 2020_06_17_s42.ckpt ./
+COPY cycic_2020_06_17_s42.ckpt ./
 
 # Copy remaining code
 COPY config/ ./config/
