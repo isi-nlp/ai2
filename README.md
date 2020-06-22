@@ -69,8 +69,14 @@ python eval.py \
 ## Dockerize
 
 ```bash
-time DOCKER_BUILDKIT=1 docker build -t cycic-test .
+time DOCKER_BUILDKIT=1 docker build -t cycic-20200622 .
 time docker run -it -v ${PWD}/data:/data -v ${PWD}/results:/results cycic-test bash run_model.sh`
+```
+
+If submitting:
+
+```bash
+beaker image create --name cycic-20200622 cycic-20200622
 ```
 
 ## Results
