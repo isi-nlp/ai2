@@ -17,7 +17,7 @@ def main() -> None:
         question_path = args.input_dir / f'cycic_{in_split}_questions.jsonl'
         label_path = args.input_dir / f'cycic_{in_split}_labels.jsonl'
 
-        with question_path.open() as file:
+        with question_path.open(encoding='utf-8-sig') as file:
             questions = [json.loads(line) for line in file]
         with label_path.open() as file:
             labels = [json.loads(line) for line in file]

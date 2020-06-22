@@ -5,11 +5,11 @@ from pathlib import Path
 
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--input-file', type=Path, default=Path('data' 'cycic.jsonl'))
+    p.add_argument('--input-file', type=Path, default=Path('data', 'cycic.jsonl'))
     p.add_argument('--output-file', type=Path, default=Path('temp.jsonl'))
     args = p.parse_args()
 
-    with args.input_file.open() as file:
+    with args.input_file.open(encoding='utf-8-sig') as file:
         questions = [json.loads(line) for line in file]
 
     fake_questions = []
