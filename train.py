@@ -1,12 +1,10 @@
 import os
 from pathlib import Path
-import random
 
 import hydra
 from loguru import logger
-import numpy as np
 import omegaconf
-from pytorch_lightning import Trainer
+from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import TestTubeLogger
 import torch
@@ -23,15 +21,9 @@ def train(config: omegaconf.Config):
     config = omegaconf.OmegaConf.to_container(config)
     logger.info(config)
 
-    # If the training is deterministic for debugging purposes, we set the random seed
-    if not isinstance(config['random_seed'], bool):
-        logger.info(f"Running deterministic model with seed {config['random_seed']}")
-        torch.manual_seed(config['random_seed'])
-        np.random.seed(config['random_seed'])
-        random.seed(config['random_seed'])
-        if torch.cuda.is_available():
-            torch.backends.cuda.deterministic = True
-            torch.backends.cuda.benchmark = False
+    # Automatically generates random seed if none given
+    config['random_seed'] = seed_everything(config['random_seed'])
+    logger.info(f"Running deterministic model with seed {config['random_seed']}")
 
     # Initialize the classifier by arguments specified in config file
     save_path = f"{config['model']}-{config['task_name']}-s{config['random_seed']}"
@@ -81,6 +73,8 @@ def train(config: omegaconf.Config):
         weights_summary='top',
         num_sanity_val_steps=5,
         resume_from_checkpoint=checkpoint_path,
+        benchmark=False,
+        deterministic=True,
     )
     trainer.fit(model)
     logger.success('Training Completed')
