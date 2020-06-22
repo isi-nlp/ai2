@@ -70,7 +70,7 @@ python eval.py \
 
 ```bash
 time DOCKER_BUILDKIT=1 docker build -t cycic-20200622 .
-time docker run -it -v ${PWD}/data:/data -v ${PWD}/results:/results cycic-test bash run_model.sh`
+time docker run -it -v ${PWD}/data:/data -v ${PWD}/results:/results cycic-20200622 bash run_model.sh`
 ```
 
 If submitting:
