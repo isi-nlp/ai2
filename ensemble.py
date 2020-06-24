@@ -27,7 +27,7 @@ def run_ensemble(predictions_df, confidences_df, subset):
     if task in ['socialiqa', 'alphanli']: weighted_votes += 1
     final_predictions = weighted_votes.tolist()
     stats = []
-    for _ in range(100):
+    for _ in range(10000):
         indices = [i for i in np.random.random_integers(0, len(final_predictions) - 1, size=len(final_predictions))]
         stats.append(accuracy_score([labels[j] for j in indices], [final_predictions[j] for j in indices]))
 
