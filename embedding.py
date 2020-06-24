@@ -1,4 +1,5 @@
 import pathlib
+import pickle
 
 import hydra
 import numpy as np
@@ -6,7 +7,6 @@ import torch
 from loguru import logger
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-import pickle
 
 from model import Classifier
 
@@ -52,15 +52,15 @@ def embedding(config):
                 logger.info(f'Parsing embeddings using {model_name}')
 
                 distance_eval_dict['checkpoint_names'].append(model_name)
-                distance_eval_dict['train_embed'].append(
-                    calculate_embeddings(a_classifier=model, compute_device=device, feature=config['feature'],
-                                         text_path=ROOT_PATH / config['train_x'], label_path=ROOT_PATH / config['train_y']))
                 distance_eval_dict['dev_embed'].append(
                     calculate_embeddings(a_classifier=model, compute_device=device, feature=config['feature'],
-                                         text_path=ROOT_PATH / config['val_x'], label_path=ROOT_PATH / config['val_y']))
+                                         text_path=ROOT_PATH/config['val_x'], label_path=ROOT_PATH/config['val_y']))
+                distance_eval_dict['train_embed'].append(
+                    calculate_embeddings(a_classifier=model, compute_device=device, feature=config['feature'],
+                                         text_path=ROOT_PATH/config['train_x'], label_path=ROOT_PATH/config['train_y']))
 
     # Pickle dump the dictionary for embedding distance calculation
-    with open(f"{config['model']}-{config['task_name']}-{config['feature']}.pickle", 'w+') as output_file:
+    with open(f"{config['model']}-{config['task_name']}-{config['feature']}.pickle", 'wb') as output_file:
         pickle.dump(distance_eval_dict, output_file)
 
 

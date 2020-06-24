@@ -7,7 +7,7 @@
 #SBATCH --cpus-per-task=4               # CPU Allocated
 #SBATCH --gpus-per-task=1               # GPU Allocated
 #SBATCH --job-name=PARSE_EMBEDDINGS        # The name of this job. If removed the job will have name of your shell script.
-#SBATCH --output=multirun/%x-%j.out              # The name of the file output. %x-%j means JOB_NAME-JOB_ID. If removed output will be in file slurm-JOB_ID.
+#SBATCH --output=outputs/%x-%j.out              # The name of the file output. %x-%j means JOB_NAME-JOB_ID. If removed output will be in file slurm-JOB_ID.
 #SBATCH --mail-user=dwangli@isi.edu     # Email address for email notifications to be sent to.
 #SBATCH --mail-type=ALL                 # Type of notifications to receive. Other options includes BEGIN, END, FAIL, REQUEUE and more.
 #SBATCH --export=NONE                   # Ensure job gets a fresh login environment
@@ -29,11 +29,9 @@ echo "Current working directory: $(pwd)"
 echo "Starting run at: $(date)"
 echo ""
 
-# Create a total array of models and tasks and permute them
-
+# Parse Embedding
 echo ""
-echo "Parsing embedding for the 20 training set along with the 1 story id"
-python embedding.py checkpoint_name=s0,s1,s2,s3,s4,s5,s6,s7,s8,s9 -m
+python embedding.py
 echo ""
 
 ### Finishing up the job and copy the output off of staging
