@@ -127,11 +127,11 @@ for task in tasks_to_threshold.keys():
         all_accuracy = run_ensemble(predictions_df, confidences_df, successful_models)
         results['Ensemble - All'] = all_accuracy
 
-        print('Ensemble of best per seed-group:', )
+        print('Ensemble of best-per-architecture:', )
         best_per_seed_accuracy = run_ensemble(predictions_df, confidences_df, [best_model_per_seed_group[k] for k in best_score_per_seed_group.keys()])
-        results['Ensemble - best per seed-group'] = all_accuracy
-        results['Improvement per seed vs all'] = round(best_per_seed_accuracy-all_accuracy,2)
-        print('Improvement per seed vs all:', results['Improvement per seed vs all'])
+        results['Ensemble - best-per-architecture'] = best_per_seed_accuracy
+        results['Ensemble Improvement best-per-architecture vs all'] = round(best_per_seed_accuracy-all_accuracy,2)
+        print('Ensemble Improvement best per arc vs all:', results['Ensemble Improvement best-per-architecture vs all'])
 
         for factor in ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']:
             without_factor = [m for m in successful_models if factor not in m]
