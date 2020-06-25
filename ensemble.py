@@ -130,6 +130,8 @@ for task in tasks_to_threshold.keys():
         print('Ensemble of best per seed-group:', )
         best_per_seed_accuracy = round(run_ensemble(predictions_df, confidences_df, [best_model_per_seed_group[k] for k in best_score_per_seed_group.keys()])*100,2)
         results['Ensemble - best per seed-group'] = all_accuracy
+        results['Improvement per seed vs all'] = best_per_seed_accuracy-all_accuracy
+        print('Improvement per seed vs all:', best_per_seed_accuracy-all_accuracy)
 
         for factor in ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']:
             without_factor = [m for m in successful_models if factor not in m]
