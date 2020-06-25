@@ -27,7 +27,7 @@ def run_ensemble(predictions_df, confidences_df, subset):
     if task in ['socialiqa', 'alphanli']: weighted_votes += 1
     final_predictions = weighted_votes.tolist()
     stats = []
-    for _ in range(10000):
+    for _ in range(100):
         indices = [i for i in np.random.random_integers(0, len(final_predictions) - 1, size=len(final_predictions))]
         stats.append(accuracy_score([labels[j] for j in indices], [final_predictions[j] for j in indices]))
 
@@ -124,7 +124,7 @@ for task in tasks_to_threshold.keys():
         all_accuracy = round(run_ensemble(predictions_df, confidences_df, successful_models)*100,2)
         results['Ensemble - All'] = all_accuracy
 
-        print('Ensemble of best per seed-group:', round(run_ensemble(predictions_df, confidences_df, [best_model_per_seed_group[k] for k in best_score_per_seed_group.keys()]),4))
+        print('Ensemble of best per seed-group:', round(run_ensemble(predictions_df, confidences_df, [best_model_per_seed_group[k] for k in best_score_per_seed_group.keys()]),3))
         for factor in ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']:
             without_factor = [m for m in successful_models if factor not in m]
             print(f'Without {factor}:')
