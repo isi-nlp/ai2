@@ -60,7 +60,7 @@ def embedding(config):
                                          text_path=ROOT_PATH/config['train_x'], label_path=ROOT_PATH/config['train_y']))
 
     # Pickle dump the dictionary for embedding distance calculation
-    with open(f"{config['model']}-{config['task_name']}-{config['feature']}.pickle", 'wb') as output_file:
+    with open(f"{config['model']}-{config['task_name']}-{config['feature']}.embed", 'wb') as output_file:
         pickle.dump(distance_eval_dict, output_file)
 
 
