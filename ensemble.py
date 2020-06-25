@@ -55,7 +55,8 @@ for task in tasks_to_threshold.keys():
         gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
         labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
 
-        best_per_seed_group = defaultdict(float)
+        best_score_per_seed_group = defaultdict(float)
+        best_model_per_seed_group = defaultdict(str)
         successful_models = []
         model_to_predictions = {}
         model_to_confidences = {}
@@ -74,9 +75,9 @@ for task in tasks_to_threshold.keys():
                     print(f'{model},{round(accuracy*100,2)}')
                     results[model.replace(task+'_'+data_size+'_','')] = round(accuracy*100,2)
 
-                    # model_without_seed = model.strip('_'+model.split('_')[-1])
-                    # if accuracy > best_per_seed_group[model_without_seed]:
-                    #     best_per_seed_group[model_without_seed] = accuracy
+                    model_without_seed = model.strip('_'+model.split('_')[-1])
+                    if accuracy > best_score_per_seed_group[model_without_seed]:
+                        best_model_per_seed_group[model_without_seed] = model
             except:
                 print(f'Couldn\'t find preds for {model}')
                 continue
@@ -122,7 +123,8 @@ for task in tasks_to_threshold.keys():
         print('Ensemble of all models:')
         all_accuracy = round(run_ensemble(predictions_df, confidences_df, successful_models)*100,2)
         results['Ensemble - All'] = all_accuracy
-        # print('Ensemble of best per seed-group:', round(run_ensemble(predictions_df, confidences_df, best_per_seed_group.keys()),4))
+
+        print('Ensemble of best per seed-group:', round(run_ensemble(predictions_df, confidences_df, [best_model_per_seed_group[k] for k in best_score_per_seed_group.keys()]),4))
         for factor in ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']:
             without_factor = [m for m in successful_models if factor not in m]
             print(f'Without {factor}:')
