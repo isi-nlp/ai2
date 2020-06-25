@@ -77,6 +77,7 @@ for task in tasks_to_threshold.keys():
 
                     model_without_seed = model.strip('_'+model.split('_')[-1])
                     if accuracy > best_score_per_seed_group[model_without_seed]:
+                        best_score_per_seed_group[model_without_seed] = accuracy
                         best_model_per_seed_group[model_without_seed] = model
             except:
                 print(f'Couldn\'t find preds for {model}')
