@@ -43,7 +43,7 @@ def run_ensemble(predictions_df, confidences_df, subset):
 
     # print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
     # unweighted_votes = predictions_df[subset].mode(axis=1).too_nutolist()
-    return accuracy
+    return round(accuracy*100,2)
 
 all_results = {}
 
@@ -124,11 +124,11 @@ for task in tasks_to_threshold.keys():
         print(best_model_per_seed_group)
         print(best_score_per_seed_group)
         print('Ensemble of all models:')
-        all_accuracy = round(run_ensemble(predictions_df, confidences_df, successful_models)*100,2)
+        all_accuracy = run_ensemble(predictions_df, confidences_df, successful_models)
         results['Ensemble - All'] = all_accuracy
 
         print('Ensemble of best per seed-group:', )
-        best_per_seed_accuracy = round(run_ensemble(predictions_df, confidences_df, [best_model_per_seed_group[k] for k in best_score_per_seed_group.keys()])*100,2)
+        best_per_seed_accuracy = run_ensemble(predictions_df, confidences_df, [best_model_per_seed_group[k] for k in best_score_per_seed_group.keys()])
         results['Ensemble - best per seed-group'] = all_accuracy
         results['Improvement per seed vs all'] = best_per_seed_accuracy-all_accuracy
         print('Improvement per seed vs all:', best_per_seed_accuracy-all_accuracy)
@@ -136,7 +136,7 @@ for task in tasks_to_threshold.keys():
         for factor in ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']:
             without_factor = [m for m in successful_models if factor not in m]
             print(f'Without {factor}:')
-            wf_accuracy = round(run_ensemble(predictions_df, confidences_df, without_factor) * 100, 2)
+            wf_accuracy = run_ensemble(predictions_df, confidences_df, without_factor)
             results[f'Ensemble - Without {factor}'] = wf_accuracy
         all_results[task + '_' + data_size] = results
 
