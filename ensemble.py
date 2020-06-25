@@ -120,6 +120,8 @@ for task in tasks_to_threshold.keys():
         # counts = Counter(best_performers)
         # print(counts.most_common())
 
+        print(best_model_per_seed_group)
+        print(best_score_per_seed_group)
         print('Ensemble of all models:')
         all_accuracy = round(run_ensemble(predictions_df, confidences_df, successful_models)*100,2)
         results['Ensemble - All'] = all_accuracy
