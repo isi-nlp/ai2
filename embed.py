@@ -31,22 +31,9 @@ def embedding(config):
                           'train_path': ROOT_PATH / config['train_x'], 'dev_path': ROOT_PATH / config['val_x'],
                           'embeddings': []}
 
-    # First we use an out of box model to encode the train and dev files as baseline
-    model = Classifier(config)
-    model.to(device)
-    model.eval()
-    logger.info('Parsing embeddings using an out of box model')
-    distance_eval_dict['embeddings'].append(
-        ('out_of_box',
-         calculate_embeddings(a_classifier=model, compute_device=device, feature=config['feature'],
-                              text_path=ROOT_PATH / config['train_x'],
-                              label_path=ROOT_PATH / config['train_y']),
-         calculate_embeddings(a_classifier=model, compute_device=device, feature=config['feature'],
-                              text_path=ROOT_PATH / config['val_x'],
-                              label_path=ROOT_PATH / config['val_y']))
-    )
-
+    # If a list of checkpoint is provided, we use them to parse the files
     if config['checkpoint_list']:
+        embed_method = 'checkpoints'
         with open(ROOT_PATH / config['checkpoint_list'], 'r') as checkpoint_list:
             for a_checkpoint_file_location in checkpoint_list:
                 # Load in the checkpoint file for the mdoel
@@ -69,9 +56,25 @@ def embedding(config):
                                           text_path=ROOT_PATH / config['val_x'],
                                           label_path=ROOT_PATH / config['val_y']))
                 )
+    # Otherwise, we use an out of box model
+    else:
+        embed_method = 'out_of_box'
+        model = Classifier(config)
+        model.to(device)
+        model.eval()
+        logger.info('Parsing embeddings using an out of box model')
+        distance_eval_dict['embeddings'].append(
+            ('out_of_box',
+             calculate_embeddings(a_classifier=model, compute_device=device, feature=config['feature'],
+                                  text_path=ROOT_PATH / config['train_x'],
+                                  label_path=ROOT_PATH / config['train_y']),
+             calculate_embeddings(a_classifier=model, compute_device=device, feature=config['feature'],
+                                  text_path=ROOT_PATH / config['val_x'],
+                                  label_path=ROOT_PATH / config['val_y']))
+        )
 
     # Pickle dump the dictionary for embedding distance calculation
-    with open(f"{config['model']}-{config['task_name']}-{config['feature']}.embed", 'wb') as output_file:
+    with open(f"{config['model']}-{embed_method}-{config['task_name']}-{config['feature']}.embed", 'wb') as output_file:
         pickle.dump(distance_eval_dict, output_file)
 
 
