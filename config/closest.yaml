@@ -1,0 +1,22 @@
+embedding_loc: outputs/2020-06-24/14-46-05/roberta-large-alphanli-retrieve_embed-AVG_MEAN.embed
+distance_type: cosine
+top_N: 5
+# Train subset - if not False, the script will only calculate distances with regard to these train stories
+# (Current selection is the first 20%)
+train_subset:
+  - 0-33930
+# Dev subset - if not False, the script will only care about these dev stories
+# (Current selection is the 6 dev story + Tim's story)
+dev_subset:
+  - 605
+  - 763
+  - 1116
+  - 1273
+  - 230
+  - 1007
+  - 1464
+# Influential Range: If not false, the script will add another column called "In Influential Range" and flag train
+# samples in the influential range. The script will also write out statistics on correctness
+# (Current selection is the second 10% of the set)
+influential_range:
+  - 16965-33930

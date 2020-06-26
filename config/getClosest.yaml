@@ -1,4 +1,0 @@
-embedding_loc: outputs/2020-06-24/14-46-05/roberta-large-alphanli-retrieve_embed-AVG_MEAN.pickle
-distance_type: cosine
-top_N: 5
-# TODO: Subselect train range and dev range

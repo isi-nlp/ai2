@@ -31,7 +31,7 @@ echo ""
 
 # Parse Embedding
 echo ""
-python embedding.py
+python embed.py
 echo ""
 
 ### Finishing up the job and copy the output off of staging
