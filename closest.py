@@ -93,7 +93,7 @@ def closest(config):
                 f"dev stories with {num_checkpoints} different checkpoint files {influential_log}")
 
     # Loop through each dev story and print out top close stories
-    for dev_story_id in dev_stories_of_interest:
+    for dev_story_id in sorted(dev_stories_of_interest):
         logger.info(f'Start Calculating Embedding for Dev Story {dev_story_id}')
         a_dev_story = json.loads(dev_text[dev_story_id])
         output_file.write(f'Dev Story ID\t\t' + '\t'.join(important_fields) + '\n')
@@ -114,7 +114,7 @@ def closest(config):
             for idx_train in train_stories_of_interest:
                 distances = dm.get_distance(train_embed[idx_train], a_dev_embed)
                 train_distances.append((idx_train, distances))
-            train_distances.sort(key=lambda tup: tup[1])
+            train_distances.sort(key=lambda tup: tup[1], reverse=config['farthest'])
 
             # Print out train stories in the table format
             output_file.write('StoryID\tCosine Distance\t' + '\t'.join(important_fields) + influential_header + '\n')

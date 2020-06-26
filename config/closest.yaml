@@ -1,6 +1,8 @@
 embedding_loc: outputs/2020-06-25/20-53-53/roberta-large-alphanli-AVG_MEAN.embed
 distance_type: cosine
 top_N: 5
+# If want to use the same logic but calculate the farthest training set
+farthest: False
 # Train subset - if not False, the script will only calculate distances with regard to these train stories
 # (Current selection is the first 20%)
 train_subset:
