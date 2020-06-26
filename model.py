@@ -98,7 +98,8 @@ class Classifier(pl.LightningModule):
                 combined = torch.cat((question_seq, ans_seq), 0)  # concat context and answer
                 combined_mean = torch.mean(combined, dim=0).squeeze()  # mean of the question and the correct answer
                 mean_embeddings[i, :] = combined_mean
-                mean_embeddings = mean_embeddings.to(torch.device('cuda'))
+                if torch.cuda.device_count() > 0:
+                    mean_embeddings = mean_embeddings.to(torch.device('cuda'))
         else:
             mean_embeddings = torch.mean(token_embeddings, dim=1).squeeze()
         output = self.dropout(mean_embeddings)

@@ -1,10 +1,10 @@
 import os
 
 parameter_options = {
-                # 'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
-                'task': ['alphanli'],
+                'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
+                # 'task': ['alphanli'],
                 # 'train_data_slice': ['25', '90'],
-                'train_data_slice': ['90'],
+                'train_data_slice': ['100'],
                 # 'task2': ['cn_10k', 'cn_20k', 'cn_40k', 'cn_physical_10k'],
                 'task2': ['','cn_10k'],
                 'architecture': ['standard', 'include_answers_in_context', 'embed_all_sep_mean'],
@@ -23,8 +23,7 @@ for parameter_name, options in parameter_options.items():
 
 for i, combination in enumerate(parameter_combinations):
     experiment_id = '_'.join(option for _, option in combination if option != '')
-
-    experiment_id = 'newsplit_'+experiment_id
+    # experiment_id = 'newsplit_'+experiment_id
 
     os.system(f"sbatch "
           # Additional SLURM specifications
