@@ -82,7 +82,12 @@ def closest(config):
                        [a_choice.strip() for a_choice in choices.strip().split("|")]
 
     # Create the output file and start writing the headers
-    output_file = open(f"{embedding_dict['task_name']}-{config['distance_type']}_dist-top_{config['top_N']}.tsv", 'w')
+    if config['farthest']:
+        mode = 'farthest'
+    else:
+        mode = 'closest'
+    output_file = \
+        open(f"{embedding_dict['task_name']}-{config['distance_type']}_dist-{mode}_top_{config['top_N']}.tsv", 'w')
     output_file.write(f"Task Name:\t{embedding_dict['task_name']}\tDistance Function:\t{config['distance_type']}\n\n\n")
 
     # Get the number of checkpoints
