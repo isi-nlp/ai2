@@ -8,6 +8,7 @@ import pathlib
 import pickle
 
 import hydra
+import torch
 import tqdm
 from loguru import logger
 
@@ -77,9 +78,8 @@ def closest(config):
     important_fields = [a_context.strip() for a_context in context.strip().split("+")] + \
                        [a_choice.strip() for a_choice in choices.strip().split("|")]
 
-    # TODO: Better file name
-    # Create the output file and start writing to it
-    output_file = open(f"output.tsv", 'w')
+    # Create the output file and start writing the headers
+    output_file = open(f"{embedding_dict['task_name']}-{config['distance_type']}_dist-top_{config['top_N']}.tsv", 'w')
     output_file.write(f"Task Name:\t{embedding_dict['task_name']}\n")
     output_file.write(f"Distance Function:\t{config['distance_type']}\n\n\n")
 
@@ -99,18 +99,17 @@ def closest(config):
         for an_important_field in important_fields:
             dev_print_line += f'\t{a_dev_story[an_important_field]}'
         output_file.write(f'{dev_print_line}\n')
+        accuracies = torch.zeros(num_checkpoints, dtype=torch.float)
 
         for ckpt_index, embed_tuple in tqdm.tqdm(enumerate(embedding_dict['checkpoint_names']), total=num_checkpoints):
-            # Break out the embedding tuple
+            # Break out the embedding tuple and write header information
             ckpt_name, train_embed, dev_embed = embed_tuple
-
-            # Retrieve the dev embedding associated to this checkpoint
             a_dev_embed = dev_embed[dev_story_id]
             output_file.write(f"Seed Name: {ckpt_name}\n")
 
             # Calculate distances from each train embedding to dev embedding and order it from by increasing distance
             train_distances = []
-            for idx_train in tqdm.tqdm(enumerate(train_stories_of_interest), total=num_train_stories):
+            for idx_train in tqdm.tqdm(train_stories_of_interest, total=num_train_stories):
                 distances = dm.get_distance(train_embed[idx_train], a_dev_embed)
                 train_distances.append((idx_train, distances))
             train_distances.sort(key=lambda tup: tup[1])
@@ -123,13 +122,20 @@ def closest(config):
                 print_line = f'{idx}\t{cosine_distance:.3f}'
                 for an_important_field in important_fields:
                     print_line += f'\t{train_story[an_important_field]}'
+
+                # If we are considering influential set, we also add this additional column of True or False
                 if influential_set:
                     print_line += f'\t{idx in influential_set}'
                     num_in_influential_set += int(idx in influential_set)
+
                 output_file.write(f'{print_line}\n')
-            if influential_set:
-                output_file.write(f"\nAccuracies\t{num_in_influential_set/config['top_N']:.5f}\n")
-            output_file.write('\n')
+
+            # Add the accuracy to the accumulating torch tensor
+            accuracies[ckpt_index] = num_in_influential_set/config['top_N']
+
+        # If we are considering influential set, also out put the mean accuracy of this dev story along with its std
+        if influential_set:
+            output_file.write(f"\nAccuracies:\t{accuracies.mean():.3f} +/- {2 * accuracies.std():.3f}\n")
         output_file.write('\n')
     output_file.close()
 
