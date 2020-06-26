@@ -96,8 +96,8 @@ def closest(config):
     for dev_story_id in dev_stories_of_interest:
         logger.info(f'Start Calculating Embedding for Dev Story {dev_story_id}')
         a_dev_story = json.loads(dev_text[dev_story_id])
-        output_file.write(f'Dev Story ID\t' + '\t'.join(important_fields) + '\n')
-        dev_print_line = f'{dev_story_id}'
+        output_file.write(f'Dev Story ID\t\t' + '\t'.join(important_fields) + '\n')
+        dev_print_line = f'{dev_story_id}\t'
         for an_important_field in important_fields:
             dev_print_line += f'\t{a_dev_story[an_important_field]}'
         output_file.write(f'{dev_print_line}\n')
