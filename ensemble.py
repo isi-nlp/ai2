@@ -140,6 +140,13 @@ for task in tasks_to_threshold.keys():
             print(f'Without {factor}:')
             wf_accuracy = run_ensemble(predictions_df, confidences_df, without_factor)
             results[f'Ensemble - Without {factor}'] = wf_accuracy
+
+            without_factor_per_arc = [m for m in [best_model_per_seed_group[k] for k in best_score_per_seed_group.keys()] if factor not in m]
+            print(f'Best-per-arc without {factor}:')
+            bpa_wf_accuracy = run_ensemble(predictions_df, confidences_df, without_factor_per_arc)
+            results[f'Best-per-arc without {factor}'] = bpa_wf_accuracy
+
+            best_per_seed_accuracy = run_ensemble(predictions_df, confidences_df, )
         all_results[task + '_' + data_size] = results
 
 df = pd.DataFrame.from_dict(all_results)
