@@ -59,7 +59,7 @@ for task in tasks_to_threshold.keys():
 
         best_score_per_seed_group = defaultdict(float)
         best_model_per_seed_group = defaultdict(str)
-        successful_models = []
+        successful_models = {}
         model_to_predictions = {}
         model_to_confidences = {}
         # Get Accuracies
@@ -70,17 +70,17 @@ for task in tasks_to_threshold.keys():
                 preds = pd.read_csv(path + '/predictions.lst', sep='\t', header=None).values.squeeze().tolist()
                 confs = pd.read_csv(path + '/confidence.lst', sep='\t', header=None).values.squeeze().tolist()
                 accuracy = accuracy_score(labels, preds)
-                if accuracy > tasks_to_threshold[task]:
-                    successful_models.append(model)
-                    model_to_predictions[model] = preds
-                    model_to_confidences[model] = confs
-                    print(f'{model},{round(accuracy*100,2)}')
-                    results[model.replace(task+'_'+data_size+'_','')] = round(accuracy*100,2)
 
-                    model_without_seed = model.strip('_'+model.split('_')[-1])
-                    if accuracy > best_score_per_seed_group[model_without_seed]:
-                        best_score_per_seed_group[model_without_seed] = accuracy
-                        best_model_per_seed_group[model_without_seed] = model
+                successful_models[model] = accuracy
+                model_to_predictions[model] = preds
+                model_to_confidences[model] = confs
+                print(f'{model},{round(accuracy*100,2)}')
+                results[model.replace(task+'_'+data_size+'_','')] = round(accuracy*100,2)
+
+                model_without_seed = model.strip('_'+model.split('_')[-1])
+                if accuracy > best_score_per_seed_group[model_without_seed]:
+                    best_score_per_seed_group[model_without_seed] = accuracy
+                    best_model_per_seed_group[model_without_seed] = model
             except:
                 print(f'Couldn\'t find preds for {model}')
                 continue
@@ -126,7 +126,7 @@ for task in tasks_to_threshold.keys():
         print(best_model_per_seed_group)
         print(best_score_per_seed_group)
         print('Ensemble of all models:')
-        all_accuracy = run_ensemble(predictions_df, confidences_df, successful_models)
+        all_accuracy = run_ensemble(predictions_df, confidences_df, [m for m,a in successful_models.items() if a > tasks_to_threshold[m.split('_')[0]]])
         results['Ensemble - All'] = all_accuracy
 
         print('Ensemble of best-per-architecture:', )
