@@ -11,7 +11,7 @@ import pandas as pd
 from scipy.stats.stats import pearsonr
 
 tasks_to_threshold = {
-    # 'alphanli':0.7,
+    'alphanli':0.6,
     'hellaswag':0.6,
     'physicaliqa':0.6,
     'socialiqa':0.6
@@ -48,11 +48,13 @@ def run_ensemble(predictions_df, confidences_df, subset):
 all_results = {}
 
 for task in tasks_to_threshold.keys():
-    for data_size in ['10','25','90']:
+    # for data_size in ['10','25','90']:
+    for data_size in ['100']:
         results = {}
         print(f'\nRunning ensemble for {task.upper()}, {data_size}')
         relevant_models = [model for model in models if task in model and data_size == model.split('_')[1]]
-        gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
+        # gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
+        gold_labels_path = f'task_data/{task}-train-dev/dev-labels.lst'
         labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
 
         best_score_per_seed_group = defaultdict(float)
@@ -141,4 +143,4 @@ for task in tasks_to_threshold.keys():
         all_results[task + '_' + data_size] = results
 
 df = pd.DataFrame.from_dict(all_results)
-df.to_csv('ensemble_results.csv',na_rep= '-')
+df.to_csv('ensemble_results_100.csv',na_rep= '-')
