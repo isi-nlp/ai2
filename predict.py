@@ -83,10 +83,9 @@ def predict(input_file, output_file, config):
 
 
 @hydra.main(config_path="config/train.yaml", strict=False)
-def load_config(cfg: omegaconf.Config):
-    con = omegaconf.OmegaConf.to_container(cfg)
-    return con
-
+def load_config(config: omegaconf.Config):
+    config = omegaconf.OmegaConf.to_container(config)
+    print(config)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
@@ -100,7 +99,9 @@ if __name__ == '__main__':
     print("=======================")
 
     print('Loading config')
-    config = load_config()
-    print(config)
-    print(config.pretty())
-    predict(args.input_file, args.output_file, config)
+    load_config()
+
+    # print(config)
+    # print(cfg)
+    # print(config.pretty())
+    # predict(args.input_file, args.output_file, config)
