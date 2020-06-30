@@ -138,11 +138,13 @@ for task in tasks_to_threshold.keys():
         for factor in ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']:
             without_factor = [m for m in successful_models if factor not in m]
             print(f'Without {factor}:')
+            print(without_factor)
             wf_accuracy = run_ensemble(predictions_df, confidences_df, without_factor)
             results[f'Ensemble - Without {factor}'] = wf_accuracy
 
             without_factor_per_arc = [m for m in [best_model_per_seed_group[k] for k in best_score_per_seed_group.keys()] if factor not in m]
             print(f'Best-per-arc without {factor}:')
+            print(without_factor_per_arc)
             bpa_wf_accuracy = run_ensemble(predictions_df, confidences_df, without_factor_per_arc)
             results[f'Best-per-arc without {factor}'] = bpa_wf_accuracy
 

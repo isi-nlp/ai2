@@ -65,7 +65,7 @@ def main(input_file, output_file):
     #  Eval for each sub model
     for ckpt in model_data[task]:
         config = {
-            'random_seed': 0,
+            'random_seed': ckpt.split('_')[-1],
             'architecture': 'standard',
             'with_true_label': True,
             'model': "roberta-large",
