@@ -46,16 +46,38 @@ def main(input_file, output_file):
             task = t
             break
     model_data = {'physicaliqa': [
-        'physicaliqa_100_cn_10k_include_answers_in_context_0.ckpt',
-        'physicaliqa_100_cn_10k_standard_42.ckpt',
-        'physicaliqa_100_include_answers_in_context_10061880.ckpt',
-        'physicaliqa_100_standard_42.ckpt'
-    ]}
+        'physicaliqa_100_cn_10k_include_answers_in_context_0',
+        'physicaliqa_100_cn_10k_standard_42',
+        'physicaliqa_100_include_answers_in_context_10061880',
+        'physicaliqa_100_standard_42'
+    ],
+        'alphanli': [
+            'alphanli_100_include_answers_in_context_0',
+            'alphanli_100_cn_10k_standard_0',
+            'alphanli_100_cn_10k_include_answers_in_context_0',
+            'alphanli_100_standard_42'
+        ],
+        'hellaswag': [
+            'hellaswag_100_standard_0',
+            'hellaswag_100_include_answers_in_context_42',
+            'hellaswag_100_cn_10k_standard_0',
+            'hellaswag_100_cn_10k_include_answers_in_context_0',
+            'hellaswag_100_cn_10k_embed_all_sep_mean_0',
+            'hellaswag_100_embed_all_sep_mean_42'
+        ],
+        'socialiqa': [
+            'socialiqa_100_cn_10k_standard_42',
+            'socialiqa_100_cn_10k_include_answers_in_context_0',
+            'socialiqa_100_cn_10k_embed_all_sep_mean_10061880',
+            'socialiqa_100_include_answers_in_context_0',
+            'socialiqa_100_embed_all_sep_mean_42',
+            'socialiqa_100_standard_42'
+        ]}
 
     #  Eval for each sub model
     for ckpt in model_data[task]:
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
-        checkpoint = torch.load(f'{task}_submission_models/{ckpt}', map_location=device)
+        checkpoint = torch.load(f'{task}_submission_models/{ckpt}.ckpt', map_location=device)
 
         with open(f'config/task/{task}.yaml', 'r') as ymlfile:
             config.update(yaml.load(ymlfile))
@@ -81,6 +103,9 @@ def main(input_file, output_file):
                     batch[key] = batch[key].to(device)
             with torch.no_grad():
                 logits = model.forward(batch)
+
+            num_choice = batch["num_choice"][0].item()
+            logits = logits.reshape(-1, num_choice)
 
             preds.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
             softmax = torch.nn.functional.softmax(logits, dim=1)
