@@ -100,5 +100,8 @@ if __name__ == '__main__':
     print('====Input Arguments====')
     print(json.dumps(vars(args), indent=2, sort_keys=True))
     print("=======================")
+
+    print('Loading config')
     config = load_config()
+
     predict(args.input_file, args.output_file, config)
