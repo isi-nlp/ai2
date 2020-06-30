@@ -1,0 +1,11 @@
+# Files to ignore.
+.git
+cache
+outputs
+taskdata
+*Dockerfile
+*.dockerignore
+physicaliqa_submission_models
+socialiqa_submission_models
+alphanli_submission_models
+hellaswag_submission_models
