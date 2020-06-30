@@ -19,7 +19,23 @@ def read_jsonl_lines(input_file: str) -> List[dict]:
         return [json.loads(l.strip()) for l in lines]
 
 
-def predict(input_file, output_file, config):
+def main(input_file, output_file):
+
+    config = {
+        'random_seed': 0,
+        'architecture': 'standard',
+        'with_true_label': True,
+        'model': "roberta-large",
+        'accumulate_grad_batches': 8,
+        'use_amp': False,  # Half precision only works best with Volta architectures such as V100
+        'max_epochs': 4,
+        'learning_rate': 5e-6,
+        'adam_epsilon': 1e-8,
+        'warmup_steps': 300,
+        'batch_size': 3,
+        'dropout': 0.3,
+        'max_length': 128,
+    }
 
     model_to_predictions = {}
     model_to_confidences = {}
@@ -40,8 +56,9 @@ def predict(input_file, output_file, config):
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
         checkpoint = torch.load(f'{task}_submission_models/{ckpt}', map_location=device)
 
-        config['task'] = task
-        if 'cn_10k' in ckpt: config['task2'] = 'cn_10k'
+        config['task_name'] = task
+        if 'cn_10k' in ckpt:
+            config.update({'task_name2': 'cn_all_cs_10k'})
         if 'include_answers_in_context' in ckpt: config['architecture'] = 'include_answers_in_context'
         elif 'embed_all_sep_mean' in ckpt: config['architecture'] = 'embed_all_sep_mean'
 
@@ -82,11 +99,6 @@ def predict(input_file, output_file, config):
         f.close()
 
 
-@hydra.main(config_path="config/train.yaml", strict=False)
-def load_config(config: omegaconf.Config):
-    config = omegaconf.OmegaConf.to_container(config)
-    print(config)
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='AI2 Submission.')
@@ -98,10 +110,4 @@ if __name__ == '__main__':
     print(json.dumps(vars(args), indent=2, sort_keys=True))
     print("=======================")
 
-    print('Loading config')
-    load_config()
-
-    # print(config)
-    # print(cfg)
-    # print(config.pretty())
-    # predict(args.input_file, args.output_file, config)
+    main(args.input_file, args.output_file)
