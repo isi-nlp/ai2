@@ -111,20 +111,16 @@ def main(input_file, output_file):
             logits = logits.reshape(-1, num_choice)
 
             preds.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
-            # softmax = torch.nn.functional.softmax(logits, dim=1)
             confidences.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())
 
         model_to_predictions[ckpt] = preds
         model_to_confidences[ckpt] = confidences
 
-    # predictions_df = pd.DataFrame.from_dict(model_to_predictions)
     confidences_df = pd.DataFrame.from_dict(model_to_confidences).applymap(np.asarray)
     confidences_df.to_csv(f'{task}_conf_predict.csv')
     weighted_votes = confidences_df.sum(axis=1).apply(np.argmax).to_numpy()
     if task in ['socialiqa', 'alphanli']: weighted_votes += 1
     predicted_answers = weighted_votes.tolist()
-    # scaled_df = predictions_df.mul(confidences_df, fill_value=1)  # Scale the predictions by multiplying with confidence
-    # predicted_answers = (scaled_df.mean(axis=1) > 0).astype(int).values.squeeze().tolist()  # Take the average of each row for ensembled predictions
 
     # Write the predictions to the output file.
     with open(output_file, "w") as f:
