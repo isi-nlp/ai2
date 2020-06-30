@@ -69,15 +69,15 @@ def main(input_file, output_file):
             'architecture': 'standard',
             'with_true_label': True,
             'model': "roberta-large",
-            # 'accumulate_grad_batches': 8,
-            # 'use_amp': False,  # Half precision only works best with Volta architectures such as V100
-            # 'max_epochs': 4,
-            # 'learning_rate': 5e-6,
-            # 'adam_epsilon': 1e-8,
-            # 'warmup_steps': 300,
-            # 'batch_size': 3,
+            'accumulate_grad_batches': 8,
+            'use_amp': False,  # Half precision only works best with Volta architectures such as V100
+            'max_epochs': 4,
+            'learning_rate': 5e-6,
+            'adam_epsilon': 1e-8,
+            'warmup_steps': 300,
+            'batch_size': 3,
             'dropout': 0.3,
-            # 'max_length': 128,
+            'max_length': 128,
         }
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
         checkpoint = torch.load(f'{task}_submission_models/{ckpt}.ckpt', map_location=device)
