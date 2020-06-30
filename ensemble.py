@@ -147,6 +147,8 @@ for task in tasks_to_threshold.keys():
             print(without_factor_per_arc)
             bpa_wf_accuracy = run_ensemble(predictions_df, confidences_df, without_factor_per_arc)
             results[f'Best-per-arc without {factor}'] = bpa_wf_accuracy
+            if factor == 'embed_all_sep_mean' and task == 'physicaliqa':
+                confidences_df[without_factor_per_arc].to_csv('piqa_conf_ensemble.csv')
 
         all_results[task + '_' + data_size] = results
 
