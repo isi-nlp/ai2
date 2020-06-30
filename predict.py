@@ -24,8 +24,7 @@ def load_config(config: DictConfig):
     return config
 
 
-def main(input_file, output_file):
-    config = load_config()
+def main(input_file, output_file, config):
 
     model_to_predictions = {}
     model_to_confidences = {}
@@ -98,4 +97,5 @@ if __name__ == '__main__':
     print('====Input Arguments====')
     print(json.dumps(vars(args), indent=2, sort_keys=True))
     print("=======================")
-    main(args.input_file, args.output_file)
+    config = load_config()
+    main(args.input_file, args.output_file, config)
