@@ -5,7 +5,7 @@ from typing import *
 import hydra
 import pandas as pd
 import torch
-from omegaconf import DictConfig
+from omegaconf import DictConfig, omegaconf
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
@@ -20,11 +20,13 @@ def read_jsonl_lines(input_file: str) -> List[dict]:
 
 
 @hydra.main(config_path="config/train.yaml", strict=False)
-def load_config(config: DictConfig):
+def load_config(config: omegaconf.Config):
+    config = omegaconf.OmegaConf.to_container(config)
+    print(config)
     return config
 
 
-def main(input_file, output_file, config):
+def predict(input_file, output_file, config):
 
     model_to_predictions = {}
     model_to_confidences = {}
@@ -98,4 +100,4 @@ if __name__ == '__main__':
     print(json.dumps(vars(args), indent=2, sort_keys=True))
     print("=======================")
     config = load_config()
-    main(args.input_file, args.output_file, config)
+    predict(args.input_file, args.output_file, config)
