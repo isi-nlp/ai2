@@ -52,6 +52,7 @@ models = f"""
 'socialiqa_100_standard_42'
 """
 
+print(models)
 for model in models.split():
     print(model)
     experiment_id = model.replace('\'', '').replace(',', '').replace(' ', '')
