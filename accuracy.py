@@ -12,4 +12,4 @@ if __name__ == '__main__':
 
     preds = pd.read_csv(args.preds, sep='\t', header=None).values.squeeze().tolist()
     labels = pd.read_csv(args.labels, sep='\t', header=None).values.squeeze().tolist()
-    print(round(accuracy_score(preds,labels)*100),2)
+    print(round(accuracy_score(preds,labels)*100,2))
