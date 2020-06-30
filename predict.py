@@ -7,6 +7,7 @@ import torch
 import yaml
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+import numpy as np
 
 from model import Classifier
 
@@ -112,14 +113,16 @@ def main(input_file, output_file):
             softmax = torch.nn.functional.softmax(logits, dim=1)
             confidences.extend((torch.max(softmax, dim=1)[0].cpu().detach().numpy().tolist()))
 
-        model_to_predictions[key] = [p + model.label_offset for p in preds]
-        model_to_confidences[key] = [(c - 0.5) * 2 for c in confidences]
+        model_to_predictions[ckpt] = [p + model.label_offset for p in preds]
+        model_to_confidences[ckpt] = confidences
 
-    predictions_df = (pd.DataFrame.from_dict(model_to_predictions) - 0.5) * 2  # Project to predictions to [-1, 1]
-    confidences_df = pd.DataFrame.from_dict(model_to_confidences)
-    scaled_df = predictions_df.mul(confidences_df, fill_value=1)  # Scale the predictions by multiplying with confidence
-
-    predicted_answers = (scaled_df.mean(axis=1) > 0).astype(int).values.squeeze().tolist()  # Take the average of each row for ensembled predictions
+    # predictions_df = pd.DataFrame.from_dict(model_to_predictions)
+    confidences_df = pd.DataFrame.from_dict(model_to_confidences).applymap(np.asarray)
+    weighted_votes = confidences_df.sum(axis=1).apply(np.argmax).to_numpy()
+    if task in ['socialiqa', 'alphanli']: weighted_votes += 1
+    predicted_answers = weighted_votes.tolist()
+    # scaled_df = predictions_df.mul(confidences_df, fill_value=1)  # Scale the predictions by multiplying with confidence
+    # predicted_answers = (scaled_df.mean(axis=1) > 0).astype(int).values.squeeze().tolist()  # Take the average of each row for ensembled predictions
 
     # Write the predictions to the output file.
     with open(output_file, "w") as f:
