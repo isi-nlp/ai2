@@ -2,11 +2,9 @@ import argparse
 import json
 from typing import *
 
-import hydra
 import pandas as pd
 import torch
 import yaml
-from omegaconf import DictConfig, omegaconf
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
