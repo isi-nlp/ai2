@@ -53,6 +53,7 @@ models = f"""
 """
 
 for model in models.split():
+    print(model)
     experiment_id = model.replace('\'', '').replace(',', '').replace(' ', '')
     combination = [('train_data_slice','100')]
     combination.append(('random_seed', experiment_id.split('_')[-1]))
@@ -65,7 +66,7 @@ for model in models.split():
         combination.append(('architecture','include_answers_in_context'))
     elif 'embed_all_sep_mean' in experiment_id:
         combination.append(('architecture','embed_all_sep_mean'))
-
+    print(combination)
 
     os.system(f"sbatch "
           # Additional SLURM specifications
