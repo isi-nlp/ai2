@@ -119,7 +119,7 @@ def main(input_file, output_file):
 
     # predictions_df = pd.DataFrame.from_dict(model_to_predictions)
     confidences_df = pd.DataFrame.from_dict(model_to_confidences).applymap(np.asarray)
-    confidences_df.to_csv('piqa_conf_predict.csv')
+    # confidences_df.to_csv('piqa_conf_predict.csv')
     weighted_votes = confidences_df.sum(axis=1).apply(np.argmax).to_numpy()
     if task in ['socialiqa', 'alphanli']: weighted_votes += 1
     predicted_answers = weighted_votes.tolist()
