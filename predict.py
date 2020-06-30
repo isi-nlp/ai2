@@ -19,9 +19,13 @@ def read_jsonl_lines(input_file: str) -> List[dict]:
         return [json.loads(l.strip()) for l in lines]
 
 
-@hydra.main(config_path="config/train.yaml", strict=False)
-def main(input_file, output_file, config: omegaconf.Config):
-    config = omegaconf.OmegaConf.to_container(config)
+def main(input_file, output_file):
+
+    @hydra.main(config_path="config/train.yaml", strict=False)
+    def load_config(config: omegaconf.Config):
+        return omegaconf.OmegaConf.to_container(config)
+
+    config = load_config()
 
     model_to_predictions = {}
     model_to_confidences = {}
@@ -38,12 +42,13 @@ def main(input_file, output_file, config: omegaconf.Config):
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
         checkpoint = torch.load(f'{task}_submission_models/{ckpt}', map_location=device)
 
-        config['task'] = task
-        if 'cn_10k' in ckpt: config['task2'] = 'cn_10k'
-        if 'include_answers_in_context' in ckpt: config['architecture'] = 'include_answers_in_context'
-        elif 'embed_all_sep_mean' in ckpt: config['architecture'] = 'embed_all_sep_mean'
-        model = Classifier(config)
-
+        with open(config, 'r') as ymlfile:
+            config = yaml.load(ymlfile)
+            config['task'] = task
+            if 'cn_10k' in ckpt: config['task2'] = 'cn_10k'
+            if 'include_answers_in_context' in ckpt: config['architecture'] = 'include_answers_in_context'
+            elif 'embed_all_sep_mean' in ckpt: config['architecture'] = 'embed_all_sep_mean'
+            model = Classifier(config)
         model.load_state_dict(checkpoint['state_dict'])
         model.to(device)
         model.eval()
