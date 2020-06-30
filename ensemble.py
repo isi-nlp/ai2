@@ -131,8 +131,8 @@ for task in tasks_to_threshold.keys():
 
         print('Ensemble of best-per-architecture:', )
         best_per_seed_accuracy = run_ensemble(predictions_df, confidences_df, [best_model_per_seed_group[k] for k in best_score_per_seed_group.keys()])
-        if task != 'physicaliqa' and task != 'alphanli':
-            confidences_df[[best_model_per_seed_group[k] for k in best_score_per_seed_group.keys()]].to_csv(f'{task}_conf_ensemble.csv')
+        # if task != 'physicaliqa' and task != 'alphanli':
+        #     confidences_df[[best_model_per_seed_group[k] for k in best_score_per_seed_group.keys()]].to_csv(f'{task}_conf_ensemble.csv')
 
         results['Ensemble - best-per-architecture'] = best_per_seed_accuracy
         results['Ensemble Improvement best-per-architecture vs all'] = round(best_per_seed_accuracy-all_accuracy,2)
@@ -150,8 +150,8 @@ for task in tasks_to_threshold.keys():
             # print(without_factor_per_arc)
             bpa_wf_accuracy = run_ensemble(predictions_df, confidences_df, without_factor_per_arc)
             results[f'Best-per-arc without {factor}'] = bpa_wf_accuracy
-            if factor == 'embed_all_sep_mean' and (task == 'physicaliqa' or task == 'alphanli'):
-                confidences_df[without_factor_per_arc].to_csv(f'{task}_conf_ensemble.csv')
+            # if factor == 'embed_all_sep_mean' and (task == 'physicaliqa' or task == 'alphanli'):
+            #     confidences_df[without_factor_per_arc].to_csv(f'{task}_conf_ensemble.csv')
 
         all_results[task + '_' + data_size] = results
 
