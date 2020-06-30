@@ -1,17 +1,17 @@
 import os
 
 parameter_options = {
-                # 'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
-                'task': ['physicaliqa'],
+                'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
+                # 'task': ['physicaliqa'],
                 # 'train_data_slice': ['25', '90'],
                 'train_data_slice': ['100'],
                 # 'task2': ['cn_10k', 'cn_20k', 'cn_40k', 'cn_physical_10k'],
-                # 'task2': ['','cn_10k'],
+                'task2': ['','cn_10k'],
                 'task2': [''],
-                # 'architecture': ['standard', 'include_answers_in_context', 'embed_all_sep_mean'],
-                'architecture': ['include_answers_in_context'],
-                # 'random_seed': ['0', '42', '10061880'],
-                'random_seed': ['10061880'],
+                'architecture': ['standard', 'include_answers_in_context', 'embed_all_sep_mean'],
+                # 'architecture': ['include_answers_in_context'],
+                'random_seed': ['0', '42', '10061880'],
+                # 'random_seed': ['10061880'],
               }
 
 # Create all possible combinations of parameters
@@ -33,14 +33,15 @@ for i, combination in enumerate(parameter_combinations):
           f"-J {experiment_id} "
           f"-o outputs/slurm/{experiment_id}.out "
           # Ephemeral specifications - sudo sacctmgr modify user beser set MaxJobs=25
-          # f"--partition=ephemeral "
-          # f"--qos=ephemeral "
-          # f"--time=12:00:00 "
-          # f"{'--gpus-per-task=2 ' if 'hellaswag' in experiment_id else ''}"
+          f"--partition=ephemeral "
+          f"--qos=ephemeral "
+          f"--time=12:00:00 "
+          f"{'--gpus-per-task=2 ' if 'hellaswag' in experiment_id else ''}"
           f"slurm/run_saga.sh "
           # Python script commands
           f"\""
               f"{' '.join([f'{name}={option}' for name,option in combination  if option != ''])}"
               f" save_path={experiment_id}" 
+              f" build_on_pretrained_model={experiment_id}/_ckpt_epoch_2." 
               f"{' batch_size=2' if 'hellaswag' in experiment_id else ''}"
               f"\"")

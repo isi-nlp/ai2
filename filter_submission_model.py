@@ -27,8 +27,9 @@ for model in models.split():
     m = model.replace('\'','').replace(',','').replace(' ','')
     task = m.split('_')[0]
     print(m)
-    for i in range(4):
-        try:
-            os.system(f'cp outputs/{m}/checkpoints/_ckpt_epoch_{i}.ckpt {task}_submission_models/{m}.ckpt')
-        except:
-            pass
+    os.system(f'ls outputs/{m}/checkpoints/')
+    # for i in range(4):
+    #     try:
+    #         os.system(f'cp outputs/{m}/checkpoints/_ckpt_epoch_{i}.ckpt {task}_submission_models/{m}.ckpt')
+    #     except:
+    #         pass
