@@ -29,7 +29,11 @@ def main(input_file, output_file):
 
     model_to_predictions = {}
     model_to_confidences = {}
-    task = input_file.replace('/data/','').replace('.jsonl','')
+    task = ''
+    for t in ['physicaliqa', 'socialiqa', 'alphanli', 'hellaswag']:
+        if t in input_file:
+            task = t
+            break
     model_data = {'physicaliqa': [
         'physicaliqa_100_cn_10k_include_answers_in_context_0.ckpt',
         'physicaliqa_100_cn_10k_standard_42.ckpt',
