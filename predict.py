@@ -46,13 +46,12 @@ def main(input_file, output_file):
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
         checkpoint = torch.load(f'{task}_submission_models/{ckpt}', map_location=device)
 
-        with open(config, 'r') as ymlfile:
-            config = yaml.load(ymlfile)
-            config['task'] = task
-            if 'cn_10k' in ckpt: config['task2'] = 'cn_10k'
-            if 'include_answers_in_context' in ckpt: config['architecture'] = 'include_answers_in_context'
-            elif 'embed_all_sep_mean' in ckpt: config['architecture'] = 'embed_all_sep_mean'
-            model = Classifier(config)
+        config['task'] = task
+        if 'cn_10k' in ckpt: config['task2'] = 'cn_10k'
+        if 'include_answers_in_context' in ckpt: config['architecture'] = 'include_answers_in_context'
+        elif 'embed_all_sep_mean' in ckpt: config['architecture'] = 'embed_all_sep_mean'
+
+        model = Classifier(config)
         model.load_state_dict(checkpoint['state_dict'])
         model.to(device)
         model.eval()
