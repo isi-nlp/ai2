@@ -29,31 +29,30 @@ import os
 #     break
 
 
-models = f"""
-'alphanli_100_include_answers_in_context_0',
-'alphanli_100_cn_10k_standard_0',
-'alphanli_100_cn_10k_include_answers_in_context_0',
-'alphanli_100_standard_42'
-"""
-# 'physicaliqa_100_cn_10k_standard_42
-# 'physicaliqa_100_include_answers_in_context_10061880
-# 'physicaliqa_100_cn_10k_include_answers_in_context_0
-# 'physicaliqa_100_standard_42'
-# 'hellaswag_100_standard_0',
-# 'hellaswag_100_include_answers_in_context_42', 
-# 'hellaswag_100_cn_10k_standard_0', 
-# 'hellaswag_100_cn_10k_include_answers_in_context_0',
-# 'hellaswag_100_cn_10k_embed_all_sep_mean_0', 
-# 'hellaswag_100_embed_all_sep_mean_42'
-# 'socialiqa_100_cn_10k_standard_42', 
-# 'socialiqa_100_cn_10k_include_answers_in_context_0', 
-# 'socialiqa_100_cn_10k_embed_all_sep_mean_10061880',
-# 'socialiqa_100_include_answers_in_context_0', 
-# 'socialiqa_100_embed_all_sep_mean_42',
-# 'socialiqa_100_standard_42'
+# 'alphanli_100_include_answers_in_context_0',
+# 'alphanli_100_cn_10k_standard_0',
+# 'alphanli_100_cn_10k_include_answers_in_context_0',
+# 'alphanli_100_standard_42'
 # """
+models = f"""
+'physicaliqa_100_cn_10k_standard_42
+'physicaliqa_100_include_answers_in_context_10061880
+'physicaliqa_100_cn_10k_include_answers_in_context_0
+'physicaliqa_100_standard_42'
+'hellaswag_100_standard_0',
+'hellaswag_100_include_answers_in_context_42', 
+'hellaswag_100_cn_10k_standard_0', 
+'hellaswag_100_cn_10k_include_answers_in_context_0',
+'hellaswag_100_cn_10k_embed_all_sep_mean_0', 
+'hellaswag_100_embed_all_sep_mean_42'
+'socialiqa_100_cn_10k_standard_42', 
+'socialiqa_100_cn_10k_include_answers_in_context_0', 
+'socialiqa_100_cn_10k_embed_all_sep_mean_10061880',
+'socialiqa_100_include_answers_in_context_0', 
+'socialiqa_100_embed_all_sep_mean_42',
+'socialiqa_100_standard_42'
+"""
 
-print(models)
 for model in models.split():
     print(model)
     experiment_id = model.replace('\'', '').replace(',', '').replace(' ', '')
@@ -75,9 +74,9 @@ for model in models.split():
           f"-J {experiment_id} "
           f"-o outputs/slurm/{experiment_id}.out "
           # Ephemeral specifications - sudo sacctmgr modify user beser set MaxJobs=25
-          # f"--partition=ephemeral "
-          # f"--qos=ephemeral "
-          # f"--time=12:00:00 "
+          f"--partition=ephemeral "
+          f"--qos=ephemeral "
+          f"--time=12:00:00 "
           f"{'--gpus-per-task=2 ' if 'hellaswag' in experiment_id else ''}"
           f"slurm/run_saga.sh "
           # Python script commands
