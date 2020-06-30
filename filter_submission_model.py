@@ -30,5 +30,7 @@ for model in models.split():
     for i in range(4):
         try:
             os.system(f'cp outputs/{m}/checkpoints/_ckpt_epoch_{i}.ckpt {task}_submission_models/{m}.ckpt')
+            print(f'Copied {m}')
+            continue
         except:
             pass
