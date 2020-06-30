@@ -1,15 +1,15 @@
 import argparse
 import json
+from typing import *
 
 import hydra
 import pandas as pd
-import yaml
-from typing import *
 import torch
-from omegaconf import omegaconf
+from omegaconf import DictConfig
 from torch.utils.data import DataLoader
-from model import Classifier
 from tqdm import tqdm
+
+from model import Classifier
 
 
 # Parse the input file from JSONL to a list of dictionaries.
@@ -19,12 +19,12 @@ def read_jsonl_lines(input_file: str) -> List[dict]:
         return [json.loads(l.strip()) for l in lines]
 
 
+@hydra.main(config_path="config/train.yaml", strict=False)
+def load_config(config: DictConfig):
+    return config
+
+
 def main(input_file, output_file):
-
-    @hydra.main(config_path="config/train.yaml", strict=False)
-    def load_config(config: omegaconf.Config):
-        return omegaconf.OmegaConf.to_container(config)
-
     config = load_config()
 
     model_to_predictions = {}
