@@ -76,7 +76,7 @@ def main(input_file, output_file):
             # 'adam_epsilon': 1e-8,
             # 'warmup_steps': 300,
             # 'batch_size': 3,
-            # 'dropout': 0.3,
+            'dropout': 0.3,
             # 'max_length': 128,
         }
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
