@@ -5,6 +5,7 @@ from typing import *
 import hydra
 import pandas as pd
 import torch
+import yaml
 from omegaconf import DictConfig, omegaconf
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -56,11 +57,14 @@ def main(input_file, output_file):
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
         checkpoint = torch.load(f'{task}_submission_models/{ckpt}', map_location=device)
 
-        config['task_name'] = task
+        with open(f'config/task/{task}.yaml', 'r') as ymlfile:
+            config.update(yaml.load(ymlfile))
+
         if 'cn_10k' in ckpt:
-            config.update({'task_name2': 'cn_all_cs_10k'})
+            with open(f'config/task2/cn_10k.yaml', 'r') as ymlfile:
+                config.update(yaml.load(ymlfile))
         if 'include_answers_in_context' in ckpt: config['architecture'] = 'include_answers_in_context'
-        elif 'embed_all_sep_mean' in ckpt: config['architecture'] = 'embed_all_sep_mean'
+        if 'embed_all_sep_mean' in ckpt: config['architecture'] = 'embed_all_sep_mean'
 
         model = Classifier(config)
         model.load_state_dict(checkpoint['state_dict'])
