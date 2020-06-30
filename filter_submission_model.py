@@ -24,7 +24,7 @@ physicaliqa_100_standard_42
 """
 
 for model in models.split():
-    m = models.replace('\'','').replace(',','').replace(' ','')
+    m = model.replace('\'','').replace(',','').replace(' ','')
     task = m.split('_')[0]
     print(m)
     for i in range(4):
