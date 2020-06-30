@@ -29,11 +29,11 @@ import os
 #     break
 
 
+# 'alphanli_100_include_answers_in_context_0',
+# 'alphanli_100_cn_10k_standard_0',
+# 'alphanli_100_cn_10k_include_answers_in_context_0',
+# 'alphanli_100_standard_42'
 models = f"""
-'alphanli_100_include_answers_in_context_0',
-'alphanli_100_cn_10k_standard_0',
-'alphanli_100_cn_10k_include_answers_in_context_0',
-'alphanli_100_standard_42'
 'physicaliqa_100_cn_10k_standard_42
 'physicaliqa_100_include_answers_in_context_10061880
 'physicaliqa_100_cn_10k_include_answers_in_context_0
