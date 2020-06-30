@@ -42,6 +42,6 @@ for i, combination in enumerate(parameter_combinations):
           f"\""
               f"{' '.join([f'{name}={option}' for name,option in combination  if option != ''])}"
               f" save_path={experiment_id}" 
-              f" build_on_pretrained_model={experiment_id}/_ckpt_epoch_2." 
+              f" save_best_only=False" 
               f"{' batch_size=2' if 'hellaswag' in experiment_id else ''}"
               f"\"")
