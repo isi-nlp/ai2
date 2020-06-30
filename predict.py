@@ -22,6 +22,7 @@ def read_jsonl_lines(input_file: str) -> List[dict]:
 @hydra.main(config_path="config/train.yaml", strict=False)
 def load_config(config: omegaconf.Config):
     config = omegaconf.OmegaConf.to_container(config)
+    print('Loaded')
     print(config)
     return config
 
