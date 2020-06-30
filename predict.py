@@ -19,14 +19,6 @@ def read_jsonl_lines(input_file: str) -> List[dict]:
         return [json.loads(l.strip()) for l in lines]
 
 
-@hydra.main(config_path="config/train.yaml", strict=False)
-def load_config(config: omegaconf.Config):
-    config = omegaconf.OmegaConf.to_container(config)
-    print('Loaded')
-    print(config)
-    return config
-
-
 def predict(input_file, output_file, config):
 
     model_to_predictions = {}
@@ -88,6 +80,14 @@ def predict(input_file, output_file, config):
             f.write(str(p))
             f.write("\n")
         f.close()
+
+
+@hydra.main(config_path="config/train.yaml", strict=False)
+def load_config(config: omegaconf.Config):
+    config = omegaconf.OmegaConf.to_container(config)
+    print('Loaded')
+    print(config)
+    return config
 
 
 if __name__ == '__main__':
