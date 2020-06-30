@@ -3,8 +3,6 @@
 cache
 outputs
 taskdata
-*Dockerfile
-*.dockerignore
 # physicaliqa_submission_models
 socialiqa_submission_models
 alphanli_submission_models
