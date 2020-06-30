@@ -1,6 +1,7 @@
 import argparse
 import json
 from typing import *
+import torch.nn.functional as F
 
 import pandas as pd
 import torch
@@ -110,10 +111,10 @@ def main(input_file, output_file):
             logits = logits.reshape(-1, num_choice)
 
             preds.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
-            softmax = torch.nn.functional.softmax(logits, dim=1)
-            confidences.extend((torch.max(softmax, dim=1)[0].cpu().detach().numpy().tolist()))
+            # softmax = torch.nn.functional.softmax(logits, dim=1)
+            confidences.extend(F.softmax(logits, dim=-1).cpu().detach().numpy().tolist())
 
-        model_to_predictions[ckpt] = [p + model.label_offset for p in preds]
+        model_to_predictions[ckpt] = preds
         model_to_confidences[ckpt] = confidences
 
     # predictions_df = pd.DataFrame.from_dict(model_to_predictions)
