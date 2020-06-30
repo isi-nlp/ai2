@@ -3,8 +3,3 @@ defaults:
   - task: alphanli
 checkpoint_list: config/checkpoint_list/alphanli-roberta_large.lst
 feature: AVG_MEAN
-# Possible Feature Types:
-# AVG_MEAN: Average embedding of all tokens, and average of all possible answers
-# AVG_CORRECT: Average embedding of all tokens, and choose the one parsed with correct answer
-# AVG_NULL: Average embedding of all tokens, without the options embedded in it
-# CLS_BOTH: CLS token embedding
