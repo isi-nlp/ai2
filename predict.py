@@ -20,29 +20,17 @@ def read_jsonl_lines(input_file: str) -> List[dict]:
 
 def main(input_file, output_file):
 
-    config = {
-        'random_seed': 0,
-        'architecture': 'standard',
-        'with_true_label': True,
-        'model': "roberta-large",
-        'accumulate_grad_batches': 8,
-        'use_amp': False,  # Half precision only works best with Volta architectures such as V100
-        'max_epochs': 4,
-        'learning_rate': 5e-6,
-        'adam_epsilon': 1e-8,
-        'warmup_steps': 300,
-        'batch_size': 3,
-        'dropout': 0.3,
-        'max_length': 128,
-    }
-
     model_to_predictions = {}
     model_to_confidences = {}
     task = ''
-    for t in ['physicaliqa', 'socialiqa', 'alphanli', 'hellaswag']:
+    for t in ['physicaliqa', 'socialiqa', 'hellaswag']:
         if t in input_file:
             task = t
             break
+
+    if 'anli' in input_file:
+        task = 'alphanli'
+
     model_data = {'physicaliqa': [
         'physicaliqa_100_cn_10k_include_answers_in_context_0',
         'physicaliqa_100_cn_10k_standard_42',
@@ -74,6 +62,21 @@ def main(input_file, output_file):
 
     #  Eval for each sub model
     for ckpt in model_data[task]:
+        config = {
+            'random_seed': 0,
+            'architecture': 'standard',
+            'with_true_label': True,
+            'model': "roberta-large",
+            'accumulate_grad_batches': 8,
+            'use_amp': False,  # Half precision only works best with Volta architectures such as V100
+            'max_epochs': 4,
+            'learning_rate': 5e-6,
+            'adam_epsilon': 1e-8,
+            'warmup_steps': 300,
+            'batch_size': 3,
+            'dropout': 0.3,
+            'max_length': 128,
+        }
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
         checkpoint = torch.load(f'{task}_submission_models/{ckpt}.ckpt', map_location=device)
 
@@ -106,10 +109,8 @@ def main(input_file, output_file):
             logits = logits.reshape(-1, num_choice)
 
             preds.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
-            # preds.extend(torch.argmax(logits, dim=1).numpy().tolist())
             softmax = torch.nn.functional.softmax(logits, dim=1)
             confidences.extend((torch.max(softmax, dim=1)[0].cpu().detach().numpy().tolist()))
-            # confidences.extend((torch.max(softmax, dim=1)[0].numpy().tolist()))
 
         model_to_predictions[key] = [p + model.label_offset for p in preds]
         model_to_confidences[key] = [(c - 0.5) * 2 for c in confidences]
