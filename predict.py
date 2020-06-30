@@ -105,9 +105,11 @@ def main(input_file, output_file):
             num_choice = batch["num_choice"][0].item()
             logits = logits.reshape(-1, num_choice)
 
-            preds.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
+            # preds.extend(torch.argmax(logits, dim=1).cpu().detach().numpy().tolist())
+            preds.extend(torch.argmax(logits, dim=1).numpy().tolist())
             softmax = torch.nn.functional.softmax(logits, dim=1)
-            confidences.extend((torch.max(softmax, dim=1)[0].cpu().detach().numpy().tolist()))
+            # confidences.extend((torch.max(softmax, dim=1)[0].cpu().detach().numpy().tolist()))
+            confidences.extend((torch.max(softmax, dim=1)[0].numpy().tolist()))
 
         model_to_predictions[key] = [p + model.label_offset for p in preds]
         model_to_confidences[key] = [(c - 0.5) * 2 for c in confidences]
