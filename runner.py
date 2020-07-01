@@ -7,7 +7,7 @@ parameter_options = {
                 'train_data_slice': ['100'],
                 # 'task2': ['cn_10k', 'cn_20k', 'cn_40k', 'cn_physical_10k'],
                 'task2': ['','cn_10k'],
-                'task2': [''],
+                # 'task2': [''],
                 'architecture': ['standard', 'include_answers_in_context', 'embed_all_sep_mean'],
                 # 'architecture': ['include_answers_in_context'],
                 'random_seed': ['0', '42', '10061880'],
@@ -76,7 +76,6 @@ for model in models.split():
           # f"--partition=ephemeral "
           # f"--qos=ephemeral "
           # f"--time=12:00:00 "
-          # f"{'--gpus-per-task=2 ' if 'hellaswag' in experiment_id else ''}"
           f"slurm/run_saga.sh "
           # Python script commands
           f"\""
