@@ -12,7 +12,7 @@ from scipy.stats.stats import pearsonr
 
 tasks_to_threshold = {
     'alphanli':0.6,
-    'hellaswag':0.6,
+    # 'hellaswag':0.6,
     'physicaliqa':0.6,
     'socialiqa':0.6
 }
