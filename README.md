@@ -84,6 +84,22 @@ time docker run -it -v ${PWD}/data:/data -v ${PWD}/results:/results cycic-full-2
 time beaker image create --name cycic-full-20200702 cycic-full-20200702
 ```
 
+### Submission of 20% CycIC on 2020-07-02
+
+```bash
+time DOCKER_BUILDKIT=1 docker build --file dockerfiles/cycic_20p_20200702 --tag cycic-20p-20200702 .
+time docker run -it -v ${PWD}/data:/data -v ${PWD}/results:/results cycic-20p-20200702 bash run_model.sh
+time beaker image create --name cycic-20p-20200702 cycic-20p-20200702
+```
+
+### Submission of 10% CycIC on 2020-07-02
+
+```bash
+time DOCKER_BUILDKIT=1 docker build --file dockerfiles/cycic_10p_20200702 --tag cycic-10p-20200702 .
+time docker run -it -v ${PWD}/data:/data -v ${PWD}/results:/results cycic-10p-20200702 bash run_model.sh
+time beaker image create --name cycic-10p-20200702 cycic-10p-20200702
+```
+
 ## Results
 
 ### PIQA
