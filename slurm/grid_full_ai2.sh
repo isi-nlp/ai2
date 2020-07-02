@@ -7,7 +7,7 @@
 #SBATCH --mem-per-cpu=4G
 #SBATCH --cpus-per-task=4
 #SBATCH --gpus-per-task=1
-#SBATCH --job-name=TRAIN_AI2
+#SBATCH --job-name=TRAIN_FULL_AI2
 #SBATCH --output=outputs/slurm/%x-%j.out    # %x-%j means JOB_NAME-JOB_ID.
 #SBATCH --mail-user=ahedges@isi.edu
 #SBATCH --mail-type=ALL   # Type of notifications to receive. Other options includes BEGIN, END, FAIL, REQUEUE and more.
@@ -29,7 +29,7 @@ echo "This is job $((SLURM_ARRAY_TASK_ID + 1)) out of $SLURM_ARRAY_TASK_COUNT jo
 lrs=(1e-5, 2e-6, 5e-6)
 lr=${lrs[${SLURM_ARRAY_TASK_ID}]}
 echo
-echo python -u train.py task=cycic_real accumulate_grad_batches=16 batch_size=1 learning_rate=$lr random_seed=1813174159
+time python -u train.py task=cycic_real accumulate_grad_batches=16 batch_size=1 learning_rate=$lr random_seed=1813174159
 echo
 
 # Finishing up the job and copy the output off of staging
