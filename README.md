@@ -10,6 +10,10 @@ conda activate ai2_stable
 pip install -r python_environment/requirements.txt
 ```
 
+This repo uses the Hydra python module to handle configuration and result storage. The config files are in the yaml 
+format, and the results are stored in multirun or outputs folder based on the time when the script is executed. 
+For more information in how to use Hydra please reference their website: https://hydra.cc/
+
 ## General File Structure Information
     .
     ├── config                      # Configuration Files
@@ -26,6 +30,10 @@ pip install -r python_environment/requirements.txt
     └── README.md
 
 ## train.py
+
+This script is the script that generates a model checkpoint by fine tuning it on a specific dataset. It can also handle
+loading in an existing model and further fine tune it with more data. The script largely uses the framework provided
+by pytorch-lightning: https://pytorch-lightning.readthedocs.io/en/latest/
 
 ## eval.py
 
