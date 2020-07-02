@@ -26,7 +26,9 @@ def train(config: omegaconf.Config):
     logger.info(f"Running deterministic model with seed {config['random_seed']}")
 
     # Initialize the classifier by arguments specified in config file
-    save_path = f"{config['model']}-{config['task_name']}-s{config['random_seed']}"
+    save_path = config['save_path']
+    if not save_path:
+        save_path = f"{config['model']}-{config['task_name']}-s{config['random_seed']}"
     if config['build_on_pretrained_model']:
         logger.info(f"Loading model from {config['build_on_pretrained_model']}")
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
