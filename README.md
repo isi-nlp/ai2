@@ -68,15 +68,20 @@ python eval.py \
 
 ## Dockerize
 
+### Submission of Full CycIC on 2020-06-22
+
 ```bash
 time DOCKER_BUILDKIT=1 docker build -t cycic-20200622 .
-time docker run -it -v ${PWD}/data:/data -v ${PWD}/results:/results cycic-20200622 bash run_model.sh`
+time docker run -it -v ${PWD}/data:/data -v ${PWD}/results:/results cycic-20200622 bash run_model.sh
+time beaker image create --name cycic-20200622 cycic-20200622
 ```
 
-If submitting:
+### Submission of Full CycIC on 2020-07-02
 
 ```bash
-beaker image create --name cycic-20200622 cycic-20200622
+time DOCKER_BUILDKIT=1 docker build --file dockerfiles/cycic_full_20200702 --tag cycic-full-20200702 .
+time docker run -it -v ${PWD}/data:/data -v ${PWD}/results:/results cycic-full-20200702 bash run_model.sh
+time beaker image create --name cycic-full-20200702 cycic-full-20200702
 ```
 
 ## Results
