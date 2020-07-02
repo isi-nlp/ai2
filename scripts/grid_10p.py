@@ -1,7 +1,13 @@
+"""Run grid search over hyperparameters for 10% CycIC."""
+
+import argparse
 import itertools
 
 
 def main() -> None:
+    p = argparse.ArgumentParser(description=__doc__)
+    p.parse_args()
+
     tasks = ('cycic_real_10',)
     agbs = (16, 32, 64)
     batches = (1, 2)
