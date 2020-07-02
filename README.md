@@ -18,7 +18,7 @@ For more information in how to use Hydra please reference their website: https:/
     .
     ├── config                      # Configuration Files
     │   ├── task                    # Configuration for each task, with train/dev file locations
-    │   ├── model                   # Configuration files for each model, with max epoch, learning rate and so on
+    │   ├── model                   # Configuration files for each model, with max epoch, learning rate, etc.
     │   └── checkpoint_list         # Lists of location where checkpoint files are located
     ├── model_cache                 # Hugging face Model Cache for Transformers 
     ├── multirun or outputs         # Hydra python package output folders - this is where script output should be
@@ -36,6 +36,10 @@ loading in an existing model and further fine tune it with more data. The script
 by pytorch-lightning: https://pytorch-lightning.readthedocs.io/en/latest/
 
 ## eval.py
+
+This script is used to evaluate a checkpoint file trained by the train script. The script uses the trained model and
+evaluate it on the dev stories. It writes out the predictions, as well as the accuracy of the model and the confidence
+interval of them.
 
 ## embed.py
 
