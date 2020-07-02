@@ -1,3 +1,5 @@
 # Files to ignore.
 .git
 outputs
+slurm
+task_data
