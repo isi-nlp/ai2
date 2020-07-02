@@ -50,8 +50,8 @@ def main(input_file, output_file):
             'hellaswag_100_include_answers_in_context_42',
             'hellaswag_100_cn_10k_standard_0',
             'hellaswag_100_cn_10k_include_answers_in_context_0',
-            'hellaswag_100_cn_10k_embed_all_sep_mean_0',
-            'hellaswag_100_embed_all_sep_mean_42'
+            # 'hellaswag_100_cn_10k_embed_all_sep_mean_0',
+            # 'hellaswag_100_embed_all_sep_mean_42'
         ],
         'socialiqa': [
             'socialiqa_100_cn_10k_standard_42',
