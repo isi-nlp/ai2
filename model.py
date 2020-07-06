@@ -114,6 +114,7 @@ class Classifier(pl.LightningModule):
             context, choices = formula.split("->")
             # alphanli:     (obs1 + obs2 -> hyp1|hyp2)
             # hellaswag:    (ctx_a + ctx_b -> ending_options)
+            # c_hellaswag:  (ctx_a + ctx_b -> opt0|opt1|opt2|opt3)
             # physicaliqa:  (goal -> sol1|sol2)
             # socialiqa:    (context + question -> answerA|answerB|answerC)
             context = context.strip().split("+")
@@ -121,13 +122,12 @@ class Classifier(pl.LightningModule):
 
             context = " ".join(row[a_context.strip()] for a_context in context)
 
-            # If we are processing hellaswag, the options are encoded in nested list, so we will flatten it
-            if choices == ['ending_options']:
-                choices = row['ending_options']
-            else:
-                choices = [row[a_choice.strip()] for a_choice in choices]
+            # # If we are processing the original hellaswag, the options are encoded in nested list, so we flatten it
+            # if choices == ['ending_options']:
+            #     choices = row['ending_options']
+            # else:
+            #     choices = [row[a_choice.strip()] for a_choice in choices]
 
-            # return list(zip(cycle([context]), ["", ""]))
             return list(zip(cycle([context]), choices))
 
         return wrapper
