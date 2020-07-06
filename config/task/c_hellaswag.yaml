@@ -1,0 +1,6 @@
+task_name: c_hellaswag
+train_x: "task_data/hellaswag-train-dev/c_train.jsonl"
+train_y: "task_data/hellaswag-train-dev/train-labels.lst"
+val_x: "task_data/hellaswag-train-dev/c_dev.jsonl"
+val_y: "task_data/hellaswag-train-dev/dev-labels.lst"
+formula: "ctx_a + ctx_b -> opt0|opt1|opt2|opt3"
