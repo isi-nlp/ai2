@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 from typing import *
 import torch.nn.functional as F
 
@@ -33,39 +34,10 @@ def main(input_file, output_file):
     if 'anli' in input_file:
         task = 'alphanli'
 
-    model_data = {'physicaliqa': [
-        'physicaliqa_100_cn_10k_include_answers_in_context_0',
-        'physicaliqa_100_cn_10k_standard_42',
-        'physicaliqa_100_include_answers_in_context_10061880',
-        'physicaliqa_100_standard_42'
-    ],
-        'alphanli': [
-            'alphanli_100_include_answers_in_context_0',
-            'alphanli_100_cn_10k_standard_0',
-            'alphanli_100_cn_10k_include_answers_in_context_0',
-            'alphanli_100_standard_42'
-        ],
-        'hellaswag': [
-            'hellaswag_100_standard_0',
-            'hellaswag_100_include_answers_in_context_42',
-            'hellaswag_100_cn_10k_standard_0',
-            'hellaswag_100_cn_10k_include_answers_in_context_0',
-            # 'hellaswag_100_cn_10k_embed_all_sep_mean_0',
-            # 'hellaswag_100_embed_all_sep_mean_42'
-        ],
-        'socialiqa': [
-            'socialiqa_100_cn_10k_standard_42',
-            'socialiqa_100_cn_10k_include_answers_in_context_0',
-            'socialiqa_100_cn_10k_embed_all_sep_mean_10061880',
-            'socialiqa_100_include_answers_in_context_0',
-            'socialiqa_100_embed_all_sep_mean_42',
-            'socialiqa_100_standard_42'
-        ]}
-
     #  Eval for each sub model
-    for ckpt in model_data[task]:
+    for ckpt in os.listdir(f"{task}_submission_models/."):
         config = {
-            'random_seed': ckpt.split('_')[-1],
+            'random_seed': ckpt.strip('.ckpt').split('_')[-1],
             'architecture': 'standard',
             'with_true_label': True,
             'model': "roberta-large",
@@ -80,7 +52,7 @@ def main(input_file, output_file):
             'max_length': 128,
         }
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
-        checkpoint = torch.load(f'{task}_submission_models/{ckpt}.ckpt', map_location=device)
+        checkpoint = torch.load(f'{task}_submission_models/{ckpt}', map_location=device)
 
         with open(f'config/task/{task}.yaml', 'r') as ymlfile:
             config.update(yaml.load(ymlfile))
