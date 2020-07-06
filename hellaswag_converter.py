@@ -1,3 +1,7 @@
+"""
+Hella Swag data comes in a different format - using a list of ending options rather than 4 discrete ending option
+This script converts the original option to the new one, which is used as task c_hellaswag
+"""
 import json
 
 # Load in the train and dev stories and their labels
