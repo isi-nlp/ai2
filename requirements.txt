@@ -48,4 +48,5 @@ torch==1.2.0
 tqdm==4.42.1
 transformers==2.4.0
 urllib3==1.25.8
+vistautils==0.23.0
 Werkzeug==1.0.0
