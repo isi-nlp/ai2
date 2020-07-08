@@ -1,0 +1,11 @@
+# Based on https://github.com/isi-vista/gaia-event-extraction/blob/master/sample_params/root.sample.params
+# This should be the path to the project root directory.
+project_root: /nas/minlp/users/mics/jcecil/ai2
+# This should be the directory under which Pegasus experiment directories should be written.
+experiments_root: "%project_root%/experiments"
+
+# SAGA settings
+partition: ephemeral  # SLURM partition to run on
+# spack_root: /opt/spack/share/spack/setup-env.sh  #  path to your spack clone
+conda_base_path: /nas/home/jcecil/miniconda3  # path to your anaconda install
+conda_environment: ai2
