@@ -55,7 +55,7 @@ def main(params: Parameters):
             resource_request = ResourceRequest.from_parameters(params)
 
         # Set up combination-specific parameters
-        job_params = Parameters()
+        job_params = Parameters.from_key_value_pairs(combination, namespace_separator=None)
         project_root = params.existing_directory('project_root')
         for parameter, option in combination:
             parameter_directory = project_root / parameter
@@ -70,8 +70,6 @@ def main(params: Parameters):
             job_params = job_params.unify({
                 'batch_size': 2
             })
-
-        job_params = job_params.unify(Parameters.from_mapping(dict(combination)))
 
         # Set general parameters
         save_path = directory_for(locator)
