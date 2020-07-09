@@ -39,7 +39,6 @@ def main(params: Parameters):
         train_data_slice = only(option for parameter, option in combination if parameter == 'train_data_slice')
         options: Tuple[str] = tuple(option for _, option in combination if option != '')
         locator = model_outputs_locator / Locator(options)
-        experiment_id = '_'.join(options)
 
         # os.system(f"sbatch "
         #           # Additional SLURM specifications
@@ -58,7 +57,7 @@ def main(params: Parameters):
         # TODO: Special logic for alphanli vs. not alphanli
         # TODO: Make sure I do this right with Slurm
         resource_request = ResourceRequest.from_parameters(params)
-        slurm_output_path = directory_for(locator) / 'slurm.out'
+        # slurm_output_path = directory_for(locator) / 'slurm.out'
         save_path = directory_for(locator)
         # TODO: Create parameters from the combination, that is the (parameter, option) list
         # Set save_best_only to false
@@ -78,7 +77,7 @@ def main(params: Parameters):
         # memory: 4g
         job = run_python_on_parameters(
             locator,
-            "TODO.train",
+            "train",
             # Pass some kind of parameters here to tell train.py where to put our stuff.
             job_params,
             # TODO maybe depend on the input file? however I specify that... I don't think I need to
