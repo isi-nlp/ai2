@@ -1,4 +1,5 @@
-_includes: "root.params"
+_includes:
+  - "root.params"
 
 parameter_options:
   tasks: ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa']
