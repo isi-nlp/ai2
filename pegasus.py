@@ -62,7 +62,20 @@ def main(params: Parameters):
         save_path = directory_for(locator)
         # TODO: Create parameters from the combination, that is the (parameter, option) list
         # Set save_best_only to false
-        job_params = params
+        job_params = dict(combination)
+        job_params['save_path'] = save_path
+        job_params['save_best_only'] = False
+        job_params['num_cpus']
+        # SBATCH --ntasks=1  # ALREADY COVERED, resource_request.py line 133
+        # SBATCH --time=20:00:00
+        # SBATCH --cpus-per-task=4
+        # SBATCH --gpus-per-task=1
+        # SBATCH --mem-per-cpu=4g
+        # Add to one of the params files:
+        # (probably train.params)
+        # num_cpus: 4
+        # num_gpus: 1
+        # memory: 4g
         job = run_python_on_parameters(
             locator,
             "TODO.train",
