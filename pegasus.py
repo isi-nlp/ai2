@@ -66,28 +66,15 @@ def main(params: Parameters):
         save_path = directory_for(locator)
 
         # Set up job parameters
-        # TODO: There must be a better way to do this.
-        # TODO: This may be a better way to do this.
-        # job_params = Parameters()
-        # project_root = params.existing_directory('project_root')
-        # for parameter, option in combinations:
-        #     parameter_directory = project_root / parameter
-        #     if parameter_directory.exists():
-        #         option_params: Parameters = YAMLParametersLoader().load(
-        #             parameter_directory / f'{option}.params'
-        #         )
-        task_params = YAMLParametersLoader().load(
-            params.existing_directory('project_root') / 'task' / (task + '.params')
-        )
-        model_params = YAMLParametersLoader().load(
-            params.existing_directory('project_root') / 'model' / (model + '.params')
-        )
-        job_params = task_params.unify(model_params)
-        if task2:
-            task2_params = YAMLParametersLoader().load(
-                params.existing_directory('project_root') / 'task2' / (model + '.params')
-            )
-            job_params = job_params.unify(task2_params)
+        job_params = Parameters()
+        project_root = params.existing_directory('project_root')
+        for parameter, option in combination:
+            parameter_directory = project_root / parameter
+            if parameter_directory.exists():
+                option_params: Parameters = YAMLParametersLoader().load(
+                    parameter_directory / f'{option}.params'
+                )
+                job_params = job_params.unify(option_params)
 
         job_params = job_params.unify(Parameters.from_mapping(dict(combination)))
         job_params = job_params.unify({
