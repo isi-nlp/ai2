@@ -2,10 +2,10 @@ import os
 from pathlib import Path
 import random
 
-import hydra
+from vistautils import parameters_only_entrypoint
+from vistautils.parameters import Parameters
 from loguru import logger
 import numpy as np
-import omegaconf
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import TestTubeLogger
@@ -18,9 +18,8 @@ from model import Classifier
 ROOT_PATH = Path(__file__).parent.absolute()
 
 
-@hydra.main(config_path="config/train.yaml", strict=False)
-def train(config: omegaconf.Config):
-    config = omegaconf.OmegaConf.to_container(config)
+def train(params: Parameters):
+    config = params.as_nested_dicts()
     logger.info(config)
     
     # If the training is deterministic for debugging purposes, we set the random seed
@@ -96,4 +95,4 @@ def train(config: omegaconf.Config):
 
 
 if __name__ == "__main__":
-    train()
+    parameters_only_entrypoint(train)
