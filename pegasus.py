@@ -78,7 +78,6 @@ def main(params: Parameters):
             # TODO maybe depend on the input file? however I specify that... I don't think I need to
             #  though.
             depends_on=[],
-            # TODO set this up right, make sure it's using Slurm with the right parameters
             resource_request=resource_request
         )
         jobs_info.append({
