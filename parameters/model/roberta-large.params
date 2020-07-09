@@ -1,0 +1,10 @@
+model: "roberta-large"
+accumulate_grad_batches: 8
+use_amp: false # Half precision only works best with Volta architectures such as V100
+max_epochs: 4
+learning_rate: 5e-6
+adam_epsilon: 1e-8
+warmup_steps: 300
+batch_size: 3
+dropout: 0.3
+max_length: 128
