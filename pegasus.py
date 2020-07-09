@@ -1,9 +1,9 @@
 from pathlib import Path
-from typing import Tuple
+from typing import Tuple, Optional
 
 from vistautils.iter_utils import only
 from vistautils import parameters_only_entrypoint
-from vistautils.parameters import Parameters
+from vistautils.parameters import Parameters, YAMLParametersLoader
 from pegasus_wrapper import (
     initialize_vista_pegasus_wrapper,
     directory_for,
@@ -13,7 +13,7 @@ from pegasus_wrapper import (
 )
 from pegasus_wrapper.resource_request import ResourceRequest
 from pegasus_wrapper.locator import Locator
-from pegasus_wrapper.artifact import DependencyNode, ValueArtifact
+from pegasus_wrapper.artifact import ValueArtifact
 
 
 def main(params: Parameters):
@@ -35,8 +35,13 @@ def main(params: Parameters):
     model_outputs_locator = Locator(('models',))
     jobs_info = []
     for i, combination in enumerate(parameter_combinations):
-        task = only(option for parameter, option in combination if parameter == 'task')
-        train_data_slice = only(option for parameter, option in combination if parameter == 'train_data_slice')
+        task: str = only(option for parameter, option in combination if parameter == 'task')
+        model: str = only(option for parameter, option in combination if parameter == 'model')
+        task2: Optional[str] = next(
+            (option for parameter, option in combination if parameter == 'task'),
+            default=None,
+        )
+        train_data_slice: str = only(option for parameter, option in combination if parameter == 'train_data_slice')
         options: Tuple[str] = tuple(option for _, option in combination if option != '')
         locator = model_outputs_locator / Locator(options)
 
@@ -59,22 +64,49 @@ def main(params: Parameters):
         resource_request = ResourceRequest.from_parameters(params)
         # slurm_output_path = directory_for(locator) / 'slurm.out'
         save_path = directory_for(locator)
-        # TODO: Create parameters from the combination, that is the (parameter, option) list
-        # Set save_best_only to false
-        job_params = dict(combination)
-        job_params['save_path'] = save_path
-        job_params['save_best_only'] = False
-        job_params['num_cpus']
-        # SBATCH --ntasks=1  # ALREADY COVERED, resource_request.py line 133
-        # SBATCH --time=20:00:00
-        # SBATCH --cpus-per-task=4
-        # SBATCH --gpus-per-task=1
-        # SBATCH --mem-per-cpu=4g
-        # Add to one of the params files:
-        # (probably train.params)
-        # num_cpus: 4
-        # num_gpus: 1
-        # memory: 4g
+
+        # Set up job parameters
+        # TODO: There must be a better way to do this.
+        # TODO: This may be a better way to do this.
+        # job_params = Parameters()
+        # project_root = params.existing_directory('project_root')
+        # for parameter, option in combinations:
+        #     parameter_directory = project_root / parameter
+        #     if parameter_directory.exists():
+        #         option_params: Parameters = YAMLParametersLoader().load(
+        #             parameter_directory / f'{option}.params'
+        #         )
+        task_params = YAMLParametersLoader().load(
+            params.existing_directory('project_root') / 'task' / (task + '.params')
+        )
+        model_params = YAMLParametersLoader().load(
+            params.existing_directory('project_root') / 'model' / (model + '.params')
+        )
+        job_params = task_params.unify(model_params)
+        if task2:
+            task2_params = YAMLParametersLoader().load(
+                params.existing_directory('project_root') / 'task2' / (model + '.params')
+            )
+            job_params = job_params.unify(task2_params)
+
+        job_params = job_params.unify(Parameters.from_mapping(dict(combination)))
+        job_params = job_params.unify({
+            'save_path': save_path,
+            'save_best_only': False,
+            # Add to one of the params files:
+            # (probably train-roberta-large-piqa.params)
+            # SBATCH --cpus-per-task=4
+            # num_cpus: 4  # add to a config
+            'num_cpus': 4,
+            # SBATCH --gpus-per-task=1
+            # num_gpus: 1  # add to a config
+            'num_gpus': 1,
+            # SBATCH --mem-per-cpu=4g
+            # memory: 4g
+            'mem': '4g',
+            # SBATCH --ntasks=1  # ALREADY COVERED, resource_request.py line 133
+            # SBATCH --time=20:00:00  # TODO: not sure how to cover
+        })
         job = run_python_on_parameters(
             locator,
             "train",
@@ -84,7 +116,7 @@ def main(params: Parameters):
             #  though.
             depends_on=[],
             # TODO set this up right, make sure it's using Slurm with the right parameters
-            resource_request=ResourceRequest.from_parameters(params)
+            resource_request=resource_request
         )
         jobs_info.append({
             'job': job,
@@ -94,7 +126,9 @@ def main(params: Parameters):
             'predictions': ValueArtifact(locator=locator, value=save_path / 'predictions.lst'),
             'confidence': ValueArtifact(locator=locator, value=save_path / 'confidence.lst'),
         })
+
     # TODO: Run ensembling
+
     write_workflow_description()
 
 
