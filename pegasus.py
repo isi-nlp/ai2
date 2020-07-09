@@ -90,8 +90,9 @@ def main(params: Parameters):
             'job': job,
             'task': task,
             'train_data_slice': train_data_slice,
-            'predictions': ValueArtifact(locator=locator, value=Path('predictions.lst')),
-            'confidence': ValueArtifact(locator=locator, value=Path('confidence.lst')),
+            'parameter_combination': combination,
+            'predictions': ValueArtifact(locator=locator, value=save_path / 'predictions.lst'),
+            'confidence': ValueArtifact(locator=locator, value=save_path / 'confidence.lst'),
         })
     # TODO: Run ensembling
     write_workflow_description()
