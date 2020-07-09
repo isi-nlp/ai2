@@ -1,5 +1,4 @@
-from pathlib import Path
-from typing import Tuple, Optional
+from typing import List, Tuple, Any
 
 from vistautils.iter_utils import only
 from vistautils import parameters_only_entrypoint
@@ -23,7 +22,7 @@ def main(params: Parameters):
     print(parameter_options)
 
     # Compute all possible combinations of the parameters
-    parameter_combinations = [[]]
+    parameter_combinations: List[List[Tuple[str, Any]]] = [[]]
     for parameter_name, options in parameter_options.items():
         new_combinations = []
         for combination in parameter_combinations:
@@ -36,17 +35,12 @@ def main(params: Parameters):
     jobs_info = []
     for i, combination in enumerate(parameter_combinations):
         task: str = only(option for parameter, option in combination if parameter == 'task')
-        model: str = only(option for parameter, option in combination if parameter == 'model')
-        task2: Optional[str] = next(
-            (option for parameter, option in combination if parameter == 'task'),
-            default=None,
-        )
         train_data_slice: str = only(option for parameter, option in combination if parameter == 'train_data_slice')
-        options: Tuple[str] = tuple(option for _, option in combination if option != '')
+        options: Tuple[str] = tuple(str(option) for _, option in combination if option != '')
         locator = model_outputs_locator / Locator(options)
 
         # Special logic for AlphaNLI
-        if 'alphanli' not in task:
+        if task != 'alphanli':
             resource_request = ResourceRequest.from_parameters(Parameters.from_mapping({
                 'partition': 'ephemeral',
                 # TODO: Set time limit of 12 hours.
