@@ -8,5 +8,13 @@ parameter_options:
   architecture: ['standard', 'include_answers_in_context']
   random_seed: [0, 42, 10061880]
 
+training:
+  slurm:
+    num_cpus: 4
+    num_gpus: 1
+    mem: '4g'
+    # SBATCH --ntasks=1  # ALREADY COVERED, resource_request.py line 133
+    # SBATCH --time=20:00:00  # TODO: not sure how to cover
+
 # maybe not needed
 # parameter_order: ['tasks', 'train_data_slice', 'task2', 'architecture', 'random_seed']

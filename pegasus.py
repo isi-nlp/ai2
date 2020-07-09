@@ -46,7 +46,7 @@ def main(params: Parameters):
                 # TODO: Set time limit of 12 hours.
             }))
         else:
-            resource_request = ResourceRequest.from_parameters(params)
+            resource_request = ResourceRequest.from_parameters(params.namespace('training.slurm'))
 
         # Set up combination-specific parameters
         job_params = Parameters.from_key_value_pairs(combination, namespace_separator=None)
@@ -70,19 +70,6 @@ def main(params: Parameters):
         job_params = job_params.unify({
             'save_path': save_path,
             'save_best_only': False,
-            # Add to one of the params files:
-            # (probably train-roberta-large-piqa.params)
-            # SBATCH --cpus-per-task=4
-            # num_cpus: 4  # add to a config
-            'num_cpus': 4,
-            # SBATCH --gpus-per-task=1
-            # num_gpus: 1  # add to a config
-            'num_gpus': 1,
-            # SBATCH --mem-per-cpu=4g
-            # memory: 4g
-            'mem': '4g',
-            # SBATCH --ntasks=1  # ALREADY COVERED, resource_request.py line 133
-            # SBATCH --time=20:00:00  # TODO: not sure how to cover
         })
         job = run_python_on_parameters(
             locator,
