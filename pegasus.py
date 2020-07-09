@@ -45,27 +45,16 @@ def main(params: Parameters):
         options: Tuple[str] = tuple(option for _, option in combination if option != '')
         locator = model_outputs_locator / Locator(options)
 
-        # os.system(f"sbatch "
-        #           # Additional SLURM specifications
-        #           f"-J {experiment_id} "
-        #           f"-o outputs/slurm/{experiment_id}.out "
-        #           # Ephemeral specifications - sudo sacctmgr modify user beser set MaxJobs=25
-        #           f"{'' if 'alphanli' in experiment_id else '--partition=ephemeral --qos=ephemeral --time=12:00:00 '}"
-        #           f"slurm/run_saga.sh "
-        #           # Python script commands
-        #           f"\""
-        #           f"{' '.join([f'{name}={option}' for name,option in combination  if option != ''])}"
-        #           f" save_path={experiment_id}"
-        #           f" save_best_only=False"
-        #           f"{' batch_size=2' if 'hellaswag' in experiment_id else ''}"
-        #           f"\"")
-        # TODO: Special logic for alphanli vs. not alphanli
-        # TODO: Make sure I do this right with Slurm
-        resource_request = ResourceRequest.from_parameters(params)
-        # slurm_output_path = directory_for(locator) / 'slurm.out'
-        save_path = directory_for(locator)
+        # Special logic for AlphaNLI
+        if 'alphanli' not in task:
+            resource_request = ResourceRequest.from_parameters(Parameters.from_mapping({
+                'partition': 'ephemeral',
+                # TODO: Set time limit of 12 hours.
+            }))
+        else:
+            resource_request = ResourceRequest.from_parameters(params)
 
-        # Set up job parameters
+        # Set up combination-specific parameters
         job_params = Parameters()
         project_root = params.existing_directory('project_root')
         for parameter, option in combination:
@@ -76,7 +65,16 @@ def main(params: Parameters):
                 )
                 job_params = job_params.unify(option_params)
 
+        # Special logic for Hellaswag
+        if task == 'hellaswag':
+            job_params = job_params.unify({
+                'batch_size': 2
+            })
+
         job_params = job_params.unify(Parameters.from_mapping(dict(combination)))
+
+        # Set general parameters
+        save_path = directory_for(locator)
         job_params = job_params.unify({
             'save_path': save_path,
             'save_best_only': False,
@@ -97,7 +95,6 @@ def main(params: Parameters):
         job = run_python_on_parameters(
             locator,
             "train",
-            # Pass some kind of parameters here to tell train.py where to put our stuff.
             job_params,
             # TODO maybe depend on the input file? however I specify that... I don't think I need to
             #  though.
