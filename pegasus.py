@@ -84,7 +84,6 @@ def main(params: Parameters):
         jobs_info = task_to_jobs_info.get(task, [])
         jobs_info.append({
             'job': job,
-            'task': task,
             'train_data_slice': train_data_slice,
             'parameter_combination': combination,
             'predictions': ValueArtifact(locator=locator, value=Path('predictions.lst')),
@@ -100,7 +99,6 @@ def main(params: Parameters):
             confidence_path = directory_for(job_info['confidence'].locator) / job_info['confidence'].value
 
             models_list.append({
-                'task': job_info['task'],
                 'train_data_slice': job_info['train_data_slice'],
                 'parameter_combination': job_info['parameter_combination'],
                 'predictions': predictions_path,
