@@ -41,7 +41,7 @@ def main(params: Parameters):
 
         # Special logic for AlphaNLI
         if task != 'alphanli':
-            resource_request = ResourceRequest.from_parameters(Parameters.from_mapping({
+            resource_request = ResourceRequest.from_parameters(params.unify({
                 'partition': 'ephemeral',
                 # TODO: Set time limit of 12 hours.
             }))
