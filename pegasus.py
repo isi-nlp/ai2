@@ -78,6 +78,7 @@ def main(params: Parameters):
             locator,
             "train",
             job_params,
+            depends_on=[],
             resource_request=resource_request
         )
         jobs_info = task_to_jobs_info.get(task, [])
