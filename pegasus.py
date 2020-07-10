@@ -92,6 +92,9 @@ def main(params: Parameters):
         task_to_jobs_info[task] = jobs_info
 
     ensemble_params = params.namespace('ensemble')
+    ensemble_params.unify({
+        'data_sizes': params.arbitrary_list('parameter_options.train_data_slice'),
+    })
     for task, jobs_info in task_to_jobs_info.items():
         models_list = []
         for job_info in jobs_info:
@@ -100,7 +103,7 @@ def main(params: Parameters):
 
             models_list.append({
                 'train_data_slice': job_info['train_data_slice'],
-                'parameter_combination': job_info['parameter_combination'],
+                'parameters': job_info['parameter_combination'],
                 'predictions': predictions_path,
                 'confidence': confidence_path,
             })

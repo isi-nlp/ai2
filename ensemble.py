@@ -3,6 +3,7 @@ import itertools
 import os
 import numpy as np
 from collections import Counter, defaultdict
+from typing import Mapping, Any
 import heapq
 
 from more_itertools import powerset
@@ -14,11 +15,10 @@ from vistautils.parameters_only_entrypoint import parameters_only_entry_point
 from vistautils.parameters import Parameters
 
 
-def main(params: Parameters):
-    tasks_to_threshold = params.namespace('task_to_threshold').as_nested_dicts()
-    # models = [name for name in os.listdir("outputs/.") if name != 'slurm']
-    models = params.arbitrary_list('models')
+def get_model_name(model: Mapping[str, Any]) -> str:
+    return "_".join(option for parameter, option in model['parameters'])
 
+def main(params: Parameters):
     def run_ensemble(predictions_df, confidences_df, subset):
         # confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
         # confidences_df = confidences_df.eq(confidences_df.where(confidences_df != 0).max(1), axis=0).astype(int)  # Get the most confident
@@ -28,7 +28,7 @@ def main(params: Parameters):
         if task in ['socialiqa', 'alphanli']: weighted_votes += 1
         final_predictions = weighted_votes.tolist()
         stats = []
-        for _ in range(100): # TODO: Use 10K for official reports. 100 is used for quick dev runs.
+        for _ in range(params.integer('accuracy_bootstrapping_samples')):
             indices = [i for i in np.random.random_integers(0, len(final_predictions) - 1, size=len(final_predictions))]
             stats.append(accuracy_score([labels[j] for j in indices], [final_predictions[j] for j in indices]))
 
@@ -40,7 +40,7 @@ def main(params: Parameters):
         upper = min(1.0, np.percentile(stats, p))
         accuracy = accuracy_score(labels, final_predictions)
         print(f'Accuracy: {accuracy}, {alpha * 100:.1f} confidence interval {lower * 100:.1f} and {upper * 100:.1f}, '
-                    f'average: {np.mean(stats) * 100:.1f}')
+              f'average: {np.mean(stats) * 100:.1f}')
 
         # print(f'{accuracy},{[int(i in subset) for i in model_to_path.keys()]}'.replace(' ','').replace('[','').replace(']','')) # CSV
         # unweighted_votes = predictions_df[subset].mode(axis=1).too_nutolist()
@@ -48,13 +48,14 @@ def main(params: Parameters):
 
     all_results = {}
 
+    tasks_to_threshold = params.namespace('task_to_threshold').as_nested_dicts()
     data_sizes = params.arbitrary_list('data_sizes')
     for task in tasks_to_threshold.keys():
-        # for data_size in ['10','25','90']:
+        task_models = params.namespace('models').arbitrary_list(task)
         for data_size in data_sizes:
             results = {}
             print(f'\nRunning ensemble for {task.upper()}, {data_size}')
-            relevant_models = [model for model in models if task in model and data_size == model.split('_')[1]]
+            relevant_models = [model for model in task_models if model['data_size'] == data_size]
             # gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
             gold_labels_path = f'task_data/{task}-train-dev/dev-labels.lst'
             labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
@@ -67,19 +68,24 @@ def main(params: Parameters):
             # Get Accuracies
             print('Accuracy of each model:')
             for model in relevant_models:
-                path = 'outputs/'+model
                 try:
-                    preds = pd.read_csv(path + '/predictions.lst', sep='\t', header=None).values.squeeze().tolist()
-                    confs = pd.read_csv(path + '/confidence.lst', sep='\t', header=None).values.squeeze().tolist()
+                    preds = pd.read_csv(model['predictions'], sep='\t', header=None).values.squeeze().tolist()
+                    confs = pd.read_csv(model['confidence'], sep='\t', header=None).values.squeeze().tolist()
                     accuracy = accuracy_score(labels, preds)
 
-                    successful_models[model] = accuracy
-                    model_to_predictions[model] = preds
-                    model_to_confidences[model] = confs
-                    print(f'{model},{round(accuracy*100,2)}')
-                    results[model.replace(task+'_'+data_size+'_','')] = round(accuracy*100,2)
+                    model_name = get_model_name(model)
+                    successful_models[model_name] = accuracy
+                    model_to_predictions[model_name] = preds
+                    model_to_confidences[model_name] = confs
+                    print(f'{model_name},{round(accuracy*100,2)}')
+                    model_without_task_data_size = '_'.join(
+                        option for parameter, option in model.parameters
+                        if parameter not in {'task', 'train_data-slice'}
+                    )
+                    results[model_without_task_data_size] = round(accuracy*100,2)
 
-                    model_without_seed = model.strip('_'+model.split('_')[-1])
+                    # model_without_seed = model.strip('_'+model.split('_')[-1])
+                    model_without_seed = '_'.join(option for parameter, option in model.parameters)
                     if accuracy > best_score_per_seed_group[model_without_seed]:
                         best_score_per_seed_group[model_without_seed] = accuracy
                         best_model_per_seed_group[model_without_seed] = model
@@ -158,7 +164,8 @@ def main(params: Parameters):
             all_results[task + '_' + data_size] = results
 
     df = pd.DataFrame.from_dict(all_results)
-    df.to_csv('ensemble_results_100.csv',na_rep= '-')
+    df.to_csv(params.creatable_file('output_file'), na_rep= '-')
+
 
 if __name__ == '__main__':
     parameters_only_entry_point(main)
