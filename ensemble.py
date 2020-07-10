@@ -18,6 +18,7 @@ from vistautils.parameters import Parameters
 def get_model_name(model: Mapping[str, Any]) -> str:
     return "_".join(option for parameter, option in model['parameters'])
 
+
 def main(params: Parameters):
     def run_ensemble(predictions_df, confidences_df, subset):
         # confidences_df[confidences_df < 0.2] = 0  # Set low confidence values to 0.
