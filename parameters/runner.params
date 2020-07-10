@@ -25,6 +25,7 @@ ensemble:
 workflow_name: george
 experiment_root: '%experiments_root%/ensemble'
 workflow_directory: '%experiment_root%'
+backend: slurm
 site: 'saga'
 parallelism: 10
 namespace: saga
