@@ -8,13 +8,19 @@ parameter_options:
   architecture: ['standard', 'include_answers_in_context']
   random_seed: [0, 42, 10061880]
 
-training:
-  slurm:
-    num_cpus: 4
-    num_gpus: 1
-    mem: '4g'
-    # SBATCH --ntasks=1  # ALREADY COVERED, resource_request.py line 133
-    # SBATCH --time=20:00:00  # TODO: not sure how to cover
-
 # maybe not needed
 # parameter_order: ['tasks', 'train_data_slice', 'task2', 'architecture', 'random_seed']
+
+# Based on https://github.com/isi-vista/gaia-event-extraction/blob/d1235671952dff13b7851a96088ef2ecef4996c9/sample_params/neural_trigger_models/pegasus/experiments/tbnamm.baseline.ace.debug.params
+workflow_name: george
+workflow_directory: '%experiment_root%'
+site: 'saga'
+parallelism: 10
+namespace: saga
+partition: saga
+
+num_cpus: 4
+num_gpus: 1
+mem: '4g'
+# sbatch --ntasks=1  # already covered, resource_request.py line 133
+# sbatch --time=20:00:00  # todo: not sure how to cover
