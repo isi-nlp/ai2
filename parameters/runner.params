@@ -18,7 +18,7 @@ workflow_directory: '%experiment_root%'
 site: 'saga'
 parallelism: 10
 namespace: saga
-partition: saga
+partition: mics
 
 num_cpus: 4
 num_gpus: 1
