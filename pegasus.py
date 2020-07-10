@@ -46,7 +46,7 @@ def main(params: Parameters):
                 # TODO: Set time limit of 12 hours.
             }))
         else:
-            resource_request = ResourceRequest.from_parameters(params.namespace('training.slurm'))
+            resource_request = ResourceRequest.from_parameters(params)
 
         # Set up combination-specific parameters
         job_params = Parameters.from_key_value_pairs(combination, namespace_separator=None)
