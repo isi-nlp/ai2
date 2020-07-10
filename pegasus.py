@@ -113,11 +113,11 @@ def main(params: Parameters):
         Locator(('ensembled',)),
         'ensemble',
         ensemble_params,
-        depends_on=flatten([
-            (job_info['predictions'], job_info['confidence'])
+        depends_on=[
+            job_info['job']
             for jobs_info in task_to_jobs_info.values()
             for job_info in jobs_info
-        ])
+        ]
     )
 
     write_workflow_description()
