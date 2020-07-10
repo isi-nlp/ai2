@@ -94,7 +94,6 @@ def main(params: Parameters):
         })
         task_to_jobs_info[task] = jobs_info
 
-    # TODO: Run ensembling
     ensemble_params = params.namespace('ensemble')
     for task, jobs_info in task_to_jobs_info.items():
         for job_info in jobs_info:
