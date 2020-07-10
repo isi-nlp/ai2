@@ -36,7 +36,7 @@ def main(params: Parameters):
     for i, combination in enumerate(parameter_combinations):
         task: str = only(option for parameter, option in combination if parameter == 'task')
         train_data_slice: str = only(option for parameter, option in combination if parameter == 'train_data_slice')
-        options: Tuple[str] = tuple(str(option) for _, option in combination if option != '')
+        options: Tuple[str] = tuple(str(option) if option != '' else '_default' for _, option in combination)
         locator = model_outputs_locator / Locator(options)
 
         # Special logic for AlphaNLI
