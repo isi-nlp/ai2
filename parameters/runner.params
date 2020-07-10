@@ -8,6 +8,14 @@ parameter_options:
   architecture: ['standard', 'include_answers_in_context']
   random_seed: [0, 42, 10061880]
 
+ensemble:
+  task_to_threshold:
+    alphanli: 0.6
+    physicaliqa: 0.6
+    socialiqa: 0.6
+    hellaswag: 0.6
+  # Fill in data_sizes from train_data_slice
+
 # maybe not needed
 # parameter_order: ['tasks', 'train_data_slice', 'task2', 'architecture', 'random_seed']
 

@@ -1,4 +1,7 @@
 from typing import List, Tuple, Any
+from pathlib import Path
+
+from more_itertools import flatten
 
 from vistautils.iter_utils import only
 from vistautils.parameters import Parameters, YAMLParametersLoader
@@ -32,7 +35,7 @@ def main(params: Parameters):
         parameter_combinations = new_combinations
 
     model_outputs_locator = Locator(('models',))
-    jobs_info = []
+    task_to_jobs_info = {}
     for i, combination in enumerate(parameter_combinations):
         task: str = only(option for parameter, option in combination if parameter == 'task')
         train_data_slice: str = only(option for parameter, option in combination if parameter == 'train_data_slice')
@@ -80,16 +83,41 @@ def main(params: Parameters):
             depends_on=[],
             resource_request=resource_request
         )
+        jobs_info = task_to_jobs_info.get(task, [])
         jobs_info.append({
             'job': job,
             'task': task,
             'train_data_slice': train_data_slice,
             'parameter_combination': combination,
-            'predictions': ValueArtifact(locator=locator, value=save_path / 'predictions.lst'),
-            'confidence': ValueArtifact(locator=locator, value=save_path / 'confidence.lst'),
+            'predictions': ValueArtifact(locator=locator, value=Path('predictions.lst')),
+            'confidence': ValueArtifact(locator=locator, value=Path('confidence.lst')),
         })
 
     # TODO: Run ensembling
+    ensemble_params = params.namespace('ensemble')
+    for task, jobs_info in task_to_jobs_info.items():
+        for job_info in jobs_info:
+            predictions_path = directory_for(jobs_info['predictions'].locator) / jobs_info['predictions'].value
+            confidences_path = directory_for(jobs_info['confidences'].locator) / jobs_info['confidences'].value
+            ensemble_params = ensemble_params.unify({
+                'models': {
+                    'task': jobs_info['task'],
+                    'train_data_slice': jobs_info['train_data_slice'],
+                    'parameter_combination': jobs_info['parameter_combination'],
+                    'predictions': predictions_path,
+                    'confidences': confidences_path,
+                }
+            })
+    run_python_on_parameters(
+        Locator(('ensembled',)),
+        'ensemble',
+        ensemble_params,
+        depends_on=flatten([
+            (job_info['predictions'], job_info['confidences'])
+            for jobs_info in task_to_jobs_info.values()
+            for job_info in jobs_info
+        ])
+    )
 
     write_workflow_description()
 
