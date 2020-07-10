@@ -92,6 +92,7 @@ def main(params: Parameters):
             'predictions': ValueArtifact(locator=locator, value=Path('predictions.lst')),
             'confidence': ValueArtifact(locator=locator, value=Path('confidence.lst')),
         })
+        task_to_jobs_info[task] = jobs_info
 
     # TODO: Run ensembling
     ensemble_params = params.namespace('ensemble')
