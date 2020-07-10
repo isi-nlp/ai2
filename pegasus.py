@@ -78,9 +78,6 @@ def main(params: Parameters):
             locator,
             "train",
             job_params,
-            # TODO maybe depend on the input file? however I specify that... I don't think I need to
-            #  though.
-            depends_on=[],
             resource_request=resource_request
         )
         jobs_info = task_to_jobs_info.get(task, [])
