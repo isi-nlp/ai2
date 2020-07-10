@@ -13,6 +13,7 @@ parameter_options:
 
 # Based on https://github.com/isi-vista/gaia-event-extraction/blob/d1235671952dff13b7851a96088ef2ecef4996c9/sample_params/neural_trigger_models/pegasus/experiments/tbnamm.baseline.ace.debug.params
 workflow_name: george
+experiment_root: '%experiments_root%/ensemble'
 workflow_directory: '%experiment_root%'
 site: 'saga'
 parallelism: 10
