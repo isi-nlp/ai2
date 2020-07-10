@@ -1,8 +1,8 @@
 from typing import List, Tuple, Any
 
 from vistautils.iter_utils import only
-from vistautils import parameters_only_entrypoint
 from vistautils.parameters import Parameters, YAMLParametersLoader
+from vistautils.parameters_only_entrypoint import parameters_only_entry_point
 from pegasus_wrapper import (
     initialize_vista_pegasus_wrapper,
     directory_for,
@@ -95,4 +95,4 @@ def main(params: Parameters):
 
 
 if __name__ == '__main__':
-    parameters_only_entrypoint(main)
+    parameters_only_entry_point(main)
