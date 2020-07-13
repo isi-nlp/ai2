@@ -43,7 +43,9 @@ def main(params: Parameters):
         locator = model_outputs_locator / Locator(options)
 
         # Special logic for AlphaNLI
-        if task != 'alphanli':
+        # Tepmorarily disabled for testing purposes since I (Joe) don't have ephemeral access.
+        # if task != 'alphanli':
+        if False:
             resource_request = ResourceRequest.from_parameters(params.unify({
                 'partition': 'ephemeral',
                 # TODO: Set time limit of 12 hours.
