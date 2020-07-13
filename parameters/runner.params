@@ -1,5 +1,6 @@
 _includes:
   - "root.params"
+  - "model.params"
 
 parameter_options:
   task: ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa']

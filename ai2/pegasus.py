@@ -54,7 +54,7 @@ def main(params: Parameters):
             resource_request = ResourceRequest.from_parameters(params)
 
         # Set up combination-specific parameters
-        job_params = Parameters.from_key_value_pairs(combination, namespace_separator=None)
+        job_params = params.unify(Parameters.from_key_value_pairs(combination, namespace_separator=None))
         project_root = params.existing_directory('project_root')
         for parameter, option in combination:
             parameter_directory = project_root / parameter
