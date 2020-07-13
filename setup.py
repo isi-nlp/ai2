@@ -1,5 +1,5 @@
 from setuptools import setup
 
 setup(
-    name='ai2'
+    name='ai2',
 )
