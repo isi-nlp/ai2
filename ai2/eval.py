@@ -12,7 +12,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from model import Classifier
+from ai2.model import Classifier
 
 # Save root path as hydra will create copies of this code in a folder
 ROOT_PATH = Path(__file__).parent.absolute()

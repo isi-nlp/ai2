@@ -78,7 +78,7 @@ def main(params: Parameters):
         })
         job = run_python_on_parameters(
             locator,
-            "train",
+            "a2.train",
             job_params,
             depends_on=[],
             resource_request=resource_request

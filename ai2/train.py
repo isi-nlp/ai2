@@ -11,8 +11,8 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import TestTubeLogger
 import torch
 
-from eval import evaluate
-from model import Classifier
+from ai2.eval import evaluate
+from ai2.model import Classifier
 
 # Save root path as hydra will create copies of this code in date specific folder
 ROOT_PATH = Path(__file__).parent.absolute()

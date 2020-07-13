@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 import numpy as np
 
-from model import Classifier
+from ai2.model import Classifier
 
 
 # Parse the input file from JSONL to a list of dictionaries.
