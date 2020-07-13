@@ -78,7 +78,7 @@ def main(params: Parameters):
         })
         job = run_python_on_parameters(
             locator,
-            "ai2.train",
+            'ai2.train.train',
             job_params,
             depends_on=[],
             resource_request=resource_request
@@ -116,7 +116,7 @@ def main(params: Parameters):
 
     run_python_on_parameters(
         Locator(('ensembled',)),
-        'ai2.ensemble',
+        'ai2.ensemble.main',
         ensemble_params,
         depends_on=[
             job_info['job']
