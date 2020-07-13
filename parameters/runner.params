@@ -1,6 +1,6 @@
 _includes:
   - "root.params"
-  - "model.params"
+  - "model/roberta-large.params"
 
 parameter_options:
   task: ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa']
