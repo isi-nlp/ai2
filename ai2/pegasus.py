@@ -116,7 +116,7 @@ def main(params: Parameters):
 
     run_python_on_parameters(
         Locator(('ensembled',)),
-        'ensemble',
+        'ai2.ensemble',
         ensemble_params,
         depends_on=[
             job_info['job']
