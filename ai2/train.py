@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 import random
 
-from vistautils import parameters_only_entrypoint
+from vistautils.parameters_only_entrypoint import parameters_only_entry_point
 from vistautils.parameters import Parameters
 from loguru import logger
 import numpy as np
@@ -95,4 +95,4 @@ def train(params: Parameters):
 
 
 if __name__ == "__main__":
-    parameters_only_entrypoint(train)
+    parameters_only_entry_point(train)
