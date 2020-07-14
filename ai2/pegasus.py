@@ -74,6 +74,7 @@ def main(params: Parameters):
         # Set general parameters
         save_path = directory_for(locator)
         job_params = job_params.unify({
+            'build_on_pretrained_model': False,
             'save_path': save_path,
             'save_best_only': False,
         })
