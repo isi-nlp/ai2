@@ -93,9 +93,11 @@ def main(params: Parameters):
         })
         task_to_jobs_info[task] = jobs_info
 
+    ensemble_locator = Locator(('ensembled',))
     ensemble_params = params.namespace('ensemble')
     ensemble_params.unify({
         'data_sizes': params.arbitrary_list('parameter_options.train_data_slice'),
+        'output_file': directory_for(ensemble_locator) / ensemble_params.creatable_file('output_file_name'),
     })
     for task, jobs_info in task_to_jobs_info.items():
         models_list = []
@@ -115,7 +117,7 @@ def main(params: Parameters):
         })
 
     run_python_on_parameters(
-        Locator(('ensembled',)),
+        ensemble_locator,
         'ai2.ensemble',
         ensemble_params,
         depends_on=[

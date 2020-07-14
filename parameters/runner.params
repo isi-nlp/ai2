@@ -11,7 +11,7 @@ parameter_options:
 
 ensemble:
   accuracy_bootstrapping_samples: 100  # Use 10K for official reports. 100 is used for quick dev runs.
-  output_file: 'ensemble_results_100.csv'
+  output_file_name: 'ensemble_results_100.csv'
   task_to_threshold:
     alphanli: 0.6
     physicaliqa: 0.6
