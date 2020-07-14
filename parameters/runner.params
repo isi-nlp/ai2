@@ -36,4 +36,4 @@ num_cpus: 4
 num_gpus: 1
 memory: '4g'
 # sbatch --ntasks=1  # already covered, resource_request.py line 133
-# sbatch --time=20:00:00  # todo: not sure how to cover
+job_time_in_minutes: 1200
