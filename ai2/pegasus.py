@@ -24,7 +24,6 @@ def main(params: Parameters):
     initialize_vista_pegasus_wrapper(params)
 
     parameter_options = params.namespace('parameter_options').as_nested_dicts()
-    print(parameter_options)
 
     # Compute all possible combinations of the parameters
     parameter_combinations: List[List[Tuple[str, Any]]] = [[]]
