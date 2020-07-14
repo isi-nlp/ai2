@@ -34,6 +34,6 @@ partition: mics
 
 num_cpus: 4
 num_gpus: 1
-memory: '4g'
+memory: '16g'
 # sbatch --ntasks=1  # already covered, resource_request.py line 133
 job_time_in_minutes: 1200
