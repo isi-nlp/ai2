@@ -55,9 +55,9 @@ def main(params: Parameters):
 
         # Set up combination-specific parameters
         job_params = params.unify(Parameters.from_key_value_pairs(combination, namespace_separator=None))
-        project_root = params.existing_directory('project_root')
+        params_root = params.existing_directory('project_root') / 'parameters'
         for parameter, option in combination:
-            parameter_directory = project_root / parameter
+            parameter_directory = params_root / parameter
             if parameter_directory.exists():
                 option_params: Parameters = YAMLParametersLoader().load(
                     parameter_directory / f'{option}.params'
