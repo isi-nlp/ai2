@@ -17,6 +17,8 @@ from pegasus_wrapper.resource_request import ResourceRequest
 from pegasus_wrapper.locator import Locator
 from pegasus_wrapper.artifact import ValueArtifact
 
+MINUTES_PER_HOUR = 60
+
 
 def main(params: Parameters):
     initialize_vista_pegasus_wrapper(params)
@@ -46,9 +48,10 @@ def main(params: Parameters):
         # Tepmorarily disabled for testing purposes since I (Joe) don't have ephemeral access.
         # if task != 'alphanli':
         if False:
+            time_limit_hours = 12
             resource_request = ResourceRequest.from_parameters(params.unify({
                 'partition': 'ephemeral',
-                # TODO: Set time limit of 12 hours.
+                'job_time_in_minutes':  time_limit_hours * MINUTES_PER_HOUR,
             }))
         else:
             resource_request = ResourceRequest.from_parameters(params)
