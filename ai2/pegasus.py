@@ -57,12 +57,13 @@ def main(params: Parameters):
         job_params = params.unify(Parameters.from_key_value_pairs(combination, namespace_separator=None))
         params_root = params.existing_directory('project_root') / 'parameters'
         for parameter, option in combination:
-            parameter_directory = params_root / parameter
-            if parameter_directory.exists():
-                option_params: Parameters = YAMLParametersLoader().load(
-                    parameter_directory / f'{option}.params'
-                )
-                job_params = job_params.unify(option_params)
+            if option != '':
+                parameter_directory = params_root / parameter
+                if parameter_directory.exists():
+                    option_params: Parameters = YAMLParametersLoader().load(
+                        parameter_directory / f'{option}.params'
+                    )
+                    job_params = job_params.unify(option_params)
 
         # Special logic for Hellaswag
         if task == 'hellaswag':
