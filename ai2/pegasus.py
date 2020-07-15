@@ -113,7 +113,7 @@ def main(params: Parameters):
 
             models_list.append({
                 'train_data_slice': job_info['train_data_slice'],
-                'parameters': job_info['parameter_combination'],
+                'parameters': job_info['parameters'],
                 'predictions': predictions_path,
                 'confidence': confidence_path,
             })
