@@ -51,14 +51,14 @@ def main(params: Parameters):
 
     tasks_to_threshold = params.namespace('task_to_threshold').as_nested_dicts()
     data_sizes = params.arbitrary_list('data_sizes')
+    task_data_root = params.existing_directory('task_data_root')
     for task in tasks_to_threshold.keys():
         task_models = params.namespace('models').arbitrary_list(task)
         for data_size in data_sizes:
             results = {}
             print(f'\nRunning ensemble for {task.upper()}, {data_size}')
             relevant_models = [model for model in task_models if model['train_data_slice'] == data_size]
-            # gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
-            gold_labels_path = f'task_data/{task}-train-dev/dev-labels.lst'
+            gold_labels_path = task_data_root / f'{task}-train-dev' / 'dev-labels.lst'
             labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
 
             best_score_per_seed_group = defaultdict(float)
