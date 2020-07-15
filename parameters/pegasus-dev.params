@@ -1,0 +1,39 @@
+_includes:
+  - "root.params"
+  - "model/roberta-large.params"
+
+parameter_options:
+  task: ['physicaliqa']
+  train_data_slice: [100]
+  task2: ['']
+  architecture: ['standard']
+  random_seed: [0, 42]
+
+ensemble:
+  accuracy_bootstrapping_samples: 100  # Use 10K for official reports. 100 is used for quick dev runs.
+  output_file_name: 'ensemble_results_100.csv'
+  task_to_threshold:
+    alphanli: 0.6
+    physicaliqa: 0.6
+    socialiqa: 0.6
+    hellaswag: 0.6
+  # Fill in data_sizes from train_data_slice
+
+# maybe not needed
+# parameter_order: ['tasks', 'train_data_slice', 'task2', 'architecture', 'random_seed']
+
+# Based on https://github.com/isi-vista/gaia-event-extraction/blob/d1235671952dff13b7851a96088ef2ecef4996c9/sample_params/neural_trigger_models/pegasus/experiments/tbnamm.baseline.ace.debug.params
+workflow_name: george
+experiment_root: '%experiments_root%/ensemble'
+workflow_directory: '%experiment_root%'
+backend: slurm
+site: 'saga'
+parallelism: 10
+namespace: saga
+partition: mics
+
+num_cpus: 4
+num_gpus: 1
+memory: '16g'
+# sbatch --ntasks=1  # already covered, resource_request.py line 133
+job_time_in_minutes: 1200
