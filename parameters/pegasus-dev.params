@@ -10,17 +10,11 @@ parameter_options:
   random_seed: [0, 42]
 
 ensemble:
-  accuracy_bootstrapping_samples: 100  # Use 10K for official reports. 100 is used for quick dev runs.
-  output_file_name: 'ensemble_results_100.csv'
+  accuracy_bootstrapping_samples: 100
+  output_file_name: 'dev_ensemble_results.csv'
   task_to_threshold:
-    alphanli: 0.6
     physicaliqa: 0.6
-    socialiqa: 0.6
-    hellaswag: 0.6
   # Fill in data_sizes from train_data_slice
-
-# maybe not needed
-# parameter_order: ['tasks', 'train_data_slice', 'task2', 'architecture', 'random_seed']
 
 # Based on https://github.com/isi-vista/gaia-event-extraction/blob/d1235671952dff13b7851a96088ef2ecef4996c9/sample_params/neural_trigger_models/pegasus/experiments/tbnamm.baseline.ace.debug.params
 workflow_name: george
