@@ -1,3 +1,6 @@
+_include:
+  - ../root.params
+
 task_name: hellaswag
 train_x: "task_data/hellaswag-train-dev/train.jsonl"
 train_y: "task_data/hellaswag-train-dev/train-labels.lst"

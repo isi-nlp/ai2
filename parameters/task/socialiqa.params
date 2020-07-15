@@ -1,6 +1,9 @@
+_include:
+  - ../root.params
+
 task_name: socialiqa
-train_x: "task_data/socialiqa-train-dev/train.jsonl"
-train_y: "task_data/socialiqa-train-dev/train-labels.lst"
-val_x: "task_data/socialiqa-train-dev/dev.jsonl"
-val_y: "task_data/socialiqa-train-dev/dev-labels.lst"
+train_x: "%project_root%/task_data/socialiqa-train-dev/train.jsonl"
+train_y: "%project_root%/task_data/socialiqa-train-dev/train-labels.lst"
+val_x: "%project_root%/task_data/socialiqa-train-dev/dev.jsonl"
+val_y: "%project_root%/task_data/socialiqa-train-dev/dev-labels.lst"
 formula: "context + question -> answerA|answerB|answerC"
