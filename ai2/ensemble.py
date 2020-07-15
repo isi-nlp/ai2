@@ -80,13 +80,13 @@ def main(params: Parameters):
                     model_to_confidences[model_name] = confs
                     print(f'{model_name},{round(accuracy*100,2)}')
                     model_without_task_data_size = '_'.join(
-                        option for parameter, option in model.parameters
+                        str(option) for parameter, option in model.parameters
                         if parameter not in {'task', 'train_data-slice'}
                     )
                     results[model_without_task_data_size] = round(accuracy*100,2)
 
                     # model_without_seed = model.strip('_'+model.split('_')[-1])
-                    model_without_seed = '_'.join(option for parameter, option in model.parameters)
+                    model_without_seed = '_'.join(str(option) for parameter, option in model.parameters if parameter != 'seed')
                     if accuracy > best_score_per_seed_group[model_without_seed]:
                         best_score_per_seed_group[model_without_seed] = accuracy
                         best_model_per_seed_group[model_without_seed] = model
