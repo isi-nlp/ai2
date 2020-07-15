@@ -56,7 +56,7 @@ def main(params: Parameters):
         for data_size in data_sizes:
             results = {}
             print(f'\nRunning ensemble for {task.upper()}, {data_size}')
-            relevant_models = [model for model in task_models if model['data_size'] == data_size]
+            relevant_models = [model for model in task_models if model['train_data_slice'] == data_size]
             # gold_labels_path = f'task_data/{task}-train-dev/internal-dev-labels.lst'
             gold_labels_path = f'task_data/{task}-train-dev/dev-labels.lst'
             labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
