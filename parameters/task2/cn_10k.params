@@ -5,5 +5,5 @@ task_name2: cn_all_cs_10k
 train2_x: "%project_root%/task_data/cn_all_cs_10k-train-dev/train.jsonl"
 train2_y: "%project_root%/task_data/cn_all_cs_10k-train-dev/train-labels.lst"
 val2_x: "%project_root%/task_data/cn_all_cs_10k-train-dev/dev.jsonl"
-val2_y: "%project_root%/ask_data/cn_all_cs_10k-train-dev/dev-labels.lst"
+val2_y: "%project_root%/task_data/cn_all_cs_10k-train-dev/dev-labels.lst"
 formula2: "e1 + e2 -> sol1|sol2|sol3|sol4|sol5|sol6|sol7"
