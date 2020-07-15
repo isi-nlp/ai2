@@ -103,7 +103,7 @@ def main(params: Parameters):
     ensemble_params = ensemble_params.unify({
         'task_data_root': params.existing_directory('project_root') / 'task_data',
         'data_sizes': params.arbitrary_list('parameter_options.train_data_slice'),
-        'output_file': directory_for(ensemble_locator) / ensemble_params.creatable_file('output_file_name'),
+        'output_file': directory_for(ensemble_locator) / ensemble_params.string('output_file_name'),
     })
     for task, jobs_info in task_to_jobs_info.items():
         models_list = []
