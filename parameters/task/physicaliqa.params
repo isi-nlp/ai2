@@ -2,8 +2,8 @@ _includes:
   - ../root.params
 
 task_name: physicaliqa
-train_x: "task_data/physicaliqa-train-dev/train.jsonl"
-train_y: "task_data/physicaliqa-train-dev/train-labels.lst"
-val_x: "task_data/physicaliqa-train-dev/dev.jsonl"
-val_y: "task_data/physicaliqa-train-dev/dev-labels.lst"
+train_x: "%project_root%/task_data/physicaliqa-train-dev/train.jsonl"
+train_y: %project_root%/"task_data/physicaliqa-train-dev/train-labels.lst"
+val_x: "%project_root%/task_data/physicaliqa-train-dev/dev.jsonl"
+val_y: "%project_root%/task_data/physicaliqa-train-dev/dev-labels.lst"
 formula: "goal -> sol1|sol2"
