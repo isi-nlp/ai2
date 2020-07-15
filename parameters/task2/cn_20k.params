@@ -1,5 +1,5 @@
 _includes:
-  - ../root.params
+  - "../root.params"
 
 task_name2: cn_all_cs_20k
 train2_x: "%project_root%/task_data/cn_all_cs_20k-train-dev/train.jsonl"

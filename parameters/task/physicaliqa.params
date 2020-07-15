@@ -1,5 +1,5 @@
 _includes:
-  - ../root.params
+  - "../root.params"
 
 task_name: physicaliqa
 train_x: "%project_root%/task_data/physicaliqa-train-dev/train.jsonl"

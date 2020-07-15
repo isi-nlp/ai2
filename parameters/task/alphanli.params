@@ -1,5 +1,5 @@
 _includes:
-  - ../root.params
+  - "../root.params"
 
 task_name: alphanli
 train_x: "%project_root%/task_data/alphanli-train-dev/train.jsonl"

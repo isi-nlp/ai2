@@ -1,5 +1,5 @@
 _includes:
-  - ../root.params
+  - "../root.params"
 
 task_name: socialiqa
 train_x: "%project_root%/task_data/socialiqa-train-dev/train.jsonl"

@@ -1,5 +1,5 @@
 _includes:
-  - ../root.params
+  - "../root.params"
 
 task_name: hellaswag
 train_x: "%project_root%/task_data/hellaswag-train-dev/train.jsonl"
