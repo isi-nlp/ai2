@@ -39,7 +39,7 @@ def main(params: Parameters):
     task_to_jobs_info = {}
     for i, combination in enumerate(parameter_combinations):
         task: str = only(option for parameter, option in combination if parameter == 'task')
-        train_data_slice: str = only(option for parameter, option in combination if parameter == 'train_data_slice')
+        train_data_slice: int = only(option for parameter, option in combination if parameter == 'train_data_slice')
         options: Tuple[str] = tuple(str(option) if option != '' else '_default' for _, option in combination)
         locator = model_outputs_locator / Locator(options)
 

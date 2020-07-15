@@ -162,7 +162,7 @@ def main(params: Parameters):
                 # if factor == 'embed_all_sep_mean' and (task == 'physicaliqa' or task == 'alphanli'):
                 #     confidences_df[without_factor_per_arc].to_csv(f'{task}_conf_ensemble.csv')
 
-            all_results[task + '_' + data_size] = results
+            all_results[task + '_' + str(data_size)] = results
 
     df = pd.DataFrame.from_dict(all_results)
     df.to_csv(params.creatable_file('output_file'), na_rep= '-')
