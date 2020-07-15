@@ -165,7 +165,7 @@ def main(params: Parameters):
             all_results[task + '_' + str(data_size)] = results
 
     df = pd.DataFrame.from_dict(all_results)
-    df.to_csv(params.creatable_file('output_file'), na_rep= '-')
+    df.to_csv(params.creatable_file('output_file'), na_rep='-')
 
 
 if __name__ == '__main__':
