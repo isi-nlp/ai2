@@ -1,4 +1,4 @@
-_include:
+_includes:
   - ../root.params
 
 task_name: socialiqa
