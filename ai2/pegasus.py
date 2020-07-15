@@ -17,6 +17,7 @@ from pegasus_wrapper.resource_request import ResourceRequest
 from pegasus_wrapper.locator import Locator
 from pegasus_wrapper.artifact import ValueArtifact
 
+TIME_LIMIT_HOURS_NOT_ALPHANLI = 12  # Time limit in hours for tasks other than AlphaNLI
 MINUTES_PER_HOUR = 60
 
 
@@ -47,10 +48,9 @@ def main(params: Parameters):
         # Tepmorarily disabled for testing purposes since I (Joe) don't have ephemeral access.
         # if task != 'alphanli':
         if False:
-            time_limit_hours = 12
             resource_request = ResourceRequest.from_parameters(params.unify({
                 'partition': 'ephemeral',
-                'job_time_in_minutes':  time_limit_hours * MINUTES_PER_HOUR,
+                'job_time_in_minutes': TIME_LIMIT_HOURS_NOT_ALPHANLI * MINUTES_PER_HOUR,
             }))
         else:
             resource_request = ResourceRequest.from_parameters(params)
