@@ -20,8 +20,7 @@ ROOT_PATH = Path(__file__).parent.absolute()
 
 def train(params: Parameters):
     config = params.as_nested_dicts()
-    logger.info(config)
-    
+
     # If the training is deterministic for debugging purposes, we set the random seed
     if not isinstance(config['random_seed'], bool):
         logger.info(f"Running deterministic model with seed {config['random_seed']}")
