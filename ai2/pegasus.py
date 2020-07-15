@@ -92,7 +92,7 @@ def main(params: Parameters):
         jobs_info.append({
             'job': job,
             'train_data_slice': train_data_slice,
-            'parameter_combination': combination,
+            'parameters': combination,
             'predictions': ValueArtifact(locator=locator, value=Path('predictions.lst')),
             'confidence': ValueArtifact(locator=locator, value=Path('confidence.lst')),
         })
