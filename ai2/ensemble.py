@@ -16,7 +16,7 @@ from vistautils.parameters import Parameters
 
 
 def get_model_name(model: Mapping[str, Any]) -> str:
-    return "_".join(option for parameter, option in model['parameters'])
+    return "_".join(str(option) for parameter, option in model['parameters'])
 
 
 def main(params: Parameters):
