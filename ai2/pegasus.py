@@ -79,6 +79,7 @@ def main(params: Parameters):
             'build_on_pretrained_model': False,
             'save_path': save_path,
             'save_best_only': False,
+            'eval_after_training': True,
         })
         job = run_python_on_parameters(
             locator,
