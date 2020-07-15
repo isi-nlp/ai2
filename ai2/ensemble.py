@@ -30,7 +30,7 @@ def main(params: Parameters):
         final_predictions = weighted_votes.tolist()
         stats = []
         for _ in range(params.integer('accuracy_bootstrapping_samples')):
-            indices = [i for i in np.random.random_integers(0, len(final_predictions) - 1, size=len(final_predictions))]
+            indices = [i for i in np.random.randint(0, len(final_predictions), size=len(final_predictions))]
             stats.append(accuracy_score([labels[j] for j in indices], [final_predictions[j] for j in indices]))
 
         # Calculate the confidence interval and log it to console
