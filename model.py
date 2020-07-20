@@ -57,7 +57,10 @@ class Classifier(pl.LightningModule):
         self.dropout = nn.Dropout(hparams["dropout"])
 
         # Create the one layer feed forward neural net for classification purpose after the encoder
-        self.classifier = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
+        if self.hparams['architecture'] == 'deepset':
+            self.classifier = nn.Linear(self.embedder.config.hidden_size, 2, bias=True)
+        else:
+            self.classifier = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
         self.classifier.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
         self.classifier.bias.data.zero_()
         self.loss = nn.CrossEntropyLoss(ignore_index=-1, reduction="mean")
@@ -84,6 +87,7 @@ class Classifier(pl.LightningModule):
                                     decoder_input_ids=batch["input_ids"], )
 
         token_embeddings, *_ = results
+        print(token_embeddings.shape)
 
         if self.hparams['architecture'] == 'embed_all_sep_mean':
             # Get the mean of part of the embedding that corresponds to the answer
@@ -102,13 +106,21 @@ class Classifier(pl.LightningModule):
                     mean_embeddings = mean_embeddings.to(torch.device('cuda'))
         else:
             mean_embeddings = torch.mean(token_embeddings, dim=1).squeeze()
+        print(mean_embeddings.shape)
         output = self.dropout(mean_embeddings)
+        print(output.shape)
+        if self.hparams['architecture'] == 'deepset':
+            bs = batch['batch_size']
+            reshaped = torch.reshape(output, (bs, int(output.shape[0]/bs), output.shape[1]))
+            summed = torch.sum(reshaped, dim=1)
+            print(summed.shape)
         if batch["task_id"] == 2:
-            logits = self.classifier2(output).squeeze(dim=1)
+            logits = self.classifier2(summed).squeeze(dim=1)
         elif batch["task_id"] == 0:
-            logits = self.classifier(output).squeeze(dim=1)
+            logits = self.classifier(summed).squeeze(dim=1)
         else:
             raise
+        print(logits.shape)
         return logits
 
     # Custom data loader
@@ -176,13 +188,14 @@ class Classifier(pl.LightningModule):
 
     # Collate function used by data loader objects
     def collate(self, examples):
-
         batch_size = len(examples)
         num_choice = len(examples[0]["text"])
+        self.num_choice = num_choice
         task_id = examples[0]["task_id"]
         batch = {
             "labels": torch.LongTensor([e["label"] for e in examples]) if "label" in examples[0] else None,
             "num_choice": torch.LongTensor([num_choice] * batch_size),
+            "batch_size": batch_size,
             "task_id": task_id
         }
 
