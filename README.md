@@ -5,9 +5,9 @@
 Create and run a virtual environment with Python 3.7 using anacondam. Make sure to use conda version `>=4.8.2`.
 
 ```bash
-conda create --name ai2_stable --file python_environment/requirements_conda.txt python=3.7
+conda create --name ai2_stable python=3.7
 conda activate ai2_stable
-pip install -r python_environment/requirements.txt
+pip install -r python_environment/requirements_pip.txt
 ```
 
 This repo uses the Hydra python module to handle configuration and result storage. The config files are in the yaml 
