@@ -87,7 +87,6 @@ class Classifier(pl.LightningModule):
                                     decoder_input_ids=batch["input_ids"], )
 
         token_embeddings, *_ = results
-        print(token_embeddings.shape)
 
         if self.hparams['architecture'] == 'embed_all_sep_mean':
             # Get the mean of part of the embedding that corresponds to the answer
@@ -106,18 +105,15 @@ class Classifier(pl.LightningModule):
                     mean_embeddings = mean_embeddings.to(torch.device('cuda'))
         else:
             mean_embeddings = torch.mean(token_embeddings, dim=1).squeeze()
-        print(mean_embeddings.shape)
         output = self.dropout(mean_embeddings)
-        print(output.shape)
         if self.hparams['architecture'] == 'deepset':
             bs = batch['batch_size']
             reshaped = torch.reshape(output, (bs, int(output.shape[0]/bs), output.shape[1]))
-            summed = torch.sum(reshaped, dim=1)
-            print(summed.shape)
+            output = torch.sum(reshaped, dim=1)
         if batch["task_id"] == 2:
-            logits = self.classifier2(summed).squeeze(dim=1)
+            logits = self.classifier2(output).squeeze(dim=1)
         elif batch["task_id"] == 0:
-            logits = self.classifier(summed).squeeze(dim=1)
+            logits = self.classifier(output).squeeze(dim=1)
         else:
             raise
         print(logits.shape)

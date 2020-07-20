@@ -72,7 +72,7 @@ for i, combination in enumerate(parameter_combinations):
           f"-J {experiment_id} "
           f"-o outputs/slurm/{experiment_id}.out "
           # Ephemeral specifications - sudo sacctmgr modify user beser set MaxJobs=25
-          f"{'' if 'alphanli' in experiment_id else '--partition=ephemeral --qos=ephemeral --time=12:00:00 '}"
+          # f"{'' if 'alphanli' in experiment_id else '--partition=ephemeral --qos=ephemeral --time=12:00:00 '}"
           f"slurm/run_saga.sh "
           # Python script commands
           f"\""
