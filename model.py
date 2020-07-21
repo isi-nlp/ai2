@@ -57,10 +57,10 @@ class Classifier(pl.LightningModule):
         self.dropout = nn.Dropout(hparams["dropout"])
 
         # Create the one layer feed forward neural net for classification purpose after the encoder
-        # if self.hparams['architecture'] == 'deepset':
-        #     self.classifier = nn.Linear(self.embedder.config.hidden_size, 2, bias=True)
-        # else:
-        self.classifier = nn.Linear(self.embedder.config.hidden_size*2, 1, bias=True)
+        if self.hparams['architecture'] == 'deepset':
+            self.classifier = nn.Linear(self.embedder.config.hidden_size*2, 1, bias=True)
+        else:
+            self.classifier = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
         self.classifier.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
         self.classifier.bias.data.zero_()
         self.loss = nn.CrossEntropyLoss(ignore_index=-1, reduction="mean")
