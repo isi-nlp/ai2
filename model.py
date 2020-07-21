@@ -57,10 +57,10 @@ class Classifier(pl.LightningModule):
         self.dropout = nn.Dropout(hparams["dropout"])
 
         # Create the one layer feed forward neural net for classification purpose after the encoder
-        if self.hparams['architecture'] == 'deepset':
-            self.classifier = nn.Linear(self.embedder.config.hidden_size, 2, bias=True)
-        else:
-            self.classifier = nn.Linear(self.embedder.config.hidden_size, 1, bias=True)
+        # if self.hparams['architecture'] == 'deepset':
+        #     self.classifier = nn.Linear(self.embedder.config.hidden_size, 2, bias=True)
+        # else:
+        self.classifier = nn.Linear(self.embedder.config.hidden_size*2, 1, bias=True)
         self.classifier.weight.data.normal_(mean=0.0, std=self.embedder.config.initializer_range)
         self.classifier.bias.data.zero_()
         self.loss = nn.CrossEntropyLoss(ignore_index=-1, reduction="mean")
@@ -109,14 +109,19 @@ class Classifier(pl.LightningModule):
         if self.hparams['architecture'] == 'deepset':
             bs = batch['batch_size']
             reshaped = torch.reshape(output, (bs, int(output.shape[0]/bs), output.shape[1]))
-            output = torch.sum(reshaped, dim=1)
+            summed_contexts = torch.sum(reshaped, dim=1) # Summed contexts size(BS, 1024)
+            # print(summed_contexts)
+            repeated = summed_contexts.repeat_interleave(2, dim=0)
+            # print(repeated.shape)
+            # print(repeated)
+            output = torch.cat([repeated, output], 1)
+            # print(output)
         if batch["task_id"] == 2:
             logits = self.classifier2(output).squeeze(dim=1)
         elif batch["task_id"] == 0:
             logits = self.classifier(output).squeeze(dim=1)
         else:
             raise
-        print(logits.shape)
         return logits
 
     # Custom data loader
