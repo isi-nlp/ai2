@@ -1,7 +1,7 @@
 defaults:
-  - model: roberta-large
+  - model: bert-base-cased
   - task: alphanli
-random_seed: 42
+random_seed: False
 build_on_pretrained_model: False
 save_best_only: True
 eval_after_training: True
