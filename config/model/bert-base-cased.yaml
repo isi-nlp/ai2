@@ -1,4 +1,4 @@
-model: "bert-large-cased"
+model: "bert-base-cased"
 accumulate_grad_batches: 16
 use_amp: false
 max_epochs: 5

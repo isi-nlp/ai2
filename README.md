@@ -1,13 +1,19 @@
 # David's Code Base For AI2 Commonsense Leaderboard
 
-## Install Dependencies
+## Install Dependencies and Set Up
 
-Create and run a virtual environment with Python 3.7 using anacondam. Make sure to use conda version `>=4.8.2`.
+Create and run a virtual environment with Python 3.7 using anaconda. Make sure to use conda version `>=4.8.2`.
 
 ```bash
 conda create --name ai2_stable python=3.7
 conda activate ai2_stable
 pip install -r python_environment/requirements_pip.txt
+```
+
+Then download pretrained weights on multiple pretrained models that are used in the repository
+
+```bash
+python download_pretrained_weights.py
 ```
 
 This repo uses the Hydra python module to handle configuration and result storage. The config files are in the yaml 
