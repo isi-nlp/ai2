@@ -6,7 +6,7 @@
 #SBATCH --mem-per-cpu=4G                # Memory allocated per cpu
 #SBATCH --cpus-per-task=4               # CPU Allocated
 #SBATCH --gpus-per-task=1               # GPU Allocated
-#SBATCH --job-name=INCREMENTAL_TRAINING        # The name of this job. If removed the job will have name of your shell script.
+#SBATCH --job-name=outputs/BERT_ANLI        # The name of this job. If removed the job will have name of your shell script.
 #SBATCH --output=%x-%j.out              # The name of the file output. %x-%j means JOB_NAME-JOB_ID. If removed output will be in file slurm-JOB_ID.
 #SBATCH --mail-user=dwangli@isi.edu     # Email address for email notifications to be sent to.
 #SBATCH --mail-type=ALL                 # Type of notifications to receive. Other options includes BEGIN, END, FAIL, REQUEUE and more.
@@ -18,7 +18,7 @@
 source ~/.bashrc
 conda activate ai2_stable
 
-. /scratch/spack/share/spack/setup-env.sh
+. /opt/spack/share/spack/setup-env.sh
 # When using `tensorflow-gpu`, paths to CUDA and CUDNN libraries are required
 # by symbol lookup at runtime even if a GPU isn't going to be used.
 spack load cuda@9.0.176

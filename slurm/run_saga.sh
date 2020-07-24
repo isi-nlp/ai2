@@ -19,4 +19,4 @@ spack load cuda@9.0.176
 spack load cudnn@7.6.5.32-9.0-linux-x64
 
 #python train.py task=physicaliqa build_on_pretrained_model=outputs/roberta-large-baselines/socialiqa-s42.ckpt
-python eval.py
+python playground.py
