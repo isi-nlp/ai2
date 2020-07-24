@@ -20,6 +20,9 @@ from pegasus_wrapper.artifact import ValueArtifact
 TIME_LIMIT_HOURS_NOT_ALPHANLI = 12  # Time limit in hours for tasks other than AlphaNLI
 MINUTES_PER_HOUR = 60
 
+# Represents a parameter combination as a list of (parameter_name, value) tuples.
+ParameterCombination = List[Tuple[str, Any]]
+
 
 def main(params: Parameters):
     initialize_vista_pegasus_wrapper(params)
@@ -27,7 +30,7 @@ def main(params: Parameters):
     parameter_options = params.namespace('parameter_options').as_nested_dicts()
 
     # Compute all possible combinations of the parameters
-    parameter_combinations: List[List[Tuple[str, Any]]] = [[]]
+    parameter_combinations: List[ParameterCombination] = [[]]
     for parameter_name, options in parameter_options.items():
         new_combinations = []
         for combination in parameter_combinations:
