@@ -36,6 +36,8 @@ def main(params: Parameters):
                 new_combinations.append(new_combination)
         parameter_combinations = new_combinations
 
+    # Training phase.
+    # Schedule training jobs for each parameter combination. Their outputs will be under "{experiment_root}/models".
     model_outputs_locator = Locator(('models',))
     task_to_jobs_info = {}
     for i, combination in enumerate(parameter_combinations):
@@ -45,7 +47,7 @@ def main(params: Parameters):
         locator = model_outputs_locator / Locator(options)
 
         # Special logic for AlphaNLI
-        # Tepmorarily disabled for testing purposes since I (Joe) don't have ephemeral access.
+        # Temporarily disabled for testing purposes since I (Joe) don't have ephemeral access.
         # if task != 'alphanli':
         if False:
             resource_request = ResourceRequest.from_parameters(params.unify({
@@ -55,7 +57,7 @@ def main(params: Parameters):
         else:
             resource_request = ResourceRequest.from_parameters(params)
 
-        # Set up combination-specific parameters
+        # Read in combination-specific parameters
         job_params = params.unify(Parameters.from_key_value_pairs(combination, namespace_separator=None))
         params_root = params.existing_directory('project_root') / 'parameters'
         for parameter, option in combination:
@@ -73,7 +75,7 @@ def main(params: Parameters):
                 'batch_size': 2
             })
 
-        # Set general parameters
+        # Set common parameters and schedule the job.
         save_path = directory_for(locator)
         job_params = job_params.unify({
             'build_on_pretrained_model': False,
@@ -88,6 +90,8 @@ def main(params: Parameters):
             depends_on=[],
             resource_request=resource_request
         )
+
+        # We track job info so that it can be fed to the ensembling script.
         jobs_info = task_to_jobs_info.get(task, [])
         jobs_info.append({
             'job': job,
@@ -98,6 +102,7 @@ def main(params: Parameters):
         })
         task_to_jobs_info[task] = jobs_info
 
+    # Ensembling phase.
     ensemble_locator = Locator(('ensembled',))
     ensemble_params = params.namespace('ensemble')
     ensemble_params = ensemble_params.unify({
@@ -105,6 +110,9 @@ def main(params: Parameters):
         'data_sizes': params.arbitrary_list('parameter_options.train_data_slice'),
         'output_file': directory_for(ensemble_locator) / ensemble_params.string('output_file_name'),
     })
+
+    # Make a list of models and the relevant job info for the ensembling script to use. It needs to
+    # know, for example, where to find their predictions and their confidences.
     for task, jobs_info in task_to_jobs_info.items():
         models_list = []
         for job_info in jobs_info:
