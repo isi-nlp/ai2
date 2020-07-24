@@ -18,7 +18,7 @@ for a_story in train_stories + dev_stories:
     a_story['opt3'] = a_story['ending_options'][3]
     del a_story['ending_options']
 
-# Write out the
+# Write out the converted dataset
 with open('task_data/hellaswag-train-dev/c_train.jsonl', 'w') as converted_train_story_file:
     for a_train_story in train_stories:
         converted_train_story_file.write(f'{json.dumps(a_train_story)}\n')

@@ -5,6 +5,7 @@
 from pathlib import Path
 
 from transformers import *
+from loguru import logger
 
 #
 # Script used to download transformer models with their pre-trained weights
