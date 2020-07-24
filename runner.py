@@ -4,7 +4,7 @@ parameter_options = {
                 # 'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
                 'task': ['physicaliqa'],
                 # 'train_data_slice': ['25', '90'],
-                'train_data_slice': ['100'],
+                'train_data_slice': ['90'],
                 # 'task2': ['cn_10k', 'cn_20k', 'cn_40k', 'cn_physical_10k'],
                 # 'task2': ['','cn_10k'],
                 # 'task2': [''],
@@ -12,6 +12,9 @@ parameter_options = {
                 'architecture': ['deepset'],
                 'random_seed': ['0', '42', '10061880'],
                 # 'random_seed': ['10061880'],
+                'learning_rate': ['5e-7','5e-6','5e-5'],
+                'batch_size': ['2','3','6'],
+                'dropout': ['0','0.2','0.3'],
               }
 
 # Create all possible combinations of parameters
@@ -26,58 +29,17 @@ for parameter_name, options in parameter_options.items():
 
 for i, combination in enumerate(parameter_combinations):
     experiment_id = '_'.join(option for _, option in combination if option != '')
-
-# # 'alphanli_100_include_answers_in_context_0',
-# # 'alphanli_100_cn_10k_standard_0',
-# # 'alphanli_100_cn_10k_include_answers_in_context_0',
-# # 'alphanli_100_standard_42'
-# 'physicaliqa_100_cn_10k_standard_42
-# 'physicaliqa_100_include_answers_in_context_10061880
-# 'physicaliqa_100_cn_10k_include_answers_in_context_0
-# 'physicaliqa_100_standard_42'
-# 'socialiqa_100_cn_10k_standard_42',
-# 'socialiqa_100_cn_10k_include_answers_in_context_0',
-# 'socialiqa_100_cn_10k_embed_all_sep_mean_10061880',
-# 'socialiqa_100_include_answers_in_context_0',
-# 'socialiqa_100_embed_all_sep_mean_42',
-# 'socialiqa_100_standard_42'
-# # """
-# models = f"""
-# 'hellaswag_100_standard_0',
-# 'hellaswag_100_include_answers_in_context_42',
-# 'hellaswag_100_cn_10k_standard_0',
-# 'hellaswag_100_cn_10k_include_answers_in_context_0',
-# 'hellaswag_100_cn_10k_embed_all_sep_mean_0',
-# 'hellaswag_100_embed_all_sep_mean_42'
-# """
-# #
-# for model in models.split():
-#     experiment_id = model.replace('\'', '').replace(',', '').replace(' ', '')
-#     print(experiment_id)
-#     combination = [('train_data_slice','100')]
-#     combination.append(('random_seed', experiment_id.split('_')[-1]))
-#     combination.append(('task', experiment_id.split('_')[0]))
-#     if 'cn_10k' in experiment_id:
-#         combination.append(('task2','cn_10k'))
-#     if 'standard' in experiment_id:
-#         combination.append(('architecture','standard'))
-#     elif 'include_answers_in_context' in experiment_id:
-#         combination.append(('architecture','include_answers_in_context'))
-#     elif 'embed_all_sep_mean' in experiment_id:
-#         combination.append(('architecture','embed_all_sep_mean'))
-#     print(combination)
-
     os.system(f"sbatch "
           # Additional SLURM specifications
           f"-J {experiment_id} "
           f"-o outputs/slurm/{experiment_id}.out "
           # Ephemeral specifications - sudo sacctmgr modify user beser set MaxJobs=25
-          # f"{'' if 'alphanli' in experiment_id else '--partition=ephemeral --qos=ephemeral --time=12:00:00 '}"
+          f"{'' if 'alphanli' in experiment_id else '--partition=ephemeral --qos=ephemeral --time=12:00:00 '}"
           f"slurm/run_saga.sh "
           # Python script commands
           f"\""
               f"{' '.join([f'{name}={option}' for name,option in combination  if option != ''])}"
               f" save_path={experiment_id}" 
-              f" save_best_only=False" 
+              # f" save_best_only=False" 
               f"{' batch_size=2' if 'hellaswag' in experiment_id else ''}"
               f"\"")
