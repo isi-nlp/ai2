@@ -37,7 +37,7 @@ allTask=(alphanli hellaswag physicaliqa  socialiqa)
 task=${allTask[${SLURM_ARRAY_TASK_ID}]}
 echo ""
 echo "This is using Roberta Large trained on alphanli to evaluate on task:  $task"
-python eval.py task="$task"
+python ai2/eval.py "parameters/eval-roberta-large-${task}.params"
 echo ""
 
 ### Finishing up the job and copy the output off of staging

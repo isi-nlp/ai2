@@ -1,0 +1,12 @@
+_includes:
+  - "root.params"
+  - "model/roberta-large.params"
+  - "task/physicaliqa.params"
+
+experiment_name: "eval"
+experiment_root: "%experiments_root%/%experiment_name%"
+results_path: "%experiment_root%/results.txt"
+checkpoint_path: "%experiments_root%/placeholder/_ckpt_epoch_4.ckpt"
+random_seed: 42
+architecture: standard
+with_true_label: True

@@ -1,58 +1,75 @@
 from pathlib import Path
-from typing import List, Union
+from typing import List, Union, Any
 
-import hydra
 from loguru import logger
 import numpy as np
-import omegaconf
 import pandas as pd
 from sklearn.metrics import accuracy_score
 import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+from vistautils.parameters import Parameters
+from vistautils.parameters_only_entrypoint import parameters_only_entry_point
 
 from ai2.model import Classifier
 
-# Save root path as hydra will create copies of this code in a folder
-ROOT_PATH = Path(__file__).parent.absolute()
 
+def main(params: Parameters):
+    checkpoint_path = params.existing_directory('checkpoint_path')
+    results_path = params.creatable_file('results_path')
+    val_x_file = params.existing_file('val_x')
+    val_y_file = params.optional_existing_file('val_y')
+    with_true_label = params.boolean('with_true_label')
+    if with_true_label and val_y_file is None:
+        raise RuntimeError(
+            f'with_true_label set to true but no true labels (val_y) provided! '
+        )
+    elif not with_true_label and val_y_file is not None:
+        raise RuntimeError(
+            f'with_true_label set to false but got true labels val_y!'
+        )
 
-# If script is executed by itself, load in the configuration yaml file and desired checkpoint model
-@hydra.main(config_path="parameters/eval.params")
-def main(config: omegaconf.Config):
-    config = omegaconf.OmegaConf.to_container(config)
-    logger.info(config)
+    model_name = params.string('model')
+    task_name = params.string('task_name')
+    random_seed = params.get('random_seed', Any)
 
     # If the evaluation is deterministic for debugging purposes, we set the random seed
-    if not isinstance(config['random_seed'], bool):
-        logger.info(f"Running deterministic model with seed {config['random_seed']}")
-        np.random.seed(config['random_seed'])
-        torch.manual_seed(config['random_seed'])
+    if not isinstance(random_seed, bool):
+        if not isinstance(random_seed, int): \
+                raise RuntimeError(
+                    "Random seed must be either false (i.e. no random seed)"
+                    "or an integer seed!"
+                )
+        logger.info(f"Running deterministic model with seed {random_seed}")
+        np.random.seed(random_seed)
+        torch.manual_seed(random_seed)
         if torch.cuda.is_available():
             torch.backends.cuda.deterministic = True
             torch.backends.cuda.benchmark = False
 
     # Load in the check pointed model
+    config = params.as_nested_dicts()
     model = Classifier(config)
     device = 'cpu' if not torch.cuda.is_available() else "cuda"
-    checkpoint = torch.load(ROOT_PATH / config['checkpoint_path'], map_location=device)
+    checkpoint = torch.load(checkpoint_path, map_location=device)
     model.load_state_dict(checkpoint['state_dict'])
 
-    save_path = Path(f"{config['model']}-{config['task_name']}-s{config['random_seed']}")
+    save_path = Path(f"{model_name}-{task_name}-s{random_seed}")
     save_path.mkdir(parents=True, exist_ok=True)
 
     # Call the main function with appropriate parameters
     evaluate(a_classifier=model,
              output_path=save_path,
+             results_path=results_path,
              compute_device=device,
-             val_x=ROOT_PATH / config['val_x'],
-             val_y=(ROOT_PATH / config['val_y'] if config['with_true_label'] else None))
+             val_x=val_x_file,
+             val_y=val_y_file)
 
 
 # Function to perform the evaluation (This was separated out to be called in train script)
-def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_device: str,
-             val_x: Union[str, Path], val_y: Union[str, Path] = None):
+def evaluate(a_classifier: Classifier, output_path: Union[str, Path], results_path: Union[str, Path],
+             compute_device: str, val_x: Union[str, Path], val_y: Union[str, Path] = None):
     # Move model to device and set to evaluation mode
     a_classifier.to(compute_device)
     a_classifier.eval()
@@ -101,10 +118,10 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
                     f'average: {np.mean(stats) * 100:.1f}')
 
         # Log eval result
-        with open(ROOT_PATH / f"results.txt", "a+") as resultf:
+        with open(results_path, "a+") as resultf:
             resultf.write(f'{output_path},Accuracy-lower-upper-average,{accuracy_score(labels, predictions):.3f},'
                     f'{lower * 100:.1f},{upper * 100:.1f},{np.mean(stats) * 100:.1f}\n')
 
 
 if __name__ == "__main__":
-    main()
+    parameters_only_entry_point(main)
