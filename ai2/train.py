@@ -1,3 +1,4 @@
+from datetime import datetime
 import random
 
 from vistautils.parameters_only_entrypoint import parameters_only_entry_point
@@ -11,6 +12,11 @@ import torch
 
 from ai2.eval import evaluate
 from ai2.model import Classifier
+
+
+# Date and time formats for saving dated/timed outputs
+DATE_FORMAT = '%Y-%m-%d'
+TIME_FORMAT = '%H-%M-%S'
 
 
 def train(params: Parameters):
@@ -52,8 +58,14 @@ def train(params: Parameters):
     model = Classifier(config)
     logger.info('Initialized classifier.')
 
+    # When no save path is specified, save in dated folders under the experiment root
     if not save_path:
-        save_path = experiment_root / f"{model_name}_{task_name}-{train_data_slice}_{architecture}_s{maybe_random_seed}"
+        now = datetime.now()
+        date = now.strftime(DATE_FORMAT)
+        time = now.strftime(TIME_FORMAT)
+        base_path = experiment_root / date / time
+
+        save_path = base_path / f"{model_name}_{task_name}-{train_data_slice}_{architecture}_s{maybe_random_seed}"
         if task_name2:
             save_path = save_path / f"_{task_name2}"
 
