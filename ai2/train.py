@@ -16,7 +16,7 @@ from ai2.model import Classifier
 def train(params: Parameters):
     # Load all expected parameters at the start so that if we're missing one, we crash immediately
     # instead of wasting time finishing half the script.
-    project_root = params.existing_directory('project_root')
+    experiment_root = params.existing_directory('experiment_root')
     save_path = params.optional_creatable_directory('save_path')
     save_best_only = params.boolean('save_best_only')
     build_on_pretrained_model = params.existing_directory('build_on_pretrained_model')
@@ -53,7 +53,7 @@ def train(params: Parameters):
     logger.info('Initialized classifier.')
 
     if not save_path:
-        save_path = project_root / f"{model_name}_{task_name}-{train_data_slice}_{architecture}_s{maybe_random_seed}"
+        save_path = experiment_root / f"{model_name}_{task_name}-{train_data_slice}_{architecture}_s{maybe_random_seed}"
         if task_name2:
             save_path = save_path / f"_{task_name2}"
 
