@@ -1,5 +1,3 @@
-import os
-from pathlib import Path
 import random
 
 from vistautils.parameters_only_entrypoint import parameters_only_entry_point
@@ -14,53 +12,73 @@ import torch
 from ai2.eval import evaluate
 from ai2.model import Classifier
 
-# Save root path as hydra will create copies of this code in date specific folder
-ROOT_PATH = Path(__file__).parent.absolute()
-
 
 def train(params: Parameters):
-    config = params.as_nested_dicts()
+    # Load all expected parameters at the start so that if we're missing one, we crash immediately
+    # instead of wasting time finishing half the script.
+    project_root = params.existing_directory('project_root')
+    save_path = params.optional_creatable_directory('save_path')
+    save_best_only = params.boolean('save_best_only')
+    build_on_pretrained_model = params.existing_directory('build_on_pretrained_model')
+
+    model_name = params.string('model')
+    task_name = params.string('task_name')
+    task_name2 = params.optional_string('task_name2')
+    architecture = params.string('architecture')
+    train_data_slice = params.integer('train_data_slice')
+    maybe_random_seed = params.get('random_seed', object)
+
+    eval_after_training = params.boolean('eval_after_training')
+    val_x_file = params.existing_file('val_x')
+    val_y_file = params.existing_file('val_y')
 
     # If the training is deterministic for debugging purposes, we set the random seed
-    if not isinstance(config['random_seed'], bool):
-        logger.info(f"Running deterministic model with seed {config['random_seed']}")
-        torch.manual_seed(config['random_seed'])
-        np.random.seed(config['random_seed'])
-        random.seed(config['random_seed'])
+    if not isinstance(maybe_random_seed, bool):
+        if not isinstance(maybe_random_seed, int):\
+            raise RuntimeError(
+                 "Random seed must be either false (i.e. no random seed)"
+                 "or an integer seed!"
+            )
+        logger.info(f"Running deterministic model with seed {maybe_random_seed}")
+        torch.manual_seed(maybe_random_seed)
+        np.random.seed(maybe_random_seed)
+        random.seed(maybe_random_seed)
         if torch.cuda.is_available():
             torch.backends.cuda.deterministic = True
             torch.backends.cuda.benchmark = False
 
     # Initialize the classifier by arguments specified in config file
+    config = params.as_nested_dicts()
     model = Classifier(config)
     logger.info('Initialized classifier.')
-    if 'save_path' in config:
-        save_path = config['save_path']
-    else:
-        save_path = f"{config['model']}_{config['task_name']}-{config['train_data_slice']}_{config['architecture']}_s{config['random_seed']}"
-        if 'task_name2' in config:
-            save_path = save_path + f"_{config['task_name2']}"
 
-    if config['build_on_pretrained_model']:
+    if not save_path:
+        save_path = project_root / f"{model_name}_{task_name}-{train_data_slice}_{architecture}_s{maybe_random_seed}"
+        if task_name2:
+            save_path = save_path / f"_{task_name2}"
+
+    if build_on_pretrained_model:
         logger.info('Loading pretrained checkpoint...')
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
-        checkpoint = torch.load(ROOT_PATH / config['build_on_pretrained_model'], map_location=device)
+        checkpoint = torch.load(build_on_pretrained_model, map_location=device)
         model.load_state_dict(checkpoint['state_dict'])
-        save_path += f"_pretrained_{config['build_on_pretrained_model'].split('/')[-1].split('.')[0]}"
+        save_path += f"_pretrained_{str(build_on_pretrained_model).split('/')[-1].split('.')[0]}"
     logger.info('Output directory: ' + save_path)
 
     # Define the trainer along with its checkpoint and experiment instance
     checkpoint = ModelCheckpoint(
-        filepath=os.path.join(save_path, 'checkpoints', 'foo'),  # Last part needed due to parsing logic
+        filepath=str(save_path / 'checkpoints' / 'foo'),  # Last part needed due to parsing logic
         verbose=True,
-        save_top_k=1 if config['save_best_only'] else -1,
+        save_top_k=1 if save_best_only else -1,
     )
     tt_logger = TestTubeLogger(
-        save_dir=save_path,
-        name=config['task_name'],
+        save_dir=str(save_path),
+        name=task_name,
         version=0,
     )
     tt_logger.experiment.autosave = True
+    # We pass the trainer parameters using the values from config (rather than params) to
+    # better reflect the parameters we passed the model.
     trainer = Trainer(
         logger=tt_logger,
         checkpoint_callback=checkpoint,
@@ -85,12 +103,12 @@ def train(params: Parameters):
     trainer.fit(model)
     logger.success('Training Completed')
 
-    if config['eval_after_training']:
+    if eval_after_training:
         logger.info('Start model evaluation')
         # Evaluate the model with evaluate function from eval.py
         evaluate(a_classifier=model, output_path=save_path,
                  compute_device=('cpu' if not torch.cuda.is_available() else "cuda"),
-                 val_x=ROOT_PATH / config["val_x"], val_y=ROOT_PATH / config["val_y"])
+                 val_x=val_x_file, val_y=val_y_file)
 
 
 if __name__ == "__main__":
