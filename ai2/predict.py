@@ -40,7 +40,7 @@ def main(input_file, output_file):
             'random_seed': ckpt.strip('.ckpt').split('_')[-1],
             'architecture': 'standard',
             'with_true_label': True,
-            'model': "roberta-large",
+            'model_name': "roberta-large",
             'accumulate_grad_batches': 8,
             'use_amp': False,  # Half precision only works best with Volta architectures such as V100
             'max_epochs': 4,

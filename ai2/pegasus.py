@@ -62,7 +62,9 @@ def main(params: Parameters):
         locator = model_outputs_locator / Locator(options)
 
         # Read in combination-specific parameters
-        job_params = params.unify(Parameters.from_key_value_pairs(combination, namespace_separator=None))
+        job_params = params.namespace('model')
+        job_params = job_params.unify(Parameters.from_key_value_pairs(combination, namespace_separator=None))
+        params_root = params.existing_directory('project_root') / 'parameters'
         for parameter, option in combination:
             if option != '':
                 parameter_directory = params_root / parameter

@@ -30,7 +30,7 @@ def main(params: Parameters):
             f'with_true_label set to false but got true labels val_y!'
         )
 
-    model_name = params.string('model')
+    model_name = params.string('model_name')
     task_name = params.string('task_name')
     maybe_random_seed = params.get('random_seed', object)
 

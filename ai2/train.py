@@ -27,7 +27,7 @@ def train(params: Parameters):
     save_best_only = params.boolean('save_best_only')
     build_on_pretrained_model = params.optional_existing_file('build_on_pretrained_model')
 
-    model_name = params.string('model')
+    model_name = params.string('model.model_name')
     task_name = params.string('task_name')
     task_name2 = params.optional_string('task_name2')
     architecture = params.string('architecture')
@@ -54,7 +54,7 @@ def train(params: Parameters):
             torch.backends.cuda.benchmark = False
 
     # Initialize the classifier by arguments specified in config file
-    config = params.as_nested_dicts()
+    config = params.namespace('model').as_nested_dicts()
     model = Classifier(config)
     logger.info('Initialized classifier.')
 
