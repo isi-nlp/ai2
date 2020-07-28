@@ -29,7 +29,7 @@ echo "This is job $((SLURM_ARRAY_TASK_ID + 1)) out of $SLURM_ARRAY_TASK_COUNT jo
 allTask=(alphanli hellaswag physicaliqa socialiqa)
 task=${allTask[${SLURM_ARRAY_TASK_ID}]}
 echo
-time python -u train.py task="$task"
+time python -u ai2/train.py "parameters/train-roberta-large-${task}.params"
 echo
 
 # Finishing up the job and copy the output off of staging

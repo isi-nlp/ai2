@@ -1,0 +1,11 @@
+_includes:
+  - "model/roberta-large.params"
+
+experiment_name: 'train_pretrained'
+experiment_root: "%experiments_root%/%experiment_name%"
+random_seed: 42
+build_on_pretrained_model: False
+save_best_only: True
+eval_after_training: True
+architecture: standard
+train_data_slice: 90

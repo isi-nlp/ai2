@@ -1,6 +1,5 @@
 _includes:
   - "model/roberta-large.params"
-  - "task/physicaliqa.params"
 
 experiment_name: 'train'
 experiment_root: "%experiments_root%/%experiment_name%"

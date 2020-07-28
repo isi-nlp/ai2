@@ -34,7 +34,7 @@ echo ""
 allTask=(alphanli hellaswag physicaliqa)
 task=${allTask[${SLURM_ARRAY_TASK_ID}]}
 echo ""
-python train.py task="$task" build_on_pretrained_model=outputs/roberta-large-baselines/socialiqa-s42.ckpt
+python ai2/train.py "parameters/train-pretrained-roberta-large-${task}.params" -p build_on_pretrained_model outputs/roberta-large-baselines/socialiqa-s42.ckpt
 echo ""
 
 ### Finishing up the job and copy the output off of staging
