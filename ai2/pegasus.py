@@ -27,7 +27,13 @@ ParameterCombination = List[Tuple[str, Any]]
 def main(params: Parameters):
     initialize_vista_pegasus_wrapper(params)
 
+    params_root = params.existing_directory('project_root') / 'parameters'
     parameter_options = params.namespace('parameter_options').as_nested_dicts()
+
+    ensemble_params = params.namespace('ensemble')
+    task_data_root = params.existing_directory('project_root') / 'task_data'
+    data_sizes = params.arbitrary_list('parameter_options.train_data_slice')
+    ensemble_output_file_name = ensemble_params.string('output_file_name')
 
     # Compute all possible combinations of the parameters
     parameter_combinations: List[ParameterCombination] = [[]]
@@ -62,7 +68,6 @@ def main(params: Parameters):
 
         # Read in combination-specific parameters
         job_params = params.unify(Parameters.from_key_value_pairs(combination, namespace_separator=None))
-        params_root = params.existing_directory('project_root') / 'parameters'
         for parameter, option in combination:
             if option != '':
                 parameter_directory = params_root / parameter
@@ -107,11 +112,10 @@ def main(params: Parameters):
 
     # Ensembling phase.
     ensemble_locator = Locator(('ensembled',))
-    ensemble_params = params.namespace('ensemble')
     ensemble_params = ensemble_params.unify({
-        'task_data_root': params.existing_directory('project_root') / 'task_data',
-        'data_sizes': params.arbitrary_list('parameter_options.train_data_slice'),
-        'output_file': directory_for(ensemble_locator) / ensemble_params.string('output_file_name'),
+        'task_data_root': task_data_root,
+        'data_sizes': data_sizes,
+        'output_file': directory_for(ensemble_locator) / ensemble_output_file_name,
     })
 
     # Make a list of models and the relevant job info for the ensembling script to use. It needs to
