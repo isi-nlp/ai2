@@ -9,6 +9,17 @@ parameter_options:
   architecture: ['standard']
   random_seed: [0, 42]
 
+training_overrides:
+  hellaswag:
+    parameter_options:
+      task: hellaswag
+    batch_size: 2
+  alphanli:
+    parameter_options:
+      task: alphanli
+    partition: mics
+    job_time_in_minutes: 1200  # 20 hours
+
 ensemble:
   accuracy_bootstrapping_samples: 100
   output_file_name: 'dev_ensemble_results.csv'
@@ -30,4 +41,4 @@ num_cpus: 4
 num_gpus: 1
 memory: '16g'
 # sbatch --ntasks=1  # already covered, resource_request.py line 133
-job_time_in_minutes: 1200
+job_time_in_minutes: 720  # 12 hours

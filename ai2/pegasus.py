@@ -1,7 +1,5 @@
-from typing import List, Tuple, Any
+from typing import Mapping, List, Tuple, Any
 from pathlib import Path
-
-from more_itertools import flatten
 
 from vistautils.iter_utils import only
 from vistautils.parameters import Parameters, YAMLParametersLoader
@@ -45,6 +43,14 @@ def main(params: Parameters):
                 new_combinations.append(new_combination)
         parameter_combinations = new_combinations
 
+    # Process combination-specific overrides
+    training_overrides = sorted(
+        list(params.namespace_or_empty('training_overrides')
+             .as_nested_dicts()
+             .values()),
+        key=lambda override: override_complexity(override['parameter_options'], parameter_options),
+    )
+
     # Training phase.
     # Schedule training jobs for each parameter combination. Their outputs will be under "{experiment_root}/models".
     model_outputs_locator = Locator(('models',))
@@ -54,17 +60,6 @@ def main(params: Parameters):
         train_data_slice: int = only(option for parameter, option in combination if parameter == 'train_data_slice')
         options: Tuple[str] = tuple(str(option) if option != '' else '_default' for _, option in combination)
         locator = model_outputs_locator / Locator(options)
-
-        # Special logic for AlphaNLI
-        # Temporarily disabled for testing purposes since I (Joe) don't have ephemeral access.
-        # if task != 'alphanli':
-        if False:
-            resource_request = ResourceRequest.from_parameters(params.unify({
-                'partition': 'ephemeral',
-                'job_time_in_minutes': TIME_LIMIT_HOURS_NOT_ALPHANLI * MINUTES_PER_HOUR,
-            }))
-        else:
-            resource_request = ResourceRequest.from_parameters(params)
 
         # Read in combination-specific parameters
         job_params = params.unify(Parameters.from_key_value_pairs(combination, namespace_separator=None))
@@ -77,11 +72,19 @@ def main(params: Parameters):
                     )
                     job_params = job_params.unify(option_params)
 
-        # Special logic for Hellaswag
-        if task == 'hellaswag':
-            job_params = job_params.unify({
-                'batch_size': 2
-            })
+        # Process overrides
+        for override in training_overrides:
+            if override_matches(override, dict(combination)):
+                job_params = job_params.unify({
+                    parameter_option: value for parameter_option, value in override
+                    if parameter_option != 'parameter_options'
+                })
+
+        # Messy parameters input this shouldn't matter to ResourceRequest.
+        # Maybe clean up later.
+        resource_request = ResourceRequest.from_parameters(
+            params.unify(job_params)
+        )
 
         # Set common parameters and schedule the job.
         save_path = directory_for(locator)
@@ -149,6 +152,26 @@ def main(params: Parameters):
     )
 
     write_workflow_description()
+
+
+def override_complexity(override: Mapping[str, List[Any]], parameter_combinations: Mapping[str, List[Any]]) -> int:
+    """
+    Returns the complexity of an override with respect to the given mapping of possible parameter
+    combinations.
+
+    The complexity of an override is the number of configurations it applies to. This is the product
+    of the number of parameter options it applies to for each parameter option.
+    """
+    complexity = 1
+    for parameter_name, all_possible_values in parameter_combinations.items():
+        override_values = override.get(parameter_name, default=all_possible_values)
+        complexity *= override_values
+    return complexity
+
+
+def override_matches(override: Mapping[str, Any], parameter_combination: Mapping[str, Any]) -> bool:
+    return all(parameter_combination.get(parameter_name) == value
+               for parameter_name, value in override.items())
 
 
 if __name__ == '__main__':
