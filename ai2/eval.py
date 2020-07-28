@@ -19,7 +19,7 @@ ROOT_PATH = Path(__file__).parent.absolute()
 
 
 # If script is executed by itself, load in the configuration yaml file and desired checkpoint model
-@hydra.main(config_path="config/eval.yaml")
+@hydra.main(config_path="parameters/eval.params")
 def main(config: omegaconf.Config):
     config = omegaconf.OmegaConf.to_container(config)
     logger.info(config)
