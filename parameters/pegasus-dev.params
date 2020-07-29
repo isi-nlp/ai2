@@ -10,15 +10,10 @@ parameter_options:
   random_seed: [0, 42]
 
 training_overrides:
-  hellaswag:
+  seed0:
     parameter_options:
-      task: hellaswag
+      random_seed: [0]
     batch_size: 2
-  alphanli:
-    parameter_options:
-      task: alphanli
-    partition: mics
-    job_time_in_minutes: 1200  # 20 hours
 
 ensemble:
   accuracy_bootstrapping_samples: 100
