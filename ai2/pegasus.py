@@ -171,9 +171,9 @@ def override_complexity(override: Mapping[str, List[Any]], parameter_combination
     return complexity
 
 
-def override_matches(override: Mapping[str, Any], parameter_combination: Mapping[str, Any]) -> bool:
-    return all(parameter_combination.get(parameter_name) == value
-               for parameter_name, value in override.items())
+def override_matches(override: Mapping[str, List[Any]], parameter_combination: Mapping[str, Any]) -> bool:
+    return all(parameter_combination.get(parameter_name) in allowed_values
+               for parameter_name, allowed_values in override.items())
 
 
 if __name__ == '__main__':
