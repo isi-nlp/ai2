@@ -16,7 +16,7 @@ from ai2.model import Classifier
 
 
 def main(params: Parameters):
-    checkpoint_path = params.existing_directory('checkpoint_path')
+    checkpoint_path = params.existing_file('checkpoint_path')
     results_path = params.creatable_file('results_path')
     val_x_file = params.existing_file('val_x')
     val_y_file = params.optional_existing_file('val_y')
