@@ -32,18 +32,18 @@ def main(params: Parameters):
 
     model_name = params.string('model')
     task_name = params.string('task_name')
-    random_seed = params.get('random_seed', Any)
+    maybe_random_seed = params.get('random_seed', object)
 
     # If the evaluation is deterministic for debugging purposes, we set the random seed
-    if not isinstance(random_seed, bool):
-        if not isinstance(random_seed, int): \
+    if not isinstance(maybe_random_seed, bool):
+        if not isinstance(maybe_random_seed, int): \
                 raise RuntimeError(
                     "Random seed must be either false (i.e. no random seed)"
                     "or an integer seed!"
                 )
-        logger.info(f"Running deterministic model with seed {random_seed}")
-        np.random.seed(random_seed)
-        torch.manual_seed(random_seed)
+        logger.info(f"Running deterministic model with seed {maybe_random_seed}")
+        np.random.seed(maybe_random_seed)
+        torch.manual_seed(maybe_random_seed)
         if torch.cuda.is_available():
             torch.backends.cuda.deterministic = True
             torch.backends.cuda.benchmark = False
@@ -55,7 +55,7 @@ def main(params: Parameters):
     checkpoint = torch.load(checkpoint_path, map_location=device)
     model.load_state_dict(checkpoint['state_dict'])
 
-    save_path = Path(f"{model_name}-{task_name}-s{random_seed}")
+    save_path = Path(f"{model_name}-{task_name}-s{maybe_random_seed}")
     save_path.mkdir(parents=True, exist_ok=True)
 
     # Call the main function with appropriate parameters
