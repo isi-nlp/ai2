@@ -25,7 +25,7 @@ def train(params: Parameters):
     save_path = params.optional_creatable_directory('save_path')
     save_by_date_and_parameters = params.boolean('save_by_date_and_parameters')
     save_best_only = params.boolean('save_best_only')
-    build_on_pretrained_model = params.existing_directory('build_on_pretrained_model')
+    build_on_pretrained_model = params.optional_existing_file('build_on_pretrained_model')
 
     model_name = params.string('model')
     task_name = params.string('task_name')
