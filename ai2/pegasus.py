@@ -78,7 +78,7 @@ def main(params: Parameters):
         for override in training_overrides:
             if override_matches(override['parameter_options'], dict(combination)):
                 job_params = job_params.unify({
-                    parameter_option: value for parameter_option, value in override
+                    parameter_option: value for parameter_option, value in override.items()
                     if parameter_option != 'parameter_options'
                 })
 
