@@ -81,7 +81,6 @@ def main(params: Parameters):
         # Set common parameters and schedule the job.
         save_path = directory_for(locator)
         job_params = job_params.unify({
-            'build_on_pretrained_model': False,
             'save_path': save_path,
             'save_best_only': False,
             'eval_after_training': True,
