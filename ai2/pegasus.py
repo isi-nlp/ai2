@@ -156,7 +156,7 @@ def main(params: Parameters):
     write_workflow_description()
 
 
-def override_complexity(override: Mapping[str, List[Any]], parameter_combinations: Mapping[str, List[Any]]) -> int:
+def override_complexity(override: Mapping[str, Any], parameter_combinations: Mapping[str, List[Any]]) -> int:
     """
     Returns the complexity of an override with respect to the given mapping of possible parameter
     combinations.
@@ -164,16 +164,19 @@ def override_complexity(override: Mapping[str, List[Any]], parameter_combination
     The complexity of an override is the number of configurations it applies to. This is the product
     of the number of parameter options it applies to for each parameter option.
     """
+    allowed_combinations = override['parameter_combinations']
     complexity = 1
     for parameter_name, all_possible_values in parameter_combinations.items():
-        override_values = override.get(parameter_name, all_possible_values)
-        complexity *= len(override_values)
+        allowed_values = allowed_combinations.get(parameter_name, all_possible_values)
+        complexity *= len(allowed_values)
     return complexity
 
 
-def override_matches(override: Mapping[str, List[Any]], parameter_combination: Mapping[str, Any]) -> bool:
+def override_matches(override: Mapping[str, Any], parameter_combination: Mapping[str, Any]) -> bool:
+    allowed_combinations = override['parameter_combinations']
     return all(parameter_combination.get(parameter_name) in allowed_values
-               for parameter_name, allowed_values in override.items())
+               for parameter_name, allowed_values in allowed_combinations.items())
+
 
 
 if __name__ == '__main__':
