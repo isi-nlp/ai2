@@ -164,7 +164,7 @@ def override_complexity(override: Mapping[str, Any], parameter_combinations: Map
     The complexity of an override is the number of configurations it applies to. This is the product
     of the number of parameter options it applies to for each parameter option.
     """
-    allowed_combinations = override['parameter_combinations']
+    allowed_combinations = override['parameter_options']
     complexity = 1
     for parameter_name, all_possible_values in parameter_combinations.items():
         allowed_values = allowed_combinations.get(parameter_name, all_possible_values)
@@ -173,7 +173,7 @@ def override_complexity(override: Mapping[str, Any], parameter_combinations: Map
 
 
 def override_matches(override: Mapping[str, Any], parameter_combination: Mapping[str, Any]) -> bool:
-    allowed_combinations = override['parameter_combinations']
+    allowed_combinations = override['parameter_options']
     return all(parameter_combination.get(parameter_name) in allowed_values
                for parameter_name, allowed_values in allowed_combinations.items())
 
