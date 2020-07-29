@@ -22,8 +22,8 @@ TIME_FORMAT = '%H-%M-%S'
 def train(params: Parameters):
     # Load all expected parameters at the start so that if we're missing one, we crash immediately
     # instead of wasting time finishing half the script.
-    experiment_root = params.existing_directory('experiment_root')
     save_path = params.optional_creatable_directory('save_path')
+    save_by_date_and_parameters = params.boolean('save_by_date_and_parameters')
     save_best_only = params.boolean('save_best_only')
     build_on_pretrained_model = params.existing_directory('build_on_pretrained_model')
 
@@ -58,14 +58,11 @@ def train(params: Parameters):
     model = Classifier(config)
     logger.info('Initialized classifier.')
 
-    # When no save path is specified, save in dated folders under the experiment root
-    if not save_path:
+    if save_by_date_and_parameters:
         now = datetime.now()
         date = now.strftime(DATE_FORMAT)
         time = now.strftime(TIME_FORMAT)
-        base_path = experiment_root / date / time
-
-        save_path = base_path / f"{model_name}_{task_name}-{train_data_slice}_{architecture}_s{maybe_random_seed}"
+        save_path = save_path / date / time / f"{model_name}_{task_name}-{train_data_slice}_{architecture}_s{maybe_random_seed}"
         if task_name2:
             save_path = save_path / f"_{task_name2}"
 
