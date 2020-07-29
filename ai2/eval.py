@@ -32,21 +32,18 @@ def main(params: Parameters):
 
     model_name = params.string('model')
     task_name = params.string('task_name')
-    random_seed = params.get('random_seed', Any)
+    random_seed = params.optional_integer('random_seed')
 
     # If the evaluation is deterministic for debugging purposes, we set the random seed
-    if not isinstance(random_seed, bool):
-        if not isinstance(random_seed, int): \
-                raise RuntimeError(
-                    "Random seed must be either false (i.e. no random seed)"
-                    "or an integer seed!"
-                )
+    if random_seed is not None:
         logger.info(f"Running deterministic model with seed {random_seed}")
         np.random.seed(random_seed)
         torch.manual_seed(random_seed)
         if torch.cuda.is_available():
             torch.backends.cuda.deterministic = True
             torch.backends.cuda.benchmark = False
+    else:
+        logger.info("Running model without seeding..")
 
     # Load in the check pointed model
     config = params.as_nested_dicts()
