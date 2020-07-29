@@ -1,4 +1,4 @@
-from typing import Mapping, List, Tuple, Any
+from typing import Mapping, List, Tuple, Any, cast
 from pathlib import Path
 
 from vistautils.iter_utils import only
@@ -48,7 +48,7 @@ def main(params: Parameters):
         list(params.namespace_or_empty('training_overrides')
              .as_nested_dicts()
              .values()),
-        key=lambda override: override_complexity(override['parameter_options'], parameter_options),
+        key=lambda override: override_generality(override, parameter_options),
     )
 
     # Training phase.
@@ -76,7 +76,7 @@ def main(params: Parameters):
 
         # Process overrides
         for override in training_overrides:
-            if override_matches(override['parameter_options'], dict(combination)):
+            if override_matches(override, dict(combination)):
                 job_params = job_params.unify({
                     parameter_option: value for parameter_option, value in override.items()
                     if parameter_option != 'parameter_options'
@@ -156,14 +156,19 @@ def main(params: Parameters):
     write_workflow_description()
 
 
-def override_complexity(override_options: Mapping[str, List[Any]], parameter_combinations: Mapping[str, List[Any]]) -> int:
+OVERRIDE_FILTER_KEY = 'parameter_options'
+
+
+def override_generality(override: Mapping[str, Any], parameter_combinations: Mapping[str, List[Any]]) -> int:
     """
-    Returns the complexity of an override with respect to the given mapping of possible parameter
+    Returns the generality of an override with respect to the given mapping of possible parameter
     combinations.
 
-    The complexity of an override is the number of configurations it applies to. This is the product
-    of the number of parameter options it applies to for each parameter option.
+    The generality of an override is the number of configurations it applies to. A bigger number
+    indicates a more general override. The generality is computed as the total number of parameter
+    combinations the options dict applies to.
     """
+    override_options = cast(Mapping[str, List[Any]], override[OVERRIDE_FILTER_KEY])
     complexity = 1
     for parameter_name, all_possible_values in parameter_combinations.items():
         allowed_values = override_options.get(parameter_name, all_possible_values)
@@ -171,10 +176,10 @@ def override_complexity(override_options: Mapping[str, List[Any]], parameter_com
     return complexity
 
 
-def override_matches(override_options: Mapping[str, List[Any]], parameter_combination: Mapping[str, Any]) -> bool:
+def override_matches(override: Mapping[str, Any], parameter_combination: Mapping[str, Any]) -> bool:
+    override_options = cast(Mapping[str, List[Any]], override[OVERRIDE_FILTER_KEY])
     return all(parameter_combination.get(parameter_name) in allowed_values
                for parameter_name, allowed_values in override_options.items())
-
 
 
 if __name__ == '__main__':
