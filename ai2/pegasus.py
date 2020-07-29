@@ -167,7 +167,7 @@ def override_complexity(override: Mapping[str, List[Any]], parameter_combination
     complexity = 1
     for parameter_name, all_possible_values in parameter_combinations.items():
         override_values = override.get(parameter_name, all_possible_values)
-        complexity *= override_values
+        complexity *= len(override_values)
     return complexity
 
 
