@@ -9,6 +9,7 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.loggers import TestTubeLogger
 import torch
 
+from autoresume import AutoResume
 from eval import evaluate
 from model import Classifier
 
@@ -57,6 +58,7 @@ def train(config: omegaconf.Config):
     trainer = Trainer(
         logger=tt_logger,
         checkpoint_callback=checkpoint,
+        callbacks=[AutoResume()] if config['autoresume'] else None,
         gradient_clip_val=0,
         gpus=-1 if torch.cuda.is_available() else None,
         log_gpu_memory="all",
