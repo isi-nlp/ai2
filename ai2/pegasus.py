@@ -76,7 +76,7 @@ def main(params: Parameters):
 
         # Process overrides
         for override in training_overrides:
-            if override_matches(override, dict(combination)):
+            if override_matches(override['parameter_options'], dict(combination)):
                 job_params = job_params.unify({
                     parameter_option: value for parameter_option, value in override
                     if parameter_option != 'parameter_options'
@@ -156,7 +156,7 @@ def main(params: Parameters):
     write_workflow_description()
 
 
-def override_complexity(override: Mapping[str, Any], parameter_combinations: Mapping[str, List[Any]]) -> int:
+def override_complexity(override_options: Mapping[str, List[Any]], parameter_combinations: Mapping[str, List[Any]]) -> int:
     """
     Returns the complexity of an override with respect to the given mapping of possible parameter
     combinations.
@@ -164,18 +164,16 @@ def override_complexity(override: Mapping[str, Any], parameter_combinations: Map
     The complexity of an override is the number of configurations it applies to. This is the product
     of the number of parameter options it applies to for each parameter option.
     """
-    allowed_combinations = override['parameter_options']
     complexity = 1
     for parameter_name, all_possible_values in parameter_combinations.items():
-        allowed_values = allowed_combinations.get(parameter_name, all_possible_values)
+        allowed_values = override_options.get(parameter_name, all_possible_values)
         complexity *= len(allowed_values)
     return complexity
 
 
-def override_matches(override: Mapping[str, Any], parameter_combination: Mapping[str, Any]) -> bool:
-    allowed_combinations = override['parameter_options']
+def override_matches(override_options: Mapping[str, List[Any]], parameter_combination: Mapping[str, Any]) -> bool:
     return all(parameter_combination.get(parameter_name) in allowed_values
-               for parameter_name, allowed_values in allowed_combinations.items())
+               for parameter_name, allowed_values in override_options.items())
 
 
 
