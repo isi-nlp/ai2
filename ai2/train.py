@@ -72,7 +72,7 @@ def train(params: Parameters):
         checkpoint = torch.load(build_on_pretrained_model, map_location=device)
         model.load_state_dict(checkpoint['state_dict'])
         save_path += f"_pretrained_{str(build_on_pretrained_model).split('/')[-1].split('.')[0]}"
-    logger.info('Output directory: ' + save_path)
+    logger.info(f'Output directory: {save_path}')
 
     # Define the trainer along with its checkpoint and experiment instance
     checkpoint = ModelCheckpoint(
