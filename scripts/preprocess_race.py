@@ -80,6 +80,8 @@ def main() -> None:
                         help='Output directory for extracted data.')
     args = parser.parse_args()
 
+    if not args.input_dir.exists():
+        raise RuntimeError(f'Input directory "{args.input_dir}" does not exist.')
     if not args.output_dir.exists():
         os.makedirs(args.output_dir, exist_ok=True)
 
