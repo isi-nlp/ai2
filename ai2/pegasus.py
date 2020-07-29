@@ -83,6 +83,7 @@ def main(params: Parameters):
         job_params = job_params.unify({
             'save_path': save_path,
             'save_best_only': False,
+            'save_by_date_and_parameters': False,
             'eval_after_training': True,
         })
         job = run_python_on_parameters(
