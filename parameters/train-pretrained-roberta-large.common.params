@@ -4,8 +4,8 @@ _includes:
 experiment_name: 'train_pretrained'
 experiment_root: "%experiments_root%/%experiment_name%"
 random_seed: 42
-build_on_pretrained_model: False
 save_best_only: True
+save_by_date_and_parameters: True
 eval_after_training: True
 architecture: standard
 train_data_slice: 90
