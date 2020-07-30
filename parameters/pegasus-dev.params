@@ -15,7 +15,7 @@ training_overrides:
       random_seed: [0]
     # Nonsense parameter. Used so we can check if the override code is working without actually
     # changing the training parameters for seed 0.
-    use_flobber: true
+    use_widget: true
 
 ensemble:
   accuracy_bootstrapping_samples: 100
