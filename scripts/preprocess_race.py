@@ -30,11 +30,12 @@ class InputExample:
     label: int
 
 
-def get_examples(data_dir: Path, example_index: int = 0) -> Tuple[Sequence[InputExample], int]:
+def get_examples(data_files: Sequence[Path], example_index: int = 0
+                 ) -> Tuple[Sequence[InputExample], int]:
     """Extract paragraph and question-answer list from each JSON file.
 
     Args:
-        data_dir: Directory containing split data.
+        data_files: Files containing split data.
         example_index: Starting index for example indices.
 
     Returns:
@@ -42,7 +43,7 @@ def get_examples(data_dir: Path, example_index: int = 0) -> Tuple[Sequence[Input
     """
     examples = []
 
-    for cur_path in sorted(data_dir.rglob("*.txt"), key=lambda x: int(x.stem)):
+    for cur_path in data_files:
         with cur_path.open("r") as file:
             cur_data = json.load(file)
             context_id = cur_data["id"]
@@ -78,6 +79,8 @@ def main() -> None:
                         help='Input directory for downloaded RACE dataset.')
     parser.add_argument("--output-dir", type=Path, required=True,
                         help='Output directory for extracted data.')
+    parser.add_argument("--mode", default="all", choices=["all", "high", "middle"],
+                        help='Output directory for extracted data.')
     args = parser.parse_args()
 
     if not args.input_dir.exists():
@@ -87,7 +90,18 @@ def main() -> None:
 
     start_index = 0
     for set_type in ["train", "dev", "test"]:
-        examples, start_index = get_examples(args.input_dir / set_type, start_index)
+        set_dir = args.input_dir / set_type
+        if args.mode == "all":
+            data_files = set_dir.rglob("*.txt")
+        elif args.mode == "high":
+            data_files = set_dir.rglob("high/*.txt")
+        elif args.mode == "middle":
+            data_files = set_dir.rglob("middle/*.txt")
+        else:
+            raise RuntimeError(f'Mode "{args.mode}" is not valid.')
+        data_files = sorted(data_files, key=lambda x: int(x.stem))
+
+        examples, start_index = get_examples(data_files, start_index)
 
         samples = []
         labels = []
