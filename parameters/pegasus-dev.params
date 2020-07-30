@@ -13,7 +13,9 @@ training_overrides:
   seed0:
     parameter_options:
       random_seed: [0]
-    batch_size: 2
+    # Nonsense parameter. Used so we can check if the override code is working without actually
+    # changing the training parameters for seed 0.
+    use_flobber: true
 
 ensemble:
   accuracy_bootstrapping_samples: 100
