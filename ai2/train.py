@@ -55,7 +55,7 @@ def train(params: Parameters):
 
     # Initialize the classifier by arguments specified in config file
     config = params.namespace('model').as_nested_dicts()
-    config.update((k, v) for k, v in params.as_nested_dicts() if k != 'model')
+    config.update((k, v) for k, v in params.as_nested_dicts().items() if k != 'model')
     model = Classifier(config)
     logger.info('Initialized classifier.')
 
