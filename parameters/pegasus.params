@@ -23,6 +23,7 @@ training_overrides:
 ensemble:
   accuracy_bootstrapping_samples: 100  # Use 10K for official reports. 100 is used for quick dev runs.
   output_file_name: 'ensemble_results_100.csv'
+  try_without: ['cn_10k', 'standard', 'include_answers_in_context', 'embed_all_sep_mean']
   task_to_threshold:
     alphanli: 0.6
     physicaliqa: 0.6

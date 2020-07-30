@@ -52,6 +52,7 @@ def main(params: Parameters):
     tasks_to_threshold = params.namespace('task_to_threshold').as_nested_dicts()
     data_sizes = params.arbitrary_list('data_sizes')
     task_data_root = params.existing_directory('task_data_root')
+    try_without = params.arbitrary_list('try_without')
     for task in tasks_to_threshold.keys():
         task_models = params.namespace('models').arbitrary_list(task)
         for data_size in data_sizes:
@@ -147,7 +148,7 @@ def main(params: Parameters):
             results['Ensemble Improvement best-per-architecture vs all'] = round(best_per_seed_accuracy-all_accuracy,2)
             print('Ensemble Improvement best per arc vs all:', results['Ensemble Improvement best-per-architecture vs all'])
 
-            for factor in params.arbitrary_list('try_without'):
+            for factor in try_without:
                 without_factor = [m for m in successful_models if factor not in m]
                 print(f'Without {factor}:')
                 # print(without_factor)
