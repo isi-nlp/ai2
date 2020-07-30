@@ -49,7 +49,7 @@ def main(params: Parameters):
             torch.backends.cuda.benchmark = False
 
     # Load in the check pointed model
-    config = params.as_nested_dicts()
+    config = params.namespace('model').as_nested_dicts()
     model = Classifier(config)
     device = 'cpu' if not torch.cuda.is_available() else "cuda"
     checkpoint = torch.load(checkpoint_path, map_location=device)
