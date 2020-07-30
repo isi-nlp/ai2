@@ -18,6 +18,7 @@ training_overrides:
 ensemble:
   accuracy_bootstrapping_samples: 100
   output_file_name: 'dev_ensemble_results.csv'
+  try_without: []
   task_to_threshold:
     physicaliqa: 0.6
   # Fill in data_sizes from train_data_slice
