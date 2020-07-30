@@ -106,7 +106,7 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], results_pa
 
         stats = []
         for _ in range(10000):
-            indices = [i for i in np.random.random_integers(0, len(predictions) - 1, size=len(predictions))]
+            indices = [i for i in np.random.randint(0, len(predictions) - 1, size=len(predictions))]
             stats.append(accuracy_score([labels[j] for j in indices], [predictions[j] for j in indices]))
 
         # Calculate the confidence interval and log it to console
