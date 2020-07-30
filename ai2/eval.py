@@ -50,6 +50,7 @@ def main(params: Parameters):
 
     # Load in the check pointed model
     config = params.namespace('model').as_nested_dicts()
+    config.update((k, v) for k, v in params.as_nested_dicts().items() if k != 'model')
     model = Classifier(config)
     device = 'cpu' if not torch.cuda.is_available() else "cuda"
     checkpoint = torch.load(checkpoint_path, map_location=device)
