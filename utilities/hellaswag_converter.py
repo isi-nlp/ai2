@@ -3,11 +3,14 @@ Hella Swag data comes in a different format - using a list of ending options rat
 This script converts the original option to the new one, which is used as task c_hellaswag
 """
 import json
+import yaml
+
+HELLASWAG_PATH = '../task_data/hellaswag-train-dev/'
 
 # Load in the train and dev stories and their labels
-with open('task_data/hellaswag-train-dev/train.jsonl', 'r') as train_story_file:
+with open(HELLASWAG_PATH + 'train.jsonl', 'r') as train_story_file:
     train_stories = list(map(lambda json_str: json.loads(json_str.strip()), train_story_file.readlines()))
-with open('task_data/hellaswag-train-dev/dev.jsonl', 'r') as dev_story_file:
+with open(HELLASWAG_PATH + 'dev.jsonl', 'r') as dev_story_file:
     dev_stories = list(map(lambda json_str: json.loads(json_str.strip()), dev_story_file.readlines()))
 
 # Loop through the two lists to extract the ending options into their respective fields
@@ -19,9 +22,19 @@ for a_story in train_stories + dev_stories:
     del a_story['ending_options']
 
 # Write out the converted dataset
-with open('task_data/hellaswag-train-dev/c_train.jsonl', 'w') as converted_train_story_file:
+with open(HELLASWAG_PATH + 'c_train.jsonl', 'w') as converted_train_story_file:
     for a_train_story in train_stories:
         converted_train_story_file.write(f'{json.dumps(a_train_story)}\n')
-with open('task_data/hellaswag-train-dev/c_dev.jsonl', 'w') as converted_dev_story_file:
+with open(HELLASWAG_PATH + 'c_dev.jsonl', 'w') as converted_dev_story_file:
     for a_dev_story in dev_stories:
         converted_dev_story_file.write(f'{json.dumps(a_dev_story)}\n')
+
+# Write out the modified config file
+with open('../config/task/c_hellaswag.yaml', 'w') as config_file:
+    config_dict = {'task_name': 'c_hellaswag',
+                   'train_x': "task_data/hellaswag-train-dev/c_train.jsonl",
+                   'train_y': "task_data/hellaswag-train-dev/train-labels.lst",
+                   'val_x': "task_data/hellaswag-train-dev/c_dev.jsonl",
+                   'val_y': "task_data/hellaswag-train-dev/dev-labels.lst",
+                   'formula': "ctx_a + ctx_b -> opt0|opt1|opt2|opt3"}
+    documents = yaml.dump(config_dict, config_file)
