@@ -33,7 +33,7 @@ backend: slurm
 site: 'saga'
 parallelism: 10
 namespace: saga
-partition: mics
+partition: ephemeral
 
 num_cpus: 4
 num_gpus: 1
