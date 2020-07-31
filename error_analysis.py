@@ -22,4 +22,4 @@ for task in ['physicaliqa', 'socialiqa']:
         df = pd.DataFrame(results, columns =['90', '25', 'Question', 'Answer 1', 'Answer 2'])
     else:
         df = pd.DataFrame(results, columns =['90', '25', 'Question', 'Context', 'Answer 1', 'Answer 2', 'Answer 3'])
-    df.to_csv(f'{task}_errors_90vs25.csv', sep='-', index=False)
+    df.to_csv(f'{task}_errors_90vs25.csv', sep='~', index=False)
