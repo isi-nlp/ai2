@@ -74,6 +74,11 @@ def main(params: Parameters):
                     )
                     job_params = job_params.unify(option_params)
 
+        # Because the job parameters tend to indirectly include root.params, which includes a
+        # default partition, we need to override the partition setting to reflect our input
+        # parameters.
+        job_params = job_params.unify({'partition': params.string('partition')})
+
         # Process overrides
         for override in training_overrides:
             if override_matches(override, dict(combination)):
