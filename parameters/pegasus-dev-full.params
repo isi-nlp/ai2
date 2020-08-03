@@ -1,0 +1,9 @@
+_includes:
+  - "./pegasus.params"
+
+training_overrides:
+  alphanli:
+    partition: ephemeral
+
+experiment_root: '%experiments_root%/ensemble-dev-full'
+workflow_directory: '%experiment_root%'
