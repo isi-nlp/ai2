@@ -4,6 +4,7 @@ _includes:
 training_overrides:
   alphanli:
     partition: ephemeral
+    job_time_in_minutes: 720  # 12 hours -- can't run 20 hours on ephemeral
 
 experiment_root: '%experiments_root%/ensemble-dev-full'
 workflow_directory: '%experiment_root%'
