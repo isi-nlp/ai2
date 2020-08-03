@@ -188,5 +188,6 @@ class Classifier(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = AdamW(self.parameters(), lr=float(self.hparams["learning_rate"]),
-                          eps=float(self.hparams["adam_epsilon"]))
+                          betas=(0.9, 0.98), eps=float(self.hparams["adam_epsilon"]),
+                          weight_decay=0.1)
         return optimizer
