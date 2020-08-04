@@ -123,7 +123,7 @@ def main(params: Parameters):
     ensemble_locator = Locator(('ensembled',))
 
     # Load the gold labels for every task covered by ensembling.
-    for task, _ in ensemble_params.namespace('task_to_threshold').namespaced_items():
+    for task in ensemble_params.namespace('task_to_threshold').as_nested_dicts().keys():
         task_params = YAMLParametersLoader().load(
             params_root / 'task' / f'{task}.params'
         )
