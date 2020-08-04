@@ -29,7 +29,7 @@ def main(params: Parameters):
         if task in ['socialiqa', 'alphanli']: weighted_votes += 1
         final_predictions = weighted_votes.tolist()
         stats = []
-        for _ in range(params.integer('accuracy_bootstrapping_samples')):
+        for _ in range(accuracy_bootstrapping_samples):
             indices = [i for i in np.random.randint(0, len(final_predictions), size=len(final_predictions))]
             stats.append(accuracy_score([labels[j] for j in indices], [final_predictions[j] for j in indices]))
 
@@ -50,17 +50,32 @@ def main(params: Parameters):
     all_results = {}
 
     tasks_to_threshold = params.namespace('task_to_threshold').as_nested_dicts()
-    data_sizes = params.arbitrary_list('data_sizes')
-    task_data_root = params.existing_directory('task_data_root')
-    try_without = params.arbitrary_list('try_without')
+    task_to_gold = params.namespace('task_to_gold')
+
+    # Check that all the necessary namespaces and files exist before we go training on them.
+    gold_labels_paths = {}
     for task in tasks_to_threshold.keys():
-        task_models = params.namespace('models').arbitrary_list(task)
+        gold_labels_paths[task] = task_to_gold.namespace(task).existing_file('val_y')
+
+    # Check that all the necessary
+    task_to_models = {}
+    for task in tasks_to_threshold.keys():
+        models_for_task = params.namespace('models').arbitrary_list(task)
+        task_to_models[task] = models_for_task
+
+    data_sizes = params.arbitrary_list('data_sizes')
+    try_without = params.arbitrary_list('try_without')
+
+    accuracy_bootstrapping_samples = params.integer('accuracy_bootstrapping_samples')
+    output_file = params.creatable_file('output_file')
+
+    for task in tasks_to_threshold.keys():
+        task_models = task_to_models[task]
+        labels = pd.read_csv(gold_labels_paths[task], sep='\t', header=None).values.squeeze().tolist()
         for data_size in data_sizes:
             results = {}
             print(f'\nRunning ensemble for {task.upper()}, {data_size}')
             relevant_models = [model for model in task_models if model['train_data_slice'] == data_size]
-            gold_labels_path = task_data_root / f'{task}-train-dev' / 'dev-labels.lst'
-            labels = pd.read_csv(gold_labels_path, sep='\t', header=None).values.squeeze().tolist()
 
             best_score_per_seed_group = defaultdict(float)
             best_model_per_seed_group = defaultdict(str)
@@ -166,7 +181,7 @@ def main(params: Parameters):
             all_results[task + '_' + str(data_size)] = results
 
     df = pd.DataFrame.from_dict(all_results)
-    df.to_csv(params.creatable_file('output_file'), na_rep='-')
+    df.to_csv(output_file, na_rep='-')
 
 
 if __name__ == '__main__':
