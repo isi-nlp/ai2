@@ -61,7 +61,7 @@ class Classifier(pl.LightningModule):
         token_embeddings, *_ = results
 
         # Feed through the feed forward network to get the final logits of each classification label
-        logits = self.classifier(token_embeddings.mean(dim=1)).squeeze(dim=1)
+        logits = self.classifier(token_embeddings[:, 0, :]).squeeze(dim=1)
         return logits
 
     # Custom data loader
