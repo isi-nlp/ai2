@@ -91,7 +91,7 @@ def main(params: Parameters):
                     accuracy = accuracy_score(labels, preds)
 
                     model_name = get_model_name(model)
-                    successful_models[model_name] = accuracy
+                    successful_models[model_name] = {'accuracy': accuracy, 'parameters': dict(model['parameters'])}
                     model_to_predictions[model_name] = preds
                     model_to_confidences[model_name] = confs
                     print(f'{model_name},{round(accuracy*100,2)}')
@@ -154,7 +154,9 @@ def main(params: Parameters):
             print(best_model_per_seed_group)
             print(best_score_per_seed_group)
             print('Ensemble of all models:')
-            all_accuracy = run_ensemble(predictions_df, confidences_df, [m for m,a in successful_models.items() if a > task_to_threshold[m.split('_')[0]]])
+            all_accuracy = run_ensemble(predictions_df, confidences_df, [
+                m for m, d in successful_models.items() if d['accuracy'] > task_to_threshold[d['parameters']['task']]
+            ])
             results['Ensemble - All'] = all_accuracy
 
             print('Ensemble of best-per-architecture:', )
