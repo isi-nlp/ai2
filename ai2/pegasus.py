@@ -132,7 +132,6 @@ def main(params: Parameters):
         }})
 
     ensemble_params = ensemble_params.unify({
-        'task_to_gold': {},
         'data_sizes': data_sizes,
         'output_file': directory_for(ensemble_locator) / ensemble_output_file_name,
     })
