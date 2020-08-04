@@ -102,7 +102,7 @@ def main(params: Parameters):
                     results[model_without_task_data_size] = round(accuracy*100,2)
 
                     # model_without_seed = model.strip('_'+model.split('_')[-1])
-                    model_without_seed = '_'.join(str(option) for parameter, option in model['parameters'] if parameter != 'seed')
+                    model_without_seed = '_'.join(str(option) for parameter, option in model['parameters'] if parameter != 'random_seed')
                     if accuracy > best_score_per_seed_group[model_without_seed]:
                         best_score_per_seed_group[model_without_seed] = accuracy
                         best_model_per_seed_group[model_without_seed] = model_name
