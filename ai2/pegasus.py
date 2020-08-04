@@ -127,7 +127,7 @@ def main(params: Parameters):
         task_params = YAMLParametersLoader().load(
             params_root / 'task' / f'{task}.params'
         )
-        ensemble_params.unify({'task_to_gold': {
+        ensemble_params = ensemble_params.unify({'task_to_gold': {
             task: {'val_y': task_params.existing_file('val_y')}
         }})
 
