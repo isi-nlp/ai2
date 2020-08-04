@@ -49,17 +49,17 @@ def main(params: Parameters):
 
     all_results = {}
 
-    tasks_to_threshold = params.namespace('task_to_threshold').as_nested_dicts()
+    task_to_threshold = params.namespace('task_to_threshold').as_nested_dicts()
     task_to_gold = params.namespace('task_to_gold')
 
     # Check that all the necessary namespaces and files exist before we go training on them.
     gold_labels_paths = {}
-    for task in tasks_to_threshold.keys():
+    for task in task_to_threshold.keys():
         gold_labels_paths[task] = task_to_gold.namespace(task).existing_file('val_y')
 
     # Check that all the necessary
     task_to_models = {}
-    for task in tasks_to_threshold.keys():
+    for task in task_to_threshold.keys():
         models_for_task = params.namespace('models').arbitrary_list(task)
         task_to_models[task] = models_for_task
 
@@ -69,7 +69,7 @@ def main(params: Parameters):
     accuracy_bootstrapping_samples = params.integer('accuracy_bootstrapping_samples')
     output_file = params.creatable_file('output_file')
 
-    for task in tasks_to_threshold.keys():
+    for task in task_to_threshold.keys():
         task_models = task_to_models[task]
         labels = pd.read_csv(gold_labels_paths[task], sep='\t', header=None).values.squeeze().tolist()
         for data_size in data_sizes:
@@ -154,7 +154,7 @@ def main(params: Parameters):
             print(best_model_per_seed_group)
             print(best_score_per_seed_group)
             print('Ensemble of all models:')
-            all_accuracy = run_ensemble(predictions_df, confidences_df, [m for m,a in successful_models.items() if a > tasks_to_threshold[m.split('_')[0]]])
+            all_accuracy = run_ensemble(predictions_df, confidences_df, [m for m,a in successful_models.items() if a > task_to_threshold[m.split('_')[0]]])
             results['Ensemble - All'] = all_accuracy
 
             print('Ensemble of best-per-architecture:', )
