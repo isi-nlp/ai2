@@ -106,7 +106,7 @@ def main(params: Parameters):
                     if accuracy > best_score_per_seed_group[model_without_seed]:
                         best_score_per_seed_group[model_without_seed] = accuracy
                         best_model_per_seed_group[model_without_seed] = model_name
-                except:
+                except FileNotFoundError:
                     print(f'Couldn\'t find preds for {model}')
                     continue
 
