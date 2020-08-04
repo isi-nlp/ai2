@@ -29,7 +29,6 @@ def main(params: Parameters):
     parameter_options = params.namespace('parameter_options').as_nested_dicts()
 
     ensemble_params = params.namespace('ensemble')
-    task_data_root = params.existing_directory('project_root') / 'task_data'
     data_sizes = params.arbitrary_list('parameter_options.train_data_slice')
     ensemble_output_file_name = ensemble_params.string('output_file_name')
 
@@ -122,8 +121,18 @@ def main(params: Parameters):
 
     # Ensembling phase.
     ensemble_locator = Locator(('ensembled',))
+
+    # Load the gold labels for every task covered by ensembling.
+    for task, _ in ensemble_params.namespace('task_to_threshold').namespaced_items():
+        task_params = YAMLParametersLoader().load(
+            params_root / 'task' / f'{task}.params'
+        )
+        ensemble_params.unify({'task_to_gold': {
+            task: {'val_y': task_params.existing_file('val_y')}
+        }})
+
     ensemble_params = ensemble_params.unify({
-        'task_data_root': task_data_root,
+        'task_to_gold': {},
         'data_sizes': data_sizes,
         'output_file': directory_for(ensemble_locator) / ensemble_output_file_name,
     })
