@@ -80,15 +80,16 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
 
     # If desired y value is provided, calculate the accuracy, validation loss, and relevant statistics
     if val_y:
-        labels = pd.read_csv(val_y, sep='\t', header=None).values.tolist()
-        val_loss = a_classifier.loss(complete_logit, [a_label - a_classifier.label_offset for a_label in labels])
+        # Load in the labels and move it to GPU if possible, and calculate the loss and the accuracy of the model
+        labels = pd.read_csv(val_y, header=None).values.tolist()
         logger.info(f"Accuracy score: {accuracy_score(labels, predictions):.3f}")
-        logger.info(f'Validation Loss: {val_loss.mean()}')
+        pt_labels = torch.LongTensor([a_label[0] - a_classifier.label_offset for a_label in labels]).to(compute_device)
+        logger.info(f'Validation Loss: {a_classifier.loss(complete_logit, pt_labels).mean()}')
 
         # Calculate the confidence interval and log it to console
         stats = []
         for _ in range(100):
-            indices = [i for i in np.random.random_integers(0, len(predictions) - 1, size=len(predictions))]
+            indices = [i for i in np.random.randint(0, len(predictions) - 1, size=len(predictions))]
             stats.append(accuracy_score([labels[j] for j in indices], [predictions[j] for j in indices]))
         alpha = 0.95
         p = ((1.0 - alpha) / 2.0) * 100

@@ -49,13 +49,13 @@ def train(config):
 
     # Trainer Call Back Functions
     early_stop = EarlyStopping(
-        monitor='loss-accuracy',
+        monitor='loss_minus_accuracy',
         mode='min',
         verbose=True,
         patience=3,
     )
     checkpoint = ModelCheckpoint(
-        monitor='loss-accuracy',
+        monitor='loss_minus_accuracy',
         mode='min',
         verbose=True,
         filepath=save_path + '/checkpoints/',
