@@ -6,16 +6,14 @@
 #SBATCH --mem-per-cpu=10G                # Memory allocated per cpu
 #SBATCH --cpus-per-task=4               # CPU Allocated
 #SBATCH --gpus-per-task=1               # GPU Allocated
-#SBATCH --job-name=PARSE_EMBEDDINGS        # The name of this job. If removed the job will have name of your shell script.
+#SBATCH --job-name=PARSE_EMBEDDINGS     # The name of this job. If removed the job will have name of your shell script.
 #SBATCH --output=outputs/%x-%j.out              # The name of the file output. %x-%j means JOB_NAME-JOB_ID. If removed output will be in file slurm-JOB_ID.
-#SBATCH --mail-user=dwangli@isi.edu     # Email address for email notifications to be sent to.
-#SBATCH --mail-type=ALL                 # Type of notifications to receive. Other options includes BEGIN, END, FAIL, REQUEUE and more.
 #SBATCH --export=NONE                   # Ensure job gets a fresh login environment
 
 
 ### Load the conda environment of your choosing
 source ~/.bashrc
-conda activate ai2_stable
+conda activate ai2_updated
 
 . /opt/spack/share/spack/setup-env.sh
 # When using `tensorflow-gpu`, paths to CUDA and CUDNN libraries are required

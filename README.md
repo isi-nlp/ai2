@@ -5,53 +5,73 @@
 Create and run a virtual environment with Python 3.7 using anaconda. Make sure to use conda version `>=4.8.2`.
 
 ```bash
-conda create --name ai2_stable python=3.7
-conda activate ai2_stable
-pip install -r python_environment/requirements_pip.txt
+conda env create -f environment.yml
 ```
 
-Then download pretrained weights on multiple pretrained models that are used in the repository
+or
 
 ```bash
-python download_pretrained_weights.py
+conda create --name ai2_updated python=3.7
+conda activate ai2_updated
+pip install -r requirements_pip.txt
 ```
 
-This repo uses the Hydra python module to handle configuration and result storage. The config files are in the yaml 
-format, and the results are stored in multirun or outputs folder based on the time when the script is executed. 
+This repo uses Facebook's Hydra module to handle configuration and script result storage. The config files are in the yaml 
+format, and the results are stored in `multirun/` or `outputs/` folder based on the time when the script is executed. 
 For more information in how to use Hydra please reference their website: https://hydra.cc/
 
-## General File Structure Information
+## Training Baseline (On Saga HPC)
+Log on to Saga HPC and navigate to the root folder of this project, and submit the follow task to Slurm Workload
+Manager: https://slurm.schedmd.com/documentation.html
+
+```bash
+sbatch slurm/baseline.sh
+```
+
+Baseline Result for Replicability Test:
+
+Model|AlphaNLI|c_HellaSwag|PhysicalIQA|SocialIQA
+:---:|:---:|:---:|:---:|:---:| 
+Roberta-Large|00.0%-00.0% Avg-00.0%|00.0%-00.0% Avg-00.0%|00.0%-00.0% Avg-00.0%|00.0%-00.0% Avg-00.0%|
+
+## Folder Structure
     .
     ├── config                      # Configuration Files
     │   ├── task                    # Configuration for each task, with train/dev file locations
     │   ├── model                   # Configuration files for each model, with max epoch, learning rate, etc.
-    │   └── checkpoint_list         # Lists of location where checkpoint files are located
-    ├── model_cache                 # Hugging face Model Cache for Transformers 
-    ├── multirun or outputs         # Hydra python package output folders - this is where script output should be
-    ├── python_environment          # Python environment specification files
-    ├── slurm                       # Slurm job submission scripts for HPC
+    │   ├── checkpoint_list         # Lists of location where checkpoint files are located
+    │   └── Core Config             # Config files for core python scripts
+    ├── model_cache                 # Pretrained Model Cache for Transformers 
+    ├── multirun or outputs         # Hydra python package output folders - this is where script output will be
+    ├── slurm                       # Slurm job sbatch submission scripts for HPC
     ├── task_data                   # Data folder for AI2 challenges
-    ├── utilities                   # Helper classes for core python scripts
-    ├── core python scripts         # Model, Train, Eval, Embed, Closest
+    ├── utilities                   # Helper classes for core python scripts and one off scripts
+    ├── Conda Environment Files     # requirements.txt (pip format) and environment.yml (conda format)
+    ├── Core Python Scripts         # model.py, train.py, eval.py, embed.py, closest.py
     └── README.md
+
+## model.py
+
+This is the self-defined model class extending pytorch-lightning's Lightning Module: 
+https://pytorch-lightning.readthedocs.io/en/latest/lightning-module.html. The classifier is designed to 
+utilize the pretrained models to embed a given text, and pass it through a classifier layer for results.
 
 ## train.py
 
-This script is the script that generates a model checkpoint by fine tuning it on a specific dataset. It can also handle
-loading in an existing model and further fine tune it with more data. The script largely uses the framework provided
-by pytorch-lightning: https://pytorch-lightning.readthedocs.io/en/latest/
+This script is the script that fine tunes a model on a specific dataset. It can also handle loading in an existing 
+model and further fine tune it with more data. 
 
 ## eval.py
 
 This script is used to evaluate a checkpoint file trained by the train script. The script uses the trained model and
-evaluate it on the dev stories. It writes out the predictions, as well as the accuracy of the model and the confidence
-interval of them.
+evaluate it on it's dev stories. It writes out the accuracy and the loss of the model, as well as two files containing
+prediction and confidence of each choice.
 
 ## embed.py
 
-This script uses the checkpoint files provided (or an out of box model if no checkpoints is provided) to parse the 
-train and dev entries for a given task. The script output a pickled dictionary consist of the metadata for the embeddings
-and embedding tuples in the form of (Name of Checkpoint File, Train Embedding, Dev Embedding). Currently the script 
+This script uses the checkpoint files provided (or an out of box model if requested) to parse the train and dev entries 
+for a given task. The script output a pickled dictionary consist of the metadata for the embeddings and embedding 
+tuples in the form of (Name of Checkpoint File, Train Embedding, Dev Embedding). Currently the script 
 supports these feature types when parsing the embeddings:
 - AVG_MEAN: Average embedding of all tokens, and average of all possible answers
 
@@ -68,6 +88,4 @@ each dev sentence. You can also specify a subset of train or dev that you are in
 the closest samples is in a designated influential range using these two formats: (x, m-n). 
 Currently the script supports the following distance functions:
 - cosine
-- manhattan
-- euclidean
 - l-0_1

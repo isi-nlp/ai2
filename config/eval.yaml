@@ -1,6 +1,3 @@
-defaults:
-  - model: roberta-large
-  - task: physicaliqa
-checkpoint_path: "outputs/2020-03-20/16-37-40/outputs/checkpoints/_ckpt_epoch_4.ckpt"
-random_seed: 42
+checkpoint_path: /Users/davidli/Developer/Projects/ai2_stable/outputs/roberta-large_ai2_baselines/alphanli-s42.ckpt
 with_true_label: True
+with_progress_bar: True

@@ -4,18 +4,18 @@ out put a tsv file that calculates the closest distance to each desired dev stor
 """
 
 import json
-import pathlib
 import pickle
+from pathlib import Path
 
 import hydra
 import torch
 import tqdm
 from loguru import logger
 
-from utilities.DistanceMeasurer import DistanceMeasurer
+from utilities.HelperLibrary import cosine_dist, l_norm_dist
 
 # Save root path as hydra will create copies of this code in date specific folder
-ROOT_PATH = pathlib.Path(__file__).parent.absolute()
+ROOT_PATH = Path(__file__).parent.absolute()
 
 
 # Helper function that turns a list of [x, y-z] indices to a set
@@ -34,8 +34,13 @@ def list_to_set(list_of_index):
 
 @hydra.main(config_path="config/closest.yaml")
 def closest(config):
-    # Initiate the distance measurer based on the type in the config file
-    dm = DistanceMeasurer(config['distance_type'])
+
+    if config['distance_type'] == 'cosine':
+        distance_measurer = cosine_dist
+    elif isinstance(config['distance_type'], (int, float)):
+        distance_measurer = l_norm_dist
+    else:
+        raise ValueError(f"Distance Type Not Recognized: {config['distance_type']}")
 
     # Load in the embeddings and all necessary information
     with open(ROOT_PATH / config['embedding_loc'], 'rb') as embedding_dict_file:
@@ -44,35 +49,29 @@ def closest(config):
 
     # Load in the training text file and the dev text file
     train_text = {}
-    with open(embedding_dict['train_path']) as train_file:
+    with open(ROOT_PATH / embedding_dict['train_path']) as train_file:
         for train_line_number, train_line in enumerate(train_file):
             train_text[train_line_number] = train_line.strip()
     dev_text = {}
-    with open(embedding_dict['dev_path']) as dev_file:
+    with open(ROOT_PATH / embedding_dict['dev_path']) as dev_file:
         for dev_line_number, dev_line in enumerate(dev_file):
             dev_text[dev_line_number] = dev_line.strip()
 
     # Load in train stories of interest, dev stories of interest, and influential sets
-    train_stories_of_interest = set()
     if config['train_subset']:
         train_stories_of_interest = list_to_set(config['train_subset'])
-    dev_stories_of_interest = set()
+    else:
+        train_stories_of_interest = set(range(len(train_text)))
     if config['dev_subset']:
         dev_stories_of_interest = list_to_set(config['dev_subset'])
-    influential_set = set()
+    else:
+        dev_stories_of_interest = set(range(len(dev_text)))
     if config['influential_range']:
         influential_set = list_to_set(config['influential_range'])
-
-    # If these subset functions are not used, update the set of interest to be all of train or all of dev, and
-    # set influential header to be an empty string
-    if not bool(train_stories_of_interest):
-        train_stories_of_interest = set(range(len(train_text)))
-    if not bool(dev_stories_of_interest):
-        dev_stories_of_interest = set(range(len(dev_text)))
-    if bool(influential_set):
         influential_log = 'with influential set and accuracy'
         influential_header = '\tIn Influential Range'
     else:
+        influential_set = False
         influential_log = 'with no influential set specified'
         influential_header = ''
 
@@ -108,7 +107,8 @@ def closest(config):
         output_file.write(f'{dev_print_line}\n')
         accuracies = torch.zeros(num_checkpoints, dtype=torch.float)
 
-        for ckpt_index, embed_tuple in tqdm.tqdm(enumerate(embedding_dict['embeddings']), total=num_checkpoints):
+        for ckpt_index, embed_tuple in tqdm.tqdm(enumerate(embedding_dict['embeddings']),
+                                                 total=num_checkpoints, disable=not config['with_progress_bar']):
             # Break out the embedding tuple and write header information
             ckpt_name, train_embed, dev_embed = embed_tuple
             a_dev_embed = dev_embed[dev_story_id]
@@ -117,7 +117,7 @@ def closest(config):
             # Calculate distances from each train embedding to dev embedding and order it from by increasing distance
             train_distances = []
             for idx_train in train_stories_of_interest:
-                distances = dm.get_distance(train_embed[idx_train], a_dev_embed)
+                distances = distance_measurer(torch.Tensor(train_embed[idx_train]), torch.Tensor(a_dev_embed))
                 train_distances.append((idx_train, distances))
             train_distances.sort(key=lambda tup: tup[1], reverse=config['farthest'])
 

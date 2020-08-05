@@ -1,86 +1,110 @@
-import os
-import pathlib
 import random
+from pathlib import Path
 
 import hydra
 import numpy as np
 import torch
 from loguru import logger
+from omegaconf import OmegaConf
 from pytorch_lightning import Trainer
-from pytorch_lightning.callbacks import ModelCheckpoint
-from test_tube import Experiment
+from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
+from pytorch_lightning.loggers import TestTubeLogger
 
 from eval import evaluate
 from model import Classifier
 
 # Save root path as hydra will create copies of this code in date specific folder
-ROOT_PATH = pathlib.Path(__file__).parent.absolute()
+ROOT_PATH = Path(__file__).parent.absolute()
 
 
 @hydra.main(config_path="config/train.yaml")
 def train(config):
     logger.info(config)
 
+    # Clear cuda's memory cache to ensure GPU has enough memory for the run
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
     # If the training is deterministic for debugging purposes, we set the random seed
+    is_deterministic = False
     if not isinstance(config['random_seed'], bool):
-        logger.info(f"Running deterministic model with seed {config['random_seed']}")
-        torch.manual_seed(config['random_seed'])
-        np.random.seed(config['random_seed'])
+        is_deterministic = True
         random.seed(config['random_seed'])
+        np.random.seed(config['random_seed'])
+        torch.manual_seed(config['random_seed'])
         if torch.cuda.is_available():
-            torch.backends.cuda.deterministic = True
-            torch.backends.cuda.benchmark = False
+            torch.backends.cudnn.deterministic = True
+            torch.backends.cudnn.benchmark = False
+        logger.info(f"Running deterministic model with seed {config['random_seed']}")
 
     # Initialize the classifier by arguments specified in config file
-    model = Classifier(config)
+    model = Classifier(OmegaConf.to_container(config))
+    logger.info('Initialized classifier.')
     save_path = f"{config['model']}-{config['task_name']}-s{config['random_seed']}"
-    if config['build_on_pretrained_model']:
+    if config['build_on_model']:
+        logger.info('Loading pretrained checkpoint...')
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
         checkpoint = torch.load(ROOT_PATH / config['build_on_pretrained_model'], map_location=device)
         model.load_state_dict(checkpoint['state_dict'])
-        save_path += f"-pretrained_{config['build_on_pretrained_model'].split('/')[-1].split('.')[0]}"
+        save_path += f"-pretrained_{config['build_on_model'].split('/')[-1].split('.')[0]}"
 
-    # Define the trainer along with its checkpoint and experiment instance
-    checkpoint = ModelCheckpoint(
-        filepath=os.path.join(save_path, 'checkpoints'),
-        save_best_only=config['save_best_only'],
-        verbose=True,
-    )
-    exp = Experiment(
+    # Initialize the Test Tube for Trainer
+    tt_logger = TestTubeLogger(
+        save_dir=save_path,
         name=config['task_name'],
         version=0,
-        save_dir=save_path,
-        autosave=True,
     )
+    tt_logger.experiment.autosave = True
+
+    # Trainer Call Back Functions
+    early_stop = EarlyStopping(
+        monitor='combined_metric',
+        patience=3,
+        verbose=True,
+        mode='min',
+    )
+    checkpoint = ModelCheckpoint(
+        filepath=save_path + '/checkpoints/',
+        save_top_k=int(config['save_top_N_models']),
+        verbose=True,
+    )
+
+    # Main Trainer
     trainer = Trainer(
-        gradient_clip_val=0,
-        gpus=None if not torch.cuda.is_available() else [i for i in range(torch.cuda.device_count())],
-        log_gpu_memory=True,
-        show_progress_bar=True,
         accumulate_grad_batches=config["accumulate_grad_batches"],
-        max_nb_epochs=config["max_epochs"],
-        min_nb_epochs=1,
-        val_check_interval=0.02,
-        log_save_interval=25,
-        row_log_interval=25,
-        distributed_backend="dp",
-        use_amp=config["use_amp"],
-        nb_sanity_val_steps=5,
+        deterministic=is_deterministic,
+        check_val_every_n_epoch=1,
         checkpoint_callback=checkpoint,
-        check_val_every_n_epoch=1.0,
-        train_percent_check=1.0,
-        val_percent_check=1.0,
-        test_percent_check=1.0,
-        experiment=exp,
+        distributed_backend="dp",
+        early_stop_callback=early_stop,
+        gpus=list(range(torch.cuda.device_count())) if torch.cuda.is_available() else None,
+        gradient_clip_val=0,
+        limit_test_batches=1.0,
+        limit_val_batches=1.0,
+        limit_train_batches=1.0,
+        log_gpu_memory="all",
+        log_save_interval=25,
+        logger=tt_logger,
+        max_epochs=config["max_epochs"],
+        min_epochs=1,
+        num_sanity_val_steps=5,
+        precision=16 if config["precision"] == 'half' else 32,
+        progress_bar_refresh_rate=config['progress_bar_refresh_rate'],
+        row_log_interval=25,
+        weights_summary='top',
     )
+
+    # Fit the model
     trainer.fit(model)
     logger.success('Training Completed')
 
+    # If config file request to evaluate after finish training
     if config['eval_after_training']:
         logger.info('Start model evaluation')
         # Evaluate the model with evaluate function from eval.py
         evaluate(a_classifier=model, output_path=save_path,
                  compute_device=('cpu' if not torch.cuda.is_available() else "cuda"),
+                 with_progress_bar=False if config['progress_bar_refresh_rate'] == 0 else True,
                  val_x=ROOT_PATH / config["val_x"], val_y=ROOT_PATH / config["val_y"])
 
 

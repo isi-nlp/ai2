@@ -1,5 +1,7 @@
 defaults:
   - model: roberta-large
   - task: alphanli
-checkpoint_list: config/checkpoint_list/alphanli-roberta_large.lst
+checkpoint_list: config/checkpoint_list/alphanli_20-roberta_large.lst
 feature: AVG_MEAN
+with_out_of_box_model: True
+with_progress_bar: True

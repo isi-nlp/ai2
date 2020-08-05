@@ -5,8 +5,6 @@
 *cache
 *idea
 *cache*
-outputs
-multirun
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -116,7 +114,12 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# Add playground file for one time scripts not related to the project
+# Hydra output directories
+outputs/
+multirun/
+
+# Personal preference - playground.py files and a __local__/ folder
 playground.py
 config/playground.yaml
+slurm/playground.sh
 __local__/

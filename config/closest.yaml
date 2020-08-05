@@ -1,7 +1,8 @@
-embedding_loc: outputs/2020-06-25/20-53-53/roberta-large-alphanli-AVG_MEAN.embed
-distance_type: cosine
-top_N: 5
+distance_type: cosine # cosine for Cosine Distance, any integer/float for associated l_p norm distance
 farthest: False
+embedding_loc: outputs/embeddings/roberta-large-out_of_box-alphanli-AVG_MEAN.embed
+top_N: 5
+with_progress_bar: True
 train_subset:
   - 0-33930
 dev_subset:
