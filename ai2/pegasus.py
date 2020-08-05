@@ -16,6 +16,9 @@ from pegasus_wrapper.resource_request import ResourceRequest
 from pegasus_wrapper.locator import Locator
 from pegasus_wrapper.artifact import ValueArtifact
 
+import ai2.train
+import ai2.ensemble
+
 TIME_LIMIT_HOURS_NOT_ALPHANLI = 12  # Time limit in hours for tasks other than AlphaNLI
 MINUTES_PER_HOUR = 60
 
@@ -108,7 +111,7 @@ def main(params: Parameters):
         })
         job = run_python_on_parameters(
             locator,
-            "ai2.train",
+            ai2.train,
             job_params,
             depends_on=[],
             resource_request=resource_request
@@ -163,7 +166,7 @@ def main(params: Parameters):
 
     run_python_on_parameters(
         ensemble_locator,
-        'ai2.ensemble',
+        ai2.ensemble,
         ensemble_params,
         depends_on=[
             job_info['job']
