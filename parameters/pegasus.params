@@ -45,6 +45,8 @@ parallelism: 10
 namespace: saga
 partition: ephemeral
 
+max_jobs_on_mics: 4
+
 num_cpus: 4
 num_gpus: 1
 memory: '16g'

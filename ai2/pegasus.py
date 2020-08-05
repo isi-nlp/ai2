@@ -9,6 +9,7 @@ from pegasus_wrapper import (
     directory_for,
     # experiment_directory,
     run_python_on_parameters,
+    limit_jobs_for_category,
     write_workflow_description,
 )
 from pegasus_wrapper.resource_request import ResourceRequest
@@ -17,6 +18,9 @@ from pegasus_wrapper.artifact import ValueArtifact
 
 TIME_LIMIT_HOURS_NOT_ALPHANLI = 12  # Time limit in hours for tasks other than AlphaNLI
 MINUTES_PER_HOUR = 60
+
+# Default limit on the number of jobs that will run on MICS at once
+DEFAULT_MAX_JOBS_ON_MICS = 2
 
 # Represents a parameter combination as a list of (parameter_name, value) tuples.
 ParameterCombination = List[Tuple[str, Any]]
@@ -27,6 +31,8 @@ def main(params: Parameters):
 
     params_root = params.existing_directory('project_root') / 'parameters'
     parameter_options = params.namespace('parameter_options').as_nested_dicts()
+
+    max_jobs_on_mics = params.integer('max_jobs_on_mics', default=DEFAULT_MAX_JOBS_ON_MICS)
 
     ensemble_params = params.namespace('ensemble')
     data_sizes = params.arbitrary_list('parameter_options.train_data_slice')
@@ -165,6 +171,9 @@ def main(params: Parameters):
             for job_info in jobs_info
         ]
     )
+
+    # Limit number of jobs that will run at once on MICS account/partition
+    limit_jobs_for_category(category='mics', max_jobs=max_jobs_on_mics)
 
     write_workflow_description()
 
