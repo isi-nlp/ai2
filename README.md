@@ -88,4 +88,4 @@ each dev sentence. You can also specify a subset of train or dev that you are in
 the closest samples is in a designated influential range using these two formats: (x, m-n). 
 Currently the script supports the following distance functions:
 - cosine
-- l-0_1
+- l-p norms

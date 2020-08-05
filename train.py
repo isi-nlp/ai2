@@ -1,12 +1,10 @@
-import random
 from pathlib import Path
 
 import hydra
-import numpy as np
 import torch
 from loguru import logger
 from omegaconf import OmegaConf
-from pytorch_lightning import Trainer
+from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
 from pytorch_lightning.loggers import TestTubeLogger
 
@@ -26,15 +24,8 @@ def train(config):
         torch.cuda.empty_cache()
 
     # If the training is deterministic for debugging purposes, we set the random seed
-    is_deterministic = False
-    if not isinstance(config['random_seed'], bool):
-        is_deterministic = True
-        random.seed(config['random_seed'])
-        np.random.seed(config['random_seed'])
-        torch.manual_seed(config['random_seed'])
-        if torch.cuda.is_available():
-            torch.backends.cudnn.deterministic = True
-            torch.backends.cudnn.benchmark = False
+    if isinstance(config['random_seed'], int):
+        seed_everything(config['random_seed'])
         logger.info(f"Running deterministic model with seed {config['random_seed']}")
 
     # Initialize the classifier by arguments specified in config file
@@ -58,21 +49,24 @@ def train(config):
 
     # Trainer Call Back Functions
     early_stop = EarlyStopping(
-        monitor='combined_metric',
-        patience=3,
-        verbose=True,
+        monitor='loss-accuracy',
         mode='min',
+        verbose=True,
+        patience=3,
     )
     checkpoint = ModelCheckpoint(
+        monitor='loss-accuracy',
+        mode='min',
+        verbose=True,
         filepath=save_path + '/checkpoints/',
         save_top_k=int(config['save_top_N_models']),
-        verbose=True,
+        save_last=True
     )
 
     # Main Trainer
     trainer = Trainer(
         accumulate_grad_batches=config["accumulate_grad_batches"],
-        deterministic=is_deterministic,
+        deterministic=True if isinstance(config['random_seed'], int) else False,
         check_val_every_n_epoch=1,
         checkpoint_callback=checkpoint,
         distributed_backend="dp",

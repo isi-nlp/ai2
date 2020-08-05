@@ -62,7 +62,7 @@ def embedding(config):
                 logger.info(f'Parsing embeddings using {model_name}')
 
                 # Load in the saved model, as well as weights saved during training time
-                model = Classifier.load_from_checkpoint(str(ROOT_PATH / a_checkpoint_file_location))
+                model = Classifier.load_from_checkpoint(str(ROOT_PATH / a_checkpoint_file_location.strip()))
                 model.to('cpu' if not torch.cuda.is_available() else "cuda")
                 model.eval()
 

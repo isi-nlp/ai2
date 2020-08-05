@@ -157,7 +157,7 @@ class Classifier(LightningModule):
         correct = torch.sum(torch.eq(val_labels, torch.argmax(val_logits, dim=1)))
         val_accuracy = torch.tensor(float(correct)) / (val_labels.shape[0] * 1.0)
         return {'val_loss': val_loss_mean, "val_accuracy": val_accuracy,
-                'combined_metric': val_loss_mean - val_accuracy}
+                'loss-accuracy': val_loss_mean - val_accuracy}
 
     # Initialize Adam Optimizer: https://arxiv.org/pdf/1412.6980.pdf
     def configure_optimizers(self):

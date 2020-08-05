@@ -29,7 +29,7 @@ echo ""
 
 # Parse Embedding
 echo ""
-python embed.py
+python embed.py with_progress_bar=False
 echo ""
 
 ### Finishing up the job and copy the output off of staging

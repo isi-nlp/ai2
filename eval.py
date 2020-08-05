@@ -8,6 +8,7 @@ import torch
 import torch.nn.functional as F
 from loguru import logger
 from omegaconf import OmegaConf
+from pytorch_lightning import seed_everything
 from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
 from tqdm import tqdm
@@ -29,13 +30,8 @@ def main(config):
     model_config = model.hparams
 
     # If the training is deterministic, we set the random seed for evaluation as well
-    if not isinstance(model_config['random_seed'], bool):
-        logger.info(f"Running deterministic model with seed {model_config['random_seed']}")
-        np.random.seed(model_config['random_seed'])
-        torch.manual_seed(model_config['random_seed'])
-        if torch.cuda.is_available():
-            torch.backends.cudnn.deterministic = True
-            torch.backends.cudnn.benchmark = False
+    if isinstance(model_config['random_seed'], int):
+        seed_everything(model_config['random_seed'])
 
     save_path = Path(f"eval-{model_config['model']}-{model_config['task_name']}-s{model_config['random_seed']}")
     save_path.mkdir(parents=True, exist_ok=True)
@@ -65,7 +61,7 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
                 batch[key] = batch[key].to(compute_device)
         with torch.no_grad():
             logits = a_classifier.forward(batch)
-        logits = logits.reshape(-1, batch["num_choice"][0].item())
+        logits = logits.reshape(-1, batch["num_choice"])
         all_logits.append(logits)
 
     # Stack the logits and
