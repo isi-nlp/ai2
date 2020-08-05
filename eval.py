@@ -11,7 +11,7 @@ from omegaconf import OmegaConf
 from pytorch_lightning import seed_everything
 from sklearn.metrics import accuracy_score
 from torch.utils.data import DataLoader
-from tqdm import tqdm
+from tqdm import tqdm, trange
 
 from model import Classifier
 
@@ -84,11 +84,11 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
         labels = pd.read_csv(val_y, header=None).values.tolist()
         logger.info(f"Accuracy score: {accuracy_score(labels, predictions):.3f}")
         pt_labels = torch.LongTensor([a_label[0] - a_classifier.label_offset for a_label in labels]).to(compute_device)
-        logger.info(f'Validation Loss: {a_classifier.loss(complete_logit, pt_labels).mean()}')
+        logger.info(f'Validation Loss: {a_classifier.loss(complete_logit, pt_labels).mean():.3f}')
 
         # Calculate the confidence interval and log it to console
         stats = []
-        for _ in range(100):
+        for _ in trange(5000, disable=not with_progress_bar):
             indices = [i for i in np.random.randint(0, len(predictions) - 1, size=len(predictions))]
             stats.append(accuracy_score([labels[j] for j in indices], [predictions[j] for j in indices]))
         alpha = 0.95
@@ -96,8 +96,8 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
         lower = max(0.0, np.percentile(stats, p))
         p = (alpha + ((1.0 - alpha) / 2.0)) * 100
         upper = min(1.0, np.percentile(stats, p))
-        logger.info(f'{alpha * 100:.1f} confidence interval {lower * 100:.1f} and {upper * 100:.1f}, '
-                    f'average: {np.mean(stats) * 100:.1f}')
+        logger.info(f'{alpha * 100:.1f}% confidence interval {lower * 100:.1f}% and {upper * 100:.1f}%, '
+                    f'average: {np.mean(stats) * 100:.1f}%')
 
 
 if __name__ == "__main__":
