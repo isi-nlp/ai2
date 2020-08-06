@@ -1,5 +1,5 @@
 defaults:
-  - model: roberta-large
+  - model: bert-large-cased
   - task: alphanli_halved
 build_on_model: False
 classifier_dropout: 0.3

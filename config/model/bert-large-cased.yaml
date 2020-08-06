@@ -1,8 +1,8 @@
 model: bert-large-cased
-accumulate_grad_batches: 1
+accumulate_grad_batches: 8
 adam_epsilon: 1e-8
-batch_size: 16
+batch_size: 3
 learning_rate: 5e-6
 max_length: 128
 precision: full # Half precision only works best with volta architectures such as V100
-warmup_steps: 0
+warmup_steps: 300
