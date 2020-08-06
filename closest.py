@@ -9,7 +9,7 @@ from pathlib import Path
 
 import hydra
 import torch
-import tqdm
+from tqdm import tqdm
 from loguru import logger
 
 from utilities.HelperLibrary import cosine_dist, l_norm_dist
@@ -34,7 +34,6 @@ def list_to_set(list_of_index):
 
 @hydra.main(config_path="config/closest.yaml")
 def closest(config):
-
     if config['distance_type'] == 'cosine':
         distance_measurer = cosine_dist
     elif isinstance(config['distance_type'], (int, float)):
@@ -107,8 +106,8 @@ def closest(config):
         output_file.write(f'{dev_print_line}\n')
         accuracies = torch.zeros(num_checkpoints, dtype=torch.float)
 
-        for ckpt_index, embed_tuple in tqdm.tqdm(enumerate(embedding_dict['embeddings']),
-                                                 total=num_checkpoints, disable=not config['with_progress_bar']):
+        for ckpt_index, embed_tuple in tqdm(enumerate(embedding_dict['embeddings']),
+                                            total=num_checkpoints, disable=not config['with_progress_bar']):
             # Break out the embedding tuple and write header information
             ckpt_name, train_embed, dev_embed = embed_tuple
             a_dev_embed = dev_embed[dev_story_id]
@@ -138,7 +137,7 @@ def closest(config):
                 output_file.write(f'{print_line}\n')
 
             # Add the accuracy to the accumulating torch tensor
-            accuracies[ckpt_index] = num_in_influential_set/config['top_N']
+            accuracies[ckpt_index] = num_in_influential_set / config['top_N']
         # If we are considering influential set, also out put the mean accuracy of this dev story along with its std
         if influential_set:
             output_file.write(f"Accuracies:\t{accuracies.mean():.3f} +/- {2 * accuracies.std():.3f}\n")

@@ -82,9 +82,9 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
     if val_y:
         # Load in the labels and move it to GPU if possible, and calculate the loss and the accuracy of the model
         labels = pd.read_csv(val_y, header=None).values.tolist()
-        logger.info(f"Accuracy score: {accuracy_score(labels, predictions):.3f}")
+        logger.info(f"Accuracy score: {accuracy_score(labels, predictions):.6f}")
         pt_labels = torch.LongTensor([a_label[0] - a_classifier.label_offset for a_label in labels]).to(compute_device)
-        logger.info(f'Validation Loss: {a_classifier.loss(complete_logit, pt_labels).mean():.3f}')
+        logger.info(f'Validation Loss: {a_classifier.loss(complete_logit, pt_labels).mean():.6f}')
 
         # Calculate the confidence interval and log it to console
         stats = []

@@ -26,6 +26,7 @@ ROOT_PATH = Path(__file__).parent.absolute()
 def embedding(config):
     logger.info(config)
     bool_pb = config['with_progress_bar']
+    model_used = []
 
     # Initiate the Distance Evaluation Dictionary to store all information needed to evaluate
     distance_eval_dict = {'task_name': config['task_name'], 'task_formula': config['formula'],
@@ -35,6 +36,7 @@ def embedding(config):
 
     # If an out of box model requested, we first embed the files using an out of box model
     if config['with_out_of_box_model']:
+        model_used.append(f"OOB_{config['model']}")
         logger.info(f"Parsing embeddings using out of box model: {config['model']}")
 
         # Loading in an out of box model
@@ -54,6 +56,7 @@ def embedding(config):
 
     # If a list of checkpoints is provided, we use each of them to parse the embeddings for the tasks
     if config['checkpoint_list']:
+        model_used.append(f"ckpt_{config['checkpoint_list'].split('/')[-1].split('.')[0]}")
         with open(ROOT_PATH / config['checkpoint_list'], 'r') as checkpoint_list:
             for a_checkpoint_file_location in checkpoint_list:
 
@@ -77,7 +80,7 @@ def embedding(config):
                 )
 
     # Pickle dump the dictionary for embedding distance calculation
-    with open(f"{config['model']}-{config['task_name']}-{config['feature']}.embed", 'wb') as output_file:
+    with open(f"{'_'.join(model_used)}-{config['task_name']}-{config['feature']}.embed", 'wb') as output_file:
         pickle.dump(distance_eval_dict, output_file)
 
 
@@ -110,7 +113,7 @@ def calculate_embeddings(a_classifier: Classifier, text_path: str, label_path: s
                 per_story_avg_embed = \
                     token_embeddings.mean(dim=1).reshape(len(batch['labels']), batch['num_choice'], -1).mean(dim=1)
             else:
-                # TODO: Implement CLS_*, AVG_CORRECT, AVG_NULL
+                # TODO: Implement AVG_CORRECT, AVG_NULL, CLS_MEAN, CLS_CORRECT, CLS_NULL
                 raise NotImplementedError(f"Feature for embedding calculation {feature} is not yet implemented")
 
         # Extend the embedding list so far with newly embeded batch
