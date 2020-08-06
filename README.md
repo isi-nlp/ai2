@@ -32,7 +32,7 @@ Baseline Result for Replicability Test:
 
 Model|AlphaNLI|c_HellaSwag|PhysicalIQA|SocialIQA
 :---:|:---:|:---:|:---:|:---:| 
-Roberta-Large|00.0%-00.0% Avg-00.0%|00.0%-00.0% Avg-00.0%|00.0%-00.0% Avg-00.0%|00.0%-00.0% Avg-00.0%|
+Roberta-Large|Acc: 81.7%-85.4% Avg-83.5%; Loss: 0.977|Acc: 83.8%-85.0% Avg-84.4%; Loss: 0.538|Acc: 77.9%-81.5% Avg-79.7%; Loss: 0.631|Acc: 74.4%-77.9% Avg-76.2%; Loss: 0.961|
 
 ## Folder Structure
     .
