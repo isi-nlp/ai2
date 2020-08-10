@@ -139,6 +139,10 @@ def main(params: Parameters):
         ensemble_params = ensemble_params.unify({'task_to_gold': {
             task: {'val_y': task_params.existing_file('val_y')}
         }})
+        if not task_to_jobs_info.get(task):
+            raise RuntimeError(
+                "Each task with a threshold must appear in the list of task parameters."
+            )
 
     ensemble_params = ensemble_params.unify({
         'data_sizes': data_sizes,
