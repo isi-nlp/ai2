@@ -1,10 +1,10 @@
 import os
 
 parameter_options = {
-                'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
-                # 'task': ['physicaliqa'],
-                'train_data_slice': ['10','25', '100'],
-                # 'train_data_slice': ['90'],
+                # 'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
+                'task': ['socialiqa'],
+                # 'train_data_slice': ['10','25', '100'],
+                'train_data_slice': ['100'],
                 # 'task2': ['cn_10k', 'cn_20k', 'cn_40k', 'cn_physical_10k'],
                 # 'task2': ['','cn_10k'],
                 # 'task2': [''],
