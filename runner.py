@@ -1,22 +1,23 @@
 import os
 
 parameter_options = {
-                # 'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
-                'task': ['physicaliqa'],
-                # 'train_data_slice': ['25', '90'],
+                'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
+                # 'task': ['physicaliqa'],
+                'train_data_slice': ['10','25', '100'],
                 # 'train_data_slice': ['90'],
                 # 'task2': ['cn_10k', 'cn_20k', 'cn_40k', 'cn_physical_10k'],
                 # 'task2': ['','cn_10k'],
                 # 'task2': [''],
                 # 'architecture': ['standard', 'include_answers_in_context', 'embed_all_sep_mean'],
-                'architecture': ['deepset'],
+                'architecture': ['standard'],
                 # 'random_seed': ['0', '42', '10061880'],
-                'random_seed': ['541401', '283219', '566944', '605430', '47299', '115719', '169760', '112068', '789504', '926273'],
+                # 'random_seed': ['541401', '283219', '566944', '605430', '47299', '115719', '169760', '112068', '789504', '926273'],
+                'random_seed': ['541401', '283219', '566944'],
                 # 'learning_rate': ['5e-7','5e-6','5e-5'],
                 # 'batch_size': ['2','3','6'],
-                'batch_size': ['2'],
+                # 'batch_size': ['2'],
                 # 'dropout': ['0','0.2','0.3'],
-                'dropout': ['0.2'],
+                # 'dropout': ['0.2'],
               }
 
 # Create all possible combinations of parameters
