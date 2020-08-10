@@ -95,8 +95,8 @@ def main(params: Parameters):
                     if parameter_option != 'parameter_options'
                 })
 
-        # Messy parameters input this shouldn't matter to ResourceRequest.
-        # Maybe clean up later.
+        # Messy parameters input. This shouldn't matter to ResourceRequest, though. Maybe clean up
+        # later.
         resource_request = ResourceRequest.from_parameters(
             params.unify(job_params)
         )
