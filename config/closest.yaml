@@ -1,6 +1,6 @@
 distance_type: cosine # cosine for Cosine Distance, any integer/float for associated l_p norm distance
 farthest: False
-embedding_loc: outputs/embeddings/roberta-large-out_of_box-alphanli-AVG_MEAN.embed
+embedding_loc: outputs/embedding/OOB_bert-large-cased_ckpt_alphanli_20-bert_large-alphanli-AVG_MEAN.embed
 top_N: 5
 with_progress_bar: True
 train_subset:
