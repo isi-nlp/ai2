@@ -31,9 +31,9 @@ respective training time listed in the following table:
 |Roberta-Large|~20hr|~7.5hr|~2.5hr|~6hr|
 
 
-Roughly 3 hrs after submitting the job, fine tuning for Physical IQA should have finished and the evaluation result 
-should be at the end of `BASELINE-$SLURM_ID.out` file in the project root directory. The result should be the same as 
-the following: 
+Given Enough Resources, roughly 3 hrs after submitting the job, fine tuning for Physical IQA should have finished and 
+the evaluation result should be at the end of `outputs/BASELINE-$SLURM_ID.out` file in the project root directory. 
+The result should be the same as the following (rounded to 3 digits of accuracy): 
 
 ### Baseline Result for Replicability Test (Random Seed 42):
 

@@ -1,6 +1,6 @@
-task_name: alphanli_10_percent_add_dev
-train_x: "task_data/alphanli-train-dev/scratch_cheat/train.jsonl"
-train_y: "task_data/alphanli-train-dev/scratch_cheat/train-labels.lst"
-val_x: "task_data/alphanli-train-dev/dev.jsonl"
-val_y: "task_data/alphanli-train-dev/dev-labels.lst"
+task_name: alphanli_dummy
+train_x: "task_data/alphanli-train-dev/dummy/train.jsonl"
+train_y: "task_data/alphanli-train-dev/dummy/train-labels.lst"
+val_x: "task_data/alphanli-train-dev/dummy/dev.jsonl"
+val_y: "task_data/alphanli-train-dev/dummy/dev-labels.lst"
 formula: "obs1 + obs2 -> hyp1|hyp2"
