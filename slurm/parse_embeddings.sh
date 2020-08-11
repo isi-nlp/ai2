@@ -32,5 +32,5 @@ echo ""
 python embed.py with_progress_bar=False
 echo ""
 
-### Finishing up the job and copy the output off of staging
+### Finishing up the job
 echo "Job finished with exit code $? at: $(date)"

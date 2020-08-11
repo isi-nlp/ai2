@@ -46,5 +46,5 @@ echo "This is for configuration $configOfInterest"
 python train.py $configOfInterest
 echo ""
 
-### Finishing up the job and copy the output off of staging
+### Finishing up the job
 echo "Job finished with exit code $? at: $(date)"

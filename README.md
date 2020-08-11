@@ -14,15 +14,16 @@ This repo uses Facebook's Hydra module to handle configuration and script result
 format, and the results are stored in `multirun/` or `outputs/` folder based on the time when the script is executed. 
 For more information in how to use Hydra please reference their website: https://hydra.cc/
 
-## Training Baseline (On Saga HPC)
+## Onboarding (On Saga HPC)
 Log on to Saga HPC and navigate to the root folder of this project, and submit the follow task to Slurm Workload
 Manager: https://slurm.schedmd.com/documentation.html
 
 ```bash
-sbatch slurm/baseline.sh
+sbatch slurm/onboarding.sh
 ```
 
-This script will submit an array of task that fine tunes roberta-large model on the four AI2 tasks with NLP focus, with 
+This script will first call a script that downloads all pretrained model weights in to the model_cache/ folder, then
+submit an array of task that fine tunes roberta-large model on the four AI2 tasks with NLP focus, with 
 respective training time listed in the following table:
 
 |Model|AlphaNLI|HellaSwag|PhysicalIQA|SocialIQA|

@@ -38,5 +38,5 @@ echo "This is for random seed: $modelSeed"
 python train.py random_seed="$modelSeed" progress_bar_refresh_rate=0
 echo ""
 
-### Finishing up the job and copy the output off of staging
+### Finishing up the job
 echo "Job finished with exit code $? at: $(date)"
