@@ -9,7 +9,7 @@
 #SBATCH --job-name=BASELINE             # The name of this job. If removed the job will have name of your shell script.
 #SBATCH --output=%x-%j.out              # The name of the file output. %x-%j means JOB_NAME-JOB_ID. If removed output will be in file slurm-JOB_ID.
 #SBATCH --export=NONE                   # Ensure job gets a fresh login environment
-#SBATCH --array=0-3                     # Submitting an array of (n-m+1) jobs, with $SLURM_ARRAY_TASK_ID ranging from n to m. Add %1 if you only want one jobs running at one time.
+#SBATCH --array=0-3%1                   # Submitting an array of (n-m+1) jobs, with $SLURM_ARRAY_TASK_ID ranging from n to m. Add %1 if you only want one jobs running at one time.
 
 
 ### Load the conda environment of your choosing
@@ -30,7 +30,7 @@ echo "This is job $SLURM_ARRAY_TASK_ID out of $SLURM_ARRAY_TASK_COUNT jobs."
 echo ""
 
 # All Tasks
-allTask=(alphanli c_hellaswag physicaliqa socialiqa)
+allTask=(physicaliqa socialiqa hellaswag alphanli)
 modelTask=${allTask[${SLURM_ARRAY_TASK_ID}]}
 echo ""
 echo "This is for AI2 Task: $modelTask"

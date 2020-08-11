@@ -24,7 +24,7 @@ def train(config):
         torch.cuda.empty_cache()
 
     # If the training is deterministic for debugging purposes, we set the random seed
-    if isinstance(config['random_seed'], int):
+    if not isinstance(config['random_seed'], bool):
         seed_everything(config['random_seed'])
         logger.info(f"Running deterministic model with seed {config['random_seed']}")
 
@@ -66,7 +66,7 @@ def train(config):
     # Main Trainer
     trainer = Trainer(
         accumulate_grad_batches=config["accumulate_grad_batches"],
-        deterministic=True if isinstance(config['random_seed'], int) else False,
+        deterministic=True if not isinstance(config['random_seed'], bool) else False,
         check_val_every_n_epoch=1,
         checkpoint_callback=checkpoint,
         distributed_backend="dp",

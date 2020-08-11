@@ -1,6 +1,6 @@
 defaults:
   - model: roberta-large
-  - task: alphanli_halved
+  - task: alphanli_variation_1
 build_on_model: False
 classifier_dropout: 0.3
 eval_after_training: True

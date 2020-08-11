@@ -5,15 +5,9 @@
 Create and run a virtual environment with Python 3.7 using anaconda. Make sure to use conda version `>=4.8.2`.
 
 ```bash
-conda env create -f environment.yml
-```
-
-or
-
-```bash
 conda create --name ai2_updated python=3.7
 conda activate ai2_updated
-pip install -r requirements_pip.txt
+pip install -r requirements.txt
 ```
 
 This repo uses Facebook's Hydra module to handle configuration and script result storage. The config files are in the yaml 
@@ -28,12 +22,34 @@ Manager: https://slurm.schedmd.com/documentation.html
 sbatch slurm/baseline.sh
 ```
 
-Baseline Result for Replicability Test:
+This script will submit an array of task that fine tunes roberta-large model on the four AI2 tasks with NLP focus, with 
+respective training time listed in the following table:
 
-Model|AlphaNLI|c_HellaSwag|PhysicalIQA|SocialIQA
-:---:|:---:|:---:|:---:|:---:| 
-Roberta-Large|Acc: 81.7%-85.4% Avg-83.5%; Loss: 0.977|Acc: 83.8%-85.0% Avg-84.4%; Loss: 0.538|Acc: 77.9%-81.5% Avg-79.7%; Loss: 0.631|Acc: 74.4%-77.9% Avg-76.2%; Loss: 0.961|
+|Model|AlphaNLI|HellaSwag|PhysicalIQA|SocialIQA|
+|:---:|:---:|:---:|:---:|:---:| 
+|Roberta-Large|~20hr|~7.5hr|~2.5hr|~6hr|
 
+
+Roughly 3 hrs after submitting the job, fine tuning for Physical IQA should have finished and the evaluation result 
+should be at the end of `BASELINE-$SLURM_ID.out` file in the project root directory. The result should be the same as 
+the following: 
+
+### Baseline Result for Replicability Test (Random Seed 42):
+
+|Model|AlphaNLI|HellaSwag|PhysicalIQA|SocialIQA|
+|:---:|:---:|:---:|:---:|:---:| 
+|Roberta-Large|Acc: 81.7%-85.4% Avg-83.5%; Loss: 0.977|Acc: 83.4%-84.8% Avg-84.1%; Loss: 0.552|Acc: 77.9%-81.5% Avg-79.7%; Loss: 0.631|Acc: 74.2%-77.9% Avg-76.0%; Loss: 0.961|
+
+Further more, when running the following diff command on the loss log file, there should be no output result when you 
+execute the following command (for Physical IQA, for other task simply replace the task name in the diff command)
+
+```bash
+diff -q \
+<(cut -d, -f1,3 PATH_TO_YOUR_metrics.csv_FILE_IN_OUTPUTS_FOLDER) \
+<(cut -d, -f1,3 /nas/minlp/users/mics/dwangli/ai2_stable/outputs/baseline-ai2-roberta-large/roberta-large-physicaliqa-s42/physicaliqa/version_0/metrics.csv)
+```
+
+ 
 ## Folder Structure
     .
     ├── config                      # Configuration Files

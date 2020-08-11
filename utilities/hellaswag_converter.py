@@ -1,6 +1,6 @@
 """
-Hella Swag data comes in a different format - using a list of ending options rather than 4 discrete ending option
-This script converts the original config to the new one, which is used as task c_hellaswag
+Original HellaSwag data comes in a different format - using a list of ending options rather than 4 discrete ending
+option. This script converts the original config to fit with the rest of the ai2 tasks
 """
 import json
 import yaml
@@ -30,8 +30,8 @@ with open(HELLASWAG_PATH + 'c_dev.jsonl', 'w') as converted_dev_story_file:
         converted_dev_story_file.write(f'{json.dumps(a_dev_story)}\n')
 
 # Write out the modified config file for converted hella swag
-with open('../config/task/c_hellaswag.yaml', 'w') as config_file:
-    config_dict = {'task_name': 'c_hellaswag',
+with open('../config/task/hellaswag.yaml', 'w') as config_file:
+    config_dict = {'task_name': 'hellaswag',
                    'train_x': "task_data/hellaswag-train-dev/c_train.jsonl",
                    'train_y': "task_data/hellaswag-train-dev/train-labels.lst",
                    'val_x': "task_data/hellaswag-train-dev/c_dev.jsonl",
