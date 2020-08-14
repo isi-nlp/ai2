@@ -66,6 +66,33 @@ python eval.py \
     --output pred.lst
 ```
 
+## Ensembling using Pegasus
+
+### Setup
+
+The ensembling workflow is defined and run using the Pegasus workflow management system. To run the
+workflow, you'll need to install the [Pegasus wrapper][pegasus_wrapper].
+
+Note that before running you'll need to set up your user-specific parameters file,
+`parameters/root.params`. See `parameters/root.sample.params` for an example.
+
+### Running the workflow
+
+Once the wrapper is installed, generate the workflow:
+
+```bash
+python ai2/pegasus.py parameters/pegasus.params
+```
+
+Then submit the workflow:
+
+```bash
+cd path/to/experiment_root/ensemble
+sh submit.sh
+```
+
+[pegasus_wrapper]: https://github.com/isi-vista/vista-pegasus-wrapper/
+
 ## Results
 
 ### PIQA
