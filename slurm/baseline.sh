@@ -7,7 +7,7 @@
 #SBATCH --cpus-per-task=4               # CPU Allocated
 #SBATCH --gpus-per-task=1               # GPU Allocated
 #SBATCH --job-name=BASELINE             # The name of this job. If removed the job will have name of your shell script.
-#SBATCH --output=%x-%j.out              # The name of the file output. %x-%j means JOB_NAME-JOB_ID. If removed output will be in file slurm-JOB_ID.
+#SBATCH --output=outputs/%x-%j.out      # The name of the file output. %x-%j means JOB_NAME-JOB_ID. If removed output will be in file slurm-JOB_ID.
 #SBATCH --export=NONE                   # Ensure job gets a fresh login environment
 #SBATCH --array=0-3                     # Submitting an array of (n-m+1) jobs, with $SLURM_ARRAY_TASK_ID ranging from n to m. Add %1 if you only want one jobs running at one time.
 
@@ -16,7 +16,10 @@
 source ~/.bashrc
 conda activate ai2_updated
 
+# If Spack failed to set up, please check this link on the latest location of setup-env.sh
+# https://github.com/isi-vista/saga-cluster/wiki/Loading-installed-software-using-Spack#using-spack-provided-software
 . /nas/gaia/shared/cluster/spack/share/spack/setup-env.sh
+
 # When using `tensorflow-gpu`, paths to CUDA and CUDNN libraries are required
 # by symbol lookup at runtime even if a GPU isn't going to be used.
 spack load cuda@9.0.176

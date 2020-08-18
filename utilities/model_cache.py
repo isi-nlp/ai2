@@ -7,6 +7,7 @@ from pathlib import Path
 import transformers as tf
 from loguru import logger
 
+# Retrieving the root path of the project folder
 ROOT_PATH = Path(__file__).parent.parent.absolute()
 
 # Define a list of all models and it's respective tokenizer (feel free to comment out lines for unwanted models)

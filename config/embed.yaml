@@ -1,7 +1,7 @@
 defaults:
-  - model: bert-large-cased
+  - model: roberta-large
   - task: alphanli
-checkpoint_list: config/checkpoint_list/alphanli_20-bert_large.lst
+checkpoint_list: config/checkpoint_list/alphanli_20-transformer_scratch.lst
 feature: AVG_MEAN
 with_out_of_box_model: True
 with_progress_bar: True

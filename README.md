@@ -22,7 +22,7 @@ Manager: https://slurm.schedmd.com/documentation.html
 sbatch slurm/onboarding.sh
 ```
 
-This script will first call a script that downloads all pretrained model weights in to the model_cache/ folder, then
+This script will first call a script that downloads all pretrained model weights in to the `model_cache/` folder, then
 submit an array of task that fine tunes roberta-large model on the four AI2 tasks with NLP focus, with 
 respective training time listed in the following table:
 
@@ -47,10 +47,14 @@ execute the following command (for Physical IQA, for other task simply replace t
 ```bash
 diff -q \
 <(cut -d, -f1,3 PATH_TO_YOUR_metrics.csv_FILE_IN_OUTPUTS_FOLDER) \
-<(cut -d, -f1,3 /nas/minlp/users/mics/dwangli/ai2_stable/outputs/baseline-ai2-roberta-large/roberta-large-physicaliqa-s42/physicaliqa/version_0/metrics.csv)
+<(cut -d, -f1,3 /nas/minlp/users/mics/dwangli/ai2_stable/outputs/baseline-ai2-roberta-large/roberta-large-[TASK_NAME]-s42/[TASK_NAME]/version_0/metrics.csv)
 ```
 
- 
+In case of failing replication - try resubmitting `baseline.sh` sbatch job again first to make sure that your current
+state is reproducible. This codebase relies on many libraries and some of them are managed by Saga (eg. cudnn), which 
+may result in minor changes in accuracy. However, if a second run of baseline tasks yields different result than the
+first, there is a bug in the code base.
+
 ## Folder Structure
     .
     ├── config                      # Configuration Files

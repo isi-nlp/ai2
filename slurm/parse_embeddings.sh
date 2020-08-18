@@ -15,7 +15,10 @@
 source ~/.bashrc
 conda activate ai2_updated
 
+# If Spack failed to set up, please check this link on the latest location of setup-env.sh
+# https://github.com/isi-vista/saga-cluster/wiki/Loading-installed-software-using-Spack#using-spack-provided-software
 . /nas/gaia/shared/cluster/spack/share/spack/setup-env.sh
+
 # When using `tensorflow-gpu`, paths to CUDA and CUDNN libraries are required
 # by symbol lookup at runtime even if a GPU isn't going to be used.
 spack load cuda@9.0.176

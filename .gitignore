@@ -117,7 +117,7 @@ venv.bak/
 outputs/
 multirun/
 
-# Personal preference - playground.py files and a __local__/ folder
+# Personal customization - playground files for running one off experiments and a __local__/ folder for temp storage
 playground.py
 config/playground.yaml
 slurm/playground.sh

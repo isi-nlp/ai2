@@ -31,6 +31,7 @@ class Classifier(LightningModule):
     def __init__(self, config):
         super().__init__()
         self.hparams = config
+        self.learning_rate = float(config['learning_rate'])
         self.root_path = Path(__file__).parent.absolute()
         self.label_offset = 0
 
@@ -161,5 +162,4 @@ class Classifier(LightningModule):
 
     # Initialize Adam Optimizer: https://arxiv.org/pdf/1412.6980.pdf
     def configure_optimizers(self):
-        return AdamW(self.parameters(), lr=float(self.hparams["learning_rate"]),
-                     eps=float(self.hparams["adam_epsilon"]))
+        return AdamW(self.parameters(), lr=self.learning_rate, eps=float(self.hparams["adam_epsilon"]))

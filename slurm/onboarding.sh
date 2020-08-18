@@ -20,7 +20,7 @@ echo "Current working directory: $(pwd)"
 echo "Starting run at: $(date)"
 echo ""
 
-# Please make sure there are enough time and memory allocated for the largest model to be downloaded
+# Please make sure there are enough time and memory allocated for the models to be downloaded
 echo ""
 echo "Start downloading pretrained model weights."
 python utilities/model_cache.py

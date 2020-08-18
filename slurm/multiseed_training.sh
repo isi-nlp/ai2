@@ -16,7 +16,10 @@
 source ~/.bashrc
 conda activate ai2_updated
 
+# If Spack failed to set up, please check this link on the latest location of setup-env.sh
+# https://github.com/isi-vista/saga-cluster/wiki/Loading-installed-software-using-Spack#using-spack-provided-software
 . /nas/gaia/shared/cluster/spack/share/spack/setup-env.sh
+
 # When using `tensorflow-gpu`, paths to CUDA and CUDNN libraries are required
 # by symbol lookup at runtime even if a GPU isn't going to be used.
 spack load cuda@9.0.176
@@ -35,7 +38,7 @@ allSeed=(0 1 2 3 4 5 6 7 8 9)
 modelSeed=${allSeed[${SLURM_ARRAY_TASK_ID}]}
 echo ""
 echo "This is for random seed: $modelSeed"
-python train.py random_seed="$modelSeed" progress_bar_refresh_rate=0
+python playground.py random_seed="$modelSeed" progress_bar_refresh_rate=0
 echo ""
 
 ### Finishing up the job
