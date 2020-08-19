@@ -1,0 +1,6 @@
+_includes:
+  - "model/roberta-large.params"
+  - "task/alphanli.params"
+  - "eval.params"
+
+checkpoint_path: "%experiments_root%/placeholder/socialiqa.ckpt"

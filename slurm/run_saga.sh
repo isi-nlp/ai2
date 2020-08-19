@@ -19,4 +19,4 @@ conda activate ai2
 spack load cuda@9.0.176
 spack load cudnn@7.6.5.32-9.0-linux-x64
 
-python train.py $1
+python ai2/train.py $1

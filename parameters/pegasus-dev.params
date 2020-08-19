@@ -1,0 +1,42 @@
+_includes:
+  - "root.params"
+  - "model/roberta-large.params"
+
+parameter_options:
+  task: ['physicaliqa']
+  train_data_slice: [100]
+  task2: ['']
+  architecture: ['standard']
+  random_seed: [0, 42]
+
+training_overrides:
+  seed0:
+    parameter_options:
+      random_seed: [0]
+    # Nonsense parameter. Used so we can check if the override code is working without actually
+    # changing the training parameters for seed 0.
+    use_widget: true
+
+ensemble:
+  accuracy_bootstrapping_samples: 100
+  output_file_name: 'dev_ensemble_results.csv'
+  try_without: []
+  task_to_threshold:
+    physicaliqa: 0.6
+  # Fill in data_sizes from train_data_slice
+
+# Based on https://github.com/isi-vista/gaia-event-extraction/blob/d1235671952dff13b7851a96088ef2ecef4996c9/sample_params/neural_trigger_models/pegasus/experiments/tbnamm.baseline.ace.debug.params
+workflow_name: george
+experiment_root: '%experiments_root%/ensemble-dev'
+workflow_directory: '%experiment_root%'
+backend: slurm
+site: 'saga'
+parallelism: 10
+namespace: saga
+partition: ephemeral
+
+num_cpus: 4
+num_gpus: 1
+memory: '16g'
+# sbatch --ntasks=1  # already covered, resource_request.py line 133
+job_time_in_minutes: 720  # 12 hours

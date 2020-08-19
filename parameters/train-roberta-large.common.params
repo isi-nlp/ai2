@@ -1,0 +1,11 @@
+_includes:
+  - "model/roberta-large.params"
+
+experiment_name: 'train'
+random_seed: 10061880
+save_path: "%experiments_root%/%experiment_name%"
+save_best_only: True
+save_by_date_and_parameters: True
+eval_after_training: True
+architecture: standard
+train_data_slice: 90

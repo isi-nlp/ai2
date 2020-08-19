@@ -8,7 +8,7 @@
 #SBATCH --gpus-per-task=2               # GPU Allocated
 #SBATCH --job-name=SIQA_BASED        # The name of this job. If removed the job will have name of your shell script.
 #SBATCH --output=outputs/%x-%j.out              # The name of the file output. %x-%j means JOB_NAME-JOB_ID. If removed output will be in file slurm-JOB_ID.
-#SBATCH --mail-user=dwangli@isi.edu     # Email address for email notifications to be sent to.
+#SBATCH --mail-user=dwangli@isi.ai2     # Email address for email notifications to be sent to.
 #SBATCH --mail-type=ALL                 # Type of notifications to receive. Other options includes BEGIN, END, FAIL, REQUEUE and more.
 #SBATCH --export=NONE                   # Ensure job gets a fresh login environment
 #SBATCH --array=0-2                  # Submitting an array of (n-m+1) jobs, with $SLURM_ARRAY_TASK_ID ranging from n to m. Add %1 if you only want one jobs running at one time.
@@ -34,7 +34,7 @@ echo ""
 allTask=(alphanli hellaswag physicaliqa)
 task=${allTask[${SLURM_ARRAY_TASK_ID}]}
 echo ""
-python train.py task="$task" build_on_pretrained_model=outputs/roberta-large-baselines/socialiqa-s42.ckpt
+python ai2/train.py "parameters/train-pretrained-roberta-large-${task}.params" -p build_on_pretrained_model outputs/roberta-large-baselines/socialiqa-s42.ckpt
 echo ""
 
 ### Finishing up the job and copy the output off of staging

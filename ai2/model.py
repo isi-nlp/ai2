@@ -50,9 +50,9 @@ class Classifier(pl.LightningModule):
         self.label_offset = 0
 
         # Load Transformer model from cache files (encoder and tokenizer)
-        self.embedder = AutoModel.from_pretrained(hparams["model"], cache_dir=self.root_path / "model_cache")
+        self.embedder = AutoModel.from_pretrained(hparams["model_name"], cache_dir=self.root_path / "model_cache")
         self.tokenizer = \
-            AutoTokenizer.from_pretrained(hparams["model"], cache_dir=self.root_path / "model_cache", use_fast=False)
+            AutoTokenizer.from_pretrained(hparams["model_name"], cache_dir=self.root_path / "model_cache", use_fast=False)
         self.embedder.train()
         self.dropout = nn.Dropout(hparams["dropout"])
 
@@ -76,13 +76,13 @@ class Classifier(pl.LightningModule):
         assert len(batch["attention_mask"].shape) == 2, "LM only take two-dimensional input"
         assert len(batch["token_type_ids"].shape) == 2, "LM only take two-dimensional input"
 
-        batch["token_type_ids"] = None if "roberta" in self.hparams["model"] or "lm_finetuned" \
-                                          in self.hparams["model"] else batch["token_type_ids"]
+        batch["token_type_ids"] = None if "roberta" in self.hparams["model_name"] or "lm_finetuned" \
+                                          in self.hparams["model_name"] else batch["token_type_ids"]
         results = self.embedder(input_ids=batch["input_ids"],
                                 attention_mask=batch["attention_mask"],
                                 token_type_ids=batch["token_type_ids"])
 
-        if 't5' in self.hparams["model"]:
+        if 't5' in self.hparams["model_name"]:
             results = self.embedder(input_ids=batch["input_ids"],
                                     decoder_input_ids=batch["input_ids"], )
 
