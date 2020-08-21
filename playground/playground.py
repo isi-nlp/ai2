@@ -1,5 +1,6 @@
 """
-Training file, configured by config/train.yaml, and produces ckpt file, and loss metrics for fine-tuned model
+Playground python file for transformer from scratch - mostly replicated the train.py file except for line 34 where
+weights are initialized randomly again
 """
 from pathlib import Path
 
@@ -18,31 +19,20 @@ from model import Classifier
 ROOT_PATH = Path(__file__).parent.absolute()
 
 
-@hydra.main(config_path="config/train.yaml")
+@hydra.main(config_path="playground.yaml")
 def train(config):
     logger.info(config)
 
-    # Clear cuda's memory cache to maximize usable memory
-    if torch.cuda.is_available():
-        torch.cuda.empty_cache()
-
     # If the training is deterministic for debugging purposes, we set the random seed
-    if config['random_seed']:
-        seed_everything(int(config['random_seed']))
-        logger.info(f"Running deterministic model with seed {int(config['random_seed'])}")
+    if not isinstance(config['random_seed'], bool):
+        seed_everything(config['random_seed'])
+        logger.info(f"Running deterministic model with seed {config['random_seed']}")
 
     # Initialize the classifier by arguments specified in config file
     model = Classifier(OmegaConf.to_container(config))
     logger.info('Initialized classifier.')
-    save_path = f"{config['model']}-{config['task_name']}-s{config['random_seed']}"
-
-    # If model is building on a previously fine tuned checkpoint file
-    if config['build_on_model']:
-        logger.info('Loading pretrained checkpoint')
-        device = 'cpu' if not torch.cuda.is_available() else "cuda"
-        checkpoint = torch.load(ROOT_PATH / config['build_on_pretrained_model'], map_location=device)
-        model.load_state_dict(checkpoint['state_dict'])
-        save_path += f"-pretrained_{config['build_on_model'].split('/')[-1].split('.')[0]}"
+    model.embedder.init_weights()
+    save_path = f"transformer_scratch-{config['task_name']}-s{config['random_seed']}"
 
     # Initialize the Test Tube for Trainer
     tt_logger = TestTubeLogger(
@@ -60,23 +50,22 @@ def train(config):
         patience=3,
     )
     checkpoint = ModelCheckpoint(
-        monitor='loss_minus_accuracy',
-        mode='min',
+        monitor='val_accuracy',
+        mode='max',
         verbose=True,
         filepath=save_path + '/checkpoints/',
         save_top_k=int(config['save_top_N_models']),
         save_last=True
     )
 
-    # Main Trainer (Check the link for additional flags available)
-    # https://pytorch-lightning.readthedocs.io/en/0.8.5/trainer.html#trainer-flags
+    # Main Trainer
     trainer = Trainer(
         accumulate_grad_batches=config["accumulate_grad_batches"],
         deterministic=True if not isinstance(config['random_seed'], bool) else False,
         check_val_every_n_epoch=1,
         checkpoint_callback=checkpoint,
         distributed_backend="dp",
-        early_stop_callback=early_stop,
+        early_stop_callback=False,
         gpus=list(range(torch.cuda.device_count())) if torch.cuda.is_available() else None,
         gradient_clip_val=0,
         limit_test_batches=1.0,
@@ -92,6 +81,7 @@ def train(config):
         progress_bar_refresh_rate=config['progress_bar_refresh_rate'],
         row_log_interval=25,
         weights_summary='top',
+        auto_lr_find=True,
     )
     trainer.fit(model)
     logger.success('Training Completed')

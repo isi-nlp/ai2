@@ -16,13 +16,13 @@ MODELS = [
     (tf.BertModel, tf.BertTokenizer, 'bert-large-cased'),
     (tf.RobertaModel, tf.RobertaTokenizer, 'roberta-base'),
     (tf.RobertaModel, tf.RobertaTokenizer, 'roberta-large'),
-    (tf.DistilBertModel, tf.DistilBertTokenizer, 'distilbert-base-uncased'),
-    (tf.OpenAIGPTModel, tf.OpenAIGPTTokenizer, 'openai-gpt'),
-    (tf.GPT2Model, tf.GPT2Tokenizer, 'gpt2'),
-    (tf.GPT2Model, tf.GPT2Tokenizer, 'gpt2-large'),
-    (tf.XLNetModel, tf.XLNetTokenizer, 'xlnet-base-cased'),
-    (tf.XLNetModel, tf.XLNetTokenizer, 'xlnet-large-cased'),
-    (tf.XLMModel, tf.XLMTokenizer, 'xlm-mlm-en-2048'),
+    # (tf.DistilBertModel, tf.DistilBertTokenizer, 'distilbert-base-uncased'),
+    # (tf.OpenAIGPTModel, tf.OpenAIGPTTokenizer, 'openai-gpt'),
+    # (tf.GPT2Model, tf.GPT2Tokenizer, 'gpt2'),
+    # (tf.GPT2Model, tf.GPT2Tokenizer, 'gpt2-large'),
+    # (tf.XLNetModel, tf.XLNetTokenizer, 'xlnet-base-cased'),
+    # (tf.XLNetModel, tf.XLNetTokenizer, 'xlnet-large-cased'),
+    # (tf.XLMModel, tf.XLMTokenizer, 'xlm-mlm-en-2048'),
 ]
 
 for model_class, tokenizer_class, pretrained_weights in MODELS:

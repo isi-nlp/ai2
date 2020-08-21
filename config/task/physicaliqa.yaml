@@ -1,6 +1,6 @@
 task_name: physicaliqa
-train_x: "task_data/physicaliqa-train-dev/train.jsonl"
-train_y: "task_data/physicaliqa-train-dev/train-labels.lst"
-val_x: "task_data/physicaliqa-train-dev/dev.jsonl"
-val_y: "task_data/physicaliqa-train-dev/dev-labels.lst"
+train_x: "task_data/PhysicalIQA/train.jsonl"
+train_y: "task_data/PhysicalIQA/train-labels.lst"
+val_x: "task_data/PhysicalIQA/dev.jsonl"
+val_y: "task_data/PhysicalIQA/dev-labels.lst"
 formula: "goal -> sol1|sol2"

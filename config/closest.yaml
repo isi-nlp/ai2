@@ -1,8 +1,9 @@
 distance_type: cosine # cosine for Cosine Distance, any integer/float for associated l_p norm distance
 farthest: False
-embedding_loc: outputs/embedding/OOB_bert-large-cased_ckpt_alphanli_20-bert_large-alphanli-AVG_MEAN.embed
+embedding_loc: outputs/embedding/OOB_roberta-large_ckpt_alphanli_20-transformer_scratch-alphanli-AVG_MEAN.embed
 top_N: 5
 with_progress_bar: True
+# [x, y-z] format for all subsets or range. If left empty script will treat whole file as desired range
 train_subset:
   - 0-33930
 dev_subset:

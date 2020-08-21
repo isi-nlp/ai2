@@ -116,9 +116,3 @@ venv.bak/
 # Hydra output directories
 outputs/
 multirun/
-
-# Personal customization - playground files for running one off experiments and a __local__/ folder for temp storage
-playground.py
-config/playground.yaml
-slurm/playground.sh
-__local__/

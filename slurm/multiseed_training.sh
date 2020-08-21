@@ -12,6 +12,9 @@
 #SBATCH --array=0-9                     # Submitting an array of (n-m+1) jobs, with $SLURM_ARRAY_TASK_ID ranging from n to m. Add %1 if you only want one jobs running at one time.
 
 
+# Offset jobs to avoid them sharing the same hydra folder (only needed when auto_lr_finder is set to True)
+sleep $((10*$SLURM_ARRAY_TASK_ID))
+
 ### Load the conda environment of your choosing
 source ~/.bashrc
 conda activate ai2_updated

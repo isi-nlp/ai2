@@ -6,5 +6,5 @@ classifier_dropout: 0.3
 eval_after_training: True
 max_epochs: 8
 random_seed: 42
-progress_bar_refresh_rate: 5
-save_top_N_models: 1 # -1 if you want all models saved
+progress_bar_refresh_rate: 5  # False if you don't want a progress bar
+save_top_N_models: 1          # -1 if you want all models saved

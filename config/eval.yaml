@@ -1,3 +1,4 @@
+# Checkpoint includes path to the true label and train and dev stories
 checkpoint_path: outputs/baseline-ai2-roberta-large/roberta-large-physicaliqa-s42/last.ckpt
 with_true_label: True
 with_progress_bar: True

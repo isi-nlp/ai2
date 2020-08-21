@@ -1,6 +1,7 @@
 """
 Library of Helper Functions
-transform: takes a task formula and turn into a lambda function to processes task stories
+transform:          takes a task formula and turn into a lambda function to processes task stories
+list_to_set:        Turns a list of [x, y-z] indices to a set (Used in closest.yaml)
 distance functions: Measure the distance of two embedding of the same size
 """
 from itertools import cycle
@@ -28,6 +29,20 @@ def transform(formula):
     return wrapper
 
 
+# Turns a list of [x, y-z] indices to a set
+def list_to_set(list_of_index):
+    index_set = set()
+    for an_index in list_of_index:
+        if isinstance(an_index, int):
+            index_set.add(an_index)
+        elif isinstance(an_index, str):
+            [start, end] = an_index.strip().split('-')
+            index_set.update(range(int(start.strip()), int(end.strip())))
+        else:
+            raise ValueError(f'Unrecognized entry in list to set {an_index}')
+    return index_set
+
+
 # Cosine Distance
 def cosine_dist(embed_1: torch.Tensor, embed_2: torch.Tensor):
     dist = torch.tensor(1) - torch.dot(embed_1, embed_2) / max(torch.norm(embed_1, 2) * torch.norm(embed_2, 2), 1e-08)
@@ -38,4 +53,6 @@ def cosine_dist(embed_1: torch.Tensor, embed_2: torch.Tensor):
 def l_norm_dist(embed_1: torch.Tensor, embed_2: torch.Tensor, l_norm: Union[int, float] = 2):
     dist = torch.norm(embed_1 - embed_2, p=l_norm)
     return dist.item
+
+
 

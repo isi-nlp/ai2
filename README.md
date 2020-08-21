@@ -10,9 +10,9 @@ conda activate ai2_updated
 pip install -r requirements.txt
 ```
 
-This repo uses Facebook's Hydra module to handle configuration and script result storage. The config files are in the yaml 
-format, and the results are stored in `multirun/` or `outputs/` folder based on the time when the script is executed. 
-For more information in how to use Hydra please reference their website: https://hydra.cc/
+This repo uses Facebook's Hydra module to handle configuration and script output storage. The config files are in the 
+yaml format, and the outputs are stored in `multirun/` or `outputs/` folder based on the time when the script is 
+executed. For more information in how to use Hydra please reference their website: https://hydra.cc/
 
 ## Onboarding (On Saga HPC)
 Log on to Saga HPC and navigate to the root folder of this project, and submit the follow task to Slurm Workload
@@ -31,7 +31,7 @@ respective training time listed in the following table:
 |Roberta-Large|~20hr|~7.5hr|~2.5hr|~6hr|
 
 
-Given Enough Resources, roughly 3 hrs after submitting the job, fine tuning for Physical IQA should have finished and 
+Given Enough Resources, roughly 4 hrs after submitting the job, fine tuning for Physical IQA should have finished and 
 the evaluation result should be at the end of `outputs/BASELINE-$SLURM_ID.out` file in the project root directory. 
 The result should be the same as the following (rounded to 3 digits of accuracy): 
 
@@ -41,8 +41,8 @@ The result should be the same as the following (rounded to 3 digits of accuracy)
 |:---:|:---:|:---:|:---:|:---:| 
 |Roberta-Large|Acc: 81.7%-85.4% Avg-83.5%; Loss: 0.977|Acc: 83.4%-84.8% Avg-84.1%; Loss: 0.552|Acc: 77.9%-81.5% Avg-79.7%; Loss: 0.631|Acc: 74.2%-77.9% Avg-76.0%; Loss: 0.961|
 
-Further more, when running the following diff command on the loss log file, there should be no output result when you 
-execute the following command (for Physical IQA, for other task simply replace the task name in the diff command)
+Furthermore, when running the following `diff` command on the loss log file, there should be no output result when you 
+execute the following command
 
 ```bash
 diff -q \
@@ -54,6 +54,11 @@ In case of failing replication - try resubmitting `baseline.sh` sbatch job again
 state is reproducible. This codebase relies on many libraries and some of them are managed by Saga (eg. cudnn), which 
 may result in minor changes in accuracy. However, if a second run of baseline tasks yields different result than the
 first, there is a bug in the code base.
+
+## Transformer From Scratch (Incomplete)
+`playground/` folder contains training files used in to train transformer from scratch. Unfortunately so far transformer
+from scratch won't converge, but the results, loss metrics and  ckpt files of using current scripts can be found in
+this directory on saga `/nas/minlp/users/mics/dwangli/ai2_stable/outputs/checkpoint-transformer-scratch_alphanli-20`
 
 ## Folder Structure
     .
@@ -67,6 +72,7 @@ first, there is a bug in the code base.
     ├── slurm                       # Slurm job sbatch submission scripts for HPC
     ├── task_data                   # Data folder for AI2 challenges
     ├── utilities                   # Helper classes for core python scripts and one off scripts
+    ├── playground                  # Playground folder for one off scripts and unfinished experiments
     ├── Conda Environment Files     # requirements.txt (pip format) and environment.yml (conda format)
     ├── Core Python Scripts         # model.py, train.py, eval.py, embed.py, closest.py
     └── README.md
@@ -74,7 +80,7 @@ first, there is a bug in the code base.
 ## model.py
 
 This is the self-defined model class extending pytorch-lightning's Lightning Module: 
-https://pytorch-lightning.readthedocs.io/en/latest/lightning-module.html. The classifier is designed to 
+https://pytorch-lightning.readthedocs.io/en/0.8.5/lightning-module.html. The classifier is designed to 
 utilize the pretrained models to embed a given text, and pass it through a classifier layer for results.
 
 ## train.py

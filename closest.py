@@ -12,28 +12,16 @@ import torch
 from tqdm import tqdm
 from loguru import logger
 
-from utilities.HelperLibrary import cosine_dist, l_norm_dist
+from utilities.HelperLibrary import cosine_dist, l_norm_dist, list_to_set
 
 # Save root path as hydra will create copies of this code in date specific folder
 ROOT_PATH = Path(__file__).parent.absolute()
 
 
-# Helper function that turns a list of [x, y-z] indices to a set
-def list_to_set(list_of_index):
-    index_set = set()
-    for an_index in list_of_index:
-        if isinstance(an_index, int):
-            index_set.add(an_index)
-        elif isinstance(an_index, str):
-            [start, end] = an_index.strip().split('-')
-            index_set.update(range(int(start.strip()), int(end.strip())))
-        else:
-            logger.error(f'Unrecognized entry in list to set {an_index}')
-    return index_set
-
-
 @hydra.main(config_path="config/closest.yaml")
 def closest(config):
+
+    # Define the distance measurer function
     if config['distance_type'] == 'cosine':
         distance_measurer = cosine_dist
     elif isinstance(config['distance_type'], (int, float)):
@@ -79,7 +67,7 @@ def closest(config):
     important_fields = [a_context.strip() for a_context in context.strip().split("+")] + \
                        [a_choice.strip() for a_choice in choices.strip().split("|")]
 
-    # Create the output file and start writing the headers
+    # Create the output file and start writing the headers of the tsv file
     if config['farthest']:
         mode = 'farthest'
     else:
@@ -143,6 +131,8 @@ def closest(config):
         if influential_set:
             output_file.write(f"Accuracies:\t{accuracies.mean():.3f} +/- {2 * accuracies.std():.3f}\n")
         output_file.write('\n')
+
+    # Finally close the output file
     output_file.close()
 
 

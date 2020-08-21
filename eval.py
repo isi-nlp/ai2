@@ -1,3 +1,6 @@
+"""
+Evaluate a checkpoint's accuracy (with confidence interval) and validation loss
+"""
 from pathlib import Path
 from typing import List, Union
 
@@ -30,8 +33,8 @@ def main(config):
     model_config = model.hparams
 
     # If the training is deterministic, we set the random seed for evaluation as well
-    if isinstance(model_config['random_seed'], int):
-        seed_everything(model_config['random_seed'])
+    if model_config['random_seed']:
+        seed_everything(int(model_config['random_seed']))
 
     save_path = Path(f"eval-{model_config['model']}-{model_config['task_name']}-s{model_config['random_seed']}")
     save_path.mkdir(parents=True, exist_ok=True)
@@ -82,9 +85,9 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
     if val_y:
         # Load in the labels and move it to GPU if possible, and calculate the loss and the accuracy of the model
         labels = pd.read_csv(val_y, header=None).values.tolist()
-        logger.info(f"Accuracy score: {accuracy_score(labels, predictions):.6f}")
+        logger.info(f"Accuracy score: {accuracy_score(labels, predictions):.3f}")
         pt_labels = torch.LongTensor([a_label[0] - a_classifier.label_offset for a_label in labels]).to(compute_device)
-        logger.info(f'Validation Loss: {a_classifier.loss(complete_logit, pt_labels).mean():.6f}')
+        logger.info(f'Validation Loss: {a_classifier.loss(complete_logit, pt_labels).mean():.3f}')
 
         # Calculate the confidence interval and log it to console
         stats = []

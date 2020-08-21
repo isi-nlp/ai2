@@ -56,7 +56,9 @@ def embedding(config):
 
     # If a list of checkpoints is provided, we use each of them to parse the embeddings for the tasks
     if config['checkpoint_list']:
+        # Extract checkpoint name from the file name
         model_used.append(f"ckpt_{config['checkpoint_list'].split('/')[-1].split('.')[0]}")
+
         with open(ROOT_PATH / config['checkpoint_list'], 'r') as checkpoint_list:
             for a_checkpoint_file_location in checkpoint_list:
 
@@ -84,7 +86,7 @@ def embedding(config):
         pickle.dump(distance_eval_dict, output_file)
 
 
-# Helper function for parsing embeddings and return a 2D numpy array
+# Helper function for parsing embeddings with a classifier and return a 2D numpy array
 def calculate_embeddings(a_classifier: Classifier, text_path: str, label_path: str,
                          compute_device: str, feature: str, with_progress_bar: bool):
     # Initialize the embedding list

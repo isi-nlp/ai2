@@ -1,3 +1,5 @@
+# Default model is used when an out of box model is used to parse embedding
+# Script will parse the task specified in defaults rather than task stored in ckpt files
 defaults:
   - model: roberta-large
   - task: alphanli

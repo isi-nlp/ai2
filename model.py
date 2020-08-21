@@ -1,3 +1,6 @@
+"""
+NLP model built on top of pytorch lightning's LightningModule, uses pretrained models to embed given stories
+"""
 from pathlib import Path
 from typing import Union
 
@@ -150,7 +153,7 @@ class Classifier(LightningModule):
                 "val_batch_logits": logits,
                 "val_batch_labels": batch_parts_outputs["labels"]}
 
-    # At the end of each validation epoch, this information is used to determine early stopping
+    # At the end of each validation epoch, this information is used to determine early stopping and checkpointing
     def validation_epoch_end(self, outputs):
         val_loss_mean = torch.stack([o['val_loss'] for o in outputs]).mean()
         val_logits = torch.cat([o["val_batch_logits"] for o in outputs])

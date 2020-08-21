@@ -5,7 +5,7 @@ option. This script converts the original config to fit with the rest of the ai2
 import json
 import yaml
 
-HELLASWAG_PATH = '../task_data/hellaswag-train-dev/'
+HELLASWAG_PATH = '../task_data/HellaSwag/'
 
 # Load in the train and dev stories
 with open(HELLASWAG_PATH + 'train.jsonl', 'r') as train_story_file:
@@ -32,9 +32,9 @@ with open(HELLASWAG_PATH + 'c_dev.jsonl', 'w') as converted_dev_story_file:
 # Write out the modified config file for converted hella swag
 with open('../config/task/hellaswag.yaml', 'w') as config_file:
     config_dict = {'task_name': 'hellaswag',
-                   'train_x': "task_data/hellaswag-train-dev/c_train.jsonl",
-                   'train_y': "task_data/hellaswag-train-dev/train-labels.lst",
-                   'val_x': "task_data/hellaswag-train-dev/c_dev.jsonl",
-                   'val_y': "task_data/hellaswag-train-dev/dev-labels.lst",
+                   'train_x': "task_data/HellaSwag/c_train.jsonl",
+                   'train_y': "task_data/HellaSwag/train-labels.lst",
+                   'val_x': "task_data/HellaSwag/c_dev.jsonl",
+                   'val_y': "task_data/HellaSwag/dev-labels.lst",
                    'formula': "ctx_a + ctx_b -> opt0|opt1|opt2|opt3"}
     documents = yaml.dump(config_dict, config_file)
