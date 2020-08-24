@@ -34,6 +34,7 @@ def train(config: omegaconf.Config):
         logger.info(f"Loading model from {config['build_on_pretrained_model']}")
         device = 'cpu' if not torch.cuda.is_available() else "cuda"
         model = Classifier.load_from_checkpoint(ROOT_PATH / config['build_on_pretrained_model'], map_location=device)
+        model.hparams = config
         save_path += f"-pretrained_{Path(config['build_on_pretrained_model']).stem}"
     else:
         model = Classifier(config)
