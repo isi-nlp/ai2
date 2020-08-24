@@ -29,7 +29,7 @@ echo "This is job $((SLURM_ARRAY_TASK_ID + 1)) out of $SLURM_ARRAY_TASK_COUNT jo
 allTask=(alphanli hellaswag physicaliqa socialiqa)
 task=${allTask[${SLURM_ARRAY_TASK_ID}]}
 echo
-time python -u train.py task="$task"
+time python -u train.py task="$task" hydra.run.dir="outputs/$SLURM_JOB_ID"
 echo
 
 # Finishing up the job and copy the output off of staging
