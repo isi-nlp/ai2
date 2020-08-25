@@ -116,7 +116,8 @@ class Classifier(pl.LightningModule):
         pairs = [pair for example in examples for pair in example["text"]]
         results = self.tokenizer.batch_encode_plus(pairs, add_special_tokens=True,
                                                    max_length=self.hparams["max_length"], return_tensors='pt',
-                                                   return_attention_masks=True, pad_to_max_length=True)
+                                                   return_token_type_ids=True, return_attention_masks=True,
+                                                   pad_to_max_length=True)
 
         assert results["input_ids"].shape[0] == sum(num_choices), \
             f"Invalid shapes {results['input_ids'].shape} {sum(num_choices)}"
