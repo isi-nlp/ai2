@@ -9,7 +9,8 @@ import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
-from transformers import AdamW, AutoModel, AutoTokenizer
+from transformers import AdamW, AutoModel, AutoTokenizer, TensorType
+from transformers.tokenization_utils_base import PaddingStrategy, TruncationStrategy
 
 
 # Extending the dataset module provided by the PyTorch module to build the dataset class for AI2 dataset.
@@ -114,10 +115,16 @@ class Classifier(pl.LightningModule):
         num_choices = [len(example["text"]) for example in examples]
 
         pairs = [pair for example in examples for pair in example["text"]]
-        results = self.tokenizer.batch_encode_plus(pairs, add_special_tokens=True,
-                                                   max_length=self.hparams["max_length"], return_tensors='pt',
-                                                   return_token_type_ids=True, return_attention_masks=True,
-                                                   pad_to_max_length=True)
+        results = self.tokenizer.batch_encode_plus(
+            pairs,
+            add_special_tokens=True,
+            padding=PaddingStrategy.MAX_LENGTH.value,
+            truncation=TruncationStrategy.LONGEST_FIRST.value,
+            max_length=self.hparams["max_length"],
+            return_tensors=TensorType.PYTORCH,
+            return_token_type_ids=True,
+            return_attention_mask=True
+        )
 
         assert results["input_ids"].shape[0] == sum(num_choices), \
             f"Invalid shapes {results['input_ids'].shape} {sum(num_choices)}"
