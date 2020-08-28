@@ -9,8 +9,6 @@
 #SBATCH --gpus-per-task=rtx2080ti:1
 #SBATCH --job-name=TRAIN_AI2
 #SBATCH --output=outputs/slurm/%x-%j.out    # %x-%j means JOB_NAME-JOB_ID.
-#SBATCH --mail-user=ahedges@isi.edu
-#SBATCH --mail-type=ALL   # Type of notifications to receive. Other options includes BEGIN, END, FAIL, REQUEUE and more.
 #SBATCH --array=0-3   # Submitting an array of (n-m+1) jobs, with $SLURM_ARRAY_TASK_ID ranging from n to m.
 
 set -euo pipefail
