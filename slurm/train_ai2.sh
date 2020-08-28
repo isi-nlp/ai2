@@ -20,6 +20,7 @@ set -euo pipefail
 spack load cuda@9.0.176
 spack load cudnn@7.6.5.32-9.0-linux-x64
 
+echo "Current node: $(hostname)"
 echo "Current working directory: $(pwd)"
 echo "Starting run at: $(date)"
 echo "Job Array ID / Job ID: $SLURM_ARRAY_JOB_ID / $SLURM_JOB_ID"
