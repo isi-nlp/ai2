@@ -6,7 +6,7 @@
 #SBATCH --time=24:00:00
 #SBATCH --mem-per-cpu=4G
 #SBATCH --cpus-per-task=4
-#SBATCH --gpus-per-task=1
+#SBATCH --gpus-per-task=rtx2080ti:1
 #SBATCH --job-name=TRAIN_AI2
 #SBATCH --output=outputs/slurm/%x-%j.out    # %x-%j means JOB_NAME-JOB_ID.
 #SBATCH --mail-user=ahedges@isi.edu
