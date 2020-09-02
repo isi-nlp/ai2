@@ -1,0 +1,189 @@
+WARNING:root:This caffe2 python run does not have GPU support. Will run in CPU only mode.
+2020-05-13 12:10:38.997 | INFO     | __main__:train:22 - {'random_seed': 42, 'build_on_pretrained_model': False, 'save_best_only': False, 'eval_after_training': True, 'model': 'roberta-large', 'accumulate_grad_batches': 16, 'use_amp': False, 'max_epochs': 4, 'learning_rate': 2e-06, 'adam_epsilon': 1e-07, 'warmup_steps': 150, 'batch_size': 4, 'max_length': 128, 'task_name': 'physicaliqa', 'train_x': 'task_data/physicaliqa-train-dev/train.jsonl', 'train_y': 'task_data/physicaliqa-train-dev/train-labels.lst', 'val_x': 'task_data/physicaliqa-train-dev/dev.jsonl', 'val_y': 'task_data/physicaliqa-train-dev/dev-labels.lst', 'formula': 'goal -> sol1|sol2'}
+2020-05-13 12:10:38.997 | INFO     | __main__:train:26 - Running deterministic model with seed 42
+[2020-05-13 12:10:39,914][transformers.configuration_utils][INFO] - loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-config.json from cache at /Users/ahedges/projects/mcs/ai2/model_cache/c22e0b5bbb7c0cb93a87a2ae01263ae715b4c18d692b1740ce72cacaa99ad184.2d28da311092e99a05f9ee17520204614d60b0bfdb32f8a75644df7737b6a748
+[2020-05-13 12:10:39,914][transformers.configuration_utils][INFO] - Model config RobertaConfig {
+  "architectures": [
+    "RobertaForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "bos_token_id": 0,
+  "do_sample": false,
+  "eos_token_id": 2,
+  "eos_token_ids": 0,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 1024,
+  "id2label": {
+    "0": "LABEL_0",
+    "1": "LABEL_1"
+  },
+  "initializer_range": 0.02,
+  "intermediate_size": 4096,
+  "is_decoder": false,
+  "label2id": {
+    "LABEL_0": 0,
+    "LABEL_1": 1
+  },
+  "layer_norm_eps": 1e-05,
+  "length_penalty": 1.0,
+  "max_length": 20,
+  "max_position_embeddings": 514,
+  "model_type": "roberta",
+  "num_attention_heads": 16,
+  "num_beams": 1,
+  "num_hidden_layers": 24,
+  "num_labels": 2,
+  "num_return_sequences": 1,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "output_past": true,
+  "pad_token_id": 1,
+  "pruned_heads": {},
+  "repetition_penalty": 1.0,
+  "temperature": 1.0,
+  "top_k": 50,
+  "top_p": 1.0,
+  "torchscript": false,
+  "type_vocab_size": 1,
+  "use_bfloat16": false,
+  "vocab_size": 50265
+}
+
+[2020-05-13 12:10:40,660][transformers.modeling_utils][INFO] - loading weights file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-pytorch_model.bin from cache at /Users/ahedges/projects/mcs/ai2/model_cache/195c00f28dc68ef13a307c6db84d566f801f03b2b6bcf8b29524f10f767fac2a.fc7abf72755ecc4a75d0d336a93c1c63358d2334f5998ed326f3b0da380bf536
+[2020-05-13 12:10:48,612][transformers.configuration_utils][INFO] - loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-config.json from cache at /Users/ahedges/projects/mcs/ai2/model_cache/c22e0b5bbb7c0cb93a87a2ae01263ae715b4c18d692b1740ce72cacaa99ad184.2d28da311092e99a05f9ee17520204614d60b0bfdb32f8a75644df7737b6a748
+[2020-05-13 12:10:48,612][transformers.configuration_utils][INFO] - Model config RobertaConfig {
+  "architectures": [
+    "RobertaForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "bos_token_id": 0,
+  "do_sample": false,
+  "eos_token_id": 2,
+  "eos_token_ids": 0,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 1024,
+  "id2label": {
+    "0": "LABEL_0",
+    "1": "LABEL_1"
+  },
+  "initializer_range": 0.02,
+  "intermediate_size": 4096,
+  "is_decoder": false,
+  "label2id": {
+    "LABEL_0": 0,
+    "LABEL_1": 1
+  },
+  "layer_norm_eps": 1e-05,
+  "length_penalty": 1.0,
+  "max_length": 20,
+  "max_position_embeddings": 514,
+  "model_type": "roberta",
+  "num_attention_heads": 16,
+  "num_beams": 1,
+  "num_hidden_layers": 24,
+  "num_labels": 2,
+  "num_return_sequences": 1,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "output_past": true,
+  "pad_token_id": 1,
+  "pruned_heads": {},
+  "repetition_penalty": 1.0,
+  "temperature": 1.0,
+  "top_k": 50,
+  "top_p": 1.0,
+  "torchscript": false,
+  "type_vocab_size": 1,
+  "use_bfloat16": false,
+  "vocab_size": 50265
+}
+
+[2020-05-13 12:10:50,203][transformers.tokenization_utils][INFO] - loading file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-vocab.json from cache at /Users/ahedges/projects/mcs/ai2/model_cache/1ae1f5b6e2b22b25ccc04c000bb79ca847aa226d0761536b011cf7e5868f0655.ef00af9e673c7160b4d41cfda1f48c5f4cba57d5142754525572a846a1ab1b9b
+[2020-05-13 12:10:50,203][transformers.tokenization_utils][INFO] - loading file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-merges.txt from cache at /Users/ahedges/projects/mcs/ai2/model_cache/f8f83199a6270d582d6245dc100e99c4155de81c9745c6248077018fe01abcfb.70bec105b4158ed9a1747fea67a43f5dee97855c64d62b6ec3742f4cfdb5feda
+                                     id  ...                                               text
+0  f6be5fcc-d686-4549-8207-7904068693d7  ...  [(When boiling butter, when it's ready, you ca...
+1  ee9783b5-76a7-4beb-bbbb-9b179b11c43e  ...  [(To permanently attach metal legs to a chair,...
+2  7230f9f4-06f7-4eb3-9994-762957427a96  ...  [(how do you indent something?, leave a space ...
+3  e3304ee5-cdca-4830-b04d-a3a7cf77f6a9  ...  [(how do you shake something?, move it up and ...
+4  b316c350-d435-4d35-a101-92ed4c9fc14a  ...  [(Clean tires, Pour water, cape off caked on d...
+
+[5 rows x 6 columns]
+                                     id  ...                                               text
+0  c36c629e-12e9-43cc-8936-e1a96d869ab0  ...  [(How do I ready a guinea pig cage for it's ne...
+1  fe68f9ec-09fd-436e-bcaf-07863711ec2b  ...  [(dresser, replace drawer with bobby pin ), (d...
+2  d73182e6-6916-48a0-b31f-2137e350776f  ...  [(To fight Ivan Drago in Rocky for sega master...
+3  fe32932f-87a6-4a99-bd48-4587d0c8444b  ...  [(Make outdoor pillow., Blow into tin can and ...
+4  1ea9030f-a902-42ce-8d22-f19c96ac17b4  ...  [(ice box, will turn into a cooler if you add ...
+
+[5 rows x 6 columns]
+                                          Name               Type     Params
+0                                     embedder       RobertaModel  355359744
+1                          embedder.embeddings  RobertaEmbeddings   52000768
+2          embedder.embeddings.word_embeddings          Embedding   51471360
+3      embedder.embeddings.position_embeddings          Embedding     526336
+4    embedder.embeddings.token_type_embeddings          Embedding       1024
+..                                         ...                ...        ...
+417                            embedder.pooler         BertPooler    1049600
+418                      embedder.pooler.dense             Linear    1049600
+419                 embedder.pooler.activation               Tanh          0
+420                                 classifier             Linear       1025
+421                                       loss   CrossEntropyLoss          0
+
+[422 rows x 3 columns]
+0it [00:00, ?it/s]  0%|          | 0/5 [00:00<?, ?it/s] 20%|██        | 1/5 [00:01<00:05,  1.40s/it] 40%|████      | 2/5 [00:02<00:04,  1.43s/it] 60%|██████    | 3/5 [00:03<00:02,  1.17s/it]  0%|          | 0/6 [00:00<00:07,  1.17s/it] 33%|███▎      | 2/6 [00:03<00:05,  1.38s/it] 50%|█████     | 3/6 [00:05<00:04,  1.38s/it] 67%|██████▋   | 4/6 [00:05<00:02,  1.12s/it] 67%|██████▋   | 4/6 [00:05<00:02,  1.12s/it, batch_nb=0, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]save callback...
+
+Epoch 00001: saving model to roberta-large-physicaliqa-s42/checkpoints/_ckpt_epoch_1.ckpt
+ 83%|████████▎ | 5/6 [00:06<00:00,  1.08it/s, batch_nb=0, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]100%|██████████| 6/6 [00:12<00:00,  2.52s/it, batch_nb=0, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]7it [00:13,  2.22s/it, batch_nb=0, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]                       8it [00:14,  1.71s/it, batch_nb=0, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]8it [00:14,  1.71s/it, batch_nb=1, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]save callback...
+
+Epoch 00001: saving model to roberta-large-physicaliqa-s42/checkpoints/_ckpt_epoch_1.ckpt
+9it [00:14,  1.37s/it, batch_nb=1, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]10it [00:18,  2.06s/it, batch_nb=1, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]11it [00:20,  1.90s/it, batch_nb=1, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]12it [00:20,  1.50s/it, batch_nb=1, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]12it [00:20,  1.50s/it, batch_nb=2, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]save callback...
+
+Epoch 00001: saving model to roberta-large-physicaliqa-s42/checkpoints/_ckpt_epoch_1.ckpt
+  0%|          | 0/6 [00:00<00:09,  1.50s/it, batch_nb=2, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692] 33%|███▎      | 2/6 [00:04<00:06,  1.71s/it, batch_nb=2, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692] 50%|█████     | 3/6 [00:06<00:05,  1.72s/it, batch_nb=2, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692] 67%|██████▋   | 4/6 [00:06<00:02,  1.40s/it, batch_nb=2, epoch=0, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692] 67%|██████▋   | 4/6 [00:06<00:02,  1.40s/it, batch_nb=0, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]save callback...
+
+Epoch 00002: saving model to roberta-large-physicaliqa-s42/checkpoints/_ckpt_epoch_2.ckpt
+ 83%|████████▎ | 5/6 [00:07<00:01,  1.12s/it, batch_nb=0, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]100%|██████████| 6/6 [00:14<00:00,  2.96s/it, batch_nb=0, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]7it [00:16,  2.65s/it, batch_nb=0, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]                       8it [00:17,  2.07s/it, batch_nb=0, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]8it [00:17,  2.07s/it, batch_nb=1, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]save callback...
+
+Epoch 00002: saving model to roberta-large-physicaliqa-s42/checkpoints/_ckpt_epoch_2.ckpt
+9it [00:17,  1.60s/it, batch_nb=1, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]10it [00:22,  2.53s/it, batch_nb=1, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]11it [00:24,  2.34s/it, batch_nb=1, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]12it [00:24,  1.84s/it, batch_nb=1, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]12it [00:24,  1.84s/it, batch_nb=2, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]save callback...
+
+Epoch 00002: saving model to roberta-large-physicaliqa-s42/checkpoints/_ckpt_epoch_2.ckpt
+  0%|          | 0/6 [00:00<00:11,  1.84s/it, batch_nb=2, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692] 33%|███▎      | 2/6 [00:04<00:08,  2.04s/it, batch_nb=2, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692] 50%|█████     | 3/6 [00:06<00:06,  2.02s/it, batch_nb=2, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692] 67%|██████▋   | 4/6 [00:07<00:03,  1.62s/it, batch_nb=2, epoch=1, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692] 67%|██████▋   | 4/6 [00:07<00:03,  1.62s/it, batch_nb=0, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]save callback...
+
+Epoch 00003: saving model to roberta-large-physicaliqa-s42/checkpoints/_ckpt_epoch_3.ckpt
+ 83%|████████▎ | 5/6 [00:08<00:01,  1.27s/it, batch_nb=0, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]100%|██████████| 6/6 [00:15<00:00,  3.06s/it, batch_nb=0, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]7it [00:17,  2.71s/it, batch_nb=0, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]                       8it [00:17,  2.10s/it, batch_nb=0, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]8it [00:17,  2.10s/it, batch_nb=1, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]save callback...
+
+Epoch 00003: saving model to roberta-large-physicaliqa-s42/checkpoints/_ckpt_epoch_3.ckpt
+9it [00:18,  1.62s/it, batch_nb=1, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]10it [00:22,  2.51s/it, batch_nb=1, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]11it [00:24,  2.31s/it, batch_nb=1, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]12it [00:25,  1.83s/it, batch_nb=1, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]12it [00:25,  1.83s/it, batch_nb=2, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]save callback...
+
+Epoch 00003: saving model to roberta-large-physicaliqa-s42/checkpoints/_ckpt_epoch_3.ckpt
+  0%|          | 0/6 [00:00<00:10,  1.83s/it, batch_nb=2, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692] 33%|███▎      | 2/6 [00:04<00:07,  1.99s/it, batch_nb=2, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692] 50%|█████     | 3/6 [00:06<00:05,  1.94s/it, batch_nb=2, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692] 67%|██████▋   | 4/6 [00:07<00:03,  1.56s/it, batch_nb=2, epoch=2, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692] 67%|██████▋   | 4/6 [00:07<00:03,  1.56s/it, batch_nb=0, epoch=3, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]save callback...
+
+Epoch 00004: saving model to roberta-large-physicaliqa-s42/checkpoints/_ckpt_epoch_4.ckpt
+ 83%|████████▎ | 5/6 [00:07<00:01,  1.24s/it, batch_nb=0, epoch=3, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]100%|██████████| 6/6 [00:15<00:00,  3.06s/it, batch_nb=0, epoch=3, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]7it [00:16,  2.71s/it, batch_nb=0, epoch=3, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]                       8it [00:17,  2.10s/it, batch_nb=0, epoch=3, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]8it [00:17,  2.10s/it, batch_nb=1, epoch=3, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]save callback...
+
+Epoch 00004: saving model to roberta-large-physicaliqa-s42/checkpoints/_ckpt_epoch_4.ckpt
+9it [00:18,  1.64s/it, batch_nb=1, epoch=3, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]10it [00:22,  2.55s/it, batch_nb=1, epoch=3, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]11it [00:24,  2.37s/it, batch_nb=1, epoch=3, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]12it [00:25,  1.86s/it, batch_nb=1, epoch=3, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]12it [00:25,  1.86s/it, batch_nb=2, epoch=3, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]save callback...
+
+Epoch 00004: saving model to roberta-large-physicaliqa-s42/checkpoints/_ckpt_epoch_4.ckpt
+2020-05-13 12:12:32.849 | SUCCESS  | __main__:train:77 - Training Completed
+2020-05-13 12:12:32.849 | INFO     | __main__:train:80 - Start model evaluation
+                                     id  ...                                               text
+0  c36c629e-12e9-43cc-8936-e1a96d869ab0  ...  [(How do I ready a guinea pig cage for it's ne...
+1  fe68f9ec-09fd-436e-bcaf-07863711ec2b  ...  [(dresser, replace drawer with bobby pin ), (d...
+2  d73182e6-6916-48a0-b31f-2137e350776f  ...  [(To fight Ivan Drago in Rocky for sega master...
+3  fe32932f-87a6-4a99-bd48-4587d0c8444b  ...  [(Make outdoor pillow., Blow into tin can and ...
+4  1ea9030f-a902-42ce-8d22-f19c96ac17b4  ...  [(ice box, will turn into a cooler if you add ...
+
+[5 rows x 6 columns]
+
+  0%|          | 0/2 [00:00<?, ?it/s][A
+ 50%|█████     | 1/2 [00:03<00:03,  3.80s/it][A
+100%|██████████| 2/2 [00:04<00:00,  2.87s/it][A100%|██████████| 2/2 [00:04<00:00,  2.25s/it]
+2020-05-13 12:12:37.401 | INFO     | eval:evaluate:85 - Accuracy score: 0.500
+2020-05-13 12:12:37.424 | INFO     | eval:evaluate:98 - 95.0 confidence interval 20.0 and 80.0, average: 48.5
+12it [00:30,  2.55s/it, batch_nb=2, epoch=3, loss=0.000, v_nb=0, val_accuracy=0.5, val_loss=0.692]

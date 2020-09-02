@@ -1,0 +1,113 @@
+{
+  "accuracy": 0.8544262295081967,
+  "true/false": {
+    "correct": 534,
+    "total": 618,
+    "accuracy": 0.8640776699029126
+  },
+  "object properties": {
+    "correct": 113,
+    "total": 180,
+    "accuracy": 0.6277777777777778
+  },
+  "multiple choice": {
+    "correct": 768,
+    "total": 906,
+    "accuracy": 0.847682119205298
+  },
+  "culture": {
+    "correct": 64,
+    "total": 68,
+    "accuracy": 0.9411764705882353
+  },
+  "logical reasoning": {
+    "correct": 337,
+    "total": 354,
+    "accuracy": 0.9519774011299436
+  },
+  "theory of mind": {
+    "correct": 302,
+    "total": 328,
+    "accuracy": 0.9207317073170732
+  },
+  "disjointness": {
+    "correct": 77,
+    "total": 86,
+    "accuracy": 0.8953488372093024
+  },
+  "composition": {
+    "correct": 19,
+    "total": 26,
+    "accuracy": 0.7307692307692307
+  },
+  "arithmetic": {
+    "correct": 48,
+    "total": 62,
+    "accuracy": 0.7741935483870968
+  },
+  "temporal sequences": {
+    "correct": 175,
+    "total": 208,
+    "accuracy": 0.8413461538461539
+  },
+  "norms": {
+    "correct": 24,
+    "total": 33,
+    "accuracy": 0.7272727272727273
+  },
+  "classification": {
+    "correct": 137,
+    "total": 147,
+    "accuracy": 0.9319727891156463
+  },
+  "temporal reasoning": {
+    "correct": 132,
+    "total": 173,
+    "accuracy": 0.7630057803468208
+  },
+  "events": {
+    "correct": 62,
+    "total": 63,
+    "accuracy": 0.9841269841269841
+  },
+  "causal reasoning": {
+    "correct": 21,
+    "total": 42,
+    "accuracy": 0.5
+  },
+  "conceptual": {
+    "correct": 53,
+    "total": 59,
+    "accuracy": 0.8983050847457628
+  },
+  "social relations": {
+    "correct": 18,
+    "total": 18,
+    "accuracy": 1.0
+  },
+  "nature": {
+    "correct": 15,
+    "total": 16,
+    "accuracy": 0.9375
+  },
+  "animals": {
+    "correct": 12,
+    "total": 18,
+    "accuracy": 0.6666666666666666
+  },
+  "capabilities": {
+    "correct": 8,
+    "total": 12,
+    "accuracy": 0.6666666666666666
+  },
+  "counterfactual": {
+    "correct": 6,
+    "total": 9,
+    "accuracy": 0.6666666666666666
+  },
+  "quotation": {
+    "correct": 6,
+    "total": 20,
+    "accuracy": 0.3
+  }
+}

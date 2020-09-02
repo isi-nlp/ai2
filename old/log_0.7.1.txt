@@ -1,0 +1,629 @@
+WARNING:root:This caffe2 python run does not have GPU support. Will run in CPU only mode.
+2020-05-13 14:49:27.736 | INFO     | __main__:train:22 - {'random_seed': 42, 'build_on_pretrained_model': False, 'save_best_only': False, 'eval_after_training': True, 'model': 'roberta-large', 'accumulate_grad_batches': 16, 'use_amp': False, 'max_epochs': 4, 'learning_rate': 2e-06, 'adam_epsilon': 1e-07, 'warmup_steps': 150, 'batch_size': 4, 'max_length': 128, 'task_name': 'physicaliqa', 'train_x': 'task_data/physicaliqa-train-dev/train.jsonl', 'train_y': 'task_data/physicaliqa-train-dev/train-labels.lst', 'val_x': 'task_data/physicaliqa-train-dev/dev.jsonl', 'val_y': 'task_data/physicaliqa-train-dev/dev-labels.lst', 'formula': 'goal -> sol1|sol2'}
+2020-05-13 14:49:27.737 | INFO     | __main__:train:26 - Running deterministic model with seed 42
+[2020-05-13 14:49:28,638][transformers.configuration_utils][INFO] - loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-config.json from cache at /Users/ahedges/projects/mcs/ai2/model_cache/c22e0b5bbb7c0cb93a87a2ae01263ae715b4c18d692b1740ce72cacaa99ad184.2d28da311092e99a05f9ee17520204614d60b0bfdb32f8a75644df7737b6a748
+[2020-05-13 14:49:28,639][transformers.configuration_utils][INFO] - Model config RobertaConfig {
+  "architectures": [
+    "RobertaForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "bos_token_id": 0,
+  "do_sample": false,
+  "eos_token_id": 2,
+  "eos_token_ids": 0,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 1024,
+  "id2label": {
+    "0": "LABEL_0",
+    "1": "LABEL_1"
+  },
+  "initializer_range": 0.02,
+  "intermediate_size": 4096,
+  "is_decoder": false,
+  "label2id": {
+    "LABEL_0": 0,
+    "LABEL_1": 1
+  },
+  "layer_norm_eps": 1e-05,
+  "length_penalty": 1.0,
+  "max_length": 20,
+  "max_position_embeddings": 514,
+  "model_type": "roberta",
+  "num_attention_heads": 16,
+  "num_beams": 1,
+  "num_hidden_layers": 24,
+  "num_labels": 2,
+  "num_return_sequences": 1,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "output_past": true,
+  "pad_token_id": 1,
+  "pruned_heads": {},
+  "repetition_penalty": 1.0,
+  "temperature": 1.0,
+  "top_k": 50,
+  "top_p": 1.0,
+  "torchscript": false,
+  "type_vocab_size": 1,
+  "use_bfloat16": false,
+  "vocab_size": 50265
+}
+
+[2020-05-13 14:49:29,377][transformers.modeling_utils][INFO] - loading weights file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-pytorch_model.bin from cache at /Users/ahedges/projects/mcs/ai2/model_cache/195c00f28dc68ef13a307c6db84d566f801f03b2b6bcf8b29524f10f767fac2a.fc7abf72755ecc4a75d0d336a93c1c63358d2334f5998ed326f3b0da380bf536
+[2020-05-13 14:49:37,269][transformers.configuration_utils][INFO] - loading configuration file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-config.json from cache at /Users/ahedges/projects/mcs/ai2/model_cache/c22e0b5bbb7c0cb93a87a2ae01263ae715b4c18d692b1740ce72cacaa99ad184.2d28da311092e99a05f9ee17520204614d60b0bfdb32f8a75644df7737b6a748
+[2020-05-13 14:49:37,269][transformers.configuration_utils][INFO] - Model config RobertaConfig {
+  "architectures": [
+    "RobertaForMaskedLM"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "bos_token_id": 0,
+  "do_sample": false,
+  "eos_token_id": 2,
+  "eos_token_ids": 0,
+  "finetuning_task": null,
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 1024,
+  "id2label": {
+    "0": "LABEL_0",
+    "1": "LABEL_1"
+  },
+  "initializer_range": 0.02,
+  "intermediate_size": 4096,
+  "is_decoder": false,
+  "label2id": {
+    "LABEL_0": 0,
+    "LABEL_1": 1
+  },
+  "layer_norm_eps": 1e-05,
+  "length_penalty": 1.0,
+  "max_length": 20,
+  "max_position_embeddings": 514,
+  "model_type": "roberta",
+  "num_attention_heads": 16,
+  "num_beams": 1,
+  "num_hidden_layers": 24,
+  "num_labels": 2,
+  "num_return_sequences": 1,
+  "output_attentions": false,
+  "output_hidden_states": false,
+  "output_past": true,
+  "pad_token_id": 1,
+  "pruned_heads": {},
+  "repetition_penalty": 1.0,
+  "temperature": 1.0,
+  "top_k": 50,
+  "top_p": 1.0,
+  "torchscript": false,
+  "type_vocab_size": 1,
+  "use_bfloat16": false,
+  "vocab_size": 50265
+}
+
+[2020-05-13 14:49:38,731][transformers.tokenization_utils][INFO] - loading file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-vocab.json from cache at /Users/ahedges/projects/mcs/ai2/model_cache/1ae1f5b6e2b22b25ccc04c000bb79ca847aa226d0761536b011cf7e5868f0655.ef00af9e673c7160b4d41cfda1f48c5f4cba57d5142754525572a846a1ab1b9b
+[2020-05-13 14:49:38,731][transformers.tokenization_utils][INFO] - loading file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-merges.txt from cache at /Users/ahedges/projects/mcs/ai2/model_cache/f8f83199a6270d582d6245dc100e99c4155de81c9745c6248077018fe01abcfb.70bec105b4158ed9a1747fea67a43f5dee97855c64d62b6ec3742f4cfdb5feda
+[2020-05-13 14:49:38,842][root][INFO] - 
+    | Name                                                 | Type              | Params
+---------------------------------------------------------------------------------------
+0   | embedder                                             | RobertaModel      | 355 M 
+1   | embedder.embeddings                                  | RobertaEmbeddings | 52 M  
+2   | embedder.embeddings.word_embeddings                  | Embedding         | 51 M  
+3   | embedder.embeddings.position_embeddings              | Embedding         | 526 K 
+4   | embedder.embeddings.token_type_embeddings            | Embedding         | 1 K   
+5   | embedder.embeddings.LayerNorm                        | LayerNorm         | 2 K   
+6   | embedder.embeddings.dropout                          | Dropout           | 0     
+7   | embedder.encoder                                     | BertEncoder       | 302 M 
+8   | embedder.encoder.layer                               | ModuleList        | 302 M 
+9   | embedder.encoder.layer.0                             | BertLayer         | 12 M  
+10  | embedder.encoder.layer.0.attention                   | BertAttention     | 4 M   
+11  | embedder.encoder.layer.0.attention.self              | BertSelfAttention | 3 M   
+12  | embedder.encoder.layer.0.attention.self.query        | Linear            | 1 M   
+13  | embedder.encoder.layer.0.attention.self.key          | Linear            | 1 M   
+14  | embedder.encoder.layer.0.attention.self.value        | Linear            | 1 M   
+15  | embedder.encoder.layer.0.attention.self.dropout      | Dropout           | 0     
+16  | embedder.encoder.layer.0.attention.output            | BertSelfOutput    | 1 M   
+17  | embedder.encoder.layer.0.attention.output.dense      | Linear            | 1 M   
+18  | embedder.encoder.layer.0.attention.output.LayerNorm  | LayerNorm         | 2 K   
+19  | embedder.encoder.layer.0.attention.output.dropout    | Dropout           | 0     
+20  | embedder.encoder.layer.0.intermediate                | BertIntermediate  | 4 M   
+21  | embedder.encoder.layer.0.intermediate.dense          | Linear            | 4 M   
+22  | embedder.encoder.layer.0.output                      | BertOutput        | 4 M   
+23  | embedder.encoder.layer.0.output.dense                | Linear            | 4 M   
+24  | embedder.encoder.layer.0.output.LayerNorm            | LayerNorm         | 2 K   
+25  | embedder.encoder.layer.0.output.dropout              | Dropout           | 0     
+26  | embedder.encoder.layer.1                             | BertLayer         | 12 M  
+27  | embedder.encoder.layer.1.attention                   | BertAttention     | 4 M   
+28  | embedder.encoder.layer.1.attention.self              | BertSelfAttention | 3 M   
+29  | embedder.encoder.layer.1.attention.self.query        | Linear            | 1 M   
+30  | embedder.encoder.layer.1.attention.self.key          | Linear            | 1 M   
+31  | embedder.encoder.layer.1.attention.self.value        | Linear            | 1 M   
+32  | embedder.encoder.layer.1.attention.self.dropout      | Dropout           | 0     
+33  | embedder.encoder.layer.1.attention.output            | BertSelfOutput    | 1 M   
+34  | embedder.encoder.layer.1.attention.output.dense      | Linear            | 1 M   
+35  | embedder.encoder.layer.1.attention.output.LayerNorm  | LayerNorm         | 2 K   
+36  | embedder.encoder.layer.1.attention.output.dropout    | Dropout           | 0     
+37  | embedder.encoder.layer.1.intermediate                | BertIntermediate  | 4 M   
+38  | embedder.encoder.layer.1.intermediate.dense          | Linear            | 4 M   
+39  | embedder.encoder.layer.1.output                      | BertOutput        | 4 M   
+40  | embedder.encoder.layer.1.output.dense                | Linear            | 4 M   
+41  | embedder.encoder.layer.1.output.LayerNorm            | LayerNorm         | 2 K   
+42  | embedder.encoder.layer.1.output.dropout              | Dropout           | 0     
+43  | embedder.encoder.layer.2                             | BertLayer         | 12 M  
+44  | embedder.encoder.layer.2.attention                   | BertAttention     | 4 M   
+45  | embedder.encoder.layer.2.attention.self              | BertSelfAttention | 3 M   
+46  | embedder.encoder.layer.2.attention.self.query        | Linear            | 1 M   
+47  | embedder.encoder.layer.2.attention.self.key          | Linear            | 1 M   
+48  | embedder.encoder.layer.2.attention.self.value        | Linear            | 1 M   
+49  | embedder.encoder.layer.2.attention.self.dropout      | Dropout           | 0     
+50  | embedder.encoder.layer.2.attention.output            | BertSelfOutput    | 1 M   
+51  | embedder.encoder.layer.2.attention.output.dense      | Linear            | 1 M   
+52  | embedder.encoder.layer.2.attention.output.LayerNorm  | LayerNorm         | 2 K   
+53  | embedder.encoder.layer.2.attention.output.dropout    | Dropout           | 0     
+54  | embedder.encoder.layer.2.intermediate                | BertIntermediate  | 4 M   
+55  | embedder.encoder.layer.2.intermediate.dense          | Linear            | 4 M   
+56  | embedder.encoder.layer.2.output                      | BertOutput        | 4 M   
+57  | embedder.encoder.layer.2.output.dense                | Linear            | 4 M   
+58  | embedder.encoder.layer.2.output.LayerNorm            | LayerNorm         | 2 K   
+59  | embedder.encoder.layer.2.output.dropout              | Dropout           | 0     
+60  | embedder.encoder.layer.3                             | BertLayer         | 12 M  
+61  | embedder.encoder.layer.3.attention                   | BertAttention     | 4 M   
+62  | embedder.encoder.layer.3.attention.self              | BertSelfAttention | 3 M   
+63  | embedder.encoder.layer.3.attention.self.query        | Linear            | 1 M   
+64  | embedder.encoder.layer.3.attention.self.key          | Linear            | 1 M   
+65  | embedder.encoder.layer.3.attention.self.value        | Linear            | 1 M   
+66  | embedder.encoder.layer.3.attention.self.dropout      | Dropout           | 0     
+67  | embedder.encoder.layer.3.attention.output            | BertSelfOutput    | 1 M   
+68  | embedder.encoder.layer.3.attention.output.dense      | Linear            | 1 M   
+69  | embedder.encoder.layer.3.attention.output.LayerNorm  | LayerNorm         | 2 K   
+70  | embedder.encoder.layer.3.attention.output.dropout    | Dropout           | 0     
+71  | embedder.encoder.layer.3.intermediate                | BertIntermediate  | 4 M   
+72  | embedder.encoder.layer.3.intermediate.dense          | Linear            | 4 M   
+73  | embedder.encoder.layer.3.output                      | BertOutput        | 4 M   
+74  | embedder.encoder.layer.3.output.dense                | Linear            | 4 M   
+75  | embedder.encoder.layer.3.output.LayerNorm            | LayerNorm         | 2 K   
+76  | embedder.encoder.layer.3.output.dropout              | Dropout           | 0     
+77  | embedder.encoder.layer.4                             | BertLayer         | 12 M  
+78  | embedder.encoder.layer.4.attention                   | BertAttention     | 4 M   
+79  | embedder.encoder.layer.4.attention.self              | BertSelfAttention | 3 M   
+80  | embedder.encoder.layer.4.attention.self.query        | Linear            | 1 M   
+81  | embedder.encoder.layer.4.attention.self.key          | Linear            | 1 M   
+82  | embedder.encoder.layer.4.attention.self.value        | Linear            | 1 M   
+83  | embedder.encoder.layer.4.attention.self.dropout      | Dropout           | 0     
+84  | embedder.encoder.layer.4.attention.output            | BertSelfOutput    | 1 M   
+85  | embedder.encoder.layer.4.attention.output.dense      | Linear            | 1 M   
+86  | embedder.encoder.layer.4.attention.output.LayerNorm  | LayerNorm         | 2 K   
+87  | embedder.encoder.layer.4.attention.output.dropout    | Dropout           | 0     
+88  | embedder.encoder.layer.4.intermediate                | BertIntermediate  | 4 M   
+89  | embedder.encoder.layer.4.intermediate.dense          | Linear            | 4 M   
+90  | embedder.encoder.layer.4.output                      | BertOutput        | 4 M   
+91  | embedder.encoder.layer.4.output.dense                | Linear            | 4 M   
+92  | embedder.encoder.layer.4.output.LayerNorm            | LayerNorm         | 2 K   
+93  | embedder.encoder.layer.4.output.dropout              | Dropout           | 0     
+94  | embedder.encoder.layer.5                             | BertLayer         | 12 M  
+95  | embedder.encoder.layer.5.attention                   | BertAttention     | 4 M   
+96  | embedder.encoder.layer.5.attention.self              | BertSelfAttention | 3 M   
+97  | embedder.encoder.layer.5.attention.self.query        | Linear            | 1 M   
+98  | embedder.encoder.layer.5.attention.self.key          | Linear            | 1 M   
+99  | embedder.encoder.layer.5.attention.self.value        | Linear            | 1 M   
+100 | embedder.encoder.layer.5.attention.self.dropout      | Dropout           | 0     
+101 | embedder.encoder.layer.5.attention.output            | BertSelfOutput    | 1 M   
+102 | embedder.encoder.layer.5.attention.output.dense      | Linear            | 1 M   
+103 | embedder.encoder.layer.5.attention.output.LayerNorm  | LayerNorm         | 2 K   
+104 | embedder.encoder.layer.5.attention.output.dropout    | Dropout           | 0     
+105 | embedder.encoder.layer.5.intermediate                | BertIntermediate  | 4 M   
+106 | embedder.encoder.layer.5.intermediate.dense          | Linear            | 4 M   
+107 | embedder.encoder.layer.5.output                      | BertOutput        | 4 M   
+108 | embedder.encoder.layer.5.output.dense                | Linear            | 4 M   
+109 | embedder.encoder.layer.5.output.LayerNorm            | LayerNorm         | 2 K   
+110 | embedder.encoder.layer.5.output.dropout              | Dropout           | 0     
+111 | embedder.encoder.layer.6                             | BertLayer         | 12 M  
+112 | embedder.encoder.layer.6.attention                   | BertAttention     | 4 M   
+113 | embedder.encoder.layer.6.attention.self              | BertSelfAttention | 3 M   
+114 | embedder.encoder.layer.6.attention.self.query        | Linear            | 1 M   
+115 | embedder.encoder.layer.6.attention.self.key          | Linear            | 1 M   
+116 | embedder.encoder.layer.6.attention.self.value        | Linear            | 1 M   
+117 | embedder.encoder.layer.6.attention.self.dropout      | Dropout           | 0     
+118 | embedder.encoder.layer.6.attention.output            | BertSelfOutput    | 1 M   
+119 | embedder.encoder.layer.6.attention.output.dense      | Linear            | 1 M   
+120 | embedder.encoder.layer.6.attention.output.LayerNorm  | LayerNorm         | 2 K   
+121 | embedder.encoder.layer.6.attention.output.dropout    | Dropout           | 0     
+122 | embedder.encoder.layer.6.intermediate                | BertIntermediate  | 4 M   
+123 | embedder.encoder.layer.6.intermediate.dense          | Linear            | 4 M   
+124 | embedder.encoder.layer.6.output                      | BertOutput        | 4 M   
+125 | embedder.encoder.layer.6.output.dense                | Linear            | 4 M   
+126 | embedder.encoder.layer.6.output.LayerNorm            | LayerNorm         | 2 K   
+127 | embedder.encoder.layer.6.output.dropout              | Dropout           | 0     
+128 | embedder.encoder.layer.7                             | BertLayer         | 12 M  
+129 | embedder.encoder.layer.7.attention                   | BertAttention     | 4 M   
+130 | embedder.encoder.layer.7.attention.self              | BertSelfAttention | 3 M   
+131 | embedder.encoder.layer.7.attention.self.query        | Linear            | 1 M   
+132 | embedder.encoder.layer.7.attention.self.key          | Linear            | 1 M   
+133 | embedder.encoder.layer.7.attention.self.value        | Linear            | 1 M   
+134 | embedder.encoder.layer.7.attention.self.dropout      | Dropout           | 0     
+135 | embedder.encoder.layer.7.attention.output            | BertSelfOutput    | 1 M   
+136 | embedder.encoder.layer.7.attention.output.dense      | Linear            | 1 M   
+137 | embedder.encoder.layer.7.attention.output.LayerNorm  | LayerNorm         | 2 K   
+138 | embedder.encoder.layer.7.attention.output.dropout    | Dropout           | 0     
+139 | embedder.encoder.layer.7.intermediate                | BertIntermediate  | 4 M   
+140 | embedder.encoder.layer.7.intermediate.dense          | Linear            | 4 M   
+141 | embedder.encoder.layer.7.output                      | BertOutput        | 4 M   
+142 | embedder.encoder.layer.7.output.dense                | Linear            | 4 M   
+143 | embedder.encoder.layer.7.output.LayerNorm            | LayerNorm         | 2 K   
+144 | embedder.encoder.layer.7.output.dropout              | Dropout           | 0     
+145 | embedder.encoder.layer.8                             | BertLayer         | 12 M  
+146 | embedder.encoder.layer.8.attention                   | BertAttention     | 4 M   
+147 | embedder.encoder.layer.8.attention.self              | BertSelfAttention | 3 M   
+148 | embedder.encoder.layer.8.attention.self.query        | Linear            | 1 M   
+149 | embedder.encoder.layer.8.attention.self.key          | Linear            | 1 M   
+150 | embedder.encoder.layer.8.attention.self.value        | Linear            | 1 M   
+151 | embedder.encoder.layer.8.attention.self.dropout      | Dropout           | 0     
+152 | embedder.encoder.layer.8.attention.output            | BertSelfOutput    | 1 M   
+153 | embedder.encoder.layer.8.attention.output.dense      | Linear            | 1 M   
+154 | embedder.encoder.layer.8.attention.output.LayerNorm  | LayerNorm         | 2 K   
+155 | embedder.encoder.layer.8.attention.output.dropout    | Dropout           | 0     
+156 | embedder.encoder.layer.8.intermediate                | BertIntermediate  | 4 M   
+157 | embedder.encoder.layer.8.intermediate.dense          | Linear            | 4 M   
+158 | embedder.encoder.layer.8.output                      | BertOutput        | 4 M   
+159 | embedder.encoder.layer.8.output.dense                | Linear            | 4 M   
+160 | embedder.encoder.layer.8.output.LayerNorm            | LayerNorm         | 2 K   
+161 | embedder.encoder.layer.8.output.dropout              | Dropout           | 0     
+162 | embedder.encoder.layer.9                             | BertLayer         | 12 M  
+163 | embedder.encoder.layer.9.attention                   | BertAttention     | 4 M   
+164 | embedder.encoder.layer.9.attention.self              | BertSelfAttention | 3 M   
+165 | embedder.encoder.layer.9.attention.self.query        | Linear            | 1 M   
+166 | embedder.encoder.layer.9.attention.self.key          | Linear            | 1 M   
+167 | embedder.encoder.layer.9.attention.self.value        | Linear            | 1 M   
+168 | embedder.encoder.layer.9.attention.self.dropout      | Dropout           | 0     
+169 | embedder.encoder.layer.9.attention.output            | BertSelfOutput    | 1 M   
+170 | embedder.encoder.layer.9.attention.output.dense      | Linear            | 1 M   
+171 | embedder.encoder.layer.9.attention.output.LayerNorm  | LayerNorm         | 2 K   
+172 | embedder.encoder.layer.9.attention.output.dropout    | Dropout           | 0     
+173 | embedder.encoder.layer.9.intermediate                | BertIntermediate  | 4 M   
+174 | embedder.encoder.layer.9.intermediate.dense          | Linear            | 4 M   
+175 | embedder.encoder.layer.9.output                      | BertOutput        | 4 M   
+176 | embedder.encoder.layer.9.output.dense                | Linear            | 4 M   
+177 | embedder.encoder.layer.9.output.LayerNorm            | LayerNorm         | 2 K   
+178 | embedder.encoder.layer.9.output.dropout              | Dropout           | 0     
+179 | embedder.encoder.layer.10                            | BertLayer         | 12 M  
+180 | embedder.encoder.layer.10.attention                  | BertAttention     | 4 M   
+181 | embedder.encoder.layer.10.attention.self             | BertSelfAttention | 3 M   
+182 | embedder.encoder.layer.10.attention.self.query       | Linear            | 1 M   
+183 | embedder.encoder.layer.10.attention.self.key         | Linear            | 1 M   
+184 | embedder.encoder.layer.10.attention.self.value       | Linear            | 1 M   
+185 | embedder.encoder.layer.10.attention.self.dropout     | Dropout           | 0     
+186 | embedder.encoder.layer.10.attention.output           | BertSelfOutput    | 1 M   
+187 | embedder.encoder.layer.10.attention.output.dense     | Linear            | 1 M   
+188 | embedder.encoder.layer.10.attention.output.LayerNorm | LayerNorm         | 2 K   
+189 | embedder.encoder.layer.10.attention.output.dropout   | Dropout           | 0     
+190 | embedder.encoder.layer.10.intermediate               | BertIntermediate  | 4 M   
+191 | embedder.encoder.layer.10.intermediate.dense         | Linear            | 4 M   
+192 | embedder.encoder.layer.10.output                     | BertOutput        | 4 M   
+193 | embedder.encoder.layer.10.output.dense               | Linear            | 4 M   
+194 | embedder.encoder.layer.10.output.LayerNorm           | LayerNorm         | 2 K   
+195 | embedder.encoder.layer.10.output.dropout             | Dropout           | 0     
+196 | embedder.encoder.layer.11                            | BertLayer         | 12 M  
+197 | embedder.encoder.layer.11.attention                  | BertAttention     | 4 M   
+198 | embedder.encoder.layer.11.attention.self             | BertSelfAttention | 3 M   
+199 | embedder.encoder.layer.11.attention.self.query       | Linear            | 1 M   
+200 | embedder.encoder.layer.11.attention.self.key         | Linear            | 1 M   
+201 | embedder.encoder.layer.11.attention.self.value       | Linear            | 1 M   
+202 | embedder.encoder.layer.11.attention.self.dropout     | Dropout           | 0     
+203 | embedder.encoder.layer.11.attention.output           | BertSelfOutput    | 1 M   
+204 | embedder.encoder.layer.11.attention.output.dense     | Linear            | 1 M   
+205 | embedder.encoder.layer.11.attention.output.LayerNorm | LayerNorm         | 2 K   
+206 | embedder.encoder.layer.11.attention.output.dropout   | Dropout           | 0     
+207 | embedder.encoder.layer.11.intermediate               | BertIntermediate  | 4 M   
+208 | embedder.encoder.layer.11.intermediate.dense         | Linear            | 4 M   
+209 | embedder.encoder.layer.11.output                     | BertOutput        | 4 M   
+210 | embedder.encoder.layer.11.output.dense               | Linear            | 4 M   
+211 | embedder.encoder.layer.11.output.LayerNorm           | LayerNorm         | 2 K   
+212 | embedder.encoder.layer.11.output.dropout             | Dropout           | 0     
+213 | embedder.encoder.layer.12                            | BertLayer         | 12 M  
+214 | embedder.encoder.layer.12.attention                  | BertAttention     | 4 M   
+215 | embedder.encoder.layer.12.attention.self             | BertSelfAttention | 3 M   
+216 | embedder.encoder.layer.12.attention.self.query       | Linear            | 1 M   
+217 | embedder.encoder.layer.12.attention.self.key         | Linear            | 1 M   
+218 | embedder.encoder.layer.12.attention.self.value       | Linear            | 1 M   
+219 | embedder.encoder.layer.12.attention.self.dropout     | Dropout           | 0     
+220 | embedder.encoder.layer.12.attention.output           | BertSelfOutput    | 1 M   
+221 | embedder.encoder.layer.12.attention.output.dense     | Linear            | 1 M   
+222 | embedder.encoder.layer.12.attention.output.LayerNorm | LayerNorm         | 2 K   
+223 | embedder.encoder.layer.12.attention.output.dropout   | Dropout           | 0     
+224 | embedder.encoder.layer.12.intermediate               | BertIntermediate  | 4 M   
+225 | embedder.encoder.layer.12.intermediate.dense         | Linear            | 4 M   
+226 | embedder.encoder.layer.12.output                     | BertOutput        | 4 M   
+227 | embedder.encoder.layer.12.output.dense               | Linear            | 4 M   
+228 | embedder.encoder.layer.12.output.LayerNorm           | LayerNorm         | 2 K   
+229 | embedder.encoder.layer.12.output.dropout             | Dropout           | 0     
+230 | embedder.encoder.layer.13                            | BertLayer         | 12 M  
+231 | embedder.encoder.layer.13.attention                  | BertAttention     | 4 M   
+232 | embedder.encoder.layer.13.attention.self             | BertSelfAttention | 3 M   
+233 | embedder.encoder.layer.13.attention.self.query       | Linear            | 1 M   
+234 | embedder.encoder.layer.13.attention.self.key         | Linear            | 1 M   
+235 | embedder.encoder.layer.13.attention.self.value       | Linear            | 1 M   
+236 | embedder.encoder.layer.13.attention.self.dropout     | Dropout           | 0     
+237 | embedder.encoder.layer.13.attention.output           | BertSelfOutput    | 1 M   
+238 | embedder.encoder.layer.13.attention.output.dense     | Linear            | 1 M   
+239 | embedder.encoder.layer.13.attention.output.LayerNorm | LayerNorm         | 2 K   
+240 | embedder.encoder.layer.13.attention.output.dropout   | Dropout           | 0     
+241 | embedder.encoder.layer.13.intermediate               | BertIntermediate  | 4 M   
+242 | embedder.encoder.layer.13.intermediate.dense         | Linear            | 4 M   
+243 | embedder.encoder.layer.13.output                     | BertOutput        | 4 M   
+244 | embedder.encoder.layer.13.output.dense               | Linear            | 4 M   
+245 | embedder.encoder.layer.13.output.LayerNorm           | LayerNorm         | 2 K   
+246 | embedder.encoder.layer.13.output.dropout             | Dropout           | 0     
+247 | embedder.encoder.layer.14                            | BertLayer         | 12 M  
+248 | embedder.encoder.layer.14.attention                  | BertAttention     | 4 M   
+249 | embedder.encoder.layer.14.attention.self             | BertSelfAttention | 3 M   
+250 | embedder.encoder.layer.14.attention.self.query       | Linear            | 1 M   
+251 | embedder.encoder.layer.14.attention.self.key         | Linear            | 1 M   
+252 | embedder.encoder.layer.14.attention.self.value       | Linear            | 1 M   
+253 | embedder.encoder.layer.14.attention.self.dropout     | Dropout           | 0     
+254 | embedder.encoder.layer.14.attention.output           | BertSelfOutput    | 1 M   
+255 | embedder.encoder.layer.14.attention.output.dense     | Linear            | 1 M   
+256 | embedder.encoder.layer.14.attention.output.LayerNorm | LayerNorm         | 2 K   
+257 | embedder.encoder.layer.14.attention.output.dropout   | Dropout           | 0     
+258 | embedder.encoder.layer.14.intermediate               | BertIntermediate  | 4 M   
+259 | embedder.encoder.layer.14.intermediate.dense         | Linear            | 4 M   
+260 | embedder.encoder.layer.14.output                     | BertOutput        | 4 M   
+261 | embedder.encoder.layer.14.output.dense               | Linear            | 4 M   
+262 | embedder.encoder.layer.14.output.LayerNorm           | LayerNorm         | 2 K   
+263 | embedder.encoder.layer.14.output.dropout             | Dropout           | 0     
+264 | embedder.encoder.layer.15                            | BertLayer         | 12 M  
+265 | embedder.encoder.layer.15.attention                  | BertAttention     | 4 M   
+266 | embedder.encoder.layer.15.attention.self             | BertSelfAttention | 3 M   
+267 | embedder.encoder.layer.15.attention.self.query       | Linear            | 1 M   
+268 | embedder.encoder.layer.15.attention.self.key         | Linear            | 1 M   
+269 | embedder.encoder.layer.15.attention.self.value       | Linear            | 1 M   
+270 | embedder.encoder.layer.15.attention.self.dropout     | Dropout           | 0     
+271 | embedder.encoder.layer.15.attention.output           | BertSelfOutput    | 1 M   
+272 | embedder.encoder.layer.15.attention.output.dense     | Linear            | 1 M   
+273 | embedder.encoder.layer.15.attention.output.LayerNorm | LayerNorm         | 2 K   
+274 | embedder.encoder.layer.15.attention.output.dropout   | Dropout           | 0     
+275 | embedder.encoder.layer.15.intermediate               | BertIntermediate  | 4 M   
+276 | embedder.encoder.layer.15.intermediate.dense         | Linear            | 4 M   
+277 | embedder.encoder.layer.15.output                     | BertOutput        | 4 M   
+278 | embedder.encoder.layer.15.output.dense               | Linear            | 4 M   
+279 | embedder.encoder.layer.15.output.LayerNorm           | LayerNorm         | 2 K   
+280 | embedder.encoder.layer.15.output.dropout             | Dropout           | 0     
+281 | embedder.encoder.layer.16                            | BertLayer         | 12 M  
+282 | embedder.encoder.layer.16.attention                  | BertAttention     | 4 M   
+283 | embedder.encoder.layer.16.attention.self             | BertSelfAttention | 3 M   
+284 | embedder.encoder.layer.16.attention.self.query       | Linear            | 1 M   
+285 | embedder.encoder.layer.16.attention.self.key         | Linear            | 1 M   
+286 | embedder.encoder.layer.16.attention.self.value       | Linear            | 1 M   
+287 | embedder.encoder.layer.16.attention.self.dropout     | Dropout           | 0     
+288 | embedder.encoder.layer.16.attention.output           | BertSelfOutput    | 1 M   
+289 | embedder.encoder.layer.16.attention.output.dense     | Linear            | 1 M   
+290 | embedder.encoder.layer.16.attention.output.LayerNorm | LayerNorm         | 2 K   
+291 | embedder.encoder.layer.16.attention.output.dropout   | Dropout           | 0     
+292 | embedder.encoder.layer.16.intermediate               | BertIntermediate  | 4 M   
+293 | embedder.encoder.layer.16.intermediate.dense         | Linear            | 4 M   
+294 | embedder.encoder.layer.16.output                     | BertOutput        | 4 M   
+295 | embedder.encoder.layer.16.output.dense               | Linear            | 4 M   
+296 | embedder.encoder.layer.16.output.LayerNorm           | LayerNorm         | 2 K   
+297 | embedder.encoder.layer.16.output.dropout             | Dropout           | 0     
+298 | embedder.encoder.layer.17                            | BertLayer         | 12 M  
+299 | embedder.encoder.layer.17.attention                  | BertAttention     | 4 M   
+300 | embedder.encoder.layer.17.attention.self             | BertSelfAttention | 3 M   
+301 | embedder.encoder.layer.17.attention.self.query       | Linear            | 1 M   
+302 | embedder.encoder.layer.17.attention.self.key         | Linear            | 1 M   
+303 | embedder.encoder.layer.17.attention.self.value       | Linear            | 1 M   
+304 | embedder.encoder.layer.17.attention.self.dropout     | Dropout           | 0     
+305 | embedder.encoder.layer.17.attention.output           | BertSelfOutput    | 1 M   
+306 | embedder.encoder.layer.17.attention.output.dense     | Linear            | 1 M   
+307 | embedder.encoder.layer.17.attention.output.LayerNorm | LayerNorm         | 2 K   
+308 | embedder.encoder.layer.17.attention.output.dropout   | Dropout           | 0     
+309 | embedder.encoder.layer.17.intermediate               | BertIntermediate  | 4 M   
+310 | embedder.encoder.layer.17.intermediate.dense         | Linear            | 4 M   
+311 | embedder.encoder.layer.17.output                     | BertOutput        | 4 M   
+312 | embedder.encoder.layer.17.output.dense               | Linear            | 4 M   
+313 | embedder.encoder.layer.17.output.LayerNorm           | LayerNorm         | 2 K   
+314 | embedder.encoder.layer.17.output.dropout             | Dropout           | 0     
+315 | embedder.encoder.layer.18                            | BertLayer         | 12 M  
+316 | embedder.encoder.layer.18.attention                  | BertAttention     | 4 M   
+317 | embedder.encoder.layer.18.attention.self             | BertSelfAttention | 3 M   
+318 | embedder.encoder.layer.18.attention.self.query       | Linear            | 1 M   
+319 | embedder.encoder.layer.18.attention.self.key         | Linear            | 1 M   
+320 | embedder.encoder.layer.18.attention.self.value       | Linear            | 1 M   
+321 | embedder.encoder.layer.18.attention.self.dropout     | Dropout           | 0     
+322 | embedder.encoder.layer.18.attention.output           | BertSelfOutput    | 1 M   
+323 | embedder.encoder.layer.18.attention.output.dense     | Linear            | 1 M   
+324 | embedder.encoder.layer.18.attention.output.LayerNorm | LayerNorm         | 2 K   
+325 | embedder.encoder.layer.18.attention.output.dropout   | Dropout           | 0     
+326 | embedder.encoder.layer.18.intermediate               | BertIntermediate  | 4 M   
+327 | embedder.encoder.layer.18.intermediate.dense         | Linear            | 4 M   
+328 | embedder.encoder.layer.18.output                     | BertOutput        | 4 M   
+329 | embedder.encoder.layer.18.output.dense               | Linear            | 4 M   
+330 | embedder.encoder.layer.18.output.LayerNorm           | LayerNorm         | 2 K   
+331 | embedder.encoder.layer.18.output.dropout             | Dropout           | 0     
+332 | embedder.encoder.layer.19                            | BertLayer         | 12 M  
+333 | embedder.encoder.layer.19.attention                  | BertAttention     | 4 M   
+334 | embedder.encoder.layer.19.attention.self             | BertSelfAttention | 3 M   
+335 | embedder.encoder.layer.19.attention.self.query       | Linear            | 1 M   
+336 | embedder.encoder.layer.19.attention.self.key         | Linear            | 1 M   
+337 | embedder.encoder.layer.19.attention.self.value       | Linear            | 1 M   
+338 | embedder.encoder.layer.19.attention.self.dropout     | Dropout           | 0     
+339 | embedder.encoder.layer.19.attention.output           | BertSelfOutput    | 1 M   
+340 | embedder.encoder.layer.19.attention.output.dense     | Linear            | 1 M   
+341 | embedder.encoder.layer.19.attention.output.LayerNorm | LayerNorm         | 2 K   
+342 | embedder.encoder.layer.19.attention.output.dropout   | Dropout           | 0     
+343 | embedder.encoder.layer.19.intermediate               | BertIntermediate  | 4 M   
+344 | embedder.encoder.layer.19.intermediate.dense         | Linear            | 4 M   
+345 | embedder.encoder.layer.19.output                     | BertOutput        | 4 M   
+346 | embedder.encoder.layer.19.output.dense               | Linear            | 4 M   
+347 | embedder.encoder.layer.19.output.LayerNorm           | LayerNorm         | 2 K   
+348 | embedder.encoder.layer.19.output.dropout             | Dropout           | 0     
+349 | embedder.encoder.layer.20                            | BertLayer         | 12 M  
+350 | embedder.encoder.layer.20.attention                  | BertAttention     | 4 M   
+351 | embedder.encoder.layer.20.attention.self             | BertSelfAttention | 3 M   
+352 | embedder.encoder.layer.20.attention.self.query       | Linear            | 1 M   
+353 | embedder.encoder.layer.20.attention.self.key         | Linear            | 1 M   
+354 | embedder.encoder.layer.20.attention.self.value       | Linear            | 1 M   
+355 | embedder.encoder.layer.20.attention.self.dropout     | Dropout           | 0     
+356 | embedder.encoder.layer.20.attention.output           | BertSelfOutput    | 1 M   
+357 | embedder.encoder.layer.20.attention.output.dense     | Linear            | 1 M   
+358 | embedder.encoder.layer.20.attention.output.LayerNorm | LayerNorm         | 2 K   
+359 | embedder.encoder.layer.20.attention.output.dropout   | Dropout           | 0     
+360 | embedder.encoder.layer.20.intermediate               | BertIntermediate  | 4 M   
+361 | embedder.encoder.layer.20.intermediate.dense         | Linear            | 4 M   
+362 | embedder.encoder.layer.20.output                     | BertOutput        | 4 M   
+363 | embedder.encoder.layer.20.output.dense               | Linear            | 4 M   
+364 | embedder.encoder.layer.20.output.LayerNorm           | LayerNorm         | 2 K   
+365 | embedder.encoder.layer.20.output.dropout             | Dropout           | 0     
+366 | embedder.encoder.layer.21                            | BertLayer         | 12 M  
+367 | embedder.encoder.layer.21.attention                  | BertAttention     | 4 M   
+368 | embedder.encoder.layer.21.attention.self             | BertSelfAttention | 3 M   
+369 | embedder.encoder.layer.21.attention.self.query       | Linear            | 1 M   
+370 | embedder.encoder.layer.21.attention.self.key         | Linear            | 1 M   
+371 | embedder.encoder.layer.21.attention.self.value       | Linear            | 1 M   
+372 | embedder.encoder.layer.21.attention.self.dropout     | Dropout           | 0     
+373 | embedder.encoder.layer.21.attention.output           | BertSelfOutput    | 1 M   
+374 | embedder.encoder.layer.21.attention.output.dense     | Linear            | 1 M   
+375 | embedder.encoder.layer.21.attention.output.LayerNorm | LayerNorm         | 2 K   
+376 | embedder.encoder.layer.21.attention.output.dropout   | Dropout           | 0     
+377 | embedder.encoder.layer.21.intermediate               | BertIntermediate  | 4 M   
+378 | embedder.encoder.layer.21.intermediate.dense         | Linear            | 4 M   
+379 | embedder.encoder.layer.21.output                     | BertOutput        | 4 M   
+380 | embedder.encoder.layer.21.output.dense               | Linear            | 4 M   
+381 | embedder.encoder.layer.21.output.LayerNorm           | LayerNorm         | 2 K   
+382 | embedder.encoder.layer.21.output.dropout             | Dropout           | 0     
+383 | embedder.encoder.layer.22                            | BertLayer         | 12 M  
+384 | embedder.encoder.layer.22.attention                  | BertAttention     | 4 M   
+385 | embedder.encoder.layer.22.attention.self             | BertSelfAttention | 3 M   
+386 | embedder.encoder.layer.22.attention.self.query       | Linear            | 1 M   
+387 | embedder.encoder.layer.22.attention.self.key         | Linear            | 1 M   
+388 | embedder.encoder.layer.22.attention.self.value       | Linear            | 1 M   
+389 | embedder.encoder.layer.22.attention.self.dropout     | Dropout           | 0     
+390 | embedder.encoder.layer.22.attention.output           | BertSelfOutput    | 1 M   
+391 | embedder.encoder.layer.22.attention.output.dense     | Linear            | 1 M   
+392 | embedder.encoder.layer.22.attention.output.LayerNorm | LayerNorm         | 2 K   
+393 | embedder.encoder.layer.22.attention.output.dropout   | Dropout           | 0     
+394 | embedder.encoder.layer.22.intermediate               | BertIntermediate  | 4 M   
+395 | embedder.encoder.layer.22.intermediate.dense         | Linear            | 4 M   
+396 | embedder.encoder.layer.22.output                     | BertOutput        | 4 M   
+397 | embedder.encoder.layer.22.output.dense               | Linear            | 4 M   
+398 | embedder.encoder.layer.22.output.LayerNorm           | LayerNorm         | 2 K   
+399 | embedder.encoder.layer.22.output.dropout             | Dropout           | 0     
+400 | embedder.encoder.layer.23                            | BertLayer         | 12 M  
+401 | embedder.encoder.layer.23.attention                  | BertAttention     | 4 M   
+402 | embedder.encoder.layer.23.attention.self             | BertSelfAttention | 3 M   
+403 | embedder.encoder.layer.23.attention.self.query       | Linear            | 1 M   
+404 | embedder.encoder.layer.23.attention.self.key         | Linear            | 1 M   
+405 | embedder.encoder.layer.23.attention.self.value       | Linear            | 1 M   
+406 | embedder.encoder.layer.23.attention.self.dropout     | Dropout           | 0     
+407 | embedder.encoder.layer.23.attention.output           | BertSelfOutput    | 1 M   
+408 | embedder.encoder.layer.23.attention.output.dense     | Linear            | 1 M   
+409 | embedder.encoder.layer.23.attention.output.LayerNorm | LayerNorm         | 2 K   
+410 | embedder.encoder.layer.23.attention.output.dropout   | Dropout           | 0     
+411 | embedder.encoder.layer.23.intermediate               | BertIntermediate  | 4 M   
+412 | embedder.encoder.layer.23.intermediate.dense         | Linear            | 4 M   
+413 | embedder.encoder.layer.23.output                     | BertOutput        | 4 M   
+414 | embedder.encoder.layer.23.output.dense               | Linear            | 4 M   
+415 | embedder.encoder.layer.23.output.LayerNorm           | LayerNorm         | 2 K   
+416 | embedder.encoder.layer.23.output.dropout             | Dropout           | 0     
+417 | embedder.pooler                                      | BertPooler        | 1 M   
+418 | embedder.pooler.dense                                | Linear            | 1 M   
+419 | embedder.pooler.activation                           | Tanh              | 0     
+420 | classifier                                           | Linear            | 1 K   
+421 | loss                                                 | CrossEntropyLoss  | 0     
+                                     id  ...                                               text
+0  c36c629e-12e9-43cc-8936-e1a96d869ab0  ...  [(How do I ready a guinea pig cage for it's ne...
+1  fe68f9ec-09fd-436e-bcaf-07863711ec2b  ...  [(dresser, replace drawer with bobby pin ), (d...
+2  d73182e6-6916-48a0-b31f-2137e350776f  ...  [(To fight Ivan Drago in Rocky for sega master...
+3  fe32932f-87a6-4a99-bd48-4587d0c8444b  ...  [(Make outdoor pillow., Blow into tin can and ...
+4  1ea9030f-a902-42ce-8d22-f19c96ac17b4  ...  [(ice box, will turn into a cooler if you add ...
+
+[5 rows x 6 columns]
+Validation sanity check:   0%|          | 0/5 [00:00<?, ?it/s]Validation sanity check: 50it [00:01, 32.43it/s]                                                              0it [00:00, ?it/s]                                     id  ...                                               text
+0  f6be5fcc-d686-4549-8207-7904068693d7  ...  [(When boiling butter, when it's ready, you ca...
+1  ee9783b5-76a7-4beb-bbbb-9b179b11c43e  ...  [(To permanently attach metal legs to a chair,...
+2  7230f9f4-06f7-4eb3-9994-762957427a96  ...  [(how do you indent something?, leave a space ...
+3  e3304ee5-cdca-4830-b04d-a3a7cf77f6a9  ...  [(how do you shake something?, move it up and ...
+4  b316c350-d435-4d35-a101-92ed4c9fc14a  ...  [(Clean tires, Pour water, cape off caked on d...
+
+[5 rows x 6 columns]
+                                     id  ...                                               text
+0  c36c629e-12e9-43cc-8936-e1a96d869ab0  ...  [(How do I ready a guinea pig cage for it's ne...
+1  fe68f9ec-09fd-436e-bcaf-07863711ec2b  ...  [(dresser, replace drawer with bobby pin ), (d...
+2  d73182e6-6916-48a0-b31f-2137e350776f  ...  [(To fight Ivan Drago in Rocky for sega master...
+3  fe32932f-87a6-4a99-bd48-4587d0c8444b  ...  [(Make outdoor pillow., Blow into tin can and ...
+4  1ea9030f-a902-42ce-8d22-f19c96ac17b4  ...  [(ice box, will turn into a cooler if you add ...
+
+[5 rows x 6 columns]
+  0%|          | 0/12 [00:00<?, ?it/s]Epoch 1:   0%|          | 0/12 [00:00<?, ?it/s]Epoch 1: : 50it [00:02, 17.73it/s]             Epoch 1: : 50it [00:02, 17.73it/s, loss=0.000, v_num=0]
+Validating:   0%|          | 0/3 [00:00<?, ?it/s][A
+Validating: 50it [00:01, 37.61it/s]              [AEpoch 1: : 100it [00:04, 21.07it/s, loss=0.000, v_num=0]Epoch 1: : 100it [00:06, 21.07it/s, loss=0.000, v_num=0]
+                                   [A[2020-05-13 14:49:48,847][root][INFO] - 
+Epoch 00000: saving model to roberta-large-physicaliqa-s42/_ckpt_epoch_0.ckpt
+
+Validating:   0%|          | 0/3 [00:00<?, ?it/s][A
+Validating: 50it [00:01, 28.19it/s]              [AEpoch 1: : 150it [00:13, 11.33it/s, loss=0.000, v_num=0]Epoch 1: : 150it [00:15, 11.33it/s, loss=0.000, v_num=0]
+                                   [A[2020-05-13 14:49:58,392][root][INFO] - 
+Epoch 00000: saving model to roberta-large-physicaliqa-s42/_ckpt_epoch_0_v0.ckpt
+
+Validating:   0%|          | 0/3 [00:00<?, ?it/s][A
+Validating: 50it [00:01, 27.07it/s]              [AEpoch 1: : 200it [00:20,  9.67it/s, loss=0.000, v_num=0]Epoch 1: : 200it [00:22,  9.67it/s, loss=0.000, v_num=0]
+                                   [A[2020-05-13 14:50:05,498][root][INFO] - 
+Epoch 00000: saving model to roberta-large-physicaliqa-s42/_ckpt_epoch_0_v1.ckpt
+Epoch 1:   0%|          | 0/12 [00:00<00:01,  9.67it/s, loss=0.000, v_num=0]Epoch 2:   0%|          | 0/12 [00:00<00:01,  9.67it/s, loss=0.000, v_num=0]Epoch 2: : 50it [00:02, 11.19it/s, loss=0.000, v_num=0]                     Epoch 2: : 50it [00:02, 11.19it/s, loss=0.000, v_num=0]
+Validating:   0%|          | 0/3 [00:00<?, ?it/s][A
+Validating: 50it [00:01, 27.37it/s]              [AEpoch 2: : 100it [00:04, 13.60it/s, loss=0.000, v_num=0]Epoch 2: : 100it [00:07, 13.60it/s, loss=0.000, v_num=0]
+                                   [A[2020-05-13 14:50:13,170][root][INFO] - 
+Epoch 00001: saving model to roberta-large-physicaliqa-s42/_ckpt_epoch_1.ckpt
+
+Validating:   0%|          | 0/3 [00:00<?, ?it/s][A
+Validating: 50it [00:01, 28.37it/s]              [AEpoch 2: : 150it [00:14,  9.04it/s, loss=0.000, v_num=0]Epoch 2: : 150it [00:16,  9.04it/s, loss=0.000, v_num=0]
+                                   [A[2020-05-13 14:50:22,929][root][INFO] - 
+Epoch 00001: saving model to roberta-large-physicaliqa-s42/_ckpt_epoch_1_v0.ckpt
+
+Validating:   0%|          | 0/3 [00:00<?, ?it/s][A
+Validating: 50it [00:01, 25.50it/s]              [AEpoch 2: : 200it [00:22,  8.15it/s, loss=0.000, v_num=0]Epoch 2: : 200it [00:24,  8.15it/s, loss=0.000, v_num=0]
+                                   [A[2020-05-13 14:50:30,529][root][INFO] - 
+Epoch 00001: saving model to roberta-large-physicaliqa-s42/_ckpt_epoch_1_v1.ckpt
+Epoch 2:   0%|          | 0/12 [00:00<00:01,  8.15it/s, loss=0.000, v_num=0]Epoch 3:   0%|          | 0/12 [00:00<00:01,  8.15it/s, loss=0.000, v_num=0]Epoch 3: : 50it [00:02,  9.75it/s, loss=0.000, v_num=0]                     Epoch 3: : 50it [00:02,  9.75it/s, loss=0.000, v_num=0]
+Validating:   0%|          | 0/3 [00:00<?, ?it/s][A
+Validating: 50it [00:01, 26.01it/s]              [AEpoch 3: : 100it [00:04, 12.00it/s, loss=0.000, v_num=0]Epoch 3: : 100it [00:07, 12.00it/s, loss=0.000, v_num=0]
+                                   [A[2020-05-13 14:50:38,043][root][INFO] - 
+Epoch 00002: saving model to roberta-large-physicaliqa-s42/_ckpt_epoch_2.ckpt
+
+Validating:   0%|          | 0/3 [00:00<?, ?it/s][A
+Validating: 50it [00:02, 23.74it/s]              [AEpoch 3: : 150it [00:14,  8.46it/s, loss=0.000, v_num=0]Epoch 3: : 150it [00:17,  8.46it/s, loss=0.000, v_num=0]
+                                   [A[2020-05-13 14:50:48,639][root][INFO] - 
+Epoch 00002: saving model to roberta-large-physicaliqa-s42/_ckpt_epoch_2_v0.ckpt
+
+Validating:   0%|          | 0/3 [00:00<?, ?it/s][A
+Validating: 50it [00:02, 23.39it/s]              [AEpoch 3: : 200it [00:23,  7.46it/s, loss=0.000, v_num=0]Epoch 3: : 200it [00:26,  7.46it/s, loss=0.000, v_num=0]
+                                   [A[2020-05-13 14:50:57,249][root][INFO] - 
+Epoch 00002: saving model to roberta-large-physicaliqa-s42/_ckpt_epoch_2_v1.ckpt
+Epoch 3:   0%|          | 0/12 [00:00<00:01,  7.46it/s, loss=0.000, v_num=0]Epoch 4:   0%|          | 0/12 [00:00<00:01,  7.46it/s, loss=0.000, v_num=0]Epoch 4: : 50it [00:03,  8.78it/s, loss=0.000, v_num=0]                     Epoch 4: : 50it [00:03,  8.78it/s, loss=0.000, v_num=0]
+Validating:   0%|          | 0/3 [00:00<?, ?it/s][A
+Validating: 50it [00:02, 21.62it/s]              [AEpoch 4: : 100it [00:05, 10.68it/s, loss=0.000, v_num=0]Epoch 4: : 100it [00:08, 10.68it/s, loss=0.000, v_num=0]
+                                   [A[2020-05-13 14:51:06,500][root][INFO] - 
+Epoch 00003: saving model to roberta-large-physicaliqa-s42/_ckpt_epoch_3.ckpt
+
+Validating:   0%|          | 0/3 [00:00<?, ?it/s][A
+Validating: 50it [00:02, 24.48it/s]              [AEpoch 4: : 150it [00:17,  7.47it/s, loss=0.000, v_num=0]Epoch 4: : 150it [00:19,  7.47it/s, loss=0.000, v_num=0]
+                                   [A[2020-05-13 14:51:17,635][root][INFO] - 
+Epoch 00003: saving model to roberta-large-physicaliqa-s42/_ckpt_epoch_3_v0.ckpt
+
+Validating:   0%|          | 0/3 [00:00<?, ?it/s][A
+Validating: 50it [00:02, 23.13it/s]              [AEpoch 4: : 200it [00:25,  6.93it/s, loss=0.000, v_num=0]Epoch 4: : 200it [00:28,  6.93it/s, loss=0.000, v_num=0]
+                                   [A[2020-05-13 14:51:26,184][root][INFO] - 
+Epoch 00003: saving model to roberta-large-physicaliqa-s42/_ckpt_epoch_3_v1.ckpt
+Epoch 4: : 200it [00:29,  6.89it/s, loss=0.000, v_num=0]
+2020-05-13 14:51:26.811 | SUCCESS  | __main__:train:77 - Training Completed
+2020-05-13 14:51:26.812 | INFO     | __main__:train:80 - Start model evaluation
+                                     id  ...                                               text
+0  c36c629e-12e9-43cc-8936-e1a96d869ab0  ...  [(How do I ready a guinea pig cage for it's ne...
+1  fe68f9ec-09fd-436e-bcaf-07863711ec2b  ...  [(dresser, replace drawer with bobby pin ), (d...
+2  d73182e6-6916-48a0-b31f-2137e350776f  ...  [(To fight Ivan Drago in Rocky for sega master...
+3  fe32932f-87a6-4a99-bd48-4587d0c8444b  ...  [(Make outdoor pillow., Blow into tin can and ...
+4  1ea9030f-a902-42ce-8d22-f19c96ac17b4  ...  [(ice box, will turn into a cooler if you add ...
+
+[5 rows x 6 columns]
+  0%|          | 0/2 [00:00<?, ?it/s] 50%|█████     | 1/2 [00:04<00:04,  4.39s/it]100%|██████████| 2/2 [00:05<00:00,  3.31s/it]100%|██████████| 2/2 [00:05<00:00,  2.59s/it]
+2020-05-13 14:51:32.048 | INFO     | eval:evaluate:85 - Accuracy score: 0.500
+2020-05-13 14:51:32.068 | INFO     | eval:evaluate:98 - 95.0 confidence interval 20.0 and 80.0, average: 48.5

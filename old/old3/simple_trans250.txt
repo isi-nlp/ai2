@@ -1,0 +1,995 @@
+
+Profiler Report
+
+Profile stats for: on_validation_epoch_start
+         100 function calls in 0.000 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        5    0.000    0.000    0.000    0.000 callback_hook.py:78(on_validation_epoch_start)
+       10    0.000    0.000    0.000    0.000 training_io.py:177(get_model)
+        5    0.000    0.000    0.000    0.000 model_hooks.py:23(is_function_implemented)
+        5    0.000    0.000    0.000    0.000 contextlib.py:116(__exit__)
+        5    0.000    0.000    0.000    0.000 {built-in method builtins.next}
+        5    0.000    0.000    0.000    0.000 profilers.py:54(profile)
+       15    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        5    0.000    0.000    0.000    0.000 profilers.py:209(stop)
+       10    0.000    0.000    0.000    0.000 module.py:758(__getattr__)
+        5    0.000    0.000    0.000    0.000 base.py:76(on_validation_epoch_start)
+       10    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        5    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+        5    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+        5    0.000    0.000    0.000    0.000 hooks.py:229(on_validation_epoch_start)
+        5    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+
+Profile stats for: validation_step_end
+         136136 function calls in 0.770 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+     1001    0.022    0.000    0.763    0.001 model_a.py:106(validation_step_end)
+     5005    0.024    0.000    0.348    0.000 model_a.py:113(<genexpr>)
+     4004    0.028    0.000    0.282    0.000 module.py:710(_call_impl)
+     1001    0.277    0.000    0.277    0.000 {built-in method stack}
+     4004    0.012    0.000    0.245    0.000 loss.py:946(forward)
+     4004    0.021    0.000    0.230    0.000 functional.py:2370(cross_entropy)
+     4004    0.020    0.000    0.112    0.000 functional.py:2158(nll_loss)
+     4004    0.006    0.000    0.089    0.000 functional.py:1567(log_softmax)
+     4004    0.082    0.000    0.082    0.000 {method 'log_softmax' of 'torch._C._TensorBase' objects}
+     4004    0.078    0.000    0.078    0.000 {built-in method torch._C._nn.nll_loss}
+     1001    0.062    0.000    0.062    0.000 {built-in method tensor}
+     4004    0.028    0.000    0.028    0.000 {method 'reshape' of 'torch._C._TensorBase' objects}
+     1001    0.026    0.000    0.026    0.000 {method 'mean' of 'torch._C._TensorBase' objects}
+     2002    0.007    0.000    0.026    0.000 tensor.py:367(split)
+     8008    0.019    0.000    0.019    0.000 module.py:758(__getattr__)
+     1001    0.012    0.000    0.012    0.000 {method 'split_with_sizes' of 'torch._C._TensorBase' objects}
+     1001    0.007    0.000    0.007    0.000 {function Tensor.split at 0x7f4e50454c20}
+     1001    0.002    0.000    0.006    0.000 contextlib.py:116(__exit__)
+     8008    0.006    0.000    0.006    0.000 {method 'size' of 'torch._C._TensorBase' objects}
+     1001    0.001    0.000    0.004    0.000 {built-in method builtins.next}
+     4004    0.004    0.000    0.004    0.000 {built-in method torch._C._get_tracing_state}
+     4004    0.004    0.000    0.004    0.000 functional.py:2415(<listcomp>)
+     1001    0.001    0.000    0.004    0.000 profilers.py:54(profile)
+     4004    0.003    0.000    0.003    0.000 functional.py:2204(<listcomp>)
+     8008    0.003    0.000    0.003    0.000 {built-in method builtins.any}
+    16016    0.003    0.000    0.003    0.000 {method 'values' of 'collections.OrderedDict' objects}
+     1001    0.002    0.000    0.002    0.000 profilers.py:209(stop)
+    12012    0.002    0.000    0.002    0.000 __init__.py:2277(is_scripting)
+     4004    0.002    0.000    0.002    0.000 {method 'dim' of 'torch._C._TensorBase' objects}
+     4004    0.002    0.000    0.002    0.000 _reduction.py:7(get_enum)
+     8008    0.002    0.000    0.002    0.000 {built-in method builtins.len}
+     1001    0.001    0.000    0.001    0.000 device_dtype_mixin.py:37(device)
+     1001    0.001    0.000    0.001    0.000 {built-in method builtins.getattr}
+     3003    0.001    0.000    0.001    0.000 {built-in method builtins.isinstance}
+     1001    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+     1001    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+
+Profile stats for: on_validation_epoch_end
+         100 function calls in 0.000 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        5    0.000    0.000    0.000    0.000 callback_hook.py:83(on_validation_epoch_end)
+       10    0.000    0.000    0.000    0.000 training_io.py:177(get_model)
+        5    0.000    0.000    0.000    0.000 model_hooks.py:23(is_function_implemented)
+        5    0.000    0.000    0.000    0.000 contextlib.py:116(__exit__)
+        5    0.000    0.000    0.000    0.000 {built-in method builtins.next}
+        5    0.000    0.000    0.000    0.000 profilers.py:54(profile)
+       15    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        5    0.000    0.000    0.000    0.000 profilers.py:209(stop)
+        5    0.000    0.000    0.000    0.000 base.py:80(on_validation_epoch_end)
+       10    0.000    0.000    0.000    0.000 module.py:758(__getattr__)
+       10    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        5    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+        5    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+        5    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        5    0.000    0.000    0.000    0.000 hooks.py:235(on_validation_epoch_end)
+
+
+
+Profile stats for: on_train_start
+         139 function calls in 0.001 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.001    0.001 callback_hook.py:108(on_train_start)
+        1    0.000    0.000    0.001    0.001 progress.py:318(on_train_start)
+        1    0.000    0.000    0.001    0.001 progress.py:269(init_train_tqdm)
+        1    0.000    0.000    0.001    0.001 std.py:511(__new__)
+        1    0.000    0.000    0.001    0.001 std.py:787(__init__)
+        1    0.000    0.000    0.001    0.001 _monitor.py:32(__init__)
+        1    0.000    0.000    0.000    0.000 threading.py:834(start)
+        1    0.000    0.000    0.000    0.000 threading.py:534(wait)
+        1    0.000    0.000    0.000    0.000 threading.py:264(wait)
+        1    0.000    0.000    0.000    0.000 std.py:1292(refresh)
+        2    0.000    0.000    0.000    0.000 utils.py:315(_environ_cols_linux)
+        1    0.000    0.000    0.000    0.000 std.py:1420(display)
+        4    0.000    0.000    0.000    0.000 {method 'acquire' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 std.py:1067(__repr__)
+        1    0.000    0.000    0.000    0.000 std.py:1405(format_dict)
+        1    0.000    0.000    0.000    0.000 threading.py:763(__init__)
+        1    0.000    0.000    0.000    0.000 std.py:310(format_meter)
+        2    0.000    0.000    0.000    0.000 {built-in method fcntl.ioctl}
+        6    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1009(_handle_fromlist)
+        1    0.000    0.000    0.000    0.000 {built-in method _thread.start_new_thread}
+        1    0.000    0.000    0.000    0.000 std.py:303(print_status)
+        2    0.000    0.000    0.000    0.000 threading.py:499(__init__)
+        2    0.000    0.000    0.000    0.000 os.py:674(__getitem__)
+        2    0.000    0.000    0.000    0.000 std.py:95(__enter__)
+        3    0.000    0.000    0.000    0.000 std.py:87(acquire)
+        1    0.000    0.000    0.000    0.000 std.py:297(fp_write)
+        2    0.000    0.000    0.000    0.000 threading.py:216(__init__)
+        1    0.000    0.000    0.000    0.000 std.py:227(format_interval)
+        2    0.000    0.000    0.000    0.000 _weakrefset.py:81(add)
+        9    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+        3    0.000    0.000    0.000    0.000 std.py:91(release)
+        1    0.000    0.000    0.000    0.000 training_io.py:177(get_model)
+        1    0.000    0.000    0.000    0.000 contextlib.py:116(__exit__)
+        2    0.000    0.000    0.000    0.000 std.py:98(__exit__)
+        3    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'write' of '_io.TextIOWrapper' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.next}
+        2    0.000    0.000    0.000    0.000 os.py:752(encode)
+        1    0.000    0.000    0.000    0.000 profilers.py:54(profile)
+        1    0.000    0.000    0.000    0.000 threading.py:255(_is_owned)
+        1    0.000    0.000    0.000    0.000 profilers.py:209(stop)
+        2    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
+        1    0.000    0.000    0.000    0.000 std.py:1064(__del__)
+        1    0.000    0.000    0.000    0.000 std.py:287(status_printer)
+        1    0.000    0.000    0.000    0.000 utils.py:247(_supports_unicode)
+        1    0.000    0.000    0.000    0.000 progress.py:247(is_disabled)
+        1    0.000    0.000    0.000    0.000 std.py:613(get_lock)
+        1    0.000    0.000    0.000    0.000 threading.py:240(__enter__)
+        1    0.000    0.000    0.000    0.000 threading.py:243(__exit__)
+        1    0.000    0.000    0.000    0.000 threading.py:1225(current_thread)
+        3    0.000    0.000    0.000    0.000 {method 'encode' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 std.py:1074(__hash__)
+        1    0.000    0.000    0.000    0.000 threading.py:728(_newname)
+        1    0.000    0.000    0.000    0.000 progress.py:149(on_train_start)
+        1    0.000    0.000    0.000    0.000 progress.py:243(is_enabled)
+        3    0.000    0.000    0.000    0.000 {method 'acquire' of '_multiprocessing.SemLock' objects}
+        1    0.000    0.000    0.000    0.000 utils.py:233(_is_utf)
+        1    0.000    0.000    0.000    0.000 utils.py:263(_environ_cols_wrapper)
+        1    0.000    0.000    0.000    0.000 module.py:758(__getattr__)
+        1    0.000    0.000    0.000    0.000 threading.py:249(_release_save)
+        1    0.000    0.000    0.000    0.000 threading.py:252(_acquire_restore)
+        3    0.000    0.000    0.000    0.000 {method 'acquire' of '_thread.RLock' objects}
+        1    0.000    0.000    0.000    0.000 {method 'flush' of '_io.TextIOWrapper' objects}
+        1    0.000    0.000    0.000    0.000 threading.py:1131(daemon)
+        2    0.000    0.000    0.000    0.000 {built-in method builtins.divmod}
+        3    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.max}
+        1    0.000    0.000    0.000    0.000 {built-in method time.time}
+        3    0.000    0.000    0.000    0.000 {built-in method _thread.allocate_lock}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        3    0.000    0.000    0.000    0.000 {method 'release' of '_thread.RLock' objects}
+        1    0.000    0.000    0.000    0.000 progress.py:74(train_batch_idx)
+        1    0.000    0.000    0.000    0.000 progress.py:235(refresh_rate)
+        1    0.000    0.000    0.000    0.000 progress.py:239(process_position)
+        3    0.000    0.000    0.000    0.000 {method 'release' of '_multiprocessing.SemLock' objects}
+        2    0.000    0.000    0.000    0.000 threading.py:507(is_set)
+        1    0.000    0.000    0.000    0.000 threading.py:1116(daemon)
+        1    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method __new__ of type object at 0x8b6d40}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.abs}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        1    0.000    0.000    0.000    0.000 {built-in method atexit.register}
+        1    0.000    0.000    0.000    0.000 {built-in method _thread.get_ident}
+        1    0.000    0.000    0.000    0.000 {method 'release' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 {method '__enter__' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        1    0.000    0.000    0.000    0.000 hooks.py:80(on_train_start)
+        1    0.000    0.000    0.000    0.000 std.py:1238(close)
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.id}
+        1    0.000    0.000    0.000    0.000 {method 'append' of 'collections.deque' objects}
+        1    0.000    0.000    0.000    0.000 {method '__exit__' of '_thread.lock' objects}
+
+
+
+Profile stats for: on_epoch_start
+         744 function calls in 0.004 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        4    0.000    0.000    0.004    0.001 callback_hook.py:98(on_epoch_start)
+        4    0.000    0.000    0.004    0.001 progress.py:322(on_epoch_start)
+        8    0.000    0.000    0.004    0.000 std.py:1292(refresh)
+        8    0.000    0.000    0.003    0.000 std.py:1420(display)
+        8    0.000    0.000    0.003    0.000 std.py:1067(__repr__)
+        4    0.000    0.000    0.003    0.001 std.py:1325(reset)
+        8    0.002    0.000    0.003    0.000 std.py:310(format_meter)
+        4    0.000    0.000    0.001    0.000 std.py:1341(set_description)
+        8    0.000    0.000    0.001    0.000 std.py:1405(format_dict)
+        8    0.000    0.000    0.000    0.000 utils.py:315(_environ_cols_linux)
+       40    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+        8    0.000    0.000    0.000    0.000 std.py:303(print_status)
+        4    0.000    0.000    0.000    0.000 progress.py:107(total_val_batches)
+        8    0.000    0.000    0.000    0.000 {built-in method fcntl.ioctl}
+        8    0.000    0.000    0.000    0.000 std.py:297(fp_write)
+       16    0.000    0.000    0.000    0.000 utils.py:254(_is_ascii)
+        4    0.000    0.000    0.000    0.000 trainer.py:886(disable_validation)
+       12    0.000    0.000    0.000    0.000 training_io.py:177(get_model)
+        4    0.000    0.000    0.000    0.000 trainer.py:891(enable_validation)
+        8    0.000    0.000    0.000    0.000 {method 'write' of '_io.TextIOWrapper' objects}
+        4    0.000    0.000    0.000    0.000 model_hooks.py:29(is_overridden)
+        8    0.000    0.000    0.000    0.000 std.py:227(format_interval)
+        8    0.000    0.000    0.000    0.000 os.py:674(__getitem__)
+       40    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+        4    0.000    0.000    0.000    0.000 model_hooks.py:23(is_function_implemented)
+       24    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1009(_handle_fromlist)
+        8    0.000    0.000    0.000    0.000 std.py:154(__format__)
+        8    0.000    0.000    0.000    0.000 std.py:87(acquire)
+        8    0.000    0.000    0.000    0.000 std.py:91(release)
+      168    0.000    0.000    0.000    0.000 {built-in method builtins.ord}
+        4    0.000    0.000    0.000    0.000 contextlib.py:116(__exit__)
+        8    0.000    0.000    0.000    0.000 os.py:752(encode)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.next}
+       12    0.000    0.000    0.000    0.000 module.py:758(__getattr__)
+       40    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        4    0.000    0.000    0.000    0.000 profilers.py:54(profile)
+        4    0.000    0.000    0.000    0.000 progress.py:98(total_train_batches)
+       12    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        8    0.000    0.000    0.000    0.000 std.py:145(__init__)
+        4    0.000    0.000    0.000    0.000 profilers.py:209(stop)
+        8    0.000    0.000    0.000    0.000 {built-in method builtins.max}
+       24    0.000    0.000    0.000    0.000 {built-in method builtins.divmod}
+        8    0.000    0.000    0.000    0.000 {method 'flush' of '_io.TextIOWrapper' objects}
+        8    0.000    0.000    0.000    0.000 {method 'acquire' of '_multiprocessing.SemLock' objects}
+        8    0.000    0.000    0.000    0.000 {method 'encode' of 'str' objects}
+        8    0.000    0.000    0.000    0.000 {method 'acquire' of '_thread.RLock' objects}
+        4    0.000    0.000    0.000    0.000 progress.py:152(on_epoch_start)
+        8    0.000    0.000    0.000    0.000 utils.py:139(__format__)
+       12    0.000    0.000    0.000    0.000 {built-in method time.time}
+        8    0.000    0.000    0.000    0.000 utils.py:135(__init__)
+        8    0.000    0.000    0.000    0.000 {method 'release' of '_thread.RLock' objects}
+       20    0.000    0.000    0.000    0.000 progress.py:70(trainer)
+        8    0.000    0.000    0.000    0.000 {method 'update' of 'dict' objects}
+        4    0.000    0.000    0.000    0.000 progress.py:376(convert_inf)
+       16    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.sum}
+        8    0.000    0.000    0.000    0.000 {built-in method builtins.abs}
+        4    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+        4    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        4    0.000    0.000    0.000    0.000 hooks.py:205(on_epoch_start)
+        8    0.000    0.000    0.000    0.000 {method 'release' of '_multiprocessing.SemLock' objects}
+
+
+
+Profile stats for: on_train_epoch_start
+         72 function calls in 0.000 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        8    0.000    0.000    0.000    0.000 training_io.py:177(get_model)
+        4    0.000    0.000    0.000    0.000 callback_hook.py:68(on_train_epoch_start)
+        4    0.000    0.000    0.000    0.000 model_hooks.py:23(is_function_implemented)
+        4    0.000    0.000    0.000    0.000 contextlib.py:116(__exit__)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.next}
+        4    0.000    0.000    0.000    0.000 profilers.py:54(profile)
+        4    0.000    0.000    0.000    0.000 profilers.py:209(stop)
+        8    0.000    0.000    0.000    0.000 module.py:758(__getattr__)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        8    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        4    0.000    0.000    0.000    0.000 base.py:68(on_train_epoch_start)
+        4    0.000    0.000    0.000    0.000 hooks.py:217(on_train_epoch_start)
+        4    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+        4    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+
+Profile stats for: get_train_batch
+         42330124 function calls (42320112 primitive calls) in 80.195 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+20012/10004    0.077    0.000   80.143    0.008 {built-in method builtins.next}
+    10004    0.053    0.000   80.079    0.008 training_loop.py:1318(_with_is_last)
+    10004    0.071    0.000   80.026    0.008 dataloader.py:362(__next__)
+    10004    0.106    0.000   79.954    0.008 dataloader.py:401(_next_data)
+    10000    0.095    0.000   79.670    0.008 fetch.py:42(fetch)
+    10000    0.316    0.000   79.453    0.008 model_a.py:54(collate)
+    10000    2.101    0.000   78.969    0.008 tokenization_utils.py:1016(batch_encode_plus)
+    80000    0.614    0.000   68.303    0.001 tokenization_utils.py:895(encode_plus)
+   160000    1.271    0.000   60.458    0.000 tokenization_utils.py:976(get_input_ids)
+   160000    1.315    0.000   50.541    0.000 tokenization_utils.py:726(tokenize)
+   160000    3.007    0.000   42.260    0.000 tokenization_utils.py:768(split_on_tokens)
+   320000    0.513    0.000   34.796    0.000 tokenization_utils.py:788(<genexpr>)
+   160000    6.938    0.000   34.283    0.000 tokenization_gpt2.py:194(_tokenize)
+   160000    0.552    0.000   13.249    0.000 regex.py:329(findall)
+   720000    2.796    0.000   12.176    0.000 tokenization_utils.py:807(convert_tokens_to_ids)
+  1840000    2.235    0.000    8.656    0.000 tokenization_utils.py:822(_convert_token_to_id_with_added_voc)
+   160000    2.397    0.000    8.084    0.000 regex.py:435(_compile)
+    80000    1.188    0.000    7.232    0.000 tokenization_utils.py:1133(prepare_for_model)
+  1280000    3.956    0.000    7.070    0.000 {method 'join' of 'str' objects}
+    30000    6.805    0.000    6.805    0.000 {built-in method tensor}
+  1840000    3.804    0.000    6.421    0.000 tokenization_gpt2.py:204(_convert_token_to_id)
+   160000    2.575    0.000    6.388    0.000 tokenization_utils.py:1487(all_special_tokens)
+   160000    4.613    0.000    4.613    0.000 {method 'findall' of '_regex.Pattern' objects}
+   160000    1.182    0.000    4.569    0.000 locale.py:651(getpreferredencoding)
+   800000    3.035    0.000    4.234    0.000 tokenization_utils.py:750(split_on_token)
+   160000    0.754    0.000    3.780    0.000 tokenization_roberta.py:105(build_inputs_with_special_tokens)
+   160000    1.711    0.000    3.128    0.000 tokenization_utils.py:1475(special_tokens_map)
+  6560000    3.115    0.000    3.115    0.000 tokenization_gpt2.py:199(<genexpr>)
+  1280000    2.037    0.000    2.979    0.000 {method 'extend' of 'list' objects}
+   480000    0.625    0.000    2.668    0.000 locale.py:593(setlocale)
+    80000    0.254    0.000    2.313    0.000 tokenization_utils.py:653(num_added_tokens)
+   240000    0.434    0.000    2.238    0.000 tokenization_utils.py:274(cls_token_id)
+  1280000    1.853    0.000    2.211    0.000 tokenization_gpt2.py:152(bpe)
+   240000    0.413    0.000    2.119    0.000 tokenization_utils.py:259(sep_token_id)
+   480000    1.967    0.000    1.967    0.000 {built-in method _locale.setlocale}
+    80000    0.516    0.000    1.874    0.000 tokenization_roberta.py:146(create_token_type_ids_from_sequences)
+  4010004    1.781    0.000    1.781    0.000 {method 'get' of 'dict' objects}
+  2080000    1.647    0.000    1.647    0.000 {method 'split' of 'str' objects}
+  2880000    1.430    0.000    1.430    0.000 {built-in method builtins.isinstance}
+  1280000    1.417    0.000    1.417    0.000 {built-in method builtins.getattr}
+    30000    0.396    0.000    1.081    0.000 tokenization_utils.py:1109(<listcomp>)
+  1840000    1.036    0.000    1.036    0.000 tokenization_utils.py:170(unk_token)
+  2560000    0.941    0.000    0.941    0.000 tokenization_gpt2.py:201(<genexpr>)
+  1280000    0.855    0.000    0.855    0.000 {method 'encode' of 'str' objects}
+   160000    0.544    0.000    0.775    0.000 <frozen importlib._bootstrap>:1009(_handle_fromlist)
+   160000    0.392    0.000    0.719    0.000 _bootlocale.py:33(getpreferredencoding)
+    80000    0.122    0.000    0.628    0.000 tokenization_utils.py:264(pad_token_id)
+  1760008    0.550    0.000    0.550    0.000 {built-in method builtins.len}
+   160000    0.422    0.000    0.498    0.000 tokenization_roberta.py:160(prepare_for_tokenization)
+  1560000    0.489    0.000    0.489    0.000 {method 'append' of 'list' objects}
+   160000    0.359    0.000    0.359    0.000 tokenization_gpt2.py:88(get_pairs)
+   160000    0.327    0.000    0.327    0.000 {built-in method _locale.nl_langinfo}
+    10000    0.303    0.000    0.303    0.000 {built-in method abs}
+   800000    0.282    0.000    0.282    0.000 {method 'rstrip' of 'str' objects}
+   240000    0.202    0.000    0.202    0.000 tokenization_utils.py:191(cls_token)
+   330000    0.195    0.000    0.195    0.000 {built-in method builtins.hasattr}
+    10004    0.024    0.000    0.178    0.000 dataloader.py:356(_next_index)
+   240000    0.178    0.000    0.178    0.000 tokenization_utils.py:177(sep_token)
+    10004    0.108    0.000    0.141    0.000 sampler.py:206(__iter__)
+    10000    0.074    0.000    0.122    0.000 fetch.py:44(<listcomp>)
+   160000    0.113    0.000    0.113    0.000 {method 'strip' of 'str' objects}
+   160000    0.109    0.000    0.109    0.000 {built-in method from_iterable}
+    10000    0.079    0.000    0.098    0.000 tokenization_utils.py:1097(<listcomp>)
+   160000    0.078    0.000    0.078    0.000 {method 'values' of 'dict' objects}
+   160000    0.076    0.000    0.076    0.000 {method 'isspace' of 'str' objects}
+    10000    0.036    0.000    0.063    0.000 lightning.py:1733(hparams)
+    10004    0.037    0.000    0.052    0.000 profilers.py:209(stop)
+    10000    0.038    0.000    0.048    0.000 model_a.py:55(<listcomp>)
+    40000    0.048    0.000    0.048    0.000 model_a.py:19(__getitem__)
+    90000    0.044    0.000    0.044    0.000 {method 'items' of 'dict' objects}
+    80000    0.040    0.000    0.040    0.000 tokenization_utils.py:184(pad_token)
+    10000    0.037    0.000    0.037    0.000 model_a.py:57(<listcomp>)
+    10000    0.037    0.000    0.037    0.000 {built-in method builtins.max}
+    30000    0.020    0.000    0.020    0.000 file_utils.py:103(is_torch_available)
+    10000    0.019    0.000    0.019    0.000 model_a.py:70(<listcomp>)
+    10000    0.008    0.000    0.008    0.000 file_utils.py:107(is_tf_available)
+    10004    0.007    0.000    0.007    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+     12/8    0.000    0.000    0.001    0.000 {built-in method builtins.iter}
+        4    0.000    0.000    0.001    0.000 dataloader.py:287(__iter__)
+        4    0.000    0.000    0.000    0.000 dataloader.py:393(__init__)
+        4    0.000    0.000    0.000    0.000 dataloader.py:338(__init__)
+        4    0.000    0.000    0.000    0.000 {method 'random_' of 'torch._C._TensorBase' objects}
+        4    0.000    0.000    0.000    0.000 {built-in method empty}
+        4    0.000    0.000    0.000    0.000 dataloader.py:36(create_fetcher)
+        4    0.000    0.000    0.000    0.000 {method 'item' of 'torch._C._TensorBase' objects}
+        4    0.000    0.000    0.000    0.000 sampler.py:61(__iter__)
+        4    0.000    0.000    0.000    0.000 fetch.py:39(__init__)
+        4    0.000    0.000    0.000    0.000 fetch.py:8(__init__)
+        4    0.000    0.000    0.000    0.000 dataloader.py:297(_index_sampler)
+        8    0.000    0.000    0.000    0.000 dataloader.py:293(_auto_collation)
+        4    0.000    0.000    0.000    0.000 model_a.py:16(__len__)
+        4    0.000    0.000    0.000    0.000 dataloader.py:353(__iter__)
+
+
+
+Profile stats for: on_batch_start
+         210000 function calls in 0.578 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    30000    0.234    0.000    0.349    0.000 training_io.py:177(get_model)
+    10000    0.071    0.000    0.247    0.000 callback_hook.py:128(on_batch_start)
+    10000    0.037    0.000    0.165    0.000 model_hooks.py:23(is_function_implemented)
+    30000    0.088    0.000    0.088    0.000 module.py:758(__getattr__)
+    10000    0.020    0.000    0.076    0.000 contextlib.py:116(__exit__)
+    10000    0.007    0.000    0.056    0.000 {built-in method builtins.next}
+    10000    0.016    0.000    0.049    0.000 profilers.py:54(profile)
+    10000    0.026    0.000    0.033    0.000 profilers.py:209(stop)
+    10000    0.031    0.000    0.031    0.000 {built-in method builtins.getattr}
+    30000    0.027    0.000    0.027    0.000 {built-in method builtins.isinstance}
+    10000    0.005    0.000    0.005    0.000 base.py:100(on_batch_start)
+    10000    0.005    0.000    0.005    0.000 {built-in method builtins.callable}
+    10000    0.005    0.000    0.005    0.000 {method 'get' of 'dict' objects}
+    10000    0.004    0.000    0.004    0.000 hooks.py:184(on_batch_start)
+    10000    0.003    0.000    0.003    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+
+Profile stats for: on_train_batch_start
+         210000 function calls in 0.431 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    30000    0.166    0.000    0.254    0.000 training_io.py:177(get_model)
+    10000    0.050    0.000    0.153    0.000 callback_hook.py:138(on_train_batch_start)
+    10000    0.030    0.000    0.136    0.000 model_hooks.py:23(is_function_implemented)
+    30000    0.069    0.000    0.069    0.000 module.py:758(__getattr__)
+    10000    0.016    0.000    0.060    0.000 contextlib.py:116(__exit__)
+    10000    0.006    0.000    0.044    0.000 {built-in method builtins.next}
+    10000    0.012    0.000    0.038    0.000 profilers.py:54(profile)
+    10000    0.020    0.000    0.026    0.000 profilers.py:209(stop)
+    10000    0.024    0.000    0.024    0.000 {built-in method builtins.getattr}
+    30000    0.018    0.000    0.018    0.000 {built-in method builtins.isinstance}
+    10000    0.006    0.000    0.006    0.000 base.py:60(on_train_batch_start)
+    10000    0.004    0.000    0.004    0.000 hooks.py:116(on_train_batch_start)
+    10000    0.004    0.000    0.004    0.000 {method 'get' of 'dict' objects}
+    10000    0.003    0.000    0.003    0.000 {built-in method builtins.callable}
+    10000    0.002    0.000    0.002    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+
+Profile stats for: model_forward
+         233040000 function calls (169310000 primitive calls) in 797.998 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    10000    0.274    0.000  797.998    0.080 training_loop.py:1168(training_forward)
+4450000/10000   46.557    0.000  787.234    0.079 module.py:710(_call_impl)
+    10000    5.646    0.001  786.893    0.079 data_parallel.py:62(forward)
+    10000    0.192    0.000  667.151    0.067 model_a.py:87(training_step)
+    10000    0.228    0.000  666.959    0.067 model_a.py:47(forward)
+    10000    1.917    0.000  664.307    0.066 modeling_bert.py:635(forward)
+    10000    1.522    0.000  645.487    0.065 modeling_bert.py:392(forward)
+   240000    3.799    0.000  641.120    0.003 modeling_bert.py:360(forward)
+   240000    2.979    0.000  469.210    0.002 modeling_bert.py:305(forward)
+   240000   40.565    0.000  350.225    0.001 modeling_bert.py:208(forward)
+  1460000    7.362    0.000  246.051    0.000 linear.py:90(forward)
+  1460000   68.702    0.000  236.464    0.000 functional.py:1655(linear)
+  1440000  129.612    0.000  129.612    0.000 {method 'matmul' of 'torch._C._TensorBase' objects}
+   240000   14.272    0.000  106.380    0.000 modeling_bert.py:268(forward)
+  3970000   21.210    0.000  101.034    0.000 module.py:1048(_named_members)
+   240000   14.021    0.000  100.045    0.000 modeling_bert.py:343(forward)
+   480000   80.069    0.000   80.069    0.000 {built-in method matmul}
+  3960000    2.704    0.000   70.134    0.000 module.py:1061(parameters)
+  3960000    2.868    0.000   67.384    0.000 module.py:1085(named_parameters)
+67590000/8520000   56.697    0.000   61.279    0.000 module.py:1215(named_modules)
+   240000    1.573    0.000   58.428    0.000 modeling_bert.py:330(forward)
+   730000    1.737    0.000   50.831    0.000 dropout.py:57(forward)
+   730000    5.734    0.000   49.093    0.000 functional.py:950(dropout)
+   490000    3.081    0.000   41.985    0.000 normalization.py:168(forward)
+   730000   41.592    0.000   41.592    0.000 {built-in method dropout}
+   490000    2.013    0.000   37.802    0.000 functional.py:2042(layer_norm)
+    10000    0.060    0.000   36.622    0.004 module.py:1111(buffers)
+    10000    0.053    0.000   36.562    0.004 module.py:1133(named_buffers)
+   490000   34.836    0.000   34.836    0.000 {built-in method layer_norm}
+   720000    4.735    0.000   24.249    0.000 modeling_bert.py:203(transpose_for_scores)
+  1460000   21.640    0.000   21.640    0.000 {method 't' of 'torch._C._TensorBase' objects}
+   240000    1.506    0.000   18.175    0.000 activation.py:1130(__init__)
+   240000    3.186    0.000   15.735    0.000 module.py:202(__init__)
+   240000    0.593    0.000   13.490    0.000 activation.py:1139(forward)
+   960000   13.233    0.000   13.233    0.000 {method 'permute' of 'torch._C._TensorBase' objects}
+   240000    0.942    0.000   12.897    0.000 functional.py:1465(softmax)
+  7960000   12.863    0.000   12.863    0.000 module.py:758(__getattr__)
+  2640000    8.959    0.000   12.044    0.000 module.py:774(__setattr__)
+   240000   11.868    0.000   11.868    0.000 {method 'softmax' of 'torch._C._TensorBase' objects}
+   960000   11.782    0.000   11.782    0.000 {method 'view' of 'torch._C._TensorBase' objects}
+    10000    0.296    0.000   10.776    0.001 modeling_roberta.py:55(forward)
+    20000    0.026    0.000   10.537    0.001 {built-in method builtins.next}
+   240000    0.865    0.000   10.478    0.000 functional.py:1356(gelu)
+    10000    0.031    0.000   10.061    0.001 contextlib.py:107(__enter__)
+    10000    0.012    0.000   10.020    0.001 profilers.py:54(profile)
+    10000    0.023    0.000   10.008    0.001 profilers.py:204(start)
+    10000    9.985    0.001    9.985    0.001 {method 'enable' of '_lsprof.Profiler' objects}
+   240000    9.592    0.000    9.592    0.000 {method 'contiguous' of 'torch._C._TensorBase' objects}
+   240000    9.547    0.000    9.547    0.000 {built-in method torch._C._nn.gelu}
+  1460000    2.294    0.000    9.363    0.000 _overrides.py:779(has_torch_function)
+ 12430000    6.144    0.000    8.966    0.000 {method 'add' of 'set' objects}
+  2920000    3.425    0.000    8.122    0.000 {built-in method builtins.any}
+    10000    0.035    0.000    7.840    0.001 data_parallel.py:161(scatter)
+    10000    0.152    0.000    7.805    0.001 scatter_gather.py:34(scatter_kwargs)
+    10000    0.036    0.000    7.622    0.001 scatter_gather.py:5(scatter)
+230000/10000    1.360    0.000    7.586    0.001 scatter_gather.py:11(scatter_map)
+    10000    1.423    0.000    7.373    0.001 modeling_bert.py:158(forward)
+  7880000    4.322    0.000    6.186    0.000 tensor.py:458(__hash__)
+  4450000    5.977    0.000    5.977    0.000 {built-in method torch._C._get_tracing_state}
+    20000    0.676    0.000    5.879    0.000 {built-in method apply}
+    20000    0.614    0.000    5.203    0.000 _functions.py:80(forward)
+  4260000    3.810    0.000    4.913    0.000 module.py:1106(<lambda>)
+  4380000    2.602    0.000    4.696    0.000 _overrides.py:792(<genexpr>)
+ 17810000    4.214    0.000    4.214    0.000 {method 'values' of 'collections.OrderedDict' objects}
+  4230000    3.052    0.000    4.025    0.000 module.py:1154(<lambda>)
+ 16970000    3.972    0.000    3.972    0.000 {method 'items' of 'collections.OrderedDict' objects}
+   240000    3.276    0.000    3.276    0.000 {method 'transpose' of 'torch._C._TensorBase' objects}
+    10000    1.168    0.000    3.040    0.000 modeling_roberta.py:67(create_position_ids_from_input_ids)
+    30000    0.199    0.000    2.707    0.000 sparse.py:123(forward)
+  1460000    2.609    0.000    2.609    0.000 functional.py:1670(<listcomp>)
+    10000    0.427    0.000    2.550    0.000 modeling_bert.py:432(forward)
+    30000    0.098    0.000    2.464    0.000 functional.py:1736(embedding)
+    30000    2.305    0.000    2.305    0.000 {built-in method embedding}
+  9060000    2.261    0.000    2.261    0.000 {built-in method builtins.len}
+  2940000    2.140    0.000    2.140    0.000 {built-in method builtins.hasattr}
+    20000    0.082    0.000    2.092    0.000 comm.py:131(scatter)
+    20000    2.011    0.000    2.011    0.000 {built-in method torch._C._scatter}
+    20000    1.937    0.000    1.937    0.000 {built-in method addmm}
+  6220000    1.887    0.000    1.887    0.000 {built-in method builtins.isinstance}
+  7880000    1.864    0.000    1.864    0.000 {built-in method builtins.id}
+  1000000    1.858    0.000    1.858    0.000 {method 'size' of 'torch._C._TensorBase' objects}
+  7920000    1.555    0.000    1.555    0.000 {method 'get' of 'dict' objects}
+   730000    1.016    0.000    1.554    0.000 _VF.py:13(__getattr__)
+   240000    1.438    0.000    1.438    0.000 {built-in method torch._C._log_api_usage_once}
+  1480000    1.199    0.000    1.199    0.000 {method 'dim' of 'torch._C._TensorBase' objects}
+    20000    0.183    0.000    1.140    0.000 __init__.py:414(current_stream)
+   490000    0.587    0.000    0.953    0.000 __init__.py:31(__get__)
+    10000    0.037    0.000    0.852    0.000 tensor.py:395(__rsub__)
+    10000    0.815    0.000    0.815    0.000 {built-in method rsub}
+    10000    0.779    0.000    0.779    0.000 {built-in method zeros}
+    20000    0.744    0.000    0.744    0.000 {method 'to' of 'torch._C._TensorBase' objects}
+    20000    0.100    0.000    0.742    0.000 streams.py:48(wait_stream)
+  2670000    0.729    0.000    0.729    0.000 __init__.py:2277(is_scripting)
+    10000    0.727    0.000    0.727    0.000 {method 'ne' of 'torch._C._TensorBase' objects}
+    20000    0.262    0.000    0.702    0.000 streams.py:27(__new__)
+    10000    0.647    0.000    0.647    0.000 {built-in method cumsum}
+   760000    0.567    0.000    0.567    0.000 {built-in method builtins.getattr}
+   240000    0.527    0.000    0.527    0.000 {built-in method math.sqrt}
+    10000    0.516    0.000    0.516    0.000 {method 'mean' of 'torch._C._TensorBase' objects}
+    10000    0.499    0.000    0.499    0.000 {method 'long' of 'torch._C._TensorBase' objects}
+    10000    0.021    0.000    0.466    0.000 activation.py:349(forward)
+    20000    0.081    0.000    0.463    0.000 streams.py:62(record_event)
+    80000    0.187    0.000    0.447    0.000 _utils.py:6(_get_device_index)
+    10000    0.445    0.000    0.445    0.000 {built-in method tanh}
+   490000    0.366    0.000    0.366    0.000 {built-in method torch._C._get_cudnn_enabled}
+    40000    0.127    0.000    0.325    0.000 __init__.py:240(__enter__)
+    40000    0.094    0.000    0.313    0.000 __init__.py:236(__init__)
+    10000    0.061    0.000    0.269    0.000 model_hooks.py:29(is_overridden)
+   100000    0.094    0.000    0.238    0.000 __init__.py:161(_lazy_init)
+    20000    0.056    0.000    0.234    0.000 streams.py:142(record)
+    40000    0.230    0.000    0.230    0.000 {built-in method __new__ of type object at 0x8b6d40}
+    40000    0.068    0.000    0.193    0.000 __init__.py:382(current_device)
+    20000    0.030    0.000    0.179    0.000 streams.py:31(wait_event)
+    20000    0.178    0.000    0.178    0.000 {function Event.record at 0x7f4e50479c20}
+    20000    0.117    0.000    0.166    0.000 training_io.py:177(get_model)
+    10000    0.165    0.000    0.165    0.000 {method 'squeeze' of 'torch._C._TensorBase' objects}
+    20000    0.049    0.000    0.149    0.000 streams.py:132(__new__)
+    20000    0.042    0.000    0.149    0.000 streams.py:151(wait)
+   100000    0.093    0.000    0.144    0.000 __init__.py:128(is_initialized)
+    80000    0.125    0.000    0.125    0.000 {built-in method torch._C._cuda_getDevice}
+    20000    0.107    0.000    0.107    0.000 {function Event.wait at 0x7f4e50479cb0}
+    20000    0.041    0.000    0.099    0.000 _functions.py:82(<lambda>)
+    10000    0.025    0.000    0.088    0.000 contextlib.py:237(helper)
+    20000    0.084    0.000    0.084    0.000 {method 'record_stream' of 'torch._C._TensorBase' objects}
+   130000    0.077    0.000    0.077    0.000 scatter_gather.py:20(<listcomp>)
+    20000    0.037    0.000    0.071    0.000 _functions.py:88(<listcomp>)
+    10000    0.054    0.000    0.063    0.000 contextlib.py:81(__init__)
+   100000    0.051    0.000    0.051    0.000 {built-in method torch._C._cuda_isInBadFork}
+    10000    0.033    0.000    0.047    0.000 container.py:184(__iter__)
+    20000    0.047    0.000    0.047    0.000 {built-in method torch._C._cuda_getCurrentStream}
+    20000    0.034    0.000    0.034    0.000 _functions.py:108(_get_stream)
+    40000    0.031    0.000    0.031    0.000 __init__.py:248(__exit__)
+    10000    0.011    0.000    0.011    0.000 {built-in method builtins.iter}
+    10000    0.011    0.000    0.011    0.000 scatter_gather.py:41(<listcomp>)
+    10000    0.006    0.000    0.006    0.000 {method 'extend' of 'list' objects}
+    10000    0.005    0.000    0.005    0.000 {method 'items' of 'dict' objects}
+
+
+
+Profile stats for: training_step_end
+         1350000 function calls in 8.973 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    10000    0.272    0.000    8.890    0.001 model_a.py:91(training_step_end)
+    50000    0.315    0.000    5.586    0.000 model_a.py:98(<genexpr>)
+    40000    0.369    0.000    4.580    0.000 module.py:710(_call_impl)
+    40000    0.153    0.000    4.099    0.000 loss.py:946(forward)
+    40000    0.241    0.000    3.890    0.000 functional.py:2370(cross_entropy)
+    40000    0.265    0.000    1.956    0.000 functional.py:2158(nll_loss)
+    40000    0.078    0.000    1.613    0.000 functional.py:1567(log_softmax)
+    40000    1.528    0.000    1.528    0.000 {method 'log_softmax' of 'torch._C._TensorBase' objects}
+    40000    1.496    0.000    1.496    0.000 {built-in method torch._C._nn.nll_loss}
+    10000    1.329    0.000    1.329    0.000 {built-in method stack}
+    10000    0.798    0.000    0.798    0.000 {built-in method tensor}
+    40000    0.515    0.000    0.515    0.000 {method 'reshape' of 'torch._C._TensorBase' objects}
+    20000    0.088    0.000    0.473    0.000 tensor.py:367(split)
+    10000    0.412    0.000    0.412    0.000 {method 'mean' of 'torch._C._TensorBase' objects}
+    10000    0.262    0.000    0.262    0.000 {method 'split_with_sizes' of 'torch._C._TensorBase' objects}
+    80000    0.232    0.000    0.232    0.000 module.py:758(__getattr__)
+    10000    0.111    0.000    0.111    0.000 {function Tensor.split at 0x7f4e50454c20}
+    80000    0.083    0.000    0.083    0.000 {method 'size' of 'torch._C._TensorBase' objects}
+    10000    0.026    0.000    0.083    0.000 contextlib.py:116(__exit__)
+    40000    0.061    0.000    0.061    0.000 {built-in method torch._C._get_tracing_state}
+    10000    0.010    0.000    0.057    0.000 {built-in method builtins.next}
+    40000    0.051    0.000    0.051    0.000 functional.py:2415(<listcomp>)
+    10000    0.017    0.000    0.047    0.000 profilers.py:54(profile)
+    40000    0.045    0.000    0.045    0.000 functional.py:2204(<listcomp>)
+    80000    0.035    0.000    0.035    0.000 {built-in method builtins.any}
+   160000    0.032    0.000    0.032    0.000 {method 'values' of 'collections.OrderedDict' objects}
+    10000    0.021    0.000    0.030    0.000 profilers.py:209(stop)
+   120000    0.023    0.000    0.023    0.000 __init__.py:2277(is_scripting)
+    40000    0.022    0.000    0.022    0.000 _reduction.py:7(get_enum)
+    40000    0.021    0.000    0.021    0.000 {method 'dim' of 'torch._C._TensorBase' objects}
+    10000    0.019    0.000    0.019    0.000 device_dtype_mixin.py:37(device)
+    80000    0.018    0.000    0.018    0.000 {built-in method builtins.len}
+    30000    0.012    0.000    0.012    0.000 {built-in method builtins.isinstance}
+    10000    0.005    0.000    0.005    0.000 {method 'get' of 'dict' objects}
+    10000    0.004    0.000    0.004    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+
+Profile stats for: model_backward
+         210000 function calls in 790.258 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    10000    0.034    0.000  789.837    0.079 hooks.py:303(backward)
+    10000    0.227    0.000  789.804    0.079 tensor.py:155(backward)
+    10000    0.118    0.000  789.576    0.079 __init__.py:57(backward)
+    10000  788.913    0.079  788.913    0.079 {method 'run_backward' of 'torch._C._EngineBase' objects}
+    10000    0.109    0.000    0.537    0.000 __init__.py:25(_make_grads)
+    10000    0.410    0.000    0.410    0.000 {built-in method ones_like}
+    20000    0.218    0.000    0.218    0.000 {method 'detach' of 'torch._C._TensorBase' objects}
+    10000    0.049    0.000    0.150    0.000 contextlib.py:116(__exit__)
+    10000    0.016    0.000    0.101    0.000 {built-in method builtins.next}
+    10000    0.029    0.000    0.085    0.000 profilers.py:54(profile)
+    10000    0.040    0.000    0.056    0.000 profilers.py:209(stop)
+    10000    0.036    0.000    0.036    0.000 parsing.py:140(__getattr__)
+    10000    0.017    0.000    0.017    0.000 parsing.py:146(__setattr__)
+    10000    0.010    0.000    0.010    0.000 {method 'get' of 'dict' objects}
+    20000    0.008    0.000    0.008    0.000 {built-in method builtins.isinstance}
+    10000    0.007    0.000    0.007    0.000 {method 'numel' of 'torch._C._TensorBase' objects}
+    10000    0.006    0.000    0.006    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+    10000    0.005    0.000    0.005    0.000 {method 'append' of 'list' objects}
+    10000    0.005    0.000    0.005    0.000 {built-in method builtins.len}
+
+
+
+Profile stats for: on_after_backward
+         70000 function calls in 0.068 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    10000    0.016    0.000    0.063    0.000 contextlib.py:116(__exit__)
+    10000    0.007    0.000    0.047    0.000 {built-in method builtins.next}
+    10000    0.011    0.000    0.040    0.000 profilers.py:54(profile)
+    10000    0.022    0.000    0.029    0.000 profilers.py:209(stop)
+    10000    0.005    0.000    0.005    0.000 hooks.py:284(on_after_backward)
+    10000    0.004    0.000    0.004    0.000 {method 'get' of 'dict' objects}
+    10000    0.003    0.000    0.003    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
+
+Profile stats for: on_batch_end
+         210000 function calls in 0.626 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    30000    0.229    0.000    0.355    0.000 training_io.py:177(get_model)
+    10000    0.082    0.000    0.253    0.000 callback_hook.py:133(on_batch_end)
+    10000    0.041    0.000    0.186    0.000 model_hooks.py:23(is_function_implemented)
+    30000    0.094    0.000    0.094    0.000 module.py:758(__getattr__)
+    10000    0.021    0.000    0.090    0.000 contextlib.py:116(__exit__)
+    10000    0.009    0.000    0.069    0.000 {built-in method builtins.next}
+    10000    0.016    0.000    0.060    0.000 profilers.py:54(profile)
+    10000    0.032    0.000    0.044    0.000 profilers.py:209(stop)
+    10000    0.042    0.000    0.042    0.000 {built-in method builtins.getattr}
+    30000    0.032    0.000    0.032    0.000 {built-in method builtins.isinstance}
+    10000    0.007    0.000    0.007    0.000 {method 'get' of 'dict' objects}
+    10000    0.006    0.000    0.006    0.000 base.py:120(on_batch_end)
+    10000    0.005    0.000    0.005    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+    10000    0.005    0.000    0.005    0.000 hooks.py:197(on_batch_end)
+    10000    0.005    0.000    0.005    0.000 {built-in method builtins.callable}
+
+
+
+Profile stats for: on_train_batch_end
+         1709868 function calls (1709860 primitive calls) in 13.786 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    10000    0.069    0.000   13.296    0.001 callback_hook.py:143(on_train_batch_end)
+    10000    0.276    0.000   13.114    0.001 progress.py:335(on_train_batch_end)
+    14999    0.142    0.000   10.062    0.001 std.py:1292(refresh)
+    14999    0.102    0.000    9.615    0.001 std.py:1420(display)
+    14999    0.180    0.000    8.433    0.001 std.py:1067(__repr__)
+    10000    0.268    0.000    6.413    0.001 std.py:1361(set_postfix)
+    14999    4.599    0.000    6.310    0.000 std.py:310(format_meter)
+    10000    0.141    0.000    4.411    0.000 std.py:1162(update)
+    14999    0.304    0.000    1.943    0.000 std.py:1405(format_dict)
+    10000    0.227    0.000    1.906    0.000 trainer.py:880(progress_bar_dict)
+    14999    0.428    0.000    1.605    0.000 utils.py:315(_environ_cols_linux)
+    10000    0.242    0.000    1.602    0.000 lightning.py:1526(get_progress_bar_dict)
+   129992    0.892    0.000    1.125    0.000 {method 'format' of 'str' objects}
+    14999    0.108    0.000    1.066    0.000 std.py:303(print_status)
+    10000    0.031    0.000    1.059    0.000 supporters.py:77(mean)
+    10000    0.055    0.000    1.028    0.000 supporters.py:89(_agg_memory)
+     9985    0.960    0.000    0.960    0.000 {method 'mean' of 'torch._C._TensorBase' objects}
+    14999    0.060    0.000    0.911    0.000 std.py:297(fp_write)
+    14999    0.787    0.000    0.787    0.000 {method 'write' of '_io.TextIOWrapper' objects}
+    14999    0.655    0.000    0.655    0.000 {built-in method fcntl.ioctl}
+    29998    0.160    0.000    0.415    0.000 std.py:227(format_interval)
+    30000    0.263    0.000    0.397    0.000 training_io.py:177(get_model)
+    29998    0.274    0.000    0.375    0.000 utils.py:254(_is_ascii)
+    14999    0.186    0.000    0.290    0.000 os.py:674(__getitem__)
+    10000    0.047    0.000    0.271    0.000 model_hooks.py:23(is_function_implemented)
+    44997    0.046    0.000    0.233    0.000 <frozen importlib._bootstrap>:1009(_handle_fromlist)
+    64995    0.205    0.000    0.205    0.000 {built-in method builtins.hasattr}
+    14999    0.182    0.000    0.202    0.000 std.py:154(__format__)
+    94997    0.103    0.000    0.184    0.000 {built-in method builtins.isinstance}
+    14999    0.096    0.000    0.178    0.000 std.py:87(acquire)
+    40000    0.136    0.000    0.136    0.000 module.py:758(__getattr__)
+    14999    0.094    0.000    0.127    0.000 std.py:91(release)
+     9985    0.126    0.000    0.126    0.000 {method 'item' of 'torch._C._TensorBase' objects}
+    10000    0.062    0.000    0.126    0.000 {method 'join' of 'str' objects}
+    10000    0.027    0.000    0.111    0.000 contextlib.py:116(__exit__)
+    14999    0.053    0.000    0.104    0.000 os.py:752(encode)
+   314979    0.088    0.000    0.088    0.000 {built-in method builtins.ord}
+    10000    0.012    0.000    0.083    0.000 {built-in method builtins.next}
+    10000    0.019    0.000    0.081    0.000 abc.py:137(__instancecheck__)
+    10000    0.021    0.000    0.071    0.000 profilers.py:54(profile)
+     9985    0.067    0.000    0.067    0.000 {method 'cpu' of 'torch._C._TensorBase' objects}
+    14999    0.064    0.000    0.064    0.000 {method 'flush' of '_io.TextIOWrapper' objects}
+    20000    0.053    0.000    0.064    0.000 std.py:1387(<genexpr>)
+    10000    0.062    0.000    0.062    0.000 {built-in method _abc._abc_instancecheck}
+    14999    0.055    0.000    0.055    0.000 std.py:145(__init__)
+    74995    0.053    0.000    0.053    0.000 {built-in method builtins.divmod}
+    10000    0.052    0.000    0.052    0.000 {built-in method builtins.sorted}
+    19985    0.051    0.000    0.051    0.000 {built-in method builtins.getattr}
+    10000    0.038    0.000    0.050    0.000 progress.py:243(is_enabled)
+    10000    0.034    0.000    0.050    0.000 profilers.py:209(stop)
+    14999    0.049    0.000    0.049    0.000 {method 'acquire' of '_multiprocessing.SemLock' objects}
+    19998    0.049    0.000    0.049    0.000 {built-in method builtins.max}
+    14999    0.043    0.000    0.043    0.000 {method 'encode' of 'str' objects}
+    10000    0.040    0.000    0.040    0.000 trainer.py:872(data_parallel)
+    24997    0.033    0.000    0.033    0.000 {built-in method time.time}
+    10000    0.033    0.000    0.033    0.000 progress.py:155(on_train_batch_end)
+    14999    0.032    0.000    0.032    0.000 {method 'acquire' of '_thread.RLock' objects}
+    14999    0.031    0.000    0.031    0.000 utils.py:135(__init__)
+    14999    0.031    0.000    0.031    0.000 utils.py:139(__format__)
+    14999    0.027    0.000    0.027    0.000 {method 'update' of 'dict' objects}
+    30000    0.026    0.000    0.026    0.000 progress.py:235(refresh_rate)
+    14999    0.019    0.000    0.019    0.000 {method 'release' of '_thread.RLock' objects}
+    29998    0.017    0.000    0.017    0.000 {built-in method builtins.len}
+    14999    0.014    0.000    0.014    0.000 {method 'release' of '_multiprocessing.SemLock' objects}
+    14999    0.014    0.000    0.014    0.000 {built-in method builtins.abs}
+    10000    0.012    0.000    0.012    0.000 progress.py:74(train_batch_idx)
+    20000    0.012    0.000    0.012    0.000 {method 'keys' of 'collections.OrderedDict' objects}
+    10000    0.011    0.000    0.011    0.000 {method 'strip' of 'str' objects}
+    10000    0.009    0.000    0.009    0.000 {method 'get' of 'dict' objects}
+    10000    0.008    0.000    0.008    0.000 {method 'keys' of 'dict' objects}
+    10000    0.007    0.000    0.007    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+    10000    0.006    0.000    0.006    0.000 hooks.py:129(on_train_batch_end)
+    10000    0.005    0.000    0.005    0.000 {built-in method builtins.callable}
+      5/1    0.000    0.000    0.000    0.000 abc.py:141(__subclasscheck__)
+      5/1    0.000    0.000    0.000    0.000 {built-in method _abc._abc_subclasscheck}
+
+
+
+Profile stats for: optimizer_step
+         5661764 function calls in 70.199 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      628    0.006    0.000   64.698    0.103 lightning.py:1076(optimizer_step)
+      628    6.887    0.011   64.692    0.103 optimization.py:119(step)
+   491096   16.385    0.000   16.390    0.000 {method 'add_' of 'torch._C._TensorBase' objects}
+   491096   14.918    0.000   14.918    0.000 {method 'mul_' of 'torch._C._TensorBase' objects}
+   245548    8.927    0.000    8.927    0.000 {method 'addcdiv_' of 'torch._C._TensorBase' objects}
+   245548    8.477    0.000    8.477    0.000 {method 'addcmul_' of 'torch._C._TensorBase' objects}
+   245548    7.258    0.000    7.258    0.000 {method 'sqrt' of 'torch._C._TensorBase' objects}
+      628    0.002    0.000    5.494    0.009 lightning.py:1162(optimizer_zero_grad)
+      628    0.684    0.001    5.492    0.009 optimizer.py:166(zero_grad)
+   245548    3.578    0.000    3.578    0.000 {method 'zero_' of 'torch._C._TensorBase' objects}
+  1230252    1.863    0.000    2.151    0.000 tensor.py:725(grad)
+   245548    0.355    0.000    0.355    0.000 {method 'detach_' of 'torch._C._TensorBase' objects}
+  1230252    0.288    0.000    0.288    0.000 {built-in method builtins.hasattr}
+   245939    0.177    0.000    0.270    0.000 tensor.py:458(__hash__)
+   245548    0.152    0.000    0.152    0.000 {built-in method math.sqrt}
+   245939    0.092    0.000    0.092    0.000 {built-in method builtins.id}
+   245549    0.087    0.000    0.087    0.000 {built-in method builtins.len}
+      782    0.051    0.000    0.051    0.000 {built-in method zeros_like}
+        1    0.000    0.000    0.005    0.005 warnings.py:96(_showwarnmsg)
+      628    0.002    0.000    0.005    0.000 contextlib.py:116(__exit__)
+        1    0.000    0.000    0.005    0.005 warnings.py:20(_showwarnmsg_impl)
+        1    0.000    0.000    0.005    0.005 warnings.py:117(_formatwarnmsg)
+        1    0.000    0.000    0.005    0.005 warnings.py:35(_formatwarnmsg_impl)
+        1    0.000    0.000    0.005    0.005 linecache.py:15(getline)
+        1    0.000    0.000    0.005    0.005 linecache.py:37(getlines)
+        1    0.000    0.000    0.005    0.005 linecache.py:82(updatecache)
+      628    0.001    0.000    0.004    0.000 {built-in method builtins.next}
+        1    0.000    0.000    0.004    0.004 tokenize.py:443(open)
+      628    0.001    0.000    0.003    0.000 profilers.py:54(profile)
+        1    0.002    0.002    0.002    0.002 {built-in method io.open}
+      628    0.001    0.000    0.002    0.000 profilers.py:209(stop)
+        1    0.001    0.001    0.001    0.001 {built-in method posix.stat}
+      628    0.001    0.000    0.001    0.000 {built-in method builtins.isinstance}
+        1    0.000    0.000    0.001    0.001 tokenize.py:350(detect_encoding)
+        1    0.000    0.000    0.001    0.001 tokenize.py:374(read_or_stop)
+        1    0.001    0.001    0.001    0.001 {method 'readline' of '_io.BufferedReader' objects}
+      628    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+      628    0.000    0.000    0.000    0.000 hooks.py:265(on_before_zero_grad)
+        1    0.000    0.000    0.000    0.000 {method 'readlines' of '_io._IOBase' objects}
+      628    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        1    0.000    0.000    0.000    0.000 tokenize.py:380(find_cookie)
+        1    0.000    0.000    0.000    0.000 codecs.py:309(__init__)
+        2    0.000    0.000    0.000    0.000 codecs.py:319(decode)
+        1    0.000    0.000    0.000    0.000 {method 'write' of '_io.TextIOWrapper' objects}
+        1    0.000    0.000    0.000    0.000 {built-in method _codecs.lookup}
+        1    0.000    0.000    0.000    0.000 codecs.py:260(__init__)
+        1    0.000    0.000    0.000    0.000 tokenize.py:339(_get_normal_name)
+        1    0.000    0.000    0.000    0.000 warnings.py:419(__init__)
+        1    0.000    0.000    0.000    0.000 {method 'match' of 're.Pattern' objects}
+        2    0.000    0.000    0.000    0.000 {built-in method _codecs.utf_8_decode}
+        1    0.000    0.000    0.000    0.000 {method 'decode' of 'bytes' objects}
+        1    0.000    0.000    0.000    0.000 {method 'startswith' of 'bytes' objects}
+        1    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'seek' of '_io.BufferedReader' objects}
+        1    0.000    0.000    0.000    0.000 {method 'replace' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'group' of 're.Match' objects}
+        1    0.000    0.000    0.000    0.000 {method 'lower' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'strip' of 'str' objects}
+
+
+
+Profile stats for: on_epoch_end
+         72 function calls in 0.000 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        4    0.000    0.000    0.000    0.000 callback_hook.py:103(on_epoch_end)
+        8    0.000    0.000    0.000    0.000 training_io.py:177(get_model)
+        4    0.000    0.000    0.000    0.000 model_hooks.py:23(is_function_implemented)
+        4    0.000    0.000    0.000    0.000 contextlib.py:116(__exit__)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.next}
+        4    0.000    0.000    0.000    0.000 profilers.py:54(profile)
+        4    0.000    0.000    0.000    0.000 profilers.py:209(stop)
+        8    0.000    0.000    0.000    0.000 module.py:758(__getattr__)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        4    0.000    0.000    0.000    0.000 hooks.py:211(on_epoch_end)
+        8    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        4    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        4    0.000    0.000    0.000    0.000 base.py:96(on_epoch_end)
+        4    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+
+
+
+Profile stats for: on_train_epoch_end
+         72 function calls in 0.000 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        8    0.000    0.000    0.000    0.000 training_io.py:177(get_model)
+        4    0.000    0.000    0.000    0.000 model_hooks.py:23(is_function_implemented)
+        4    0.000    0.000    0.000    0.000 callback_hook.py:73(on_train_epoch_end)
+        4    0.000    0.000    0.000    0.000 contextlib.py:116(__exit__)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.next}
+        4    0.000    0.000    0.000    0.000 profilers.py:54(profile)
+        8    0.000    0.000    0.000    0.000 module.py:758(__getattr__)
+        4    0.000    0.000    0.000    0.000 profilers.py:209(stop)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        8    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        4    0.000    0.000    0.000    0.000 hooks.py:223(on_train_epoch_end)
+        4    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+        4    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        4    0.000    0.000    0.000    0.000 base.py:72(on_train_epoch_end)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+
+
+
+Profile stats for: on_train_end
+         164 function calls in 0.001 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    0.001    0.001 callback_hook.py:113(on_train_end)
+        1    0.000    0.000    0.001    0.001 progress.py:357(on_train_end)
+        1    0.000    0.000    0.001    0.001 std.py:1238(close)
+        1    0.000    0.000    0.001    0.001 std.py:1420(display)
+        1    0.000    0.000    0.001    0.001 std.py:1067(__repr__)
+        1    0.001    0.001    0.001    0.001 std.py:310(format_meter)
+        1    0.000    0.000    0.000    0.000 std.py:540(_decr_instances)
+        1    0.000    0.000    0.000    0.000 _monitor.py:50(exit)
+        1    0.000    0.000    0.000    0.000 threading.py:1012(join)
+        1    0.000    0.000    0.000    0.000 threading.py:1050(_wait_for_tstate_lock)
+        2    0.000    0.000    0.000    0.000 {method 'acquire' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 std.py:1405(format_dict)
+        1    0.000    0.000    0.000    0.000 utils.py:315(_environ_cols_linux)
+        1    0.000    0.000    0.000    0.000 threading.py:513(set)
+        8    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 threading.py:358(notify_all)
+        1    0.000    0.000    0.000    0.000 threading.py:335(notify)
+        1    0.000    0.000    0.000    0.000 std.py:303(print_status)
+        3    0.000    0.000    0.000    0.000 training_io.py:177(get_model)
+        3    0.000    0.000    0.000    0.000 {method 'write' of '_io.TextIOWrapper' objects}
+        2    0.000    0.000    0.000    0.000 std.py:1255(fp_write)
+        2    0.000    0.000    0.000    0.000 std.py:95(__enter__)
+        1    0.000    0.000    0.000    0.000 _weakrefset.py:106(remove)
+        1    0.000    0.000    0.000    0.000 {built-in method fcntl.ioctl}
+        1    0.000    0.000    0.000    0.000 model_hooks.py:23(is_function_implemented)
+        2    0.000    0.000    0.000    0.000 std.py:227(format_interval)
+        1    0.000    0.000    0.000    0.000 std.py:297(fp_write)
+        2    0.000    0.000    0.000    0.000 utils.py:254(_is_ascii)
+        2    0.000    0.000    0.000    0.000 std.py:87(acquire)
+        1    0.000    0.000    0.000    0.000 _weakrefset.py:58(__iter__)
+        2    0.000    0.000    0.000    0.000 {method 'remove' of 'set' objects}
+        2    0.000    0.000    0.000    0.000 std.py:98(__exit__)
+        2    0.000    0.000    0.000    0.000 std.py:91(release)
+        1    0.000    0.000    0.000    0.000 contextlib.py:116(__exit__)
+        1    0.000    0.000    0.000    0.000 os.py:674(__getitem__)
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.next}
+        2    0.000    0.000    0.000    0.000 {method 'release' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 threading.py:977(_stop)
+        1    0.000    0.000    0.000    0.000 profilers.py:54(profile)
+        1    0.000    0.000    0.000    0.000 profilers.py:209(stop)
+        3    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1009(_handle_fromlist)
+        1    0.000    0.000    0.000    0.000 utils.py:152(__eq__)
+        1    0.000    0.000    0.000    0.000 std.py:154(__format__)
+        1    0.000    0.000    0.000    0.000 threading.py:240(__enter__)
+        5    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+       21    0.000    0.000    0.000    0.000 {built-in method builtins.ord}
+        2    0.000    0.000    0.000    0.000 threading.py:1225(current_thread)
+        5    0.000    0.000    0.000    0.000 {built-in method builtins.divmod}
+        2    0.000    0.000    0.000    0.000 std.py:1070(_comparable)
+        3    0.000    0.000    0.000    0.000 module.py:758(__getattr__)
+        1    0.000    0.000    0.000    0.000 _weakrefset.py:20(__enter__)
+        1    0.000    0.000    0.000    0.000 _weakrefset.py:26(__exit__)
+        1    0.000    0.000    0.000    0.000 os.py:752(encode)
+        3    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        1    0.000    0.000    0.000    0.000 _weakrefset.py:67(__len__)
+        1    0.000    0.000    0.000    0.000 threading.py:255(_is_owned)
+        6    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.max}
+        1    0.000    0.000    0.000    0.000 {method 'flush' of '_io.TextIOWrapper' objects}
+        1    0.000    0.000    0.000    0.000 std.py:1074(__hash__)
+        1    0.000    0.000    0.000    0.000 _monitor.py:98(report)
+        1    0.000    0.000    0.000    0.000 std.py:145(__init__)
+        2    0.000    0.000    0.000    0.000 {method 'acquire' of '_multiprocessing.SemLock' objects}
+        1    0.000    0.000    0.000    0.000 threading.py:243(__exit__)
+        1    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {method 'update' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {method 'encode' of 'str' objects}
+        5    0.000    0.000    0.000    0.000 {built-in method builtins.len}
+        1    0.000    0.000    0.000    0.000 {built-in method time.time}
+        2    0.000    0.000    0.000    0.000 {method 'release' of '_thread.RLock' objects}
+        1    0.000    0.000    0.000    0.000 {method '__enter__' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 base.py:128(on_train_end)
+        1    0.000    0.000    0.000    0.000 hooks.py:86(on_train_end)
+        1    0.000    0.000    0.000    0.000 utils.py:135(__init__)
+        1    0.000    0.000    0.000    0.000 utils.py:139(__format__)
+        2    0.000    0.000    0.000    0.000 {method 'release' of '_multiprocessing.SemLock' objects}
+        1    0.000    0.000    0.000    0.000 _weakrefset.py:16(__init__)
+        1    0.000    0.000    0.000    0.000 _weakrefset.py:52(_commit_removals)
+        2    0.000    0.000    0.000    0.000 threading.py:507(is_set)
+        1    0.000    0.000    0.000    0.000 threading.py:1116(daemon)
+        1    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
+        3    0.000    0.000    0.000    0.000 {built-in method builtins.abs}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.id}
+        1    0.000    0.000    0.000    0.000 {method 'remove' of 'collections.deque' objects}
+        2    0.000    0.000    0.000    0.000 {built-in method _thread.get_ident}
+        2    0.000    0.000    0.000    0.000 {method 'acquire' of '_thread.RLock' objects}
+        1    0.000    0.000    0.000    0.000 {method 'locked' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 {method '__exit__' of '_thread.lock' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+
