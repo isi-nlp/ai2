@@ -1,7 +1,7 @@
 import itertools
 from itertools import cycle
 from pathlib import Path
-from typing import Union
+from typing import Iterable, List, Union
 
 import numpy as np
 import pandas as pd
@@ -10,6 +10,14 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 from transformers import AdamW, AutoModel, AutoTokenizer
+
+
+def merge(seq: List) -> List:
+    """Extract merged list after multi-GPU step."""
+    if seq and isinstance(seq[0], Iterable):
+        return list(list(zip(*seq))[0])
+    else:
+        return seq
 
 
 # Extending the dataset module provided by the PyTorch module to build the dataset class for AI2 dataset.
@@ -125,11 +133,8 @@ class Classifier(pl.LightningModule):
             "input_ids": results["input_ids"],
             "attention_mask": results["attention_mask"],
             "token_type_ids": results["token_type_ids"],
-            "labels": torch.LongTensor(list(itertools.chain.from_iterable(
-                [[label] + [-1] * (num_choice - 1) for label, num_choice in
-                 zip([e["label"] for e in examples], num_choices)]))) if "label" in examples[0] else None,
-            "num_choice": torch.LongTensor(
-                list(itertools.chain.from_iterable([[i] + [-1] * (i - 1) for i in num_choices])))
+            "labels": [e["label"] for e in examples] if "label" in examples[0] else None,
+            "num_choice": num_choices
         }
 
     # Data loader methods to return train and validation data sets
@@ -152,9 +157,9 @@ class Classifier(pl.LightningModule):
 
     def training_step_end(self, batch_parts_outputs):
         logits = batch_parts_outputs["out"]
-        num_choices = batch_parts_outputs["num_choice"].masked_select(batch_parts_outputs["num_choice"].ne(-1))
-        labels = batch_parts_outputs["labels"].masked_select(batch_parts_outputs["labels"].ne(-1))
-        logits = logits.split(num_choices.tolist())
+        num_choices = merge(batch_parts_outputs["num_choice"])
+        labels = torch.tensor(merge(batch_parts_outputs["labels"]), dtype=torch.long, device=self.device)
+        logits = logits.split(num_choices)
         labels = labels.split(1)
         loss = torch.stack(list(self.loss(l1.reshape(1, -1), l2) for l1, l2 in zip(logits, labels))).mean()
         return {"loss": loss,
@@ -168,9 +173,9 @@ class Classifier(pl.LightningModule):
 
     def validation_step_end(self, batch_parts_outputs):
         logits = batch_parts_outputs["out"]
-        num_choices = batch_parts_outputs["num_choice"].masked_select(batch_parts_outputs["num_choice"].ne(-1))
-        labels = batch_parts_outputs["labels"].masked_select(batch_parts_outputs["labels"].ne(-1))
-        logits = logits.split(num_choices.tolist())
+        num_choices = merge(batch_parts_outputs["num_choice"])
+        labels = torch.tensor(merge(batch_parts_outputs["labels"]), dtype=torch.long, device=self.device)
+        logits = logits.split(num_choices)
         labels = labels.split(1)
         loss = torch.stack(list(self.loss(l1.reshape(1, -1), l2) for l1, l2 in zip(logits, labels))).mean()
         return {"val_loss": loss,

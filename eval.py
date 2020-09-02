@@ -13,7 +13,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from model import Classifier
+from model import Classifier, merge
 
 # Save root path as hydra will create copies of this code in a folder
 ROOT_PATH = Path(__file__).parent.absolute()
@@ -68,8 +68,8 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
                 batch[key] = batch[key].to(compute_device)
         with torch.no_grad():
             logits = a_classifier.forward(batch)
-        num_choices = batch["num_choice"].masked_select(batch["num_choice"].ne(-1))
-        logits = logits.split(num_choices.tolist())
+        num_choices = merge(batch["num_choice"])
+        logits = logits.split(num_choices)
         new_predictions = torch.stack([torch.argmax(log) for log in logits]).cpu().detach().numpy().tolist()
         new_confidences = [F.softmax(log, dim=0).cpu().detach().numpy().tolist() for log in logits]
         predictions.extend(new_predictions)
