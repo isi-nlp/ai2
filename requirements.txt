@@ -46,7 +46,7 @@ tensorboard==2.2.0
 tensorboard-plugin-wit==1.7.0
 test-tube==0.7.5
 tokenizers==0.5.0
-torch==1.6.0
+torch==1.4.0
 tqdm==4.42.1
 transformers==2.5.0
 urllib3==1.25.8
