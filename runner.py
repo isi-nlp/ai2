@@ -3,7 +3,7 @@ import os
 parameter_options = {
                 # 'task': ['alphanli', 'hellaswag', 'physicaliqa', 'socialiqa'],
                 'task': ['ace'],
-                'train_data_slice': ['33','66', '100'],
+                'train_data_slice': ['7', '33','66', '100'],
                 'max_length': ['256'],
                 # 'train_data_slice': ['10'],
                 # 'task2': ['cn_10k', 'cn_20k', 'cn_40k', 'cn_physical_10k'],
