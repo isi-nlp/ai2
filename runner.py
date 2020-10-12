@@ -18,6 +18,7 @@ parameter_options = {
                 # 'learning_rate': ['5e-7','5e-6','5e-5'],
                 # 'batch_size': ['2','3','6'],
                 'batch_size': ['1'],
+                'max_epochs': ['10'],
                 # 'dropout': ['0','0.2','0.3'],
                 # 'dropout': ['0.2'],
               }
