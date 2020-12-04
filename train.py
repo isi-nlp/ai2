@@ -80,6 +80,7 @@ def train(config: omegaconf.Config):
         resume_from_checkpoint=checkpoint_path,
         benchmark=False,
         deterministic=True,
+        fast_dev_run=True,  # TODO: Remove
     )
     trainer.fit(model)
     logger.success('Training Completed')

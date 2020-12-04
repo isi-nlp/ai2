@@ -74,6 +74,7 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
         new_confidences = [F.softmax(log, dim=0).cpu().detach().numpy().tolist() for log in logits]
         predictions.extend(new_predictions)
         confidence.extend(new_confidences)
+        break  # TODO: Remove
 
     # Offset the predictions with the lowest label
     predictions = [p + a_classifier.label_offset for p in predictions]
@@ -87,6 +88,7 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], compute_de
     # If desired y value is provided, calculate relevant statistics
     if val_y:
         labels = pd.read_csv(val_y, sep='\t', header=None).values.tolist()
+        labels = labels[:a_classifier.hparams["batch_size"] * 2]  # TODO: Remove
         logger.info(f"Accuracy score: {accuracy_score(labels, predictions):.3f}")
 
         stats = []
