@@ -20,7 +20,6 @@ from pegasus_wrapper.locator import Locator
 from pegasus_wrapper.artifact import ValueArtifact
 
 import ai2.train as train_script
-import ai2.eval as eval_script
 import ai2.percent_agreement as percent_agreement_script
 from ai2.pegasus import override_generality, override_matches
 
@@ -38,6 +37,7 @@ ParameterCombination = List[Tuple[str, Any]]
 def main(params: Parameters):
     initialize_vista_pegasus_wrapper(params)
 
+    experiment_root = params.creatable_directory('experiment_root')
     project_root = params.existing_directory('project_root')
     params_root = project_root / 'parameters'
     parameter_options = params.namespace('parameter_options').as_nested_dicts()
@@ -66,7 +66,6 @@ def main(params: Parameters):
     # both a train job (output under 'models')
     # and an eval job (output under 'eval')
     model_outputs_locator = Locator(('models',))
-    base_eval_locator = Locator(('eval',))
     prediction_artifacts = []
     for idx, combination in enumerate(parameter_combinations):
         task: str = only(option for parameter, option in combination if parameter == 'task')
@@ -111,7 +110,7 @@ def main(params: Parameters):
         )
 
         # Set common parameters and schedule the job.
-        save_path = directory_for(train_locator)
+        save_path = experiment_root / "_".join(options)
         train_job_params = train_job_params.unify({
             'save_path': save_path,
             'save_best_only': False,
@@ -125,34 +124,14 @@ def main(params: Parameters):
             depends_on=[],
             resource_request=resource_request,
         )
-        trained_model = ValueArtifact(
-            value=save_path,
-            depends_on=immutableset([train_job]),
-        )
 
-        # Evaluate on the dev set
-        eval_locator = base_eval_locator / '_'.join(options)
-        eval_results_path = directory_for(eval_locator) / 'results'
-        eval_job = run_python_on_parameters(
-            eval_locator,
-            eval_script,
-            train_job_params.unify({
-                'checkpoint_path': save_path,
-                'results_path': eval_results_path,
-                'with_true_label': True,
-                # NOTE: val_x and val_y *should* be included in the trainng job parameters,
-                # because it includes parameters/task/{taskname}.params"
-                # (part of the combination-specific parameters)
-            }),
-            depends_on=[trained_model],
-        )
         prediction_artifacts.append(
             (
                 combination,
                 task,
                 ValueArtifact(
-                    value=eval_results_path / "predictions.lst",
-                    depends_on=immutableset([eval_job]),
+                    value=save_path / "predictions.lst",
+                    depends_on=immutableset([train_job]),
                 )
             )
         )
