@@ -38,6 +38,13 @@ parallelism: 10
 namespace: saga
 partition: ephemeral
 
+# Needed for training/inference jobs.
+# Oddly, it doesn't look like it's possible to specify these at the job level,
+# so I instead specify these spack requirements at the workflow level.
+spack_packages:
+  - "cuda@10.1.243"
+  - "cudnn@7.6.5.32-9.0-linux-x64"
+
 max_jobs_on_mics: 4
 
 num_cpus: 4
