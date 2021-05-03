@@ -3,6 +3,8 @@ Train two slightly different RoBERTa models and compare them on
 """
 from typing import List, Tuple, Any
 
+from more_itertools import only
+
 from immutablecollections import immutableset
 from vistautils.parameters import Parameters, YAMLParametersLoader
 from vistautils.parameters_only_entrypoint import parameters_only_entry_point
@@ -19,6 +21,7 @@ from pegasus_wrapper.artifact import ValueArtifact
 
 import ai2.train as train_script
 import ai2.eval as eval_script
+import ai2.percent_agreement as percent_agreement_script
 from ai2.pegasus import override_generality, override_matches
 
 
@@ -63,7 +66,9 @@ def main(params: Parameters):
     # Schedule training jobs for each parameter combination. Their outputs will be under '{experiment_root}/models'.
     model_outputs_locator = Locator(('models',))
     base_eval_locator = Locator(('eval',))
-    for i, combination in enumerate(parameter_combinations):
+    prediction_artifacts = []
+    for idx, combination in enumerate(parameter_combinations):
+        task: str = only(option for parameter, option in combination if parameter == 'task')
         options: Tuple[str] = tuple(str(option) if option != '' else '_default' for _, option in combination)
         train_locator = model_outputs_locator / Locator(options)
 
@@ -119,12 +124,13 @@ def main(params: Parameters):
         )
 
         eval_locator = base_eval_locator / '_'.join(options)
-        run_python_on_parameters(
+        eval_results_path = directory_for(eval_locator) / 'results'
+        eval_job = run_python_on_parameters(
             eval_locator,
             eval_script,
             train_job_params.unify({
                 'checkpoint_path': save_path,
-                'results_path': directory_for(eval_locator) / 'results',
+                'results_path': eval_results_path,
                 'with_true_label': True,
                 # NOTE: val_x and val_y *should* be included in the trainng job parameters,
                 # because it includes parameters/task/{taskname}.params"
@@ -132,6 +138,44 @@ def main(params: Parameters):
             }),
             depends_on=[trained_model],
         )
+        prediction_artifacts.append(
+            (
+                combination,
+                task,
+                ValueArtifact(
+                    value=eval_results_path / "predictions.lst",
+                    depends_on=immutableset([eval_job]),
+                )
+            )
+        )
+
+    base_percent_agreement_locator = Locator(("percent_agreement",))
+    for idx, (combination1, task1, model1_predictions_artifact) in enumerate(prediction_artifacts):
+        model1_name = '__'.join('='.join(str(x) for x in option_pair) for option_pair in combination1)
+        for combination2, task2, model2_predictions_artifact in prediction_artifacts[idx + 1:]:
+            if task1 != task2:
+                continue
+
+            task_parameters: Parameters = YAMLParametersLoader().load(
+                params_root / 'task' / f'{task1}.params'
+            )
+            percent_agreement_parameters = params.unify(task_parameters)
+
+            model2_name = '__'.join('='.join(str(x) for x in option_pair) for option_pair in combination2)
+
+            percent_agreement_locator = base_percent_agreement_locator / model1_name / model2_name
+            run_python_on_parameters(
+                percent_agreement_locator,
+                percent_agreement_script,
+                percent_agreement_parameters.unify({
+                    'model1_predicted_labels': model1_predictions_artifact.value,
+                    'model2_predicted_labels': model2_predictions_artifact.value,
+                    'gold_labels': task_parameters.existing_file("val_y"),
+                    'save_agreement_series_to': directory_for(percent_agreement_locator) / "agreement_series.csv",
+                    'save_percent_agreement_to': directory_for(percent_agreement_locator) / "agreement.txt",
+                }),
+                depends_on=[model1_predictions_artifact, model2_predictions_artifact],
+            )
 
     # Limit number of jobs that will run at once on MICS account/partition
     limit_jobs_for_category(category='mics', max_jobs=max_jobs_on_mics)
