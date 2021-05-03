@@ -62,8 +62,9 @@ def main(params: Parameters):
         key=lambda override_: override_generality(override_, parameter_options),
     )
 
-    # Training phase.
-    # Schedule training jobs for each parameter combination. Their outputs will be under '{experiment_root}/models'.
+    # Schedule jobs for each parameter combination:
+    # both a train job (output under 'models')
+    # and an eval job (output under 'eval')
     model_outputs_locator = Locator(('models',))
     base_eval_locator = Locator(('eval',))
     prediction_artifacts = []
@@ -123,6 +124,7 @@ def main(params: Parameters):
             depends_on=immutableset([train_job]),
         )
 
+        # Evaluate on the dev set
         eval_locator = base_eval_locator / '_'.join(options)
         eval_results_path = directory_for(eval_locator) / 'results'
         eval_job = run_python_on_parameters(
@@ -149,6 +151,7 @@ def main(params: Parameters):
             )
         )
 
+    # Calculate the percent agreement for all same-task model pairs
     base_percent_agreement_locator = Locator(("percent_agreement",))
     for idx, (combination1, task1, model1_predictions_artifact) in enumerate(prediction_artifacts):
         model1_name = '__'.join('='.join(str(x) for x in option_pair) for option_pair in combination1)
