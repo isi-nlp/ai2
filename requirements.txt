@@ -25,6 +25,7 @@ jmespath==0.9.5
 joblib==0.14.1
 loguru==0.4.1
 Markdown==3.2.1
+more_itertools==8.7.0
 numpy==1.18.1
 oauthlib==3.1.0
 omegaconf==1.4.1
