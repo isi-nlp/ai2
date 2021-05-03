@@ -1,0 +1,47 @@
+_includes:
+  - "root.params"
+  - "model/roberta-large.params"
+
+parameter_options:
+  task:
+    - 'alphanli'
+#    - 'hellaswag'
+    - 'physicaliqa'
+    - 'socialiqa'
+  train_data_slice:
+    - 50
+    - 100
+  architecture:
+    - 'standard'
+#    - 'include_answers_in_context'
+  random_seed:
+    - 42
+
+training_overrides:
+#  hellaswag:
+#    parameter_options:
+#      task: hellaswag
+#    batch_size: 2
+  alphanli:
+    parameter_options:
+      task: alphanli
+    partition: mics
+    job_time_in_minutes: 1200  # 20 hours
+
+# Based on https://github.com/isi-vista/gaia-event-extraction/blob/d1235671952dff13b7851a96088ef2ecef4996c9/sample_params/neural_trigger_models/pegasus/experiments/tbnamm.baseline.ace.debug.params
+workflow_name: george
+experiment_root: '%experiments_root%/compare_models'
+workflow_directory: '%experiment_root%'
+backend: slurm
+site: 'saga'
+parallelism: 10
+namespace: saga
+partition: ephemeral
+
+max_jobs_on_mics: 4
+
+num_cpus: 4
+num_gpus: 1
+memory: '16g'
+# sbatch --ntasks=1  # already covered, resource_request.py line 133
+job_time_in_minutes: 720  # 12 horus

@@ -1,0 +1,143 @@
+"""
+Train two slightly different RoBERTa models and compare them on
+"""
+from typing import List, Tuple, Any
+
+from immutablecollections import immutableset
+from vistautils.parameters import Parameters, YAMLParametersLoader
+from vistautils.parameters_only_entrypoint import parameters_only_entry_point
+from pegasus_wrapper import (
+    initialize_vista_pegasus_wrapper,
+    directory_for,
+    run_python_on_parameters,
+    limit_jobs_for_category,
+    write_workflow_description,
+)
+from pegasus_wrapper.resource_request import ResourceRequest
+from pegasus_wrapper.locator import Locator
+from pegasus_wrapper.artifact import ValueArtifact
+
+import ai2.train as train_script
+import ai2.eval as eval_script
+from ai2.pegasus import override_generality, override_matches
+
+
+TIME_LIMIT_HOURS_NOT_ALPHANLI = 12  # Time limit in hours for tasks other than AlphaNLI
+MINUTES_PER_HOUR = 60
+
+# Default limit on the number of jobs that will run on MICS at once
+DEFAULT_MAX_JOBS_ON_MICS = 2
+
+# Represents a parameter combination as a list of (parameter_name, value) tuples.
+ParameterCombination = List[Tuple[str, Any]]
+
+
+def main(params: Parameters):
+    initialize_vista_pegasus_wrapper(params)
+
+    project_root = params.existing_directory('project_root')
+    params_root = project_root / 'parameters'
+    parameter_options = params.namespace('parameter_options').as_nested_dicts()
+
+    max_jobs_on_mics = params.integer('max_jobs_on_mics', default=DEFAULT_MAX_JOBS_ON_MICS)
+
+    # Compute all possible combinations of the parameters
+    parameter_combinations: List[ParameterCombination] = [[]]
+    for parameter_name, options in parameter_options.items():
+        new_combinations = []
+        for combination in parameter_combinations:
+            for option in options:
+                new_combination = combination + [(parameter_name, option)]
+                new_combinations.append(new_combination)
+        parameter_combinations = new_combinations
+
+    # Process combination-specific overrides
+    training_overrides = sorted(
+        list(params.namespace_or_empty('training_overrides')
+             .as_nested_dicts()
+             .values()),
+        key=lambda override_: override_generality(override_, parameter_options),
+    )
+
+    # Training phase.
+    # Schedule training jobs for each parameter combination. Their outputs will be under '{experiment_root}/models'.
+    model_outputs_locator = Locator(('models',))
+    base_eval_locator = Locator(('eval',))
+    for i, combination in enumerate(parameter_combinations):
+        options: Tuple[str] = tuple(str(option) if option != '' else '_default' for _, option in combination)
+        train_locator = model_outputs_locator / Locator(options)
+
+        # Read in combination-specific parameters
+        train_job_params = params.from_key_value_pairs([('model', params.namespace('model'))])
+        train_job_params = train_job_params.unify(Parameters.from_key_value_pairs(combination, namespace_separator=None))
+        for parameter, option in combination:
+            if option != '':
+                parameter_directory = params_root / parameter
+                if parameter_directory.exists():
+                    option_params: Parameters = YAMLParametersLoader().load(
+                        parameter_directory / f'{option}.params'
+                    )
+                    train_job_params = train_job_params.unify(option_params)
+
+        # Because the job parameters tend to indirectly include root.params, which includes a
+        # default partition, we need to override the partition setting to reflect our input
+        # parameters.
+        train_job_params = train_job_params.unify({'partition': params.string('partition')})
+
+        # Process overrides
+        for override in training_overrides:
+            if override_matches(override, dict(combination)):
+                train_job_params = train_job_params.unify({
+                    parameter_option: value for parameter_option, value in override.items()
+                    if parameter_option != 'parameter_options'
+                })
+
+        # Messy parameters input. This shouldn't matter to ResourceRequest, though. Maybe clean up
+        # later.
+        resource_request = ResourceRequest.from_parameters(
+            params.unify(train_job_params)
+        )
+
+        # Set common parameters and schedule the job.
+        save_path = directory_for(train_locator)
+        train_job_params = train_job_params.unify({
+            'save_path': save_path,
+            'save_best_only': False,
+            'save_by_date_and_parameters': False,
+            'eval_after_training': True,
+        })
+        train_job = run_python_on_parameters(
+            train_locator,
+            train_script,
+            train_job_params,
+            depends_on=[],
+            resource_request=resource_request,
+        )
+        trained_model = ValueArtifact(
+            value=save_path,
+            depends_on=immutableset([train_job]),
+        )
+
+        eval_locator = base_eval_locator / '_'.join(options)
+        run_python_on_parameters(
+            eval_locator,
+            eval_script,
+            train_job_params.unify({
+                'checkpoint_path': save_path,
+                'results_path': directory_for(eval_locator) / 'results',
+                'with_true_label': True,
+                # NOTE: val_x and val_y *should* be included in the trainng job parameters,
+                # because it includes parameters/task/{taskname}.params"
+                # (part of the combination-specific parameters)
+            }),
+            depends_on=[trained_model],
+        )
+
+    # Limit number of jobs that will run at once on MICS account/partition
+    limit_jobs_for_category(category='mics', max_jobs=max_jobs_on_mics)
+
+    write_workflow_description()
+
+
+if __name__ == '__main__':
+    parameters_only_entry_point(main)
