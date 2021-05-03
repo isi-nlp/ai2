@@ -10,7 +10,6 @@ from vistautils.parameters import Parameters, YAMLParametersLoader
 from vistautils.parameters_only_entrypoint import parameters_only_entry_point
 from pegasus_wrapper import (
     initialize_vista_pegasus_wrapper,
-    directory_for,
     run_python_on_parameters,
     limit_jobs_for_category,
     write_workflow_description,
@@ -110,7 +109,10 @@ def main(params: Parameters):
         )
 
         # Set common parameters and schedule the job.
-        save_path = experiment_root / "_".join(options)
+        save_path = experiment_root / "_".join(
+            "=".join(str(x) for x in option_pair)
+            for option_pair in combination
+        )
         train_job_params = train_job_params.unify({
             'save_path': save_path,
             'save_best_only': False,
@@ -139,7 +141,11 @@ def main(params: Parameters):
     # Calculate the percent agreement for all same-task model pairs
     base_percent_agreement_locator = Locator(("percent_agreement",))
     for idx, (combination1, task1, model1_predictions_artifact) in enumerate(prediction_artifacts):
-        model1_name = '__'.join('='.join(str(x) for x in option_pair) for option_pair in combination1)
+        model1_name = '__'.join(
+            '='.join(str(x) for x in option_pair)
+            for option_pair in combination1
+            if "task" not in option_pair[0]
+        )
         for combination2, task2, model2_predictions_artifact in prediction_artifacts[idx + 1:]:
             if task1 != task2:
                 continue
@@ -149,7 +155,11 @@ def main(params: Parameters):
             )
             percent_agreement_parameters = params.unify(task_parameters)
 
-            model2_name = '__'.join('='.join(str(x) for x in option_pair) for option_pair in combination2)
+            model2_name = '__'.join(
+                '='.join(str(x) for x in option_pair)
+                for option_pair in combination2
+                if "task" not in option_pair[0]
+            )
 
             percent_agreement_locator = base_percent_agreement_locator / model1_name / model2_name
             run_python_on_parameters(
@@ -159,8 +169,8 @@ def main(params: Parameters):
                     'model1_predicted_labels': model1_predictions_artifact.value,
                     'model2_predicted_labels': model2_predictions_artifact.value,
                     'gold_labels': task_parameters.existing_file("val_y"),
-                    'save_agreement_series_to': directory_for(percent_agreement_locator) / "agreement_series.csv",
-                    'save_percent_agreement_to': directory_for(percent_agreement_locator) / "agreement.txt",
+                    'save_agreement_series_to': experiment_root / task1 / model1_name / model2_name / "agreement_series.csv",
+                    'save_percent_agreement_to': experiment_root / task1 / model1_name / model2_name / "agreement.txt",
                 }),
                 depends_on=[model1_predictions_artifact, model2_predictions_artifact],
             )
