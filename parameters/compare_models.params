@@ -31,7 +31,6 @@ training_overrides:
 workflow_name: george
 experiment_root: '%experiments_root%/compare_models'
 workflow_directory: '%pegasus_home%/compare_models'
-home_dir: '%workflow_directory%'
 backend: slurm
 site: 'saga'
 parallelism: 10
