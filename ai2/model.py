@@ -221,10 +221,15 @@ class Classifier(pl.LightningModule):
         else:
             pairs = [pair for example in examples for pair in example["text"]]
 
-        results = self.tokenizer.batch_encode_plus(pairs,
-                                                   add_special_tokens=True, max_length=self.hparams["max_length"],
-                                                   return_tensors='pt', return_attention_masks=True,
-                                                   pad_to_max_length=True)
+        results = self.tokenizer.batch_encode_plus(
+            pairs,
+            add_special_tokens=True,
+            max_length=self.hparams["max_length"],
+            truncation=True,
+            padding='max_length',
+            return_tensors='pt',
+            return_attention_masks=True,
+        )
         assert results["input_ids"].shape[0] == batch_size * num_choice, \
             f"Invalid shapes {results['input_ids'].shape} {batch_size, num_choice}"
 
