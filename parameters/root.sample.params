@@ -6,6 +6,7 @@ experiments_root: "%project_root%/experiments"
 
 # SAGA settings
 partition: mics  # SLURM partition to run on
+pegasus_home: /nas/home/yourname/pegasus_working
 # spack_root: /opt/spack/share/spack/setup-env.sh  #  path to your spack clone
 conda_base_path: /nas/home/jcecil/miniconda3  # path to your anaconda install
 conda_environment: ai2
