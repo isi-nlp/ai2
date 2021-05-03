@@ -31,7 +31,8 @@ training_overrides:
 # Based on https://github.com/isi-vista/gaia-event-extraction/blob/d1235671952dff13b7851a96088ef2ecef4996c9/sample_params/neural_trigger_models/pegasus/experiments/tbnamm.baseline.ace.debug.params
 workflow_name: george
 experiment_root: '%experiments_root%/compare_models'
-workflow_directory: '%experiment_root%'
+workflow_directory: '%pegasus_home%/compare_models'
+home_dir: '%workflow_directory%'
 backend: slurm
 site: 'saga'
 parallelism: 10
