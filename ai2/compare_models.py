@@ -73,8 +73,14 @@ def main(params: Parameters):
         options: Tuple[str] = tuple(str(option) if option != '' else '_default' for _, option in combination)
         train_locator = model_outputs_locator / Locator(options)
 
+        # Set up common job parameters
+        train_job_params = Parameters.from_key_value_pairs([
+            ('model', params.namespace('model'))
+        ]).unify(
+            params.namespace("train")
+        )
+
         # Read in combination-specific parameters
-        train_job_params = params.from_key_value_pairs([('model', params.namespace('model'))])
         train_job_params = train_job_params.unify(Parameters.from_key_value_pairs(combination, namespace_separator=None))
         for parameter, option in combination:
             if option != '':
