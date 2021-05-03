@@ -36,7 +36,10 @@ ParameterCombination = List[Tuple[str, Any]]
 
 
 def main(params: Parameters):
-    initialize_vista_pegasus_wrapper(params)
+    pegasus_params = Parameters.from_mapping({
+        "workflow_directory": params.existing_directory("home_dir") / "mics" / "mf-jm-jc-leaderboard" / "compare_models"
+    })
+    initialize_vista_pegasus_wrapper(pegasus_params.unify(params))
 
     project_root = params.existing_directory('project_root')
     params_root = project_root / 'parameters'
