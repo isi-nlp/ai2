@@ -161,7 +161,7 @@ def main(params: Parameters):
                 if "task" not in option_pair[0]
             )
 
-            percent_agreement_locator = base_percent_agreement_locator / model1_name / model2_name
+            percent_agreement_locator = base_percent_agreement_locator / task1 / model1_name / model2_name
             run_python_on_parameters(
                 percent_agreement_locator,
                 percent_agreement_script,
