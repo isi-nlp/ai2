@@ -50,7 +50,7 @@ def random_slice_entry_point(params: Parameters) -> None:
 
     permuted_indices = np.random.permutation(df.index)
     sampled_indices = permuted_indices[:int(n_rows * fraction)]
-    sampled_df = df[sampled_indices]
+    sampled_df = df.loc[sampled_indices]
     _log.info("Producing slice of size %d", len(sampled_df))
 
     if output.suffix == ".jsonl":
