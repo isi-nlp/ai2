@@ -47,11 +47,13 @@ def random_slice_entry_point(params: Parameters) -> None:
 
     n_rows = len(df)
     _log.info("Got input of size %d", n_rows)
+    _log.info("Head of input: %s", df.head())
 
     permuted_indices = np.random.permutation(df.index)
     sampled_indices = permuted_indices[:int(n_rows * fraction)]
     sampled_df = df.loc[sampled_indices]
     _log.info("Producing slice of size %d", len(sampled_df))
+    _log.info("Head of sampled: %s", sampled_df.head())
 
     if output.suffix == ".jsonl":
         sampled_df.to_json(str(output), orient="records", lines=True)
