@@ -120,8 +120,8 @@ def compare_models_entrypoint(params: Parameters):
                     input_y=ValueArtifact.preexisting(
                         task_to_parameters[task].existing_file("train_y")
                     ),
-                    output_x=experiment_root / "slices" / f"seed{slice_option['seed']}_pct{slice_option['percent']}" / "train.jsonl",
-                    output_y=experiment_root / "slices" / f"seed{slice_option['seed']}_pct{slice_option['percent']}" / "train-labels.lst",
+                    output_x=experiment_root / "slices" / task / f"seed{slice_option['seed']}_pct{slice_option['percent']}" / "train.jsonl",
+                    output_y=experiment_root / "slices" / task / f"seed{slice_option['seed']}_pct{slice_option['percent']}" / "train-labels.lst",
                     random_seed=slice_option["seed"],
                     fraction=slice_option["percent"] / 100.,
                 )
