@@ -2,25 +2,27 @@ _includes:
   - "root.params"
   - "model/roberta-large.params"
 
+slice_options:
+  - seed: 0
+    percent: 80
+  - seed: 42
+    percent: 80
+
 parameter_options:
   task:
     - 'alphanli'
-#    - 'hellaswag'
     - 'physicaliqa'
     - 'socialiqa'
-  train_data_slice:
-    - 50
-    - 100
+  random_seed:
+    - 0
+    - 42
 
 train:
   architecture: 'standard'
-  random_seed: 42
+  # Training should use all (100%) of the 80% slice of the data we provided
+  train_data_slice: 100
 
 training_overrides:
-#  hellaswag:
-#    parameter_options:
-#      task: hellaswag
-#    batch_size: 2
   alphanli:
     parameter_options:
       task: alphanli
