@@ -39,7 +39,9 @@ def random_slice_entry_point(params: Parameters) -> None:
     df: pd.DataFrame
     if input_.suffix == ".jsonl":
         df = pd.read_json(str(input_), lines=True)
-    elif input_.suffix in {".csv", ".lst"}:
+    elif input_.suffix == ".lst":
+        df = pd.read_csv(str(input_), header=None)
+    elif input_.suffix == ".csv":
         df = pd.read_csv(str(input_))
     else:
         _log.warning("Don't know how to handle input with suffix %s; attempting to load as CSV...", input_.suffix)
