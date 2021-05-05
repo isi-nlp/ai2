@@ -37,9 +37,9 @@ def random_slice_entry_point(params: Parameters) -> None:
     np.random.seed(random_seed)
 
     df: pd.DataFrame
-    if input_.suffix == "jsonl":
+    if input_.suffix == ".jsonl":
         df = pd.read_json(str(input_), lines=True)
-    elif input_.suffix in {"csv", "lst"}:
+    elif input_.suffix in {".csv", ".lst"}:
         df = pd.read_csv(str(input_))
     else:
         _log.warning("Don't know how to handle input with suffix %s; attempting to load as CSV...", input_.suffix)
@@ -53,9 +53,9 @@ def random_slice_entry_point(params: Parameters) -> None:
     sampled_df = df[sampled_indices]
     _log.info("Producing slice of size %d", len(sampled_df))
 
-    if output.suffix == "jsonl":
+    if output.suffix == ".jsonl":
         sampled_df.to_json(str(output), lines=True, index=False)
-    elif output.suffix in {"lst"}:
+    elif output.suffix in {".lst"}:
         sampled_df.to_csv(str(output), header=False, index=False)
     else:
         _log.warning("Don't know how to save output with suffix %s; saving as CSV with header...", input_.suffix)
