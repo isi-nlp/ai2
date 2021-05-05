@@ -54,7 +54,7 @@ def random_slice_entry_point(params: Parameters) -> None:
     _log.info("Producing slice of size %d", len(sampled_df))
 
     if output.suffix == ".jsonl":
-        sampled_df.to_json(str(output), lines=True, index=False)
+        sampled_df.to_json(str(output), orient="records", lines=True)
     elif output.suffix in {".lst"}:
         sampled_df.to_csv(str(output), header=False, index=False)
     else:
