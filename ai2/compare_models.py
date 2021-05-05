@@ -203,7 +203,7 @@ def compare_models_entrypoint(params: Parameters):
                 "=".join(str(x) for x in option_pair)
                 for option_pair in combination
             )
-            save_path = experiment_root / f"{options_name}_{tuple_slice_name}"
+            save_path = experiment_root / f"{options_name}_{string_slice_name}"
             train_job_params = train_job_params.unify({
                 'train_x': slice_x_artifact.value,
                 'train_y': slice_y_artifact.value,
