@@ -10,7 +10,6 @@ slice_options:
 
 parameter_options:
   task:
-    - 'alphanli'
     - 'physicaliqa'
     - 'socialiqa'
   random_seed:
@@ -21,13 +20,6 @@ train:
   architecture: 'standard'
   # Training should use all (100%) of the 80% slice of the data we provided
   train_data_slice: 100
-
-training_overrides:
-  alphanli:
-    parameter_options:
-      task: alphanli
-    partition: mics
-    job_time_in_minutes: 1440  # 20 hours
 
 # Based on https://github.com/isi-vista/gaia-event-extraction/blob/d1235671952dff13b7851a96088ef2ecef4996c9/sample_params/neural_trigger_models/pegasus/experiments/tbnamm.baseline.ace.debug.params
 workflow_name: george
