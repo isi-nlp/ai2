@@ -25,7 +25,7 @@ training_overrides:
     parameter_options:
       task: alphanli
     partition: mics
-    job_time_in_minutes: 1200  # 20 hours
+    job_time_in_minutes: 1440  # 20 hours
 
 # Based on https://github.com/isi-vista/gaia-event-extraction/blob/d1235671952dff13b7851a96088ef2ecef4996c9/sample_params/neural_trigger_models/pegasus/experiments/tbnamm.baseline.ace.debug.params
 workflow_name: george
