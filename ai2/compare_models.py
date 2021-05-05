@@ -222,7 +222,7 @@ def compare_models_entrypoint(params: Parameters):
 
             prediction_artifacts.append(
                 (
-                    combination + [("slice", string_slice_name)],
+                    combination + [("slice", "_".join(tuple_slice_name[2:]))],
                     task,
                     ValueArtifact(
                         value=save_path / "predictions.lst",
