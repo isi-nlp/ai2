@@ -4,9 +4,17 @@ _includes:
 
 slice_options:
   - seed: 0
+    percent: 70
+  - seed: 42
+    percent: 70
+  - seed: 0
     percent: 80
   - seed: 42
     percent: 80
+  - seed: 0
+    percent: 90
+  - seed: 42
+    percent: 90
 
 parameter_options:
   task:
@@ -15,6 +23,8 @@ parameter_options:
   random_seed:
     - 0
     - 42
+    - 431
+    - 774
 
 train:
   architecture: 'standard'
