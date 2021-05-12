@@ -5,11 +5,13 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 from more_itertools import only
+import pandas as pd
 
 from immutablecollections import immutableset
 from vistautils.parameters import Parameters, YAMLParametersLoader
 from vistautils.parameters_only_entrypoint import parameters_only_entry_point
 from pegasus_wrapper import (
+    directory_for,
     initialize_vista_pegasus_wrapper,
     run_python_on_parameters,
     limit_jobs_for_category,
@@ -154,7 +156,7 @@ def compare_models_entrypoint(params: Parameters):
     # both a train job (output under 'models')
     # and an eval job (output under 'eval')
     model_outputs_locator = Locator(('models',))
-    prediction_artifacts = []
+    evaluation_artifacts = []
     for idx, combination in enumerate(parameter_combinations):
         task: str = only(option for parameter, option in combination if parameter == 'task')
         options: Tuple[str, ...] = tuple(str(option) if option != '' else '_default' for _, option in combination)
@@ -227,10 +229,14 @@ def compare_models_entrypoint(params: Parameters):
                 resource_request=resource_request,
             )
 
-            prediction_artifacts.append(
+            evaluation_artifacts.append(
                 (
                     combination + [("slice", "_".join(tuple_slice_name[2:]))],
                     task,
+                    ValueArtifact(
+                        value=save_path / "results.txt",
+                        depends_on=immutableset([train_job]),
+                    ),
                     ValueArtifact(
                         value=save_path / "predictions.lst",
                         depends_on=immutableset([train_job]),
@@ -239,43 +245,39 @@ def compare_models_entrypoint(params: Parameters):
             )
 
     # Calculate the percent agreement for all same-task model pairs
-    base_percent_agreement_locator = Locator(("percent_agreement",))
-    for idx, (combination1, task1, model1_predictions_artifact) in enumerate(prediction_artifacts):
-        model1_name = '__'.join(
-            '-'.join(str(x) for x in option_pair)
-            for option_pair in combination1
-            if "task" not in option_pair[0]
-        )
-        for combination2, task2, model2_predictions_artifact in prediction_artifacts[idx + 1:]:
-            if task1 != task2:
-                continue
+    percent_agreement_locator = Locator(("percent_agreement",))
+    comparisons_to_make = pd.DataFrame([
+        {
+            "model1_combination": model1_combination,
+            "model2_combination": model2_combination,
+            "model1_accuracy": str(model1_accuracy_artifact.value),
+            "model2_accuracy": str(model1_accuracy_artifact.value),
+            "model1_predicted_labels": str(model1_predictions_artifact.value),
+            "model2_predicted_labels": str(model2_predictions_artifact.value),
+            "gold_labels": str(task_to_parameters[task1].existing_file("val_y")),
+        }
+        for idx, (model1_combination, task1, model1_accuracy_artifact, model1_predictions_artifact) in enumerate(evaluation_artifacts)
+        for model2_combination, task2, model2_accuracy_artifact, model2_predictions_artifact in evaluation_artifacts[idx + 1:]
+        if task1 == task2
+    ])
+    file_of_comparisons_to_make = directory_for(percent_agreement_locator) / "comparisons.jsonl"
+    comparisons_to_make.to_json(file_of_comparisons_to_make, orient="records", lines=True)
 
-            # task_parameters: Parameters = YAMLParametersLoader().load(
-            #     params_root / 'task' / f'{task1}.params'
-            # )
-            task_parameters: Parameters = task_to_parameters[task1]
-            percent_agreement_parameters = params.unify(task_parameters)
+    percent_agreement_parameters = params.unify({
+        "comparisons_to_make": file_of_comparisons_to_make,
+        "save_agreement_seqs_to": experiment_root / "agreement_data.csv",
+        "save_comparison_results_to": experiment_root / "summary.csv",
+    })
 
-            model2_name = '__'.join(
-                ','.join(str(x) for x in option_pair)
-                for option_pair in combination2
-                if "task" not in option_pair[0]
-            )
-
-            percent_agreement_locator = base_percent_agreement_locator / task1 / model1_name / model2_name
-            run_python_on_parameters(
-                percent_agreement_locator,
-                percent_agreement_script,
-                percent_agreement_parameters.unify({
-                    'model1_predicted_labels': model1_predictions_artifact.value,
-                    'model2_predicted_labels': model2_predictions_artifact.value,
-                    'gold_labels': task_parameters.existing_file("val_y"),
-                    'save_agreement_series_to': experiment_root / task1 / model1_name / model2_name / "agreement_series.csv",
-                    'save_percent_agreement_to': experiment_root / task1 / model1_name / model2_name / "agreement.txt",
-                }),
-                depends_on=[model1_predictions_artifact, model2_predictions_artifact],
-                resource_request=SlurmResourceRequest(job_time_in_minutes=120),
-            )
+    accuracy_artifacts = tuple(accuracy_artifact for _, _, accuracy_artifact, _ in evaluation_artifacts)
+    prediction_artifacts = tuple(prediction_artifact for _, _, _, prediction_artifact in evaluation_artifacts)
+    run_python_on_parameters(
+        percent_agreement_locator,
+        percent_agreement_script,
+        percent_agreement_parameters,
+        depends_on=accuracy_artifacts + prediction_artifacts,
+        resource_request=SlurmResourceRequest(job_time_in_minutes=120),
+    )
 
     # Limit number of jobs that will run at once on MICS account/partition
     limit_jobs_for_category(category='mics', max_jobs=max_jobs_on_mics)
