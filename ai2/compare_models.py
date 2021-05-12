@@ -235,7 +235,7 @@ def compare_models_entrypoint(params: Parameters):
     base_percent_agreement_locator = Locator(("percent_agreement",))
     for idx, (combination1, task1, model1_predictions_artifact) in enumerate(prediction_artifacts):
         model1_name = '__'.join(
-            '='.join(str(x) for x in option_pair)
+            '-'.join(str(x) for x in option_pair)
             for option_pair in combination1
             if "task" not in option_pair[0]
         )
@@ -250,7 +250,7 @@ def compare_models_entrypoint(params: Parameters):
             percent_agreement_parameters = params.unify(task_parameters)
 
             model2_name = '__'.join(
-                '='.join(str(x) for x in option_pair)
+                ','.join(str(x) for x in option_pair)
                 for option_pair in combination2
                 if "task" not in option_pair[0]
             )
