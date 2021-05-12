@@ -15,7 +15,7 @@ from pegasus_wrapper import (
     limit_jobs_for_category,
     write_workflow_description,
 )
-from pegasus_wrapper.resource_request import ResourceRequest
+from pegasus_wrapper.resource_request import ResourceRequest, SlurmResourceRequest, Partition
 from pegasus_wrapper.locator import Locator
 from pegasus_wrapper.artifact import ValueArtifact
 
@@ -53,6 +53,7 @@ def run_random_slice(
             "fraction": fraction,
         }),
         depends_on=[input],
+        resource_request=SlurmResourceRequest(job_time_in_minutes=120),
     )
     return ValueArtifact(
         value=output,
@@ -194,9 +195,15 @@ def compare_models_entrypoint(params: Parameters):
 
             # Messy parameters input. This shouldn't matter to ResourceRequest, though. Maybe clean up
             # later.
+            resource_request_params = params.unify(train_job_params)
             resource_request = ResourceRequest.from_parameters(
-                params.unify(train_job_params)
-            )
+                resource_request_params
+                # Run training on MICS.
+                # jac: temporary, while supplies lost
+            ).unify(SlurmResourceRequest(
+                partition="mics",
+                job_time_in_minutes=resource_request_params.positive_integer("job_time_in_minutes")
+            ))
 
             # Set common parameters and schedule the job.
             options_name = "_".join(
@@ -267,6 +274,7 @@ def compare_models_entrypoint(params: Parameters):
                     'save_percent_agreement_to': experiment_root / task1 / model1_name / model2_name / "agreement.txt",
                 }),
                 depends_on=[model1_predictions_artifact, model2_predictions_artifact],
+                resource_request=SlurmResourceRequest(job_time_in_minutes=120),
             )
 
     # Limit number of jobs that will run at once on MICS account/partition

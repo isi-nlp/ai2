@@ -39,7 +39,7 @@ backend: slurm
 site: 'saga'
 parallelism: 10
 namespace: saga
-partition: ephemeral
+partition: scavenge
 
 # Needed for training/inference jobs.
 # Oddly, it doesn't look like it's possible to specify these at the job level,
@@ -55,4 +55,4 @@ num_cpus: 4
 num_gpus: 1
 memory: '16g'
 # sbatch --ntasks=1  # already covered, resource_request.py line 133
-job_time_in_minutes: 720  # 12 horus
+job_time_in_minutes: 720  # 12 hours
