@@ -76,7 +76,7 @@ def stat_analysis_entrypoint(params: Parameters):
         # Calculate agreement
         model1_correct = (model1_predicted_labels == gold_labels)
         model2_correct = (model2_predicted_labels == gold_labels)
-        contingency_table = pd.crosstab(model1_correct, model2_correct)
+        contingency_table = pd.crosstab(model1_correct.rename("model1"), model2_correct.rename("model2"))
         _logger.info("first entries of model1_predicted_labels = %s", model1_predicted_labels.head())
         _logger.info("first entries of model2_predicted_labels = %s", model2_predicted_labels.head())
         _logger.info("-----")
