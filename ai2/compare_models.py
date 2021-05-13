@@ -306,6 +306,7 @@ def compare_models_entrypoint(params: Parameters):
     percent_agreement_parameters = params.unify(
         {
             "comparisons_to_make": file_of_comparisons_to_make,
+            "save_accuracies_to": experiment_root / "accuracies.csv",
             "save_agreement_seqs_to": experiment_root / "agreement_data.csv",
             "save_comparison_results_to": experiment_root / "summary.csv",
         }

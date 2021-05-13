@@ -9,17 +9,28 @@ from vistautils.parameters_only_entrypoint import parameters_only_entry_point
 
 def percent_agreement_entrypoint(params: Parameters):
     comparisons_to_make_path = params.existing_file("comparisons_to_make")
+    save_accuracies_to = params.creatable_file("save_accuracies_to")
     save_agreement_seqs_to = params.creatable_file("save_agreement_seqs_to")
     save_comparison_results_to = params.creatable_file("save_comparison_results_to")
 
     comparisons_to_make = pd.read_json(comparisons_to_make_path, orient="records", lines=True)
     comparisons = []
     agreement_seqs = []
+    model_accuracies = {}
     for comparison_to_make in comparisons_to_make:
         model1_name = name_model(comparison_to_make["model1_combination"])
         model2_name = name_model(comparison_to_make["model2_combination"])
         model1_accuracy = float(Path(comparison_to_make["model1_accuracy"]).read_text())
         model2_accuracy = float(Path(comparison_to_make["model2_accuracy"]).read_text())
+
+        # Collect model accuracies for summary
+        if model_accuracies.get(model1_name, model1_accuracy) != model1_accuracy:
+            raise RuntimeError(f"Model {model1_name} has two listed accuracies: {model1_accuracy} and (prior) {model_accuracies[model1_name]}.")
+        model_accuracies[model1_name] = model1_accuracy
+
+        if model_accuracies.get(model2_name, model2_accuracy) != model2_accuracy:
+            raise RuntimeError(f"Model {model2_name} has two listed accuracies: {model2_accuracy} and (prior) {model_accuracies[model2_name]}.")
+        model_accuracies[model2_name] = model2_accuracy
 
         # Read in raw predictions
         model1_predicted_labels: pd.Series = pd.read_csv(
@@ -54,6 +65,15 @@ def percent_agreement_entrypoint(params: Parameters):
         })
         comparisons.append(comparison)
 
+    pd.DataFrame(
+        [
+            {
+                "model_name": model_name,
+                "accuracy": accuracy,
+            }
+            for model_name, accuracy in model_accuracies.items()
+        ]
+    ).to_csv(save_accuracies_to)
     pd.DataFrame(comparisons).to_csv(save_comparison_results_to)
     pd.DataFrame(agreement_seqs).to_csv(save_agreement_seqs_to)
 
