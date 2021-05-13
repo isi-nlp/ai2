@@ -131,7 +131,7 @@ def stat_analysis_entrypoint(params: Parameters):
     accuracy_df["rank"] = accuracy_df.groupby("task", as_index=False)["accuracy"].rank(
         "first", ascending=False
     ).astype(int)
-    accuracy_df.sort_values(by=["task", "accuracy"], ascending=False)
+    accuracy_df = accuracy_df.sort_values(by=["task", "accuracy"], ascending=False)
     accuracy_df.to_csv(save_accuracies_to, index=False)
 
     pd.DataFrame(agreement_seqs).to_csv(save_agreement_seqs_to, index=False)
