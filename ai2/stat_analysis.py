@@ -3,11 +3,22 @@ from typing import Any, List, Tuple
 
 import pandas as pd
 
+from immutablecollections import immutabledict
 from vistautils.parameters import Parameters
 from vistautils.parameters_only_entrypoint import parameters_only_entry_point
 
+from ai2.stats_tests import fishers_test, binomial_difference_of_proportions_test, mcnemar, mcnemar_worst_case, mcnemar_best_case
 
-def percent_agreement_entrypoint(params: Parameters):
+
+UNPAIRED_TESTS = immutabledict({
+    "fisher": fishers_test,
+    "prop": binomial_difference_of_proportions_test,
+    "mc-worst": mcnemar_worst_case,
+    "mc-best": mcnemar_best_case,
+})
+
+
+def stat_analysis_entrypoint(params: Parameters):
     comparisons_to_make_path = params.existing_file("comparisons_to_make")
     save_accuracies_to = params.creatable_file("save_accuracies_to")
     save_agreement_seqs_to = params.creatable_file("save_agreement_seqs_to")
@@ -50,6 +61,26 @@ def percent_agreement_entrypoint(params: Parameters):
         })
         percent_agreement = agreement_seq.mean()
 
+        # Calculate tests
+        test_set_size = len(gold_labels)
+        stats = {
+            "mcnemar": mcnemar(
+                test_set_size=test_set_size,
+                model1_accuracy=model1_accuracy,
+                model2_accuracy=model2_accuracy,
+                fractional_agreement=percent_agreement,
+            )
+        }
+        stats.update({
+            test_name: unpaired_test(
+                test_set_size=test_set_size,
+                model1_accuracy=model1_accuracy,
+                model2_accuracy=model2_accuracy,
+            )
+            for test_name, unpaired_test in UNPAIRED_TESTS.items()
+        })
+
+        # Start with the basics, then add stats, then extra model details.
         comparison = {
             "model1_name": model1_name,
             "model2_name": model1_name,
@@ -57,6 +88,12 @@ def percent_agreement_entrypoint(params: Parameters):
             "model2_accuracy": model2_accuracy,
             "percent_agreement": percent_agreement,
         }
+        # add tests
+        for test_name, (test_statistic, p_value) in stats.items():
+            comparisons.update({
+                f"{test_name} stat": test_statistic,
+                f"{test_name} p": p_value,
+            })
         comparison.update({
             f"model1 {name}": value for name, value in comparisons_to_make["model1_combination"]
         })
@@ -87,4 +124,4 @@ def name_model(combination: List[Tuple[str, Any]]) -> str:
 
 
 if __name__ == "__main__":
-    parameters_only_entry_point(percent_agreement_entrypoint)
+    parameters_only_entry_point(stat_analysis_entrypoint)

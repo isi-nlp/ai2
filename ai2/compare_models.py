@@ -23,7 +23,7 @@ from pegasus_wrapper.artifact import ValueArtifact
 
 import ai2.random_slice as random_slice_script
 import ai2.train as train_script
-import ai2.percent_agreement as percent_agreement_script
+import ai2.stat_analysis as stat_analysis_script
 from ai2.pegasus import override_generality, override_matches
 
 
@@ -272,7 +272,7 @@ def compare_models_entrypoint(params: Parameters):
             )
 
     # Calculate the percent agreement for all same-task model pairs
-    percent_agreement_locator = Locator(("percent_agreement",))
+    stat_analysis_locator = Locator(("stat_analysis",))
     comparisons_to_make = pd.DataFrame(
         [
             {
@@ -297,7 +297,7 @@ def compare_models_entrypoint(params: Parameters):
         ]
     )
     file_of_comparisons_to_make = (
-        directory_for(percent_agreement_locator) / "comparisons.jsonl"
+        directory_for(stat_analysis_locator) / "comparisons.jsonl"
     )
     comparisons_to_make.to_json(
         file_of_comparisons_to_make, orient="records", lines=True
@@ -319,8 +319,8 @@ def compare_models_entrypoint(params: Parameters):
         prediction_artifact for _, _, _, prediction_artifact in evaluation_artifacts
     )
     run_python_on_parameters(
-        percent_agreement_locator,
-        percent_agreement_script,
+        stat_analysis_locator,
+        stat_analysis_script,
         percent_agreement_parameters,
         depends_on=accuracy_artifacts + prediction_artifacts,
         resource_request=SlurmResourceRequest(job_time_in_minutes=120),
