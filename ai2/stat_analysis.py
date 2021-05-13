@@ -130,7 +130,7 @@ def stat_analysis_entrypoint(params: Parameters):
     # Add a rank column where 1 is the highest rank and 2 is the lowest
     accuracy_df["Rank"] = accuracy_df.groupby("task", as_index=False).transform(
         lambda leaderboard_results: leaderboard_results.sort_values(
-            ascending=False
+            by="accuracy", ascending=False
         ).reset_index().index + 1
     )
     accuracy_df.sort_values(by=["task", "accuracy"])
