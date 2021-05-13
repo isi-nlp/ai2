@@ -52,6 +52,10 @@ def stat_analysis_entrypoint(params: Parameters):
         model_to_accuracy[model2_name] = model2_accuracy
 
         # To keep things organized, reorder the comparison if model1 is worse than model2
+        # This makes it so that when we sort our comparisons at the end, we end up sorting (for each task)
+        # such that all the (rank 1 vs. rank j), comparisons come first (j > 1),
+        # then the (rank 2 vs. rank j), comparisons (j > 2),
+        # etc.
         if model1_accuracy < model2_accuracy:
             logging.info("Model 1, %s, worse than model 2, %s; swapping...")
             model1_name, model2_name = model2_name, model1_name
