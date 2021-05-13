@@ -90,8 +90,8 @@ def stat_analysis_entrypoint(params: Parameters):
         comparison = {
             "task": task_name,
             "num test": task_name,
-            "Model A Submission": model1_name,
-            "Model B Submission": model2_name,
+            "Model A": model1_name,
+            "Model B": model2_name,
             "Model A Accuracy": model1_accuracy,
             "Model B Accuracy": model2_accuracy,
             "% agree": percent_agreement,
@@ -138,14 +138,14 @@ def stat_analysis_entrypoint(params: Parameters):
     comparisons_df = pd.DataFrame(comparisons)
     comparisons_df = pd.merge(
         comparisons_df,
-        accuracy_df[["task", "model_name", "rank"]].rename(columns={"model_name": "Model A Submission", "rank": "Model A Rank"}),
-        on=["task", "Model A Submission"],
+        accuracy_df[["task", "model_name", "rank"]].rename(columns={"model_name": "Model A", "rank": "Model A Rank"}),
+        on=["task", "Model A"],
         how="left",
     )
     comparisons_df = pd.merge(
         comparisons_df,
-        accuracy_df[["task", "model_name", "rank"]].rename(columns={"model_name": "Model B Submission", "rank": "Model B Rank"}),
-        on=["task", "Model B Submission"],
+        accuracy_df[["task", "model_name", "rank"]].rename(columns={"model_name": "Model B", "rank": "Model B Rank"}),
+        on=["task", "Model B"],
         how="left",
     )
     comparisons_df.to_csv(save_comparison_results_to, index=False)
