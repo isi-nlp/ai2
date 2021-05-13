@@ -56,7 +56,7 @@ def stat_analysis_entrypoint(params: Parameters):
             comparison_to_make["model1_predicted_labels"], names=["label"]
         )["label"]
         model2_predicted_labels: pd.Series = pd.read_csv(
-            comparison_to_make["model1_predicted_labels"], names=["label"]
+            comparison_to_make["model2_predicted_labels"], names=["label"]
         )["label"]
         gold_labels: pd.Series = pd.read_csv(
             comparison_to_make["gold_labels"], names=["label"]
