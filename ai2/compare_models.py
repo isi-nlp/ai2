@@ -276,6 +276,7 @@ def compare_models_entrypoint(params: Parameters):
     comparisons_to_make = pd.DataFrame(
         [
             {
+                "task": task1,
                 "model1_combination": model1_combination,
                 "model2_combination": model2_combination,
                 "model1_results": str(model1_results_artifact.value),

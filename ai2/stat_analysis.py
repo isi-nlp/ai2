@@ -27,21 +27,23 @@ def stat_analysis_entrypoint(params: Parameters):
     comparisons_to_make = pd.read_json(comparisons_to_make_path, orient="records", lines=True)
     comparisons = []
     agreement_seqs = []
-    model_accuracies = {}
+    task_to_model_to_accuracy = {}
     for _, comparison_to_make in comparisons_to_make.iterrows():
+        task_name = comparison_to_make["task"]
         model1_name = name_model(comparison_to_make["model1_combination"])
         model2_name = name_model(comparison_to_make["model2_combination"])
         model1_accuracy = get_accuracy_from_results(Path(comparison_to_make["model1_results"]))
         model2_accuracy = get_accuracy_from_results(Path(comparison_to_make["model2_results"]))
 
         # Collect model accuracies for summary
-        if model_accuracies.get(model1_name, model1_accuracy) != model1_accuracy:
-            raise RuntimeError(f"Model {model1_name} has two listed accuracies: {model1_accuracy} and (prior) {model_accuracies[model1_name]}.")
-        model_accuracies[model1_name] = model1_accuracy
+        model_to_accuracy = task_to_model_to_accuracy.setdefault(task_name, {})
+        if model_to_accuracy.get(model1_name, model1_accuracy) != model1_accuracy:
+            raise RuntimeError(f"Model {model1_name} has two listed accuracies: {model1_accuracy} and (prior) {model_to_accuracy[model1_name]}.")
+        model_to_accuracy[model1_name] = model1_accuracy
 
-        if model_accuracies.get(model2_name, model2_accuracy) != model2_accuracy:
-            raise RuntimeError(f"Model {model2_name} has two listed accuracies: {model2_accuracy} and (prior) {model_accuracies[model2_name]}.")
-        model_accuracies[model2_name] = model2_accuracy
+        if model_to_accuracy.get(model2_name, model2_accuracy) != model2_accuracy:
+            raise RuntimeError(f"Model {model2_name} has two listed accuracies: {model2_accuracy} and (prior) {model_to_accuracy[model2_name]}.")
+        model_to_accuracy[model2_name] = model2_accuracy
 
         # Read in raw predictions
         model1_predicted_labels: pd.Series = pd.read_csv(
@@ -105,10 +107,12 @@ def stat_analysis_entrypoint(params: Parameters):
     pd.DataFrame(
         [
             {
+                "task": task_name,
                 "model_name": model_name,
                 "accuracy": accuracy,
             }
-            for model_name, accuracy in model_accuracies.items()
+            for task_name, model_to_accuracy in task_to_model_to_accuracy.items()
+            for model_name, accuracy in model_to_accuracy.items()
         ]
     ).to_csv(save_accuracies_to)
     pd.DataFrame(comparisons).to_csv(save_comparison_results_to)
