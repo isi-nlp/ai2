@@ -146,6 +146,10 @@ def stat_analysis_entrypoint(params: Parameters):
         on=["task", "Model B"],
         how="left",
     )
+    model_a_rank = comparisons_df.pop("Model A Rank")
+    model_b_rank = comparisons_df.pop("Model B Rank")
+    comparisons_df.insert(3, "Model A Rank", model_a_rank)
+    comparisons_df.insert(4, "Model B Rank", model_b_rank)
     comparisons_df.to_csv(save_comparison_results_to, index=False)
     pd.DataFrame(agreement_seqs).to_csv(save_agreement_seqs_to, index=False)
     _logger.info("Saved collected results.")
