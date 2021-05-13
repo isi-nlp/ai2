@@ -31,8 +31,8 @@ def stat_analysis_entrypoint(params: Parameters):
     for _, comparison_to_make in comparisons_to_make.iterrows():
         model1_name = name_model(comparison_to_make["model1_combination"])
         model2_name = name_model(comparison_to_make["model2_combination"])
-        model1_accuracy = float(Path(comparison_to_make["model1_accuracy"]).read_text())
-        model2_accuracy = float(Path(comparison_to_make["model2_accuracy"]).read_text())
+        model1_accuracy = get_accuracy_from_results(Path(comparison_to_make["model1_accuracy"]))
+        model2_accuracy = get_accuracy_from_results(Path(comparison_to_make["model2_accuracy"]))
 
         # Collect model accuracies for summary
         if model_accuracies.get(model1_name, model1_accuracy) != model1_accuracy:
@@ -113,6 +113,14 @@ def stat_analysis_entrypoint(params: Parameters):
     ).to_csv(save_accuracies_to)
     pd.DataFrame(comparisons).to_csv(save_comparison_results_to)
     pd.DataFrame(agreement_seqs).to_csv(save_agreement_seqs_to)
+
+
+def get_accuracy_from_results(results_file: Path) -> float:
+    """
+    Read the accuracy from a CSV file called results.txt, as produced by the ai2.evaluate code.
+    """
+    results = pd.read_csv(results_file, header=["name", "_explainer", "accuracy", "_average", "_lower", "_upper"])
+    return float(results.loc[0, "accuracy"])
 
 
 def name_model(combination: List[Tuple[str, Any]]) -> str:
