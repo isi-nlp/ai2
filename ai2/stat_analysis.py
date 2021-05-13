@@ -45,10 +45,10 @@ def stat_analysis_entrypoint(params: Parameters):
 
         # Read in raw predictions
         model1_predicted_labels: pd.Series = pd.read_csv(
-            comparisons_to_make["model1_predicted_labels"], names=["label"]
+            comparison_to_make["model1_predicted_labels"], names=["label"]
         )["label"]
         model2_predicted_labels: pd.Series = pd.read_csv(
-            comparisons_to_make["model1_predicted_labels"], names=["label"]
+            comparison_to_make["model1_predicted_labels"], names=["label"]
         )["label"]
         gold_labels: pd.Series = pd.read_csv(
             comparison_to_make["gold_labels"], names=["label"]
@@ -95,10 +95,10 @@ def stat_analysis_entrypoint(params: Parameters):
                 f"{test_name} p": p_value,
             })
         comparison.update({
-            f"model1 {name}": value for name, value in comparisons_to_make["model1_combination"]
+            f"model1 {name}": value for name, value in comparison_to_make["model1_combination"]
         })
         comparison.update({
-            f"model2 {name}": value for name, value in comparisons_to_make["model2_combination"]
+            f"model2 {name}": value for name, value in comparison_to_make["model2_combination"]
         })
         comparisons.append(comparison)
 
