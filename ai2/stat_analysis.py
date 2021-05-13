@@ -120,7 +120,7 @@ def stat_analysis_entrypoint(params: Parameters):
         [
             {
                 "task": task_name,
-                "model_name": model_name,
+                "model": model_name,
                 "accuracy": accuracy,
             }
             for task_name, model_to_accuracy in task_to_model_to_accuracy.items()
@@ -138,13 +138,13 @@ def stat_analysis_entrypoint(params: Parameters):
     comparisons_df = pd.DataFrame(comparisons)
     comparisons_df = pd.merge(
         comparisons_df,
-        accuracy_df[["task", "model_name", "rank"]].rename(columns={"model_name": "Model A", "rank": "Model A Rank"}),
+        accuracy_df[["task", "model", "rank"]].rename(columns={"model": "Model A", "rank": "Model A Rank"}),
         on=["task", "Model A"],
         how="left",
     )
     comparisons_df = pd.merge(
         comparisons_df,
-        accuracy_df[["task", "model_name", "rank"]].rename(columns={"model_name": "Model B", "rank": "Model B Rank"}),
+        accuracy_df[["task", "model", "rank"]].rename(columns={"model": "Model B", "rank": "Model B Rank"}),
         on=["task", "Model B"],
         how="left",
     )
