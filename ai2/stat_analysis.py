@@ -128,12 +128,10 @@ def stat_analysis_entrypoint(params: Parameters):
         ]
     )
     # Add a rank column where 1 is the highest rank and 2 is the lowest
-    accuracy_df["Rank"] = accuracy_df.groupby("task", as_index=False).transform(
-        lambda leaderboard_results: leaderboard_results.sort_values(
-            by="accuracy", ascending=False
-        ).reset_index().index + 1
-    )
-    accuracy_df.sort_values(by=["task", "accuracy"])
+    accuracy_df["Rank"] = accuracy_df.groupby("task", as_index=False)["accuracy"].rank(
+        "first", asecnding=False
+    ).astype(int)
+    accuracy_df.sort_values(by=["task", "accuracy"], ascending=False)
     accuracy_df.to_csv(save_accuracies_to, index=False)
     comparisons_df = pd.DataFrame(comparisons)
     comparisons_df = pd.merge(
