@@ -168,6 +168,7 @@ def stat_analysis_entrypoint(params: Parameters):
         ]
     )
     # Add a rank column where 1 is the highest rank and 2 is the lowest
+    # Thanks to https://stackoverflow.com/a/33899937 for the .rank() solution.
     accuracy_df["rank"] = accuracy_df.groupby("task", as_index=False)["accuracy"].rank(
         "first", ascending=False
     ).astype(int)
