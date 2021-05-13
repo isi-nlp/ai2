@@ -66,6 +66,7 @@ def stat_analysis_entrypoint(params: Parameters):
         model1_correct = (model1_predicted_labels == gold_labels)
         model2_correct = (model2_predicted_labels == gold_labels)
         contingency_table = pd.crosstab(model1_correct, model2_correct)
+        logging.debug("contingency table = %s", contingency_table)
         agreement_seq: pd.Series = model1_correct == model2_correct
         agreement_seqs[f"{model1_name} with {model2_name} ({task_name})"] = agreement_seq
         percent_agreement = agreement_seq.mean()
