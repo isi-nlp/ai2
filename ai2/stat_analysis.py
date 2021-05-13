@@ -29,10 +29,11 @@ def stat_analysis_entrypoint(params: Parameters):
     log_every_n_steps = params.optional_positive_integer("log_every_n_steps", default=10)
 
     comparisons_to_make = pd.read_json(comparisons_to_make_path, orient="records", lines=True)
+    n_comparisons = len(comparisons_to_make)
     comparisons = []
     agreement_seqs = []
     task_to_model_to_accuracy = {}
-    _logger.info("Doing %d comparisons...", len(comparisons_to_make))
+    _logger.info("Doing %d comparisons...", n_comparisons)
     for idx, comparison_to_make in comparisons_to_make.iterrows():
         task_name = comparison_to_make["task"]
         model1_name = name_model(comparison_to_make["model1_combination"])
@@ -110,7 +111,7 @@ def stat_analysis_entrypoint(params: Parameters):
         comparisons.append(comparison)
 
         if (idx + 1) % log_every_n_steps == 0:
-            _logger.info("Ran %d / %d comparisons.", log_every_n_steps)
+            _logger.info("Ran %d / %d comparisons.", log_every_n_steps, n_comparisons)
 
     _logger.info("Done comparing.")
 
