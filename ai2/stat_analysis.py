@@ -117,6 +117,14 @@ def stat_analysis_entrypoint(params: Parameters):
         comparison.update({
             f"Model B {name}": value for name, value in comparison_to_make["model2_combination"]
         })
+        model1_slice_seed, model1_slice_size = comparison["Model A slice"].split("_")
+        model2_slice_seed, model2_slice_size = comparison["Model B slice"].split("_")
+        comparison.update({
+            f"Model A slice size (%)": model1_slice_size,
+            f"Model A slice seed": model1_slice_seed,
+            f"Model B slice size (%)": model2_slice_size,
+            f"Model B slice seed": model2_slice_seed,
+        })
         comparisons.append(comparison)
 
         if (idx + 1) % log_every_n_steps == 0:
