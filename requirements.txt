@@ -25,7 +25,7 @@ jmespath==0.9.5
 joblib==0.14.1
 loguru==0.4.1
 Markdown==3.2.1
-more_itertools==8.7.0
+more-itertools==8.7.0
 numpy==1.18.1
 oauthlib==3.1.0
 omegaconf==1.4.1
@@ -49,18 +49,20 @@ requests-oauthlib==1.3.0
 rsa==4.0
 s3transfer==0.3.3
 sacremoses==0.0.38
+-e git+git@github.com:isi-vista/saga-tools.git@b4c4d409f9b2f7e7bd578dc536fc30eb5de56f1c#egg=saga_tools
 scikit-learn==0.22.2
 scipy==1.4.1
 sentencepiece==0.1.85
 six==1.14.0
 smmap==4.0.0
 sortedcontainers==2.3.0
+temppathlib==1.1.0
 tensorboard==2.1.1
 test-tube==0.7.5
-tokenizers==0.0.11
+tokenizers==0.5.0
 torch==1.2.0
 tqdm==4.42.1
-transformers==2.4.0
+transformers==2.5.0
 typing-extensions==3.10.0.0
 urllib3==1.25.8
 vistautils==0.23.0
