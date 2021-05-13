@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 from typing import Any, List, Tuple
 
@@ -9,6 +10,8 @@ from vistautils.parameters_only_entrypoint import parameters_only_entry_point
 
 from ai2.stats_tests import fishers_test, binomial_difference_of_proportions_test, mcnemar, mcnemar_worst_case, mcnemar_best_case
 
+
+_logger = logging.getLogger(__name__)
 
 UNPAIRED_TESTS = immutabledict({
     "fisher": fishers_test,
@@ -23,12 +26,14 @@ def stat_analysis_entrypoint(params: Parameters):
     save_accuracies_to = params.creatable_file("save_accuracies_to")
     save_agreement_seqs_to = params.creatable_file("save_agreement_seqs_to")
     save_comparison_results_to = params.creatable_file("save_comparison_results_to")
+    log_every_n_steps = params.optional_positive_integer("log_every_n_steps", default=10)
 
     comparisons_to_make = pd.read_json(comparisons_to_make_path, orient="records", lines=True)
     comparisons = []
     agreement_seqs = []
     task_to_model_to_accuracy = {}
-    for _, comparison_to_make in comparisons_to_make.iterrows():
+    _logger.info("Doing %d comparisons...", len(comparisons_to_make))
+    for idx, comparison_to_make in comparisons_to_make.iterrows():
         task_name = comparison_to_make["task"]
         model1_name = name_model(comparison_to_make["model1_combination"])
         model2_name = name_model(comparison_to_make["model2_combination"])
@@ -104,6 +109,12 @@ def stat_analysis_entrypoint(params: Parameters):
         })
         comparisons.append(comparison)
 
+        if (idx + 1) % log_every_n_steps == 0:
+            _logger.info("Ran %d / %d comparisons.", log_every_n_steps)
+
+    _logger.info("Done comparing.")
+
+    _logger.info("Collecting and saving results...")
     pd.DataFrame(
         [
             {
@@ -117,6 +128,7 @@ def stat_analysis_entrypoint(params: Parameters):
     ).to_csv(save_accuracies_to)
     pd.DataFrame(comparisons).to_csv(save_comparison_results_to)
     pd.DataFrame(agreement_seqs).to_csv(save_agreement_seqs_to)
+    _logger.info("Saved collected results.")
 
 
 def get_accuracy_from_results(results_file: Path) -> float:
