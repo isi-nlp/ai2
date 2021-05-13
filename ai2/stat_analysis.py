@@ -58,7 +58,7 @@ def stat_analysis_entrypoint(params: Parameters):
             for key1 in comparisons_to_make:
                 if 'model1' in key1:
                     key2 = key1.replace('model1', 'model2')
-                    comparison_to_make[key1], comparisons_to_make[key2] = (
+                    comparison_to_make[key1], comparison_to_make[key2] = (
                         comparison_to_make[key2], comparison_to_make[key1]
                     )
 
