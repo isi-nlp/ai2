@@ -109,7 +109,7 @@ def stat_analysis_entrypoint(params: Parameters):
         comparisons.append(comparison)
 
         if (idx + 1) % log_every_n_steps == 0:
-            _logger.info("Ran %d / %d comparisons.", log_every_n_steps, n_comparisons)
+            _logger.info("Ran %d / %d comparisons.", idx + 1, n_comparisons)
 
     _logger.info("Done comparing.")
 
