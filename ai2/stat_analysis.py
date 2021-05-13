@@ -90,7 +90,7 @@ def stat_analysis_entrypoint(params: Parameters):
         # Start with the basics, then add stats, then extra model details.
         comparison = {
             "model1_name": model1_name,
-            "model2_name": model1_name,
+            "model2_name": model2_name,
             "model1_accuracy": model1_accuracy,
             "model2_accuracy": model2_accuracy,
             "percent_agreement": percent_agreement,
