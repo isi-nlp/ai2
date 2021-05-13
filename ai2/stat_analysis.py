@@ -125,9 +125,9 @@ def stat_analysis_entrypoint(params: Parameters):
             for task_name, model_to_accuracy in task_to_model_to_accuracy.items()
             for model_name, accuracy in model_to_accuracy.items()
         ]
-    ).to_csv(save_accuracies_to)
-    pd.DataFrame(comparisons).to_csv(save_comparison_results_to)
-    pd.DataFrame(agreement_seqs).to_csv(save_agreement_seqs_to)
+    ).to_csv(save_accuracies_to, index=False)
+    pd.DataFrame(comparisons).to_csv(save_comparison_results_to, index=False)
+    pd.DataFrame(agreement_seqs).to_csv(save_agreement_seqs_to, index=False)
     _logger.info("Saved collected results.")
 
 
