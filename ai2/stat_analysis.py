@@ -165,7 +165,7 @@ def stat_analysis_entrypoint(params: Parameters):
     accuracy_df["rank"] = accuracy_df.groupby("task", as_index=False)["accuracy"].rank(
         "first", ascending=False
     ).astype(int)
-    accuracy_df = accuracy_df.sort_values(by=["task", "accuracy"], ascending=False)
+    accuracy_df = accuracy_df.sort_values(by=["task", "accuracy"], ascending=[True, False])
     accuracy_df.to_csv(save_accuracies_to, index=False)
 
     pd.DataFrame(agreement_seqs).to_csv(save_agreement_seqs_to, index=False)
@@ -189,6 +189,7 @@ def stat_analysis_entrypoint(params: Parameters):
     model_b_rank = comparisons_df.pop("Model B Rank")
     comparisons_df.insert(3, "Model A Rank", model_a_rank)
     comparisons_df.insert(5, "Model B Rank", model_b_rank)
+    comparisons_df = comparisons_df.sort_values(by=["task", "Model A Rank", "Model B Rank"], ascending=True)
     comparisons_df.to_csv(save_comparison_results_to, index=False)
 
     _logger.info("Saved collected results.")
