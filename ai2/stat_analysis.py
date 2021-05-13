@@ -133,6 +133,11 @@ def stat_analysis_entrypoint(params: Parameters):
     ).astype(int)
     accuracy_df.sort_values(by=["task", "accuracy"], ascending=False)
     accuracy_df.to_csv(save_accuracies_to, index=False)
+
+    pd.DataFrame(agreement_seqs).to_csv(save_agreement_seqs_to, index=False)
+
+    # Create the comparisons DF.
+    # Make sure to merge in the model ranks and reorder them so they're together with the model names.
     comparisons_df = pd.DataFrame(comparisons)
     comparisons_df = pd.merge(
         comparisons_df,
@@ -151,7 +156,7 @@ def stat_analysis_entrypoint(params: Parameters):
     comparisons_df.insert(3, "Model A Rank", model_a_rank)
     comparisons_df.insert(4, "Model B Rank", model_b_rank)
     comparisons_df.to_csv(save_comparison_results_to, index=False)
-    pd.DataFrame(agreement_seqs).to_csv(save_agreement_seqs_to, index=False)
+
     _logger.info("Saved collected results.")
 
 
