@@ -90,7 +90,7 @@ def stat_analysis_entrypoint(params: Parameters):
         }
         # add tests
         for test_name, (test_statistic, p_value) in stats.items():
-            comparisons.update({
+            comparison.update({
                 f"{test_name} stat": test_statistic,
                 f"{test_name} p": p_value,
             })
