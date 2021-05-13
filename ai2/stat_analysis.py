@@ -51,6 +51,17 @@ def stat_analysis_entrypoint(params: Parameters):
             raise RuntimeError(f"Model {model2_name} has two listed accuracies: {model2_accuracy} and (prior) {model_to_accuracy[model2_name]}.")
         model_to_accuracy[model2_name] = model2_accuracy
 
+        # To keep things organized, reorder the comparison if model1 is worse than model2
+        if model1_accuracy < model2_accuracy:
+            model1_name, model2_name = model2_name, model1_name
+            model1_accuracy, model2_accuracy = model2_accuracy, model1_accuracy
+            for key1 in comparisons_to_make:
+                if 'model1' in key1:
+                    key2 = key1.replace('model1', 'model2')
+                    comparison_to_make[key1], comparisons_to_make[key2] = (
+                        comparison_to_make[key2], comparison_to_make[key1]
+                    )
+
         # Read in raw predictions
         model1_predicted_labels: pd.Series = pd.read_csv(
             comparison_to_make["model1_predicted_labels"], names=["label"]
