@@ -63,7 +63,10 @@ def stat_analysis_entrypoint(params: Parameters):
         )["label"]
 
         # Calculate agreement
-        agreement_seq: pd.Series = (model1_predicted_labels == gold_labels) == (model2_predicted_labels == gold_labels)
+        model1_correct = (model1_predicted_labels == gold_labels)
+        model2_correct = (model2_predicted_labels == gold_labels)
+        contingency_table = pd.crosstab(model1_correct, model2_correct)
+        agreement_seq: pd.Series = model1_correct == model2_correct
         agreement_seqs[f"{model1_name} with {model2_name} ({task_name})"] = agreement_seq
         percent_agreement = agreement_seq.mean()
 
@@ -102,6 +105,12 @@ def stat_analysis_entrypoint(params: Parameters):
                 f"{test_name} stat": test_statistic,
                 f"{test_name} p": p_value,
             })
+        comparison.update({
+            "both right": contingency_table.loc[True, True],
+            "A right/B wrong": contingency_table.loc[True, False],
+            "B right/A wrong": contingency_table.loc[False, True],
+            "both wrong": contingency_table.loc[False, False],
+        })
         comparison.update({
             f"Model A {name}": value for name, value in comparison_to_make["model1_combination"]
         })
