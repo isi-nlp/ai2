@@ -31,8 +31,8 @@ def stat_analysis_entrypoint(params: Parameters):
     for _, comparison_to_make in comparisons_to_make.iterrows():
         model1_name = name_model(comparison_to_make["model1_combination"])
         model2_name = name_model(comparison_to_make["model2_combination"])
-        model1_accuracy = get_accuracy_from_results(Path(comparison_to_make["model1_accuracy"]))
-        model2_accuracy = get_accuracy_from_results(Path(comparison_to_make["model2_accuracy"]))
+        model1_accuracy = get_accuracy_from_results(Path(comparison_to_make["model1_results"]))
+        model2_accuracy = get_accuracy_from_results(Path(comparison_to_make["model2_results"]))
 
         # Collect model accuracies for summary
         if model_accuracies.get(model1_name, model1_accuracy) != model1_accuracy:

@@ -278,8 +278,8 @@ def compare_models_entrypoint(params: Parameters):
             {
                 "model1_combination": model1_combination,
                 "model2_combination": model2_combination,
-                "model1_accuracy": str(model1_accuracy_artifact.value),
-                "model2_accuracy": str(model1_accuracy_artifact.value),
+                "model1_results": str(model1_results_artifact.value),
+                "model2_results": str(model1_results_artifact.value),
                 "model1_predicted_labels": str(model1_predictions_artifact.value),
                 "model2_predicted_labels": str(model2_predictions_artifact.value),
                 "gold_labels": str(task_to_parameters[task1].existing_file("val_y")),
@@ -287,10 +287,10 @@ def compare_models_entrypoint(params: Parameters):
             for idx, (
                 model1_combination,
                 task1,
-                model1_accuracy_artifact,
+                model1_results_artifact,
                 model1_predictions_artifact,
             ) in enumerate(evaluation_artifacts)
-            for model2_combination, task2, model2_accuracy_artifact, model2_predictions_artifact in evaluation_artifacts[
+            for model2_combination, task2, model2_results_artifact, model2_predictions_artifact in evaluation_artifacts[
                 idx + 1 :
             ]
             if task1 == task2
