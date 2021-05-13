@@ -26,7 +26,7 @@ def stat_analysis_entrypoint(params: Parameters):
     save_accuracies_to = params.creatable_file("save_accuracies_to")
     save_agreement_seqs_to = params.creatable_file("save_agreement_seqs_to")
     save_comparison_results_to = params.creatable_file("save_comparison_results_to")
-    log_every_n_steps = params.optional_positive_integer("log_every_n_steps", default=10)
+    log_every_n_steps = params.positive_integer("log_every_n_steps", default=10)
 
     comparisons_to_make = pd.read_json(comparisons_to_make_path, orient="records", lines=True)
     n_comparisons = len(comparisons_to_make)
