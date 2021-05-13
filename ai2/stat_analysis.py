@@ -53,6 +53,7 @@ def stat_analysis_entrypoint(params: Parameters):
 
         # To keep things organized, reorder the comparison if model1 is worse than model2
         if model1_accuracy < model2_accuracy:
+            logging.info("Model 1, %s, worse than model 2, %s; swapping...")
             model1_name, model2_name = model2_name, model1_name
             model1_accuracy, model2_accuracy = model2_accuracy, model1_accuracy
             for key1 in comparisons_to_make:
@@ -61,6 +62,7 @@ def stat_analysis_entrypoint(params: Parameters):
                     comparison_to_make[key1], comparison_to_make[key2] = (
                         comparison_to_make[key2], comparison_to_make[key1]
                     )
+            logging.info("New model 1 is %s and new model 2 is %s.", model1_name, model2_name)
 
         # Read in raw predictions
         model1_predicted_labels: pd.Series = pd.read_csv(
