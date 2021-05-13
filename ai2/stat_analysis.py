@@ -28,7 +28,7 @@ def stat_analysis_entrypoint(params: Parameters):
     comparisons = []
     agreement_seqs = []
     model_accuracies = {}
-    for comparison_to_make in comparisons_to_make:
+    for _, comparison_to_make in comparisons_to_make.iterrows():
         model1_name = name_model(comparison_to_make["model1_combination"])
         model2_name = name_model(comparison_to_make["model2_combination"])
         model1_accuracy = float(Path(comparison_to_make["model1_accuracy"]).read_text())
