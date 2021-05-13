@@ -31,7 +31,7 @@ def stat_analysis_entrypoint(params: Parameters):
     comparisons_to_make = pd.read_json(comparisons_to_make_path, orient="records", lines=True)
     n_comparisons = len(comparisons_to_make)
     comparisons = []
-    agreement_seqs = []
+    agreement_seqs = {}
     task_to_model_to_accuracy = {}
     _logger.info("Doing %d comparisons...", n_comparisons)
     for idx, comparison_to_make in comparisons_to_make.iterrows():
@@ -64,9 +64,7 @@ def stat_analysis_entrypoint(params: Parameters):
 
         # Calculate agreement
         agreement_seq: pd.Series = (model1_predicted_labels == gold_labels) == (model2_predicted_labels == gold_labels)
-        agreement_seqs.append({
-            f"{model1_name} with {model2_name}": agreement_seq,
-        })
+        agreement_seqs[f"{model1_name} with {model2_name} ({task_name})"] = agreement_seq
         percent_agreement = agreement_seq.mean()
 
         # Calculate tests
