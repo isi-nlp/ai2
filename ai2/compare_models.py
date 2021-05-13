@@ -17,11 +17,7 @@ from pegasus_wrapper import (
     limit_jobs_for_category,
     write_workflow_description,
 )
-from pegasus_wrapper.resource_request import (
-    ResourceRequest,
-    SlurmResourceRequest,
-    Partition,
-)
+from pegasus_wrapper.resource_request import ResourceRequest, SlurmResourceRequest
 from pegasus_wrapper.locator import Locator
 from pegasus_wrapper.artifact import ValueArtifact
 
