@@ -279,7 +279,7 @@ def compare_models_entrypoint(params: Parameters):
                 "model1_combination": model1_combination,
                 "model2_combination": model2_combination,
                 "model1_results": str(model1_results_artifact.value),
-                "model2_results": str(model1_results_artifact.value),
+                "model2_results": str(model2_results_artifact.value),
                 "model1_predicted_labels": str(model1_predictions_artifact.value),
                 "model2_predicted_labels": str(model2_predictions_artifact.value),
                 "gold_labels": str(task_to_parameters[task1].existing_file("val_y")),
