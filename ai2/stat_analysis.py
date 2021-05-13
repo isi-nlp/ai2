@@ -88,11 +88,13 @@ def stat_analysis_entrypoint(params: Parameters):
 
         # Start with the basics, then add stats, then extra model details.
         comparison = {
-            "model1_name": model1_name,
-            "model2_name": model2_name,
-            "model1_accuracy": model1_accuracy,
-            "model2_accuracy": model2_accuracy,
-            "percent_agreement": percent_agreement,
+            "task": task_name,
+            "num test": task_name,
+            "Model A Submission": model1_name,
+            "Model B Submission": model2_name,
+            "Model A Accuracy": model1_accuracy,
+            "Model B Accuracy": model2_accuracy,
+            "% agree": percent_agreement,
         }
         # add tests
         for test_name, (test_statistic, p_value) in stats.items():
@@ -101,10 +103,10 @@ def stat_analysis_entrypoint(params: Parameters):
                 f"{test_name} p": p_value,
             })
         comparison.update({
-            f"model1 {name}": value for name, value in comparison_to_make["model1_combination"]
+            f"Model A {name}": value for name, value in comparison_to_make["model1_combination"]
         })
         comparison.update({
-            f"model2 {name}": value for name, value in comparison_to_make["model2_combination"]
+            f"Model B {name}": value for name, value in comparison_to_make["model2_combination"]
         })
         comparisons.append(comparison)
 
@@ -114,7 +116,7 @@ def stat_analysis_entrypoint(params: Parameters):
     _logger.info("Done comparing.")
 
     _logger.info("Collecting and saving results...")
-    pd.DataFrame(
+    accuracy_df = pd.DataFrame(
         [
             {
                 "task": task_name,
@@ -124,8 +126,29 @@ def stat_analysis_entrypoint(params: Parameters):
             for task_name, model_to_accuracy in task_to_model_to_accuracy.items()
             for model_name, accuracy in model_to_accuracy.items()
         ]
-    ).to_csv(save_accuracies_to, index=False)
-    pd.DataFrame(comparisons).to_csv(save_comparison_results_to, index=False)
+    )
+    # Add a rank column where 1 is the highest rank and 2 is the lowest
+    accuracy_df["Rank"] = accuracy_df.groupby("task", as_index=False).transform(
+        lambda leaderboard_results: leaderboard_results.sort_values(
+            ascending=False
+        ).reset_index().index + 1
+    )
+    accuracy_df.sort_values(by=["task", "accuracy"])
+    accuracy_df.to_csv(save_accuracies_to, index=False)
+    comparisons_df = pd.DataFrame(comparisons)
+    comparisons_df = pd.merge(
+        comparisons_df,
+        accuracy_df[["task", "model_name", "rank"]].rename(columns={"model_name": "Model A Submission", "rank": "Model A Rank"}),
+        on=["task", "Model A Submission"],
+        how="left",
+    )
+    comparisons_df = pd.merge(
+        comparisons_df,
+        accuracy_df[["task", "model_name", "rank"]].rename(columns={"model_name": "Model B Submission", "rank": "Model B Rank"}),
+        on=["task", "Model B Submission"],
+        how="left",
+    )
+    comparisons_df.to_csv(save_comparison_results_to, index=False)
     pd.DataFrame(agreement_seqs).to_csv(save_agreement_seqs_to, index=False)
     _logger.info("Saved collected results.")
 
