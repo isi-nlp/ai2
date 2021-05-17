@@ -120,7 +120,7 @@ def stat_analysis_entrypoint(params: Parameters):
             "Model B": model2_name,
             "Model A Accuracy": model1_accuracy,
             "Model B Accuracy": model2_accuracy,
-            "% agree": percent_agreement,
+            "% overlap": percent_agreement,
         }
         # add tests
         for test_name, (test_statistic, p_value) in stats.items():
