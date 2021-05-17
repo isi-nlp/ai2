@@ -271,7 +271,7 @@ def compare_models_entrypoint(params: Parameters):
                 )
             )
 
-    # Calculate the percent agreement for all same-task model pairs
+    # Calculate summary statistics for comparing the models
     stat_analysis_locator = Locator(("stat_analysis",))
     comparisons_to_make = pd.DataFrame(
         [
@@ -304,11 +304,11 @@ def compare_models_entrypoint(params: Parameters):
         file_of_comparisons_to_make, orient="records", lines=True
     )
 
-    percent_agreement_parameters = params.unify(
+    stat_analysis_parameters = params.unify(
         {
             "comparisons_to_make": file_of_comparisons_to_make,
             "save_accuracies_to": experiment_root / "accuracies.csv",
-            "save_agreement_seqs_to": experiment_root / "agreement_data.csv",
+            "save_overlap_seqs_to": experiment_root / "overlap_data.csv",
             "save_comparison_results_to": experiment_root / "summary.csv",
         }
     )
@@ -322,7 +322,7 @@ def compare_models_entrypoint(params: Parameters):
     run_python_on_parameters(
         stat_analysis_locator,
         stat_analysis_script,
-        percent_agreement_parameters,
+        stat_analysis_parameters,
         depends_on=accuracy_artifacts + prediction_artifacts,
         resource_request=SlurmResourceRequest(job_time_in_minutes=120),
     )

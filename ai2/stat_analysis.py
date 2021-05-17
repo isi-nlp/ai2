@@ -24,7 +24,7 @@ UNPAIRED_TESTS = immutabledict({
 def stat_analysis_entrypoint(params: Parameters):
     comparisons_to_make_path = params.existing_file("comparisons_to_make")
     save_accuracies_to = params.creatable_file("save_accuracies_to")
-    save_agreement_seqs_to = params.creatable_file("save_agreement_seqs_to")
+    save_overlap_seqs_to = params.creatable_file("save_overlap_seqs_to")
     save_comparison_results_to = params.creatable_file("save_comparison_results_to")
     log_every_n_steps = params.positive_integer("log_every_n_steps", default=10)
 
@@ -91,7 +91,7 @@ def stat_analysis_entrypoint(params: Parameters):
         _logger.info("contingency table = \n%s", contingency_table)
         agreement_seq: pd.Series = model1_correct == model2_correct
         agreement_seqs[f"{model1_name} with {model2_name} ({task_name})"] = agreement_seq
-        percent_agreement = agreement_seq.mean()
+        percent_overlap = agreement_seq.mean()
 
         # Calculate tests
         test_set_size = len(gold_labels)
@@ -100,7 +100,7 @@ def stat_analysis_entrypoint(params: Parameters):
                 test_set_size=test_set_size,
                 model1_accuracy=model1_accuracy,
                 model2_accuracy=model2_accuracy,
-                fractional_agreement=percent_agreement,
+                fractional_agreement=percent_overlap,
             )
         }
         stats.update({
@@ -120,7 +120,7 @@ def stat_analysis_entrypoint(params: Parameters):
             "Model B": model2_name,
             "Model A Accuracy": model1_accuracy,
             "Model B Accuracy": model2_accuracy,
-            "% overlap": percent_agreement,
+            "% overlap": percent_overlap,
         }
         # add tests
         for test_name, (test_statistic, p_value) in stats.items():
@@ -175,7 +175,7 @@ def stat_analysis_entrypoint(params: Parameters):
     accuracy_df = accuracy_df.sort_values(by=["task", "accuracy"], ascending=[True, False])
     accuracy_df.to_csv(save_accuracies_to, index=False)
 
-    pd.DataFrame(agreement_seqs).to_csv(save_agreement_seqs_to, index=False)
+    pd.DataFrame(agreement_seqs).to_csv(save_overlap_seqs_to, index=False)
 
     # Create the comparisons DF.
     # Make sure to merge in the model ranks and reorder them so they're together with the model names.
