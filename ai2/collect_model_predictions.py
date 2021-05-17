@@ -47,8 +47,8 @@ def collect_model_predictions_entry_point(params: Parameters) -> None:
                 for task_data, predicted_label in zip(task_to_data[task], predictions)
             ]
             for aligned_prediction in aligned_predictions:
-                aligned_prediction["predicted"] = human_readable_label(
-                    aligned_prediction["predicted"]
+                aligned_prediction["predicted_label"] = human_readable_label(
+                    aligned_prediction["predicted_label"]
                 )
                 aligned_prediction["gold_label"] = human_readable_label(
                     aligned_prediction["gold_label"]
