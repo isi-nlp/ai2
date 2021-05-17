@@ -54,14 +54,14 @@ def collect_model_predictions_entry_point(params: Parameters) -> None:
                     aligned_prediction["gold_label"]
                 )
 
-            aligned_zip_path = prediction_file.relative_to(experiment_root)
+            aligned_zip_path = prediction_file.relative_to(experiment_root).with_suffix(".jsonl")
             zip_file.writestr(
                 str(aligned_zip_path),
-                json.dumps(aligned_predictions),
+                "\n".join(json.dumps(aligned_prediction) for aligned_prediction in aligned_predictions) + "\n",
             )
 
             # Save unaligned predictions
-            raw_zip_path = aligned_zip_path.with_name(aligned_zip_path.name + "_raw")
+            raw_zip_path = aligned_zip_path.with_name(aligned_zip_path.name + "_raw").with_suffix(".lst")
             zip_file.write(
                 prediction_file.absolute(),
                 arcname=str(raw_zip_path)
