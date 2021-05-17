@@ -71,7 +71,7 @@ def collect_model_predictions_entry_point(params: Parameters) -> None:
             )
 
             # Save unaligned predictions
-            raw_zip_path = aligned_zip_path.with_stem(aligned_zip_path.stem + "_raw").with_suffix(".lst")
+            raw_zip_path = aligned_zip_path.with_name(aligned_zip_path.stem + "_raw.lst")
             zip_file.write(
                 prediction_file.absolute(),
                 arcname=str(raw_zip_path)
