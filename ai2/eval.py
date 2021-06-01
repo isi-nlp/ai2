@@ -123,7 +123,7 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], results_pa
                     f'average: {np.mean(stats) * 100:.1f}')
 
         # Log eval result
-        with open(results_path, "a+") as resultf:
+        with open(results_path, "w") as resultf:
             resultf.write(f'{output_path},Accuracy-lower-upper-average,{accuracy_score(labels, predictions):.3f},'
                     f'{lower * 100:.1f},{upper * 100:.1f},{np.mean(stats) * 100:.1f}\n')
 
