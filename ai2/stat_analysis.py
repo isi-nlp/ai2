@@ -19,6 +19,11 @@ UNPAIRED_TESTS = immutabledict({
     "mc-worst": mcnemar_worst_case,
     "mc-best": mcnemar_best_case,
 })
+EPSILON = 0.01
+ACCURACY_MISMATCH_ERROR = (
+    f"Computed accuracy for model %d (%s) is %3f but accuracy from results.txt is %3f "
+    f"which differs by more than %3f.",
+)
 
 
 def stat_analysis_entrypoint(params: Parameters):
@@ -82,6 +87,16 @@ def stat_analysis_entrypoint(params: Parameters):
         # Calculate agreement
         model1_correct = (model1_predicted_labels == gold_labels)
         model2_correct = (model2_predicted_labels == gold_labels)
+        computed_model1_accuracy = model1_correct.mean()
+        computed_model2_accuracy = model2_correct.mean()
+        if abs(model1_correct.mean() - model1_accuracy) > EPSILON:
+            _logger.error(
+                ACCURACY_MISMATCH_ERROR, 1, model1_name, model1_accuracy, computed_model1_accuracy, EPSILON
+            )
+        if abs(model2_correct.mean() - model2_accuracy) > EPSILON:
+            _logger.error(
+                ACCURACY_MISMATCH_ERROR, 2, model2_name, model2_accuracy, computed_model2_accuracy, EPSILON
+            )
         contingency_table = pd.crosstab(model1_correct.rename("model1"), model2_correct.rename("model2"))
         _logger.info("first entries of model1_predicted_labels = \n%s", model1_predicted_labels.head())
         _logger.info("first entries of model2_predicted_labels = \n%s", model2_predicted_labels.head())
