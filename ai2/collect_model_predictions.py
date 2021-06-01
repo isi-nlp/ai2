@@ -57,12 +57,8 @@ def collect_model_predictions_entry_point(params: Parameters) -> None:
                         gold_label - 1
                     ).upper()
                 else:
-                    aligned_prediction["predicted_label"] = human_readable_label(
-                        predicted_label
-                    )
-                    aligned_prediction["gold_label"] = human_readable_label(
-                        gold_label
-                    )
+                    aligned_prediction["predicted_label"] = str(predicted_label)
+                    aligned_prediction["gold_label"] = str(gold_label)
 
             aligned_zip_path = prediction_file.relative_to(experiment_root).with_suffix(".jsonl")
             zip_file.writestr(
