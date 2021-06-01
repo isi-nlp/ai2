@@ -98,12 +98,13 @@ def stat_analysis_entrypoint(params: Parameters):
                 ACCURACY_MISMATCH_ERROR, 2, model2_name, model2_accuracy, computed_model2_accuracy, EPSILON
             )
         contingency_table = pd.crosstab(model1_correct.rename("model1"), model2_correct.rename("model2"))
-        _logger.info("first entries of model1_predicted_labels = \n%s", model1_predicted_labels.head())
-        _logger.info("first entries of model2_predicted_labels = \n%s", model2_predicted_labels.head())
-        _logger.info("-----")
-        _logger.info("first entries of model1_correct = \n%s", model1_correct.head())
-        _logger.info("first entries of model2_correct = \n%s", model2_correct.head())
-        _logger.info("contingency table = \n%s", contingency_table)
+        _logger.debug("model1 = %s, model2 = %s", model1_name, model2_name)
+        _logger.debug("first entries of model1_predicted_labels = \n%s", model1_predicted_labels.head())
+        _logger.debug("first entries of model2_predicted_labels = \n%s", model2_predicted_labels.head())
+        _logger.debug("-----")
+        _logger.debug("first entries of model1_correct = \n%s", model1_correct.head())
+        _logger.debug("first entries of model2_correct = \n%s", model2_correct.head())
+        _logger.debug("contingency table = \n%s", contingency_table)
         agreement_seq: pd.Series = model1_correct == model2_correct
         agreement_seqs[f"{model1_name} with {model2_name} ({task_name})"] = agreement_seq
         percent_overlap = agreement_seq.mean()
