@@ -207,7 +207,7 @@ def get_accuracy_from_results(results_file: Path) -> float:
     Read the accuracy from a CSV file called results.txt, as produced by the ai2.evaluate code.
     """
     results = pd.read_csv(results_file, names=["name", "_explainer", "accuracy", "_average", "_lower", "_upper"])
-    return float(results.loc[0, "accuracy"])
+    return float(results.iloc[-1]["accuracy"])
 
 
 def name_model(combination: List[Tuple[str, Any]]) -> str:
