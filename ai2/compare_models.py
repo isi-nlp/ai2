@@ -22,7 +22,7 @@ from pegasus_wrapper.locator import Locator
 from pegasus_wrapper.artifact import ValueArtifact
 
 import ai2.random_slice as random_slice_script
-import ai2.train as train_script
+import ai2.eval as eval_script
 import ai2.stat_analysis as stat_analysis_script
 from ai2.pegasus import override_generality, override_matches
 
@@ -182,12 +182,12 @@ def compare_models_entrypoint(params: Parameters):
             train_locator = model_outputs_locator / Locator(options) / string_slice_name
 
             # Set up common job parameters
-            train_job_params = Parameters.from_key_value_pairs(
+            eval_job_params = Parameters.from_key_value_pairs(
                 [("model", params.namespace("model"))]
             ).unify(params.namespace("train"))
 
             # Read in combination-specific parameters
-            train_job_params = train_job_params.unify(
+            eval_job_params = eval_job_params.unify(
                 Parameters.from_key_value_pairs(combination, namespace_separator=None)
             )
             for parameter, option in combination:
@@ -197,19 +197,19 @@ def compare_models_entrypoint(params: Parameters):
                         option_params: Parameters = YAMLParametersLoader().load(
                             parameter_directory / f"{option}.params"
                         )
-                        train_job_params = train_job_params.unify(option_params)
+                        eval_job_params = eval_job_params.unify(option_params)
 
             # Because the job parameters tend to indirectly include root.params, which includes a
             # default partition, we need to override the partition setting to reflect our input
             # parameters.
-            train_job_params = train_job_params.unify(
+            eval_job_params = eval_job_params.unify(
                 {"partition": params.string("partition")}
             )
 
             # Process overrides
             for override in training_overrides:
                 if override_matches(override, dict(combination)):
-                    train_job_params = train_job_params.unify(
+                    eval_job_params = eval_job_params.unify(
                         {
                             parameter_option: value
                             for parameter_option, value in override.items()
@@ -219,7 +219,7 @@ def compare_models_entrypoint(params: Parameters):
 
             # Messy parameters input. This shouldn't matter to ResourceRequest, though. Maybe clean up
             # later.
-            resource_request_params = params.unify(train_job_params)
+            resource_request_params = params.unify(eval_job_params)
             resource_request = ResourceRequest.from_parameters(
                 resource_request_params
                 # Run training on MICS.
@@ -237,21 +237,27 @@ def compare_models_entrypoint(params: Parameters):
             options_name = "_".join(
                 "=".join(str(x) for x in option_pair) for option_pair in combination
             )
+            # Grab the latest checkpoint for this configuration and evaluate that.
             save_path = experiment_root / f"{options_name}_{string_slice_name}"
-            train_job_params = train_job_params.unify(
+            checkpoints_root = save_path / "checkpoints"
+            # assert checkpoints_root.exists()
+            checkpoint_paths_from_latest_to_earliest = sorted(
+                checkpoints_root.glob(".ckpt"), reverse=True, key=lambda path: path.stat().st_mtime,
+            )
+            latest_checkpoint_path = checkpoint_paths_from_latest_to_earliest[0] if checkpoint_paths_from_latest_to_earliest else checkpoints_root / "dummy.ckpt"
+            eval_job_params = eval_job_params.unify(
                 {
-                    "train_x": slice_x_artifact.value,
-                    "train_y": slice_y_artifact.value,
-                    "save_path": save_path,
-                    "save_best_only": False,
-                    "save_by_date_and_parameters": False,
-                    "eval_after_training": True,
+                    "checkpoint_path": latest_checkpoint_path,
+                    "results_path": save_path,
+                    "with_true_label": True,
+                    # use a fixed random seed for evaluation
+                    "random_seed": 0,
                 }
             )
-            train_job = run_python_on_parameters(
-                train_locator,
-                train_script,
-                train_job_params,
+            eval_job = run_python_on_parameters(
+                train_locator / "evaluate",
+                eval_script,
+                eval_job_params,
                 depends_on=[slice_x_artifact, slice_y_artifact],
                 resource_request=resource_request,
             )
@@ -262,11 +268,11 @@ def compare_models_entrypoint(params: Parameters):
                     task,
                     ValueArtifact(
                         value=save_path / "results.txt",
-                        depends_on=immutableset([train_job]),
+                        depends_on=immutableset([eval_job]),
                     ),
                     ValueArtifact(
                         value=save_path / "predictions.lst",
-                        depends_on=immutableset([train_job]),
+                        depends_on=immutableset([eval_job]),
                     ),
                 )
             )
