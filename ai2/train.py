@@ -37,6 +37,7 @@ def train(params: Parameters):
     eval_after_training = params.boolean('eval_after_training')
     val_x_file = params.existing_file('val_x')
     val_y_file = params.existing_file('val_y')
+    append_results = params.boolean('append_results', default=False)
 
     # If the training is deterministic for debugging purposes, we set the random seed
     if not isinstance(maybe_random_seed, bool):
@@ -118,7 +119,7 @@ def train(params: Parameters):
         # Evaluate the model with evaluate function from eval.py
         evaluate(a_classifier=model, output_path=save_path, results_path=save_path / "results.txt",
                  compute_device=('cpu' if not torch.cuda.is_available() else "cuda"),
-                 val_x=val_x_file, val_y=val_y_file)
+                 val_x=val_x_file, val_y=val_y_file, append_results=append_results)
 
 
 if __name__ == "__main__":

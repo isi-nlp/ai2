@@ -265,6 +265,7 @@ def compare_models_entrypoint(params: Parameters):
                     "checkpoint_path": latest_checkpoint_path,
                     "output_path": save_path,
                     "results_path": save_path / "results.txt",
+                    "append_results": False,
                     "with_true_label": True,
                     # use a fixed random seed for evaluation
                     "random_seed": 0,

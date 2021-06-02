@@ -18,6 +18,7 @@ from ai2.model import Classifier
 def main(params: Parameters):
     checkpoint_path = params.existing_file('checkpoint_path')
     results_path = params.creatable_file('results_path')
+    append_results = params.boolean('append_results', default=False)
     val_x_file = params.existing_file('val_x')
     val_y_file = params.optional_existing_file('val_y')
     with_true_label = params.boolean('with_true_label')
@@ -69,12 +70,13 @@ def main(params: Parameters):
              results_path=results_path,
              compute_device=device,
              val_x=val_x_file,
-             val_y=val_y_file)
+             val_y=val_y_file,
+             append_results=append_results)
 
 
 # Function to perform the evaluation (This was separated out to be called in train script)
 def evaluate(a_classifier: Classifier, output_path: Union[str, Path], results_path: Union[str, Path],
-             compute_device: str, val_x: Union[str, Path], val_y: Union[str, Path] = None):
+             compute_device: str, val_x: Union[str, Path], val_y: Union[str, Path] = None, append_results: bool = False):
     # Move model to device and set to evaluation mode
     a_classifier.to(compute_device)
     a_classifier.eval()
@@ -123,7 +125,8 @@ def evaluate(a_classifier: Classifier, output_path: Union[str, Path], results_pa
                     f'average: {np.mean(stats) * 100:.1f}')
 
         # Log eval result
-        with open(results_path, "w") as resultf:
+        results_mode = "a+" if append_results else "w"
+        with open(results_path, results_mode) as resultf:
             resultf.write(f'{output_path},Accuracy-lower-upper-average,{accuracy_score(labels, predictions):.3f},'
                     f'{lower * 100:.1f},{upper * 100:.1f},{np.mean(stats) * 100:.1f}\n')
 
