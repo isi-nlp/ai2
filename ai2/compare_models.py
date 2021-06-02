@@ -39,7 +39,6 @@ DEFAULT_MAX_JOBS_ON_MICS = 2
 ParameterCombination = List[Tuple[str, Any]]
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
 
 def run_random_slice(
