@@ -244,7 +244,8 @@ def compare_models_entrypoint(params: Parameters):
             # Grab the latest checkpoint for this configuration and evaluate that.
             save_path = experiment_root / f"{options_name}_{string_slice_name}"
             checkpoints_root = save_path / "checkpoints"
-            # assert checkpoints_root.exists()
+            if not checkpoints_root.exists():
+                raise RuntimeError(f"Can't find checkpoints root {checkpoints_root}")
             checkpoint_paths_from_latest_to_earliest = sorted(
                 checkpoints_root.glob("*.ckpt"), reverse=True, key=lambda path: path.stat().st_mtime,
             )
