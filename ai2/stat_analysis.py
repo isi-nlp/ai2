@@ -152,9 +152,11 @@ def stat_analysis_entrypoint(params: Parameters):
         })
         comparison.update({
             f"Model A {name}": value for name, value in comparison_to_make["model1_combination"]
+            if name != "task"
         })
         comparison.update({
             f"Model B {name}": value for name, value in comparison_to_make["model2_combination"]
+            if name != "task"
         })
         model1_slice_seed, model1_slice_size = comparison["Model A slice"].split("_")
         model2_slice_seed, model2_slice_size = comparison["Model B slice"].split("_")
