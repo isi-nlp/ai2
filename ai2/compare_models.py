@@ -3,6 +3,7 @@ Train two slightly different RoBERTa models and compare them on
 """
 import logging
 from pathlib import Path
+from pprint import pformat
 from typing import Any, Dict, List, Tuple
 
 from more_itertools import only
@@ -255,9 +256,9 @@ def compare_models_entrypoint(params: Parameters):
                 latest_checkpoint_path,
             )
             logger.debug(
-                "For model %s, available checkpoints were: %s",
+                "For model %s, available checkpoints were:\n%s",
                 options_name,
-                checkpoint_paths_from_latest_to_earliest,
+                pformat(checkpoint_paths_from_latest_to_earliest),
             )
             eval_job_params = eval_job_params.unify(
                 {
