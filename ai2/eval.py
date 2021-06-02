@@ -56,16 +56,16 @@ def main(params: Parameters):
     checkpoint = torch.load(checkpoint_path, map_location=device)
     model.load_state_dict(checkpoint['state_dict'])
 
-    results_path_param: str = "results_path"
-    if results_path_param in params:
-        save_path = params.creatable_directory(results_path_param)
+    output_path_param: str = "output_path"
+    if output_path_param in params:
+        output_path = params.creatable_directory(output_path_param)
     else:
-        save_path = Path(f"{model_name}-{task_name}-s{maybe_random_seed}")
-        save_path.mkdir(parents=True, exist_ok=True)
+        output_path = Path(f"{model_name}-{task_name}-s{maybe_random_seed}")
+        output_path.mkdir(parents=True, exist_ok=True)
 
     # Call the main function with appropriate parameters
     evaluate(a_classifier=model,
-             output_path=save_path,
+             output_path=output_path,
              results_path=results_path,
              compute_device=device,
              val_x=val_x_file,

@@ -263,7 +263,8 @@ def compare_models_entrypoint(params: Parameters):
             eval_job_params = eval_job_params.unify(
                 {
                     "checkpoint_path": latest_checkpoint_path,
-                    "results_path": save_path,
+                    "output_path": save_path,
+                    "results_path": save_path / "results.txt",
                     "with_true_label": True,
                     # use a fixed random seed for evaluation
                     "random_seed": 0,
