@@ -245,7 +245,7 @@ def compare_models_entrypoint(params: Parameters):
             checkpoints_root = save_path / "checkpoints"
             # assert checkpoints_root.exists()
             checkpoint_paths_from_latest_to_earliest = sorted(
-                checkpoints_root.glob(".ckpt"), reverse=True, key=lambda path: path.stat().st_mtime,
+                checkpoints_root.glob("*.ckpt"), reverse=True, key=lambda path: path.stat().st_mtime,
             )
             latest_checkpoint_path = checkpoint_paths_from_latest_to_earliest[0] if checkpoint_paths_from_latest_to_earliest else checkpoints_root / "dummy.ckpt"
             logger.info(
