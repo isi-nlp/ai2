@@ -249,7 +249,7 @@ def compare_models_entrypoint(params: Parameters):
             checkpoint_paths_from_latest_to_earliest = sorted(
                 checkpoints_root.glob("*.ckpt"), reverse=True, key=lambda path: path.stat().st_mtime,
             )
-            latest_checkpoint_path = checkpoint_paths_from_latest_to_earliest[0] if checkpoint_paths_from_latest_to_earliest else checkpoints_root / "dummy.ckpt"
+            latest_checkpoint_path = checkpoint_paths_from_latest_to_earliest[0]
             logger.info(
                 "Using latest checkpoint for model %s. Latest checkpoint is: `%s`",
                 options_name,
