@@ -1,6 +1,7 @@
 """
 Train two slightly different RoBERTa models and compare them on
 """
+import logging
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -35,6 +36,8 @@ DEFAULT_MAX_JOBS_ON_MICS = 2
 
 # Represents a parameter combination as a list of (parameter_name, value) tuples.
 ParameterCombination = List[Tuple[str, Any]]
+
+logger = logging.getLogger(__name__)
 
 
 def run_random_slice(
@@ -245,6 +248,11 @@ def compare_models_entrypoint(params: Parameters):
                 checkpoints_root.glob(".ckpt"), reverse=True, key=lambda path: path.stat().st_mtime,
             )
             latest_checkpoint_path = checkpoint_paths_from_latest_to_earliest[0] if checkpoint_paths_from_latest_to_earliest else checkpoints_root / "dummy.ckpt"
+            logger.info(
+                "Using latest checkpoint for model %s. Latest checkpoint is: `%s`",
+                options_name,
+                latest_checkpoint_path,
+            )
             eval_job_params = eval_job_params.unify(
                 {
                     "checkpoint_path": latest_checkpoint_path,
