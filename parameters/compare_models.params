@@ -56,6 +56,3 @@ num_gpus: 1
 memory: '16g'
 # sbatch --ntasks=1  # already covered, resource_request.py line 133
 job_time_in_minutes: 720  # 12 hours
-
-logging:
-  root_level: DEBUG
