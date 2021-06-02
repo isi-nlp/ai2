@@ -253,6 +253,11 @@ def compare_models_entrypoint(params: Parameters):
                 options_name,
                 latest_checkpoint_path,
             )
+            logger.debug(
+                "For model %s, available checkpoints were: %s",
+                options_name,
+                checkpoint_paths_from_latest_to_earliest,
+            )
             eval_job_params = eval_job_params.unify(
                 {
                     "checkpoint_path": latest_checkpoint_path,
