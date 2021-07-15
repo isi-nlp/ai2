@@ -8,16 +8,26 @@ from immutablecollections import immutabledict
 from vistautils.parameters import Parameters
 from vistautils.parameters_only_entrypoint import parameters_only_entry_point
 
-from ai2.stats_tests import fishers_test, binomial_difference_of_proportions_test, mcnemar, mcnemar_worst_case, mcnemar_best_case
-
+from ai2.stats_tests import (
+    fishers_test,
+    binomial_difference_of_proportions_test,
+    mcnemar,
+    mcnemar_exact,
+    mcnemar_exact_upper_p,
+    mcnemar_exact_lower_p,
+    mcnemar_min_overlap,
+    mcnemar_max_overlap,
+)
 
 _logger = logging.getLogger(__name__)
 
 UNPAIRED_TESTS = immutabledict({
     "fisher": fishers_test,
     "prop": binomial_difference_of_proportions_test,
-    "mc-worst": mcnemar_worst_case,
-    "mc-best": mcnemar_best_case,
+    "mc-min-overlap-upper-p": mcnemar_min_overlap,
+    "mc-max-overlap-lower-p": mcnemar_max_overlap,
+    "mc-b-upper-p": mcnemar_exact_upper_p,
+    "mc-b-lower-p": mcnemar_exact_lower_p,
 })
 EPSILON = 0.01
 ACCURACY_MISMATCH_ERROR = (
@@ -116,8 +126,14 @@ def stat_analysis_entrypoint(params: Parameters):
                 test_set_size=test_set_size,
                 model1_accuracy=model1_accuracy,
                 model2_accuracy=model2_accuracy,
-                fractional_agreement=percent_overlap,
-            )
+                percent_overlap=percent_overlap,
+            ),
+            "mcnemar-exact": mcnemar_exact(
+                test_set_size=test_set_size,
+                model1_accuracy=model1_accuracy,
+                model2_accuracy=model2_accuracy,
+                percent_overlap=percent_overlap,
+            ),
         }
         stats.update({
             test_name: unpaired_test(
