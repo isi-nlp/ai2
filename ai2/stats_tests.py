@@ -175,7 +175,7 @@ def _infer_mcnemar_table_info(
     #
     # We get our accuracies as floats, so we can't just multiply out and get integers.
     # We have to round.
-    n_disagreements = round(_approx_disagreements(test_set_size, percent_overlap))
+    n_disagreements = int(round(_approx_disagreements(test_set_size, percent_overlap)))
     n_only_model1_correct = _get_n_only_model1_correct(
         test_set_size, n_disagreements, model1_accuracy, model2_accuracy
     )
