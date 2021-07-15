@@ -164,9 +164,9 @@ def stat_analysis_entrypoint(params: Parameters):
                 percent_overlap=percent_overlap,
             ),
             "mcnemar-exact": mcnemar_exact_ct(
-                n_disagreements=test_set_size - agreement_seq.sum(),
-                n_only_model1_correct=(model1_correct & ~model2_correct).sum(),
-                n_only_model2_correct=(model2_correct & ~model1_correct).sum(),
+                n_disagreements=int(test_set_size - agreement_seq.sum()),
+                n_only_model1_correct=int((model1_correct & ~model2_correct).sum()),
+                n_only_model2_correct=int((model2_correct & ~model1_correct).sum()),
             ),
         }
         stats.update(
