@@ -129,18 +129,6 @@ class _BinomialMcNemarTableInfo:
     n_only_model2_correct: int = attrib(validator=and_(instance_of(int), in_(Range.at_least(0))))
 
 
-def _approx_disagreements(
-    test_set_size: int,
-    percent_overlap: float,
-) -> float:
-    """
-    Return the number of disagreements, estimated by test_set_size * (1 - percent_overlap).
-
-    We leave this as a fractional value so that you can round it however you want.
-    """
-    return test_set_size * (1 - percent_overlap)
-
-
 def _get_n_only_model1_correct(
     test_set_size: int,
     n_disagreements: int,
@@ -175,7 +163,7 @@ def _infer_mcnemar_table_info(
     #
     # We get our accuracies as floats, so we can't just multiply out and get integers.
     # We have to round.
-    n_disagreements = int(round(_approx_disagreements(test_set_size, percent_overlap)))
+    n_disagreements = int(round(test_set_size * (1 - percent_overlap)))
     n_only_model1_correct = _get_n_only_model1_correct(
         test_set_size, n_disagreements, model1_accuracy, model2_accuracy
     )
@@ -240,6 +228,34 @@ def mcnemar_exact(
     return _mcnemar_exact_conditional_from_table_info(table_info)
 
 
+def mcnemar_exact_ct(
+    *,
+    n_disagreements: int,
+    n_only_model1_correct: int,
+    n_only_model2_correct: int,
+) -> Tuple[float, float]:
+    """
+    Compare the two models whose accuracy is given using the exact version of McNemar's test and return the test
+    statistic and p-value.
+
+    We do this by setting up a contingency table like this:
+
+    |   rows: model 1 / columns: model 2 | M2 correct | M2 incorrect |
+    | ---------------------------------- | ---------- | ------------ |
+    |                         M1 correct |          a |            b |
+    |                       M1 incorrect |          c |            d |
+
+    where a, b, c, and d are integers. Here,
+    """
+    return _mcnemar_exact_conditional_from_table_info(
+        _BinomialMcNemarTableInfo(
+            n_disagreements=n_disagreements,
+            n_only_model1_correct=n_only_model1_correct,
+            n_only_model2_correct=n_only_model2_correct,
+        )
+    )
+
+
 def mcnemar_mid_p(
         *,
         model1_accuracy: float,
@@ -295,18 +311,36 @@ def mcnemar_mid_p(
     )
 
 
-def get_min_possible_agreement(model1_accuracy: float, model2_accuracy: float) -> float:
+def get_min_possible_overlap(model1_accuracy: float, model2_accuracy: float) -> float:
     """
     Return the minimum possible agreement between models 1 and 2.
     """
     return max(model1_accuracy + model2_accuracy - 1., 0.)
 
 
-def get_max_possible_agreement(model1_accuracy: float, model2_accuracy: float) -> float:
+def get_max_possible_overlap(model1_accuracy: float, model2_accuracy: float) -> float:
     """
     Return the maximum possible agreement between models 1 and 2.
     """
     return 1 - np.abs(model2_accuracy - model1_accuracy)
+
+
+def get_min_possible_absolute_overlap(test_set_size: int, model1_accuracy: float, model2_accuracy: float) -> int:
+    """
+    Return the minimum possible absolute agreement between models 1 and 2.
+    """
+    model1_correct = int(round(test_set_size * model1_accuracy))
+    model2_correct = int(round(test_set_size * model2_accuracy))
+    return max(model1_correct + model2_correct - test_set_size, 0)
+
+
+def get_max_possible_absolute_overlap(test_set_size: int, model1_accuracy: float, model2_accuracy: float) -> int:
+    """
+    Return the maximum possible absolute agreement between models 1 and 2.
+    """
+    model1_correct = int(round(test_set_size * model1_accuracy))
+    model2_correct = int(round(test_set_size * model2_accuracy))
+    return test_set_size - abs(model2_correct - model1_correct)
 
 
 def mcnemar_min_overlap(
@@ -346,7 +380,7 @@ def mcnemar_min_overlap(
     # is bounded above by test_set_size * (delta_acc ** 2) / d
     delta_acc = (model2_accuracy - model1_accuracy)
     # discordance_upper_bound = 1 - max(model1_accuracy + model2_accuracy - 1., 0.)
-    discordance_upper_bound = 1 - get_min_possible_agreement(model1_accuracy, model2_accuracy)
+    discordance_upper_bound = 1 - get_min_possible_overlap(model1_accuracy, model2_accuracy)
     test_statistic = test_set_size * delta_acc * delta_acc / discordance_upper_bound
     return test_statistic, chi2.sf(test_statistic, 1)
 
@@ -383,23 +417,15 @@ def _all_possible_mcnemar_exact_results(
     """
     Return a list of all possible McNemar exact test results for the given pair
     """
-    min_disagreements = floor(
-        _approx_disagreements(
-            test_set_size,
-            get_max_possible_agreement(
-                model1_accuracy=model1_accuracy,
-                model2_accuracy=model2_accuracy,
-            ),
-        )
+    min_disagreements = test_set_size - get_max_possible_absolute_overlap(
+        test_set_size=test_set_size,
+        model1_accuracy=model1_accuracy,
+        model2_accuracy=model2_accuracy,
     )
-    max_disagreements = ceil(
-        _approx_disagreements(
-            test_set_size,
-            get_min_possible_agreement(
-                model1_accuracy=model1_accuracy,
-                model2_accuracy=model2_accuracy,
-            ),
-        )
+    max_disagreements = test_set_size - get_min_possible_absolute_overlap(
+        test_set_size=test_set_size,
+        model1_accuracy=model1_accuracy,
+        model2_accuracy=model2_accuracy,
     )
 
     def valid_config(n_disagreements: int, n_only_model1_correct: int, n_only_model2_correct: int) -> bool:

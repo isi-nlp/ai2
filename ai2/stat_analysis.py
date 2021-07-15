@@ -12,7 +12,7 @@ from ai2.stats_tests import (
     fishers_test,
     binomial_difference_of_proportions_test,
     mcnemar,
-    mcnemar_exact,
+    mcnemar_exact_ct,
     mcnemar_exact_upper_p,
     mcnemar_exact_lower_p,
     mcnemar_min_overlap,
@@ -163,11 +163,10 @@ def stat_analysis_entrypoint(params: Parameters):
                 model2_accuracy=model2_accuracy,
                 percent_overlap=percent_overlap,
             ),
-            "mcnemar-exact": mcnemar_exact(
-                test_set_size=test_set_size,
-                model1_accuracy=model1_accuracy,
-                model2_accuracy=model2_accuracy,
-                percent_overlap=percent_overlap,
+            "mcnemar-exact": mcnemar_exact_ct(
+                n_disagreements=test_set_size - agreement_seq.sum(),
+                n_only_model1_correct=(model1_correct & ~model2_correct).sum(),
+                n_only_model2_correct=(model2_correct & ~model1_correct).sum(),
             ),
         }
         stats.update(
