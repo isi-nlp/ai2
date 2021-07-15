@@ -153,7 +153,7 @@ def _get_n_only_model1_correct(
     """
     return round(
         (
-                n_disagreements - test_set_size * (model1_accuracy - model2_accuracy)
+                n_disagreements - test_set_size * (model2_accuracy - model1_accuracy)
         ) / 2
     ) if n_disagreements > 0 else 0
 
@@ -392,8 +392,6 @@ def _all_possible_mcnemar_exact_results(
             ),
         )
     )
-    if min_disagreements % 2 != test_set_size % 2:
-        min_disagreements -= 1
     max_disagreements = ceil(
         _approx_disagreements(
             test_set_size,
@@ -403,16 +401,26 @@ def _all_possible_mcnemar_exact_results(
             ),
         )
     )
-    if max_disagreements % 2 != test_set_size % 2:
-        max_disagreements += 1
+
+    def valid_config(n_disagreements: int, n_only_model1_correct: int, n_only_model2_correct: int) -> bool:
+        implied_accuracy_difference = (n_only_model1_correct - n_only_model2_correct) / test_set_size
+        real_accuracy_difference = model1_accuracy - model2_accuracy
+        return (
+            n_disagreements >= 0 and
+            n_only_model1_correct >= 0 and
+            n_only_model2_correct >= 0 and
+            abs(implied_accuracy_difference - real_accuracy_difference) < 0.01 and
+            # if there is no real accuracy difference, then to be valid the number of disagreements must be 1
+            (real_accuracy_difference != 0 or n_disagreements % 2 == 0)
+        )
 
     test_results = []
-    for n_disagreements in range(min_disagreements, max_disagreements, 2):
+    for n_disagreements in range(min_disagreements, max_disagreements + 1):
         n_only_model1_correct = _get_n_only_model1_correct(
             test_set_size, n_disagreements, model1_accuracy, model2_accuracy
         )
         n_only_model2_correct = n_disagreements - n_only_model1_correct
-        if n_only_model1_correct >= 0 and n_only_model2_correct >= 0:
+        if valid_config(n_disagreements, n_only_model1_correct, n_only_model2_correct):
             test_results.append(
                 _mcnemar_exact_conditional_from_table_info(
                     _BinomialMcNemarTableInfo(
