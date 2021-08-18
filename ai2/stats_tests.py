@@ -119,6 +119,25 @@ def mcnemar(
     return test_statistic, chi2.sf(test_statistic, 1)
 
 
+def mcnemar_ct(
+    *,
+    n_disagreements: int,
+    n_only_model1_correct: int,
+    n_only_model2_correct: int,
+) -> Tuple[float, float]:
+    """
+    Compare the two models whose information is given using McNemar's test and return the test statistic and p-value.
+
+    In this version we calculate the McNemar statistic directly as (b - c)^2 / (b + c). This should only differ from
+    mcnemar() in rounding.
+
+    Note that here n_disagreements = b + c.
+    """
+    correctness_difference = n_only_model2_correct - n_only_model1_correct
+    test_statistic = correctness_difference * correctness_difference / n_disagreements
+    return test_statistic, chi2.sf(test_statistic, 1)
+
+
 @attrs
 class _BinomialMcNemarTableInfo:
     """
