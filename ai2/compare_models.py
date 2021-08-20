@@ -330,9 +330,9 @@ def compare_models_entrypoint(params: Parameters):
     stat_analysis_parameters = params.unify(
         {
             "comparisons_to_make": file_of_comparisons_to_make,
-            "save_accuracies_to": experiment_root / "accuracies.csv",
-            "save_overlap_seqs_to": experiment_root / "overlap_data.csv",
-            "save_comparison_results_to": experiment_root / "summary.csv",
+            "save_accuracies_to": experiment_root / "real_model_accuracies.csv",
+            "save_overlap_seqs_to": experiment_root / "real_model_overlap_data.csv",
+            "save_comparison_results_to": experiment_root / "real_model_comparisons.csv",
         }
     )
 
