@@ -158,7 +158,7 @@ def stat_analysis_entrypoint(params: Parameters):
         # Calculate tests
         test_set_size = len(gold_labels)
         mcnemar_result = library_mcnemar(contingency_table, exact=False, correction=False)
-        exact_mcnemar_result = library_mcnemar(contingency_table, exact=False, correction=False)
+        exact_mcnemar_result = library_mcnemar(contingency_table, exact=True, correction=False)
         stats = {
             "mcnemar": (mcnemar_result.statistic, mcnemar_result.pvalue),
             "mcnemar-exact": (exact_mcnemar_result.statistic, exact_mcnemar_result.pvalue),
