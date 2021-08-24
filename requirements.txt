@@ -33,7 +33,7 @@ packaging==20.9
 pandas==1.0.1
 pegasus-wms.api==5.0.0
 pegasus-wms.common==5.0.0
-pegasus-wrapper==0.2.0
+pegasus-wrapper==0.3.0
 Pillow==7.0.0
 protobuf==3.11.3
 pyasn1==0.4.8
