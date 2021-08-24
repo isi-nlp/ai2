@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any, List, Tuple
 
 import pandas as pd
+from statsmodels.stats.contingency_tables import mcnemar as library_mcnemar
 
 from immutablecollections import immutabledict
 from vistautils.parameters import Parameters
@@ -157,13 +158,15 @@ def stat_analysis_entrypoint(params: Parameters):
         # Calculate tests
         test_set_size = len(gold_labels)
         stats = {
-            "mcnemar": mcnemar(
+            "mcnemar": library_mcnemar(contingency_table, exact=False, correction=False),
+            "mcnemar-exact": library_mcnemar(contingency_table, exact=True, correction=False),
+            "my-mcnemar": mcnemar(
                 test_set_size=test_set_size,
                 model1_accuracy=model1_accuracy,
                 model2_accuracy=model2_accuracy,
                 percent_overlap=percent_overlap,
             ),
-            "mcnemar-exact": mcnemar_exact_ct(
+            "my-mcnemar-exact": mcnemar_exact_ct(
                 n_disagreements=int(test_set_size - agreement_seq.sum()),
                 n_only_model1_correct=int((model1_correct & ~model2_correct).sum()),
                 n_only_model2_correct=int((model2_correct & ~model1_correct).sum()),

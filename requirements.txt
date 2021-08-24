@@ -31,6 +31,7 @@ oauthlib==3.1.0
 omegaconf==1.4.1
 packaging==20.9
 pandas==1.0.1
+patsy==0.5.1
 pegasus-wms.api==5.0.0
 pegasus-wms.common==5.0.0
 pegasus-wrapper==0.3.0
@@ -56,6 +57,7 @@ sentencepiece==0.1.85
 six==1.14.0
 smmap==4.0.0
 sortedcontainers==2.3.0
+statsmodels==0.12.2
 temppathlib==1.1.0
 tensorboard==2.1.1
 test-tube==0.7.5
