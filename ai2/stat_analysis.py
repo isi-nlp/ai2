@@ -162,13 +162,13 @@ def stat_analysis_entrypoint(params: Parameters):
         stats = {
             "mcnemar": (mcnemar_result.statistic, mcnemar_result.pvalue),
             "mcnemar-exact": (exact_mcnemar_result.statistic, exact_mcnemar_result.pvalue),
-            "my-mcnemar": mcnemar(
+            "own-mcnemar": mcnemar(
                 test_set_size=test_set_size,
                 model1_accuracy=model1_accuracy,
                 model2_accuracy=model2_accuracy,
                 percent_overlap=percent_overlap,
             ),
-            "my-mcnemar-exact": mcnemar_exact_ct(
+            "own-mcnemar-exact": mcnemar_exact_ct(
                 n_disagreements=int(test_set_size - agreement_seq.sum()),
                 n_only_model1_correct=int((model1_correct & ~model2_correct).sum()),
                 n_only_model2_correct=int((model2_correct & ~model1_correct).sum()),
