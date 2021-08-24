@@ -164,8 +164,8 @@ def stat_analysis_entrypoint(params: Parameters):
             "mcnemar-exact": (exact_mcnemar_result.statistic, exact_mcnemar_result.pvalue),
             "own-mcnemar": mcnemar(
                 test_set_size=test_set_size,
-                model1_accuracy=model1_accuracy,
-                model2_accuracy=model2_accuracy,
+                model1_accuracy=computed_model1_accuracy,
+                model2_accuracy=computed_model2_accuracy,
                 percent_overlap=percent_overlap,
             ),
             "own-mcnemar-exact": mcnemar_exact_ct(
