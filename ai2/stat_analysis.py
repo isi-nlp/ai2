@@ -12,8 +12,6 @@ from vistautils.parameters_only_entrypoint import parameters_only_entry_point
 from ai2.stats_tests import (
     fishers_test,
     binomial_difference_of_proportions_test,
-    mcnemar,
-    mcnemar_exact_ct,
     mcnemar_exact_upper_p,
     mcnemar_exact_lower_p,
     mcnemar_min_overlap,
@@ -157,29 +155,25 @@ def stat_analysis_entrypoint(params: Parameters):
 
         # Calculate tests
         test_set_size = len(gold_labels)
-        mcnemar_result = library_mcnemar(contingency_table, exact=False, correction=False)
-        exact_mcnemar_result = library_mcnemar(contingency_table, exact=True, correction=False)
+        mcnemar_result = library_mcnemar(
+            contingency_table, exact=False, correction=False
+        )
+        exact_mcnemar_result = library_mcnemar(
+            contingency_table, exact=True, correction=False
+        )
         stats = {
             "mcnemar": (mcnemar_result.statistic, mcnemar_result.pvalue),
-            "mcnemar-exact": (exact_mcnemar_result.statistic, exact_mcnemar_result.pvalue),
-            "own-mcnemar": mcnemar(
-                test_set_size=test_set_size,
-                model1_accuracy=computed_model1_accuracy,
-                model2_accuracy=computed_model2_accuracy,
-                percent_overlap=percent_overlap,
-            ),
-            "own-mcnemar-exact": mcnemar_exact_ct(
-                n_disagreements=int(test_set_size - agreement_seq.sum()),
-                n_only_model1_correct=int((model1_correct & ~model2_correct).sum()),
-                n_only_model2_correct=int((model2_correct & ~model1_correct).sum()),
+            "mcnemar-exact": (
+                exact_mcnemar_result.statistic,
+                exact_mcnemar_result.pvalue,
             ),
         }
         stats.update(
             {
                 test_name: unpaired_test(
                     test_set_size=test_set_size,
-                    model1_accuracy=model1_accuracy,
-                    model2_accuracy=model2_accuracy,
+                    n_model1_correct=model1_correct.sum(),
+                    n_model2_correct=model2_correct.sum(),
                 )
                 for test_name, unpaired_test in UNPAIRED_TESTS.items()
             }
