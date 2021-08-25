@@ -5,11 +5,7 @@ from typing import Any, List, Tuple
 import pandas as pd
 from statsmodels.stats.contingency_tables import mcnemar as library_mcnemar
 
-from immutablecollections import immutabledict
-from vistautils.parameters import Parameters
-from vistautils.parameters_only_entrypoint import parameters_only_entry_point
-
-from ai2.stats_tests import (
+from leaderboard_analyses.comparison_tests import (
     fishers_test,
     binomial_difference_of_proportions_test,
     mcnemar_exact_upper_p,
@@ -17,6 +13,9 @@ from ai2.stats_tests import (
     mcnemar_min_overlap,
     mcnemar_max_overlap,
 )
+from immutablecollections import immutabledict
+from vistautils.parameters import Parameters
+from vistautils.parameters_only_entrypoint import parameters_only_entry_point
 
 _logger = logging.getLogger(__name__)
 
